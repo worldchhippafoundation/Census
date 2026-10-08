@@ -339,6 +339,10 @@
         </div>
         <div class="flex gap-2">
           <button onclick="exportAdminDataToExcel()" class="px-3 py-1.5 bg-green-700 hover:bg-green-800 text-white rounded text-xs font-bold flex items-center gap-1.5">
+            <button type="button" onclick="generateCommunityDirectoryPDF()" class="px-3 py-1.5 bg-emerald-800 text-white rounded-lg text-xs font-bold hover:bg-emerald-900 flex items-center gap-1.5 shadow-sm transition">
+    <i class="fa-solid fa-book-atlas"></i> Download Directory (A-Z)
+            </button>
+            
             <i class="fa-solid fa-file-excel"></i> Export Excel (CSV)
           </button>
           <button onclick="window.print()" class="px-3 py-1.5 bg-gray-800 hover:bg-black text-white rounded text-xs font-bold flex items-center gap-1.5">
@@ -1332,6 +1336,10 @@
       setLanguage('en');
       checkUrlForVerification();
     });
+    function generateCommunityDirectoryPDF() {
+    alert("Generating Community Directory... Please wait.");
+    }
+    
   </script>
 </body>
 </html>
