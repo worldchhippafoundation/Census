@@ -37,7 +37,7 @@
   <header class="bg-emerald-800 text-white shadow-md sticky top-0 z-50">
     <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-3">
       
-      <!-- Official Seal Logo -->
+      <!-- Official Stamp / Verified Seal Logo -->
       <div class="flex items-center gap-3">
         <div class="w-12 h-12 rounded-full border-2 border-dashed border-amber-300 bg-emerald-900 flex flex-col items-center justify-center text-center p-0.5 shadow-md">
           <span class="text-[7px] font-black text-amber-300 leading-none uppercase">WCF</span>
@@ -129,20 +129,17 @@
             <label id="lblHeadClan" class="block text-xs font-semibold text-slate-700 mb-1">اٹک / ذیلی ذات*</label>
             <select id="headClan" required onchange="toggleManualInput(this, 'headClanOtherWrap')" class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"></select>
             <div id="headClanOtherWrap" class="hidden mt-2">
-              <input type="text" id="headClanOther" placeholder="اپنی اٹک / شاخ لکھیں..." class="w-full border border-emerald-400 rounded-lg p-2 text-xs bg-emerald-50 outline-none">
+              <input type="text" id="headClanOther" class="w-full border border-emerald-400 rounded-lg p-2 text-xs bg-emerald-50 outline-none">
             </div>
-          </div>
-
-          <!-- Lineage -->
-          <div>
-            <label id="lblHeadLineage" class="block text-xs font-semibold text-slate-700 mb-1">کمیونٹی نسب*</label>
-            <select id="headLineage" required class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"></select>
           </div>
 
           <!-- Education -->
           <div>
             <label id="lblHeadEdu" class="block text-xs font-semibold text-slate-700 mb-1">تعلیمی قابلیت*</label>
-            <select id="headEdu" required class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"></select>
+            <select id="headEdu" required onchange="toggleManualInput(this, 'headEduOtherWrap')" class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"></select>
+            <div id="headEduOtherWrap" class="hidden mt-2">
+              <input type="text" id="headEduOther" class="w-full border border-emerald-400 rounded-lg p-2 text-xs bg-emerald-50 outline-none">
+            </div>
           </div>
 
           <!-- Occupation -->
@@ -150,7 +147,7 @@
             <label id="lblHeadJob" class="block text-xs font-semibold text-slate-700 mb-1">پیشہ / ملازمت*</label>
             <select id="headJob" required onchange="toggleManualInput(this, 'headJobOtherWrap')" class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"></select>
             <div id="headJobOtherWrap" class="hidden mt-2">
-              <input type="text" id="headJobOther" placeholder="اپنا پیشہ درج کریں..." class="w-full border border-emerald-400 rounded-lg p-2 text-xs bg-emerald-50 outline-none">
+              <input type="text" id="headJobOther" class="w-full border border-emerald-400 rounded-lg p-2 text-xs bg-emerald-50 outline-none">
             </div>
           </div>
 
@@ -173,7 +170,7 @@
           </div>
 
           <!-- Address -->
-          <div class="md:col-span-1">
+          <div class="md:col-span-2">
             <label id="lblHeadAddress" class="block text-xs font-semibold text-slate-700 mb-1">مکمل رہائشی پتہ*</label>
             <input type="text" id="headAddress" required class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
           </div>
@@ -261,7 +258,7 @@
                 <p><span class="font-bold text-slate-700">شناختی کارڈ:</span> <span id="frcHeadCNIC" class="text-slate-800 font-mono"></span></p>
                 <p><span class="font-bold text-slate-700">رابطہ فون:</span> <span id="frcHeadPhone" class="text-slate-800 font-mono"></span></p>
                 <p><span class="font-bold text-slate-700">ملک و شہر:</span> <span id="frcHeadLocation" class="text-slate-800"></span></p>
-                <p><span class="font-bold text-slate-700">کمیونٹی نسب:</span> <span id="frcHeadLineage" class="text-emerald-800 font-bold"></span></p>
+                <p><span class="font-bold text-slate-700">کمیونٹی نسب:</span> <span id="frcHeadLineage" class="text-emerald-800 font-bold">چھیپا</span></p>
               </div>
             </div>
 
@@ -334,7 +331,6 @@
         lblHeadFather: "والد / سرپرست کا نام*",
         lblHeadGender: "جنس*",
         lblHeadClan: "اٹک / ذیلی ذات*",
-        lblHeadLineage: "کمیونٹی نسب*",
         lblHeadEdu: "تعلیمی قابلیت*",
         lblHeadJob: "پیشہ / ملازمت*",
         lblHeadPhone: "رابطہ فون / واٹس ایپ*",
@@ -352,10 +348,11 @@
         lblMemAge: "عمر*",
         lblMemCNIC: "شناختی کارڈ / بے فارم*",
         lblMemEdu: "تعلیمی قابلیت*",
-        lblMemLineage: "کمیونٹی نسب*",
+        lblMemLineage: "بیوی کا نسب*",
         lblMemJob: "پیشہ / ملازمت*",
         btnRemove: "ختم کریں",
         otherClanPlaceholder: "اپنی اٹک / شاخ لکھیں...",
+        otherEduPlaceholder: "اپنی تعلیم درج کریں...",
         otherJobPlaceholder: "اپنا پیشہ درج کریں...",
         relations: {
           Wife: "بیوی",
@@ -429,7 +426,6 @@
         lblHeadFather: "पिता / संरक्षक का नाम*",
         lblHeadGender: "लिंग*",
         lblHeadClan: "गोत्र / उप-जाति*",
-        lblHeadLineage: "समुदाय वंश*",
         lblHeadEdu: "शैक्षणिक योग्यता*",
         lblHeadJob: "व्यवसाय / पेशा*",
         lblHeadPhone: "संपर्क फ़ोन / व्हाट्सएप*",
@@ -447,10 +443,11 @@
         lblMemAge: "उम्र*",
         lblMemCNIC: "पहचान पत्र / जन्म प्रमाण पत्र*",
         lblMemEdu: "शैक्षणिक योग्यता*",
-        lblMemLineage: "समुदाय वंश*",
+        lblMemLineage: "पत्नी का वंश*",
         lblMemJob: "व्यवसाय / पेशा*",
         btnRemove: "हटाएं",
         otherClanPlaceholder: "अपना गोत्र दर्ज करें...",
+        otherEduPlaceholder: "अपनी शिक्षा लिखें...",
         otherJobPlaceholder: "अपना व्यवसाय लिखें...",
         relations: {
           Wife: "पत्नी",
@@ -524,7 +521,6 @@
         lblHeadFather: "Father / Guardian Name*",
         lblHeadGender: "Gender*",
         lblHeadClan: "Clan / Sub-Caste*",
-        lblHeadLineage: "Community Lineage*",
         lblHeadEdu: "Education Level*",
         lblHeadJob: "Occupation / Job*",
         lblHeadPhone: "Contact Phone / WhatsApp*",
@@ -542,10 +538,11 @@
         lblMemAge: "Age*",
         lblMemCNIC: "National ID / B-Form / Child ID*",
         lblMemEdu: "Education Level*",
-        lblMemLineage: "Community Lineage*",
+        lblMemLineage: "Wife Lineage*",
         lblMemJob: "Occupation / Job*",
         btnRemove: "Remove",
         otherClanPlaceholder: "Enter Sub-caste / Clan...",
+        otherEduPlaceholder: "Enter your education details...",
         otherJobPlaceholder: "Enter your occupation...",
         relations: {
           Wife: "Wife",
@@ -641,7 +638,6 @@
       document.getElementById('lblHeadFather').textContent = dict.lblHeadFather;
       document.getElementById('lblHeadGender').textContent = dict.lblHeadGender;
       document.getElementById('lblHeadClan').textContent = dict.lblHeadClan;
-      document.getElementById('lblHeadLineage').textContent = dict.lblHeadLineage;
       document.getElementById('lblHeadEdu').textContent = dict.lblHeadEdu;
       document.getElementById('lblHeadJob').textContent = dict.lblHeadJob;
       document.getElementById('lblHeadPhone').textContent = dict.lblHeadPhone;
@@ -654,9 +650,13 @@
       document.getElementById('btnAddMemberBtn').textContent = dict.btnAddMemberBtn;
       document.getElementById('btnSubmitForm').textContent = dict.btnSubmitForm;
 
+      // Update Head Placeholders
+      document.getElementById('headClanOther').placeholder = dict.otherClanPlaceholder;
+      document.getElementById('headEduOther').placeholder = dict.otherEduPlaceholder;
+      document.getElementById('headJobOther').placeholder = dict.otherJobPlaceholder;
+
       populateSelectOptions('headGender', dict.genders, 'Male');
       populateSelectOptions('headClan', dict.clans, 'Tak');
-      populateSelectOptions('headLineage', dict.lineage, 'Chhippa');
       populateSelectOptions('headEdu', dict.education, 'Matric');
       populateSelectOptions('headJob', dict.jobs, 'Business');
 
@@ -788,30 +788,35 @@
             <span id="memCNICHint_${id}" class="text-[10px] text-slate-500 mt-0.5 block">18 سال سے کم عمر کے لیے سرپرست کا کارڈ منسلک ہو جائے گا</span>
           </div>
 
-          <div>
+          <!-- Wife Specific Lineage Wrap (Hidden for all other relations) -->
+          <div id="memWifeLineageWrap_${id}" class="hidden">
             <label class="block text-xs font-semibold text-slate-700 mb-1 lbl-mem-lineage">${dict.lblMemLineage}</label>
             <select id="memLineage_${id}" class="w-full border border-slate-300 rounded-lg p-2 text-xs focus:ring-2 focus:ring-emerald-500 outline-none">
               ${Object.entries(dict.lineage).map(([k, v]) => `<option value="${k}">${v}</option>`).join('')}
             </select>
           </div>
 
+          <!-- Education -->
           <div>
             <label class="block text-xs font-semibold text-slate-700 mb-1 lbl-mem-edu">${dict.lblMemEdu}</label>
-            <select id="memEdu_${id}" class="w-full border border-slate-300 rounded-lg p-2 text-xs focus:ring-2 focus:ring-emerald-500 outline-none">
+            <select id="memEdu_${id}" onchange="toggleManualInput(this, 'memEduOtherWrap_${id}')" class="w-full border border-slate-300 rounded-lg p-2 text-xs focus:ring-2 focus:ring-emerald-500 outline-none">
               ${Object.entries(dict.education).map(([k, v]) => `<option value="${k}">${v}</option>`).join('')}
             </select>
+            <div id="memEduOtherWrap_${id}" class="hidden mt-2">
+              <input type="text" id="memEduOther_${id}" class="w-full border border-emerald-400 rounded-lg p-2 text-xs bg-emerald-50 outline-none">
+            </div>
           </div>
 
-          <div class="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-2">
+          <!-- Occupation -->
+          <div class="md:col-span-2">
             <div>
               <label class="block text-xs font-semibold text-slate-700 mb-1 lbl-mem-job">${dict.lblMemJob}</label>
               <select id="memJob_${id}" onchange="toggleManualInput(this, 'memJobOtherWrap_${id}')" class="w-full border border-slate-300 rounded-lg p-2 text-xs focus:ring-2 focus:ring-emerald-500 outline-none">
                 ${Object.entries(dict.jobs).map(([k, v]) => `<option value="${k}">${v}</option>`).join('')}
               </select>
             </div>
-            <div id="memJobOtherWrap_${id}" class="hidden">
-              <label class="block text-xs font-semibold text-slate-700 mb-1">تفصیل</label>
-              <input type="text" id="memJobOther_${id}" placeholder="${dict.otherJobPlaceholder}" class="w-full border border-emerald-400 rounded-lg p-2 text-xs bg-emerald-50 outline-none">
+            <div id="memJobOtherWrap_${id}" class="hidden mt-2">
+              <input type="text" id="memJobOther_${id}" class="w-full border border-emerald-400 rounded-lg p-2 text-xs bg-emerald-50 outline-none">
             </div>
           </div>
 
@@ -830,11 +835,20 @@
     function handleRelationChange(id) {
       const rel = document.getElementById(`memRel_${id}`).value;
       const genderSelect = document.getElementById(`memGender_${id}`);
+      const wifeLineageWrap = document.getElementById(`memWifeLineageWrap_${id}`);
 
+      // Auto Gender
       if (['Wife', 'Daughter', 'Mother', 'Sister'].includes(rel)) {
         genderSelect.value = 'Female';
       } else if (['Husband', 'Son', 'Father', 'Brother'].includes(rel)) {
         genderSelect.value = 'Male';
+      }
+
+      // Wife specific lineage display
+      if (rel === 'Wife') {
+        wifeLineageWrap.classList.remove('hidden');
+      } else {
+        wifeLineageWrap.classList.add('hidden');
       }
     }
 
@@ -873,11 +887,20 @@
         card.querySelector('.lbl-mem-job').textContent = dict.lblMemJob;
         card.querySelector('button').textContent = dict.btnRemove;
 
+        // Placeholders refresh
+        const eduOther = document.getElementById(`memEduOther_${id}`);
+        if (eduOther) eduOther.placeholder = dict.otherEduPlaceholder;
+
+        const jobOther = document.getElementById(`memJobOther_${id}`);
+        if (jobOther) jobOther.placeholder = dict.otherJobPlaceholder;
+
         populateSelectOptions(`memRel_${id}`, dict.relations);
         populateSelectOptions(`memGender_${id}`, dict.genders);
         populateSelectOptions(`memLineage_${id}`, dict.lineage, 'Chhippa');
         populateSelectOptions(`memEdu_${id}`, dict.education, 'Matric');
         populateSelectOptions(`memJob_${id}`, dict.jobs, 'Student');
+        
+        handleRelationChange(id);
       });
     }
 
@@ -893,12 +916,13 @@
       const headGenderKey = document.getElementById('headGender').value;
       const headClanKey = document.getElementById('headClan').value;
       const headClan = headClanKey === 'Other' ? (document.getElementById('headClanOther').value.trim() || dict.clans.Other) : dict.clans[headClanKey];
-      const headLineageKey = document.getElementById('headLineage').value;
-      const headLineage = dict.lineage[headLineageKey];
+      
       const headEduKey = document.getElementById('headEdu').value;
-      const headEdu = dict.education[headEduKey];
+      const headEdu = headEduKey === 'Other' ? (document.getElementById('headEduOther').value.trim() || dict.education.Other) : dict.education[headEduKey];
+
       const headJobKey = document.getElementById('headJob').value;
       const headJob = headJobKey === 'Other' ? (document.getElementById('headJobOther').value.trim() || dict.jobs.Other) : dict.jobs[headJobKey];
+      
       const headPhone = document.getElementById('headPhone').value.trim();
       const headCountry = document.getElementById('headCountry').value;
       const headCity = document.getElementById('headCity').value.trim();
@@ -912,8 +936,16 @@
         const mName = document.getElementById(`memName_${id}`).value.trim();
         const mGenderKey = document.getElementById(`memGender_${id}`).value;
         const mCNIC = document.getElementById(`memCNIC_${id}`).value.trim();
-        const mLineageKey = document.getElementById(`memLineage_${id}`).value;
+        
+        let mLineage = dict.lineage.Chhippa;
+        if (mRelKey === 'Wife') {
+          const mLineageKey = document.getElementById(`memLineage_${id}`).value;
+          mLineage = dict.lineage[mLineageKey];
+        }
+
         const mEduKey = document.getElementById(`memEdu_${id}`).value;
+        const mEdu = mEduKey === 'Other' ? (document.getElementById(`memEduOther_${id}`).value.trim() || dict.education.Other) : dict.education[mEduKey];
+
         const mJobKey = document.getElementById(`memJob_${id}`).value;
         const mJob = mJobKey === 'Other' ? (document.getElementById(`memJobOther_${id}`).value.trim() || dict.jobs.Other) : dict.jobs[mJobKey];
 
@@ -923,9 +955,9 @@
           relation: dict.relations[mRelKey],
           gender: dict.genders[mGenderKey],
           cnic: mCNIC,
-          edu: dict.education[mEduKey],
+          edu: mEdu,
           job: mJob,
-          lineage: dict.lineage[mLineageKey]
+          lineage: mLineage
         });
       });
 
@@ -938,7 +970,7 @@
           gender: dict.genders[headGenderKey],
           cnic: headCNIC,
           clan: headClan,
-          lineage: headLineage,
+          lineage: dict.lineage.Chhippa,
           edu: headEdu,
           job: headJob,
           phone: headPhone,
@@ -980,7 +1012,7 @@
         <td class="border border-slate-300 p-1.5 font-mono">${record.head.cnic}</td>
         <td class="border border-slate-300 p-1.5">${record.head.edu}</td>
         <td class="border border-slate-300 p-1.5">${record.head.job}</td>
-        <td class="border border-slate-300 p-1.5 text-emerald-800">${record.head.lineage}</td>
+        <td class="border border-slate-300 p-1.5 text-emerald-800 font-bold">${record.head.lineage}</td>
       `;
       tableBody.appendChild(headRow);
 
@@ -995,7 +1027,7 @@
           <td class="border border-slate-300 p-1.5 font-mono">${m.cnic}</td>
           <td class="border border-slate-300 p-1.5">${m.edu}</td>
           <td class="border border-slate-300 p-1.5">${m.job}</td>
-          <td class="border border-slate-300 p-1.5 ${m.lineage.includes('غیر') ? 'text-slate-600' : 'text-emerald-800 font-semibold'}">${m.lineage}</td>
+          <td class="border border-slate-300 p-1.5 ${m.lineage.includes('غیر') || m.lineage.includes('Non') ? 'text-amber-800 font-semibold' : 'text-emerald-800 font-bold'}">${m.lineage}</td>
         `;
         tableBody.appendChild(row);
       });
