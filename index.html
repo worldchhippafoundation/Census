@@ -6,6 +6,9 @@
   <title>World Chhippa Foundation - Global Census & FRC Portal</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- jsPDF & AutoTable for Directory Generation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
   <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
@@ -18,7 +21,6 @@
     }
     .rtl-dir { direction: rtl; text-align: right; }
     .ltr-dir { direction: ltr; text-align: left; }
-    /* Circular Stamp Watermark */
     .watermark-stamp {
       position: absolute;
       top: 50%;
@@ -57,7 +59,7 @@
           <p class="text-[10px] sm:text-xs text-emerald-200 truncate" id="headerSubtitle">Global Census & FRC Portal</p>
         </div>
       </div>
-      <!-- Ultra-Compact Language Switcher -->
+      <!-- Language Switcher -->
       <div class="flex rounded-lg overflow-hidden bg-emerald-950 p-0.5 border border-emerald-700 shrink-0">
         <button type="button" onclick="setLanguage('en')" class="lang-btn px-2.5 py-1 text-xs font-bold rounded bg-emerald-600 text-white" id="btnLangEn">EN</button>
         <button type="button" onclick="setLanguage('ur')" class="lang-btn px-2.5 py-1 text-xs font-bold rounded text-emerald-200 hover:text-white" id="btnLangUr">اردو</button>
@@ -98,48 +100,56 @@
         <!-- Head of Family Section -->
         <div class="border-b border-gray-200 pb-6 mb-6">
           <h2 class="text-lg font-bold text-emerald-800 flex items-center gap-2 mb-4" id="lblHeadInfoTitle">
-            <i class="fa-solid fa-user-tie"></i> Head of Family Information
+            <i class="fa-solid fa-user-tie"></i> Head of Family Information / मुखिया की जानकारी
           </h2>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label class="block text-xs font-bold text-gray-700 uppercase mb-1" id="lblFullName">Full Name *</label>
+              <label class="block text-xs font-bold text-gray-700 uppercase mb-1" id="lblFullName">Full Name / पूरा नाम *</label>
               <input type="text" id="headName" required class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-emerald-600 outline-none">
             </div>
 
             <div>
-              <label class="block text-xs font-bold text-gray-700 uppercase mb-1" id="lblFatherName">Father's Name *</label>
+              <label class="block text-xs font-bold text-gray-700 uppercase mb-1" id="lblFatherName">Father's Name / पिता का नाम *</label>
               <input type="text" id="fatherName" required class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-emerald-600 outline-none">
             </div>
 
             <div>
-              <label class="block text-xs font-bold text-gray-700 uppercase mb-1" id="lblFatherIdNumber">Father's National ID (For Digital Shajra Link)</label>
-              <input type="text" id="fatherIdNumber" placeholder="If father registered, enter CNIC/Aadhaar" class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-emerald-600 outline-none">
+              <label class="block text-xs font-bold text-gray-700 uppercase mb-1" id="lblApplicantIdNumber">Applicant's National ID (CNIC / Aadhaar Card) *</label>
+              <input type="text" id="headIdNumber" required placeholder="Enter CNIC / Aadhaar Number" class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-emerald-600 outline-none">
             </div>
 
             <div>
-              <label class="block text-xs font-bold text-gray-700 uppercase mb-1" id="lblGrandfatherName">Grandfather's Name</label>
-              <input type="text" id="grandfatherName" class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-emerald-600 outline-none">
+              <label class="block text-xs font-bold text-gray-700 uppercase mb-1" id="lblGrandfatherName">Grandfather's Name / दादा का नाम (Optional)</label>
+              <input type="text" id="grandfatherName" placeholder="Optional / वैकल्पिक" class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-emerald-600 outline-none">
             </div>
 
             <div>
-              <label class="block text-xs font-bold text-gray-700 uppercase mb-1" id="lblGoth">Goth / Clan *</label>
-              <input type="text" id="goth" required placeholder="e.g. Tak, Chauhan..." class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-emerald-600 outline-none">
+              <label class="block text-xs font-bold text-gray-700 uppercase mb-1" id="lblGoth">Clan / Shakh (शाख / गोत्र / नख) *</label>
+              <input type="text" id="goth" required placeholder="e.g. Tak, Chauhan, Bhati..." class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-emerald-600 outline-none">
             </div>
 
             <div>
               <label class="block text-xs font-bold text-gray-700 uppercase mb-1" id="lblPhoneHead">Phone / WhatsApp Number *</label>
-              <input type="tel" id="headPhone" required placeholder="e.g. +92 300 1234567" class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-emerald-600 outline-none">
+              <input type="tel" id="headPhone" required placeholder="e.g. +92 300 1234567 / +91 9876543210" class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-emerald-600 outline-none">
             </div>
 
             <div>
-              <label class="block text-xs font-bold text-gray-700 uppercase mb-1" id="lblGender">Gender *</label>
-              <select id="headGender" class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-emerald-600 outline-none"></select>
+              <label class="block text-xs font-bold text-gray-700 uppercase mb-1" id="lblGender">Gender / लिंग *</label>
+              <select id="headGender" required class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-emerald-600 outline-none">
+                <option value="Male">पुरुष / Male</option>
+                <option value="Female">महिला / Female</option>
+              </select>
             </div>
 
             <div>
-              <label class="block text-xs font-bold text-gray-700 uppercase mb-1" id="lblMaritalStatus">Marital Status *</label>
-              <select id="headMarital" onchange="toggleHeadMatrimonial()" class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-emerald-600 outline-none"></select>
+              <label class="block text-xs font-bold text-gray-700 uppercase mb-1" id="lblMaritalStatus">Marital Status / वैवाहिक स्थिति *</label>
+              <select id="headMarital" required class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-emerald-600 outline-none">
+                <option value="Married">विवाहित / Married</option>
+                <option value="Unmarried">अविवाहित / Unmarried</option>
+                <option value="Widowed">विधवा / विधुर / Widowed</option>
+                <option value="Divorced">तलाकशुदा / Divorced</option>
+              </select>
             </div>
 
             <!-- Head DOB -->
@@ -148,45 +158,55 @@
               <div class="grid grid-cols-3 gap-2">
                 <select id="headDobDay" required class="px-2 py-2 border rounded-md focus:ring-2 focus:ring-emerald-600 outline-none"></select>
                 <select id="headDobMonth" required class="px-2 py-2 border rounded-md focus:ring-2 focus:ring-emerald-600 outline-none"></select>
-                <select id="headDobYear" onchange="checkHeadAge()" required class="px-2 py-2 border rounded-md focus:ring-2 focus:ring-emerald-600 outline-none"></select>
+                <select id="headDobYear" required class="px-2 py-2 border rounded-md focus:ring-2 focus:ring-emerald-600 outline-none"></select>
               </div>
             </div>
 
-            <!-- Head National ID (18+) -->
-            <div id="headIdBox" class="md:col-span-2">
-              <label class="block text-xs font-bold text-gray-700 uppercase mb-1" id="lblNationalId">National ID / CNIC / Aadhaar Card *</label>
-              <input type="text" id="headIdNumber" placeholder="Identity card number" class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-emerald-600 outline-none">
+            <!-- Head Occupation & Job Sector -->
+            <div>
+              <label class="block text-xs font-bold text-gray-700 uppercase mb-1" id="lblHeadOccupation">Occupation / पेशा / व्यवसाय *</label>
+              <input type="text" id="headOccupation" required placeholder="e.g. Cloth Merchant, Teacher, Tailor" class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-emerald-600 outline-none">
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-gray-700 uppercase mb-1" id="lblHeadJobType">Job Type / काम का प्रकार *</label>
+              <select id="headJobType" required class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-emerald-600 outline-none">
+                <option value="Business / Self-Employed">व्यापार / Business / Self-Employed</option>
+                <option value="Private Job">प्राइवेट नौकरी / Private Job</option>
+                <option value="Govt Job">सरकारी नौकरी / Govt Job</option>
+                <option value="Student">विद्यार्थी / Student</option>
+                <option value="Homemaker">गृहणी / Housewife</option>
+                <option value="Retired / Other">अन्य / Other</option>
+              </select>
             </div>
 
             <!-- Education -->
             <div>
-              <label class="block text-xs font-bold text-gray-700 uppercase mb-1" id="lblEducation">Education</label>
-              <select id="headEducation" class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-emerald-600 outline-none"></select>
+              <label class="block text-xs font-bold text-gray-700 uppercase mb-1" id="lblEducation">Education / शिक्षा</label>
+              <select id="headEducation" class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-emerald-600 outline-none">
+                <option value="Matric / Below">Matric / Below</option>
+                <option value="Intermediate">Intermediate / 12th</option>
+                <option value="Graduate">Graduate / स्नातक</option>
+                <option value="Post Graduate">Post Graduate / मास्टर</option>
+                <option value="Professional / Diploma">Professional / Diploma</option>
+              </select>
             </div>
 
             <!-- Country & City -->
             <div>
-              <label class="block text-xs font-bold text-gray-700 uppercase mb-1" id="lblCountry">Country *</label>
-              <input type="text" id="country" required class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-emerald-600 outline-none">
+              <label class="block text-xs font-bold text-gray-700 uppercase mb-1" id="lblCountry">Country / देश *</label>
+              <input type="text" id="country" required value="India" class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-emerald-600 outline-none">
             </div>
 
             <div class="md:col-span-2">
-              <label class="block text-xs font-bold text-gray-700 uppercase mb-1" id="lblCity">City *</label>
+              <label class="block text-xs font-bold text-gray-700 uppercase mb-1" id="lblCity">City / शहर *</label>
               <input type="text" id="city" required class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-emerald-600 outline-none">
             </div>
 
             <!-- Residential Address -->
             <div class="md:col-span-2">
               <label class="block text-xs font-bold text-gray-700 uppercase mb-1" id="lblAddress">Residential Address (House / Mohalla / Area) *</label>
-              <textarea id="headAddress" rows="2" required oninput="syncMemberAddresses()" class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-emerald-600 outline-none"></textarea>
-            </div>
-
-            <!-- Discreet Matrimonial Option for Head -->
-            <div id="headMatrimonialContainer" class="hidden md:col-span-2 p-3 bg-amber-50 border border-amber-200 rounded-md">
-              <label class="flex items-center space-x-2 text-sm text-amber-900 cursor-pointer">
-                <input type="checkbox" id="headMatrimonialCheck" class="w-4 h-4 text-emerald-600 rounded">
-                <span id="lblMatrimonialText">Register profile discreetly for Community Matrimonial Matchmaking?</span>
-              </label>
+              <textarea id="headAddress" rows="2" required class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-emerald-600 outline-none"></textarea>
             </div>
           </div>
         </div>
@@ -195,7 +215,7 @@
         <div class="mb-6">
           <div class="flex items-center justify-between mb-4">
             <h2 class="text-lg font-bold text-emerald-800 flex items-center gap-2" id="lblFamilySectionTitle">
-              <i class="fa-solid fa-users"></i> Family Members
+              <i class="fa-solid fa-users"></i> Family Members / परिवार के अन्य सदस्य
             </h2>
           </div>
 
@@ -204,7 +224,7 @@
           <!-- Add Member Button -->
           <div class="mt-4 pt-2">
             <button type="button" onclick="addMemberCard()" class="w-full py-3 border-2 border-dashed border-emerald-600 text-emerald-700 hover:bg-emerald-50 rounded-lg font-semibold flex items-center justify-center gap-2 transition">
-              <i class="fa-solid fa-user-plus"></i> <span id="lblAddMemberBtn">+ Add Family Member</span>
+              <i class="fa-solid fa-user-plus"></i> <span id="lblAddMemberBtn">+ Add Family Member / सदस्य जोड़ें</span>
             </button>
           </div>
         </div>
@@ -245,6 +265,7 @@
         <button onclick="switchView('register')" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 font-semibold rounded text-sm"><i class="fa-solid fa-arrow-left"></i> Back to Portal</button>
         
         <div class="flex gap-2">
+          <!-- WhatsApp Manual Share Button: Auto-trigger strictly removed -->
           <a id="frcWhatsAppBtn" href="#" target="_blank" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-bold rounded shadow text-sm flex items-center gap-2 transition">
             <i class="fa-brands fa-whatsapp text-lg"></i> <span id="lblSendWhatsApp">Send to WhatsApp</span>
           </a>
@@ -288,8 +309,8 @@
         <!-- Details Grid -->
         <div class="relative z-10 grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs mb-6 bg-emerald-50/80 p-4 rounded border border-emerald-200">
           <div><span class="font-bold text-gray-600 block">Family Head:</span> <span id="frcHeadName" class="font-bold text-sm text-gray-900"></span></div>
-          <div><span class="font-bold text-gray-600 block">Father/Husband:</span> <span id="frcFatherName" class="font-semibold text-gray-900"></span></div>
-          <div><span class="font-bold text-gray-600 block">Goth / Clan:</span> <span id="frcGoth" class="font-semibold text-gray-900"></span></div>
+          <div><span class="font-bold text-gray-600 block">Father:</span> <span id="frcFatherName" class="font-semibold text-gray-900"></span></div>
+          <div><span class="font-bold text-gray-600 block">Clan / Shakh:</span> <span id="frcGoth" class="font-semibold text-gray-900"></span></div>
           <div><span class="font-bold text-gray-600 block">Contact Phone:</span> <span id="frcContactPhone" class="font-semibold text-gray-900"></span></div>
           <div><span class="font-bold text-gray-600 block">Location:</span> <span id="frcLocation" class="font-semibold text-gray-900"></span></div>
           <div class="col-span-2 sm:col-span-3"><span class="font-bold text-gray-600 block">Registered Address:</span> <span id="frcAddress" class="text-gray-900"></span></div>
@@ -304,8 +325,8 @@
                 <th class="p-2 border">Full Name</th>
                 <th class="p-2 border">Relation</th>
                 <th class="p-2 border">Gender</th>
-                <th class="p-2 border">Lineage</th>
                 <th class="p-2 border">Identity Card / CNIC</th>
+                <th class="p-2 border">Occupation / Job</th>
                 <th class="p-2 border">Contact No.</th>
               </tr>
             </thead>
@@ -330,40 +351,37 @@
 
     <!-- SECTION 4: Invisible Master Admin Dashboard (PIN: 5492) -->
     <div id="adminSection" class="hidden bg-white rounded-xl shadow-lg p-5 sm:p-8 border border-emerald-700 mt-4">
-      <div class="flex flex-wrap justify-between items-center border-b pb-4 mb-4 gap-2">
+      <div class="flex flex-wrap items-center justify-between border-b pb-4 mb-4 gap-2">
         <div>
-          <h2 class="text-xl font-bold text-emerald-950 flex items-center gap-2">
-            <i class="fa-solid fa-shield-halved text-emerald-700"></i> Master Admin Census Console
+          <h2 class="text-xl font-bold text-emerald-900 flex items-center gap-2">
+            <i class="fa-solid fa-shield-halved"></i> Master Census Administration Dashboard
           </h2>
-          <p class="text-xs text-gray-500">Authorized Personnel Only | Filter, Search & Export</p>
+          <p class="text-xs text-gray-500">Authorized Personnel Only - Community Records & Directory Management</p>
         </div>
         <div class="flex gap-2">
-          <button onclick="exportAdminDataToExcel()" class="px-3 py-1.5 bg-green-700 hover:bg-green-800 text-white rounded text-xs font-bold flex items-center gap-1.5">
-            <button type="button" onclick="generateCommunityDirectoryPDF()" class="px-3 py-1.5 bg-emerald-800 text-white rounded-lg text-xs font-bold hover:bg-emerald-900 flex items-center gap-1.5 shadow-sm transition">
-    <i class="fa-solid fa-book-atlas"></i> Download Directory (A-Z)
-            </button>
-            
-            <i class="fa-solid fa-file-excel"></i> Export Excel (CSV)
+          <!-- One-Click PDF Community Directory Download Button -->
+          <button type="button" onclick="generateCommunityDirectoryPDF()" class="px-4 py-2 bg-emerald-800 hover:bg-emerald-900 text-white font-bold rounded shadow text-xs flex items-center gap-1.5 transition">
+            <i class="fa-solid fa-file-pdf text-amber-300"></i> Download Directory (A-Z)
           </button>
-          <button onclick="window.print()" class="px-3 py-1.5 bg-gray-800 hover:bg-black text-white rounded text-xs font-bold flex items-center gap-1.5">
-            <i class="fa-solid fa-print"></i> Print Admin Report
+          <button type="button" onclick="exportCensusCSV()" class="px-3 py-2 bg-blue-700 hover:bg-blue-800 text-white font-bold rounded shadow text-xs flex items-center gap-1">
+            <i class="fa-solid fa-file-csv"></i> Export CSV
           </button>
-          <button onclick="closeAdminDashboard()" class="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded text-xs font-bold">
-            <i class="fa-solid fa-xmark"></i> Close
+          <button type="button" onclick="closeAdminDashboard()" class="px-3 py-2 bg-gray-200 hover:bg-gray-300 font-bold rounded text-xs">
+            Close
           </button>
         </div>
       </div>
 
-      <!-- Filters Row -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 bg-gray-50 p-4 rounded-lg border mb-6 text-xs">
+      <!-- Admin Filters -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4 bg-gray-50 p-3 rounded-lg border text-xs">
         <div>
-          <label class="block font-bold text-gray-700 mb-1">Search (Name / CNIC / FRC)</label>
-          <input type="text" id="adminSearchQuery" oninput="applyAdminFilters()" placeholder="Type to filter..." class="w-full px-2.5 py-1.5 border rounded">
+          <label class="block font-bold text-gray-600 mb-1">Search Directory</label>
+          <input type="text" id="adminSearchInput" oninput="renderAdminDirectory()" placeholder="Name, Phone, ID, Clan..." class="w-full px-2 py-1.5 border rounded outline-none">
         </div>
         <div>
-          <label class="block font-bold text-gray-700 mb-1">Marital Status</label>
-          <select id="adminFilterMarital" onchange="applyAdminFilters()" class="w-full px-2.5 py-1.5 border rounded">
-            <option value="ALL">All Statuses</option>
+          <label class="block font-bold text-gray-600 mb-1">Marital Status Filter</label>
+          <select id="adminFilterMarital" onchange="renderAdminDirectory()" class="w-full px-2 py-1.5 border rounded outline-none">
+            <option value="ALL">All Marital Statuses</option>
             <option value="Married">Married</option>
             <option value="Unmarried">Unmarried</option>
             <option value="Widowed">Widowed</option>
@@ -371,727 +389,239 @@
           </select>
         </div>
         <div>
-          <label class="block font-bold text-gray-700 mb-1">Age Category</label>
-          <select id="adminFilterAge" onchange="applyAdminFilters()" class="w-full px-2.5 py-1.5 border rounded">
+          <label class="block font-bold text-gray-600 mb-1">Age Filter</label>
+          <select id="adminFilterAge" onchange="renderAdminDirectory()" class="w-full px-2 py-1.5 border rounded outline-none">
             <option value="ALL">All Ages</option>
             <option value="ADULT">Adults (18+)</option>
-            <option value="MINOR">Minors (Under 18)</option>
-          </select>
-        </div>
-        <div>
-          <label class="block font-bold text-gray-700 mb-1">Matrimonial Matchmaking</label>
-          <select id="adminFilterMatrimonial" onchange="applyAdminFilters()" class="w-full px-2.5 py-1.5 border rounded">
-            <option value="ALL">All Records</option>
-            <option value="YES">Matrimonial Opt-in (Yes)</option>
+            <option value="MINOR">Minors (&lt;18)</option>
           </select>
         </div>
       </div>
 
-      <!-- Admin Data Table -->
-      <div class="overflow-x-auto border rounded-lg max-h-[500px]">
+      <!-- Directory Table -->
+      <div class="overflow-x-auto max-h-96 border rounded">
         <table class="w-full text-left text-xs border-collapse">
           <thead class="bg-emerald-900 text-white sticky top-0">
             <tr>
-              <th class="p-2 border">Sub Code</th>
+              <th class="p-2 border">Code</th>
               <th class="p-2 border">Full Name</th>
-              <th class="p-2 border">Relation</th>
               <th class="p-2 border">Father</th>
-              <th class="p-2 border">Goth</th>
-              <th class="p-2 border">CNIC / ID</th>
+              <th class="p-2 border">Clan / Shakh</th>
+              <th class="p-2 border">Occupation</th>
               <th class="p-2 border">Phone</th>
-              <th class="p-2 border">Status</th>
-              <th class="p-2 border">City/Country</th>
-              <th class="p-2 border">Matrimonial</th>
+              <th class="p-2 border">Marital Status</th>
+              <th class="p-2 border">Actions</th>
             </tr>
           </thead>
-          <tbody id="adminTableBody" class="divide-y"></tbody>
+          <tbody id="adminDirectoryTableBody" class="divide-y bg-white"></tbody>
         </table>
       </div>
-      <div class="mt-2 text-right text-xs text-gray-500 font-semibold" id="adminRecordCountDisplay">Showing 0 Records</div>
     </div>
+
   </main>
 
-  <!-- Clean Footer -->
-  <footer class="bg-emerald-950 text-white mt-12 py-5 border-t border-emerald-900 text-xs no-print">
-    <div class="max-w-4xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
-      <div id="footerCopy">© 2026 World Chhippa Foundation. All rights reserved.</div>
-      <div class="text-emerald-300">
-        Official Census & FRC Issuance System
-      </div>
-    </div>
+  <footer class="mt-12 py-6 bg-emerald-950 text-white text-center text-xs">
+    <p>&copy; 2026 World Chhippa Foundation. All rights reserved.</p>
+    <p class="text-emerald-400 mt-1">Official Census &amp; FRC Issuance System</p>
   </footer>
 
   <script>
-    // Master Multilingual Dictionary
-    const i18n = {
-      en: {
-        dir: 'ltr',
-        defaultCountry: 'Pakistan',
-        headerTitle: "World Chhippa Foundation",
-        headerSubtitle: "Global Census & FRC Portal",
-        liveCounter: "Total Registered Community Members:",
-        tabNew: "New Census Registration",
-        tabReprint: "Reprint / Download FRC",
-        headInfoTitle: "Head of Family Information",
-        fullName: "Full Name *",
-        fatherName: "Father's Name *",
-        fatherId: "Father's National ID (For Digital Shajra Link)",
-        grandfatherName: "Grandfather's Name",
-        goth: "Goth / Clan *",
-        phoneHead: "Phone / WhatsApp Number *",
-        phoneOptional: "Phone / Mobile Number (Optional)",
-        gender: "Gender *",
-        maritalStatus: "Marital Status *",
-        dob: "Date of Birth (Day / Month / Year) *",
-        nationalId: "National ID / CNIC / Aadhaar Card *",
-        education: "Education",
-        country: "Country *",
-        city: "City *",
-        address: "Residential Address (House / Mohalla / Area) *",
-        matrimonialText: "Register profile discreetly for Community Matrimonial Matchmaking?",
-        familySectionTitle: "Family Members",
-        addMemberBtn: "+ Add Family Member",
-        submitBtn: "Submit Census & Generate FRC",
-        savingBtn: "Saving Census Record...",
-        sendWhatsApp: "Send to WhatsApp",
-        footerCopy: "© 2026 World Chhippa Foundation. All rights reserved.",
-        sameAddressLabel: "Same as Family Head Residential Address",
-        reprintHeading: "Retrieve Official FRC",
-        reprintSub: "Enter your Unique FRC Code (e.g. WCF-482910) to view, verify, and reprint your family certificate.",
-        fetchReprintBtn: "Search & Print FRC",
-        genders: [ { val: "Male", text: "Male" }, { val: "Female", text: "Female" } ],
-        maritals: [
-          { val: "Married", text: "Married" },
-          { val: "Unmarried", text: "Unmarried" },
-          { val: "Widowed", text: "Widow / Widower" },
-          { val: "Divorced", text: "Divorced" }
-        ],
-        educations: [
-          "Uneducated / Illiterate", "Primary / Middle", "Matric / Secondary (SSC)",
-          "Intermediate / Higher Secondary (HSC)", "Bachelor's Degree (BA, BSc, BCom)",
-          "Engineering (BE / BTech / BS)", "Medical (MBBS / BDS / Pharmacy)",
-          "Master's Degree (MA, MSc, MBA)", "Islamic Studies / Dars-e-Nizami",
-          "Technical / Vocational Diploma", "MPhil / Doctorate (PhD)", "Other"
-        ],
-        relations: [
-          { val: "Spouse", text: "Spouse (Wife / Husband)" },
-          { val: "Son", text: "Son" },
-          { val: "Daughter", text: "Daughter" },
-          { val: "Father", text: "Father" },
-          { val: "Mother", text: "Mother" },
-          { val: "Brother", text: "Brother" },
-          { val: "Sister", text: "Sister" },
-          { val: "Other", text: "Other" }
-        ],
-        communities: [
-          { val: "Chhippa", text: "Chhippa Community" },
-          { val: "Non-Chhippa", text: "Non-Chhippa Family" }
-        ]
-      },
-      ur: {
-        dir: 'rtl',
-        defaultCountry: 'پاکستان',
-        headerTitle: "ورلڈ چھیپا فاؤنڈیشن",
-        headerSubtitle: "عالمی مردم شماری و ایف آر سی پورٹل",
-        liveCounter: "کل رجسٹرڈ برادری کے افراد:",
-        tabNew: "نیا مردم شماری اندراج",
-        tabReprint: "ایف آر سی دوبارہ حاصل کریں",
-        headInfoTitle: "سربراہ خاندان کی معلومات",
-        fullName: "مکمل نام *",
-        fatherName: "والد کا نام *",
-        fatherId: "والد کا شناختی کارڈ نمبر (ڈیجیٹل شجرہ لنک کے لیے)",
-        grandfatherName: "دادا کا نام",
-        goth: "گوتھ / قبیلہ *",
-        phoneHead: "فون / واٹس ایپ نمبر *",
-        phoneOptional: "فون / موبائل نمبر (اختیاری)",
-        gender: "جنس *",
-        maritalStatus: "ازدواجی حیثیت *",
-        dob: "تاریخ پیدائش (دن / مہینہ / سال) *",
-        nationalId: "شناختی کارڈ نمبر / این آئی سی *",
-        education: "تعلیم",
-        country: "ملک *",
-        city: "شہر *",
-        address: "مکمل رہائشی پتہ (مکان / گلی / علاقہ) *",
-        matrimonialText: "کیا اس فرد کو برادری کے باوقار رشتہ ریکارڈ میں شامل کرنا چاہتے ہیں؟",
-        familySectionTitle: "خاندان کے دیگر افراد",
-        addMemberBtn: "+ اگلا فرد شامل کریں",
-        submitBtn: "اندراج مکمل کریں اور ایف آر سی جاری کریں",
-        savingBtn: "اندراج محفوظ ہو رہا ہے...",
-        sendWhatsApp: "واٹس ایپ پر بھیجیں",
-        footerCopy: "© 2026 ورلڈ چھیپا فاؤنڈیشن۔ جملہ حقوق محفوظ ہیں۔",
-        sameAddressLabel: "خاندان کے سربراہ والا پتہ ہی استعمال کریں",
-        reprintHeading: "جاری شدہ ایف آر سی تلاش کریں",
-        reprintSub: "اپنا مخصوص ایف آر سی کوڈ درج کریں اور تصدیق شدہ سرٹیفکیٹ حاصل کریں۔",
-        fetchReprintBtn: "تلاش کریں اور پرنٹ نکالیں",
-        genders: [ { val: "Male", text: "مرد" }, { val: "Female", text: "عورت" } ],
-        maritals: [
-          { val: "Married", text: "شادی شدہ" },
-          { val: "Unmarried", text: "غیر شادی شدہ" },
-          { val: "Widowed", text: "بیوہ / رنڈوا" },
-          { val: "Divorced", text: "طلاق یافتہ" }
-        ],
-        educations: [
-          "ان پڑھ / غیر تعلیم یافتہ", "پرائمری / مڈل", "میٹرک / سیکنڈری",
-          "انٹر / ہائر سیکنڈری", "گریجویشن", "انجینئرنگ", "میڈیکل",
-          "ماسٹرز", "درس نظامی / دینی تعلیم", "ٹیکنیکل ڈپلومہ", "ایم فل / پی ایچ ڈی", "دیگر"
-        ],
-        relations: [
-          { val: "Spouse", text: "شریک حیات (بیوی / شوہر)" },
-          { val: "Son", text: "بیٹا" },
-          { val: "Daughter", text: "بیٹی" },
-          { val: "Father", text: "والد" },
-          { val: "Mother", text: "والدہ" },
-          { val: "Brother", text: "بھائی" },
-          { val: "Sister", text: "بہن" },
-          { val: "Other", text: "دیگر" }
-        ],
-        communities: [
-          { val: "Chhippa", text: "چھیپا برادری" },
-          { val: "Non-Chhippa", text: "غیر چھیپا برادری" }
-        ]
-      },
-      hi: {
-        dir: 'ltr',
-        defaultCountry: 'भारत',
-        headerTitle: "वर्ल्ड छीपा फाउंडेशन",
-        headerSubtitle: "वैश्विक जनगणना एवं एफआरसी पोर्टल",
-        liveCounter: "कुल पंजीकृत समाज के सदस्य:",
-        tabNew: "नया जनगणना पंजीकरण",
-        tabReprint: "एफआरसी पुनः प्राप्त करें",
-        headInfoTitle: "परिवार के मुखिया का विवरण",
-        fullName: "पूरा नाम *",
-        fatherName: "पिता का नाम *",
-        fatherId: "पिता का पहचान पत्र (डिजिटल शजरा लिंक के लिए)",
-        grandfatherName: "दादा का नाम",
-        goth: "गोत्र / कबीला *",
-        phoneHead: "फोन / व्हाट्सएप नंबर *",
-        phoneOptional: "फोन / मोबाइल नंबर (वैकल्पिक)",
-        gender: "लिंग *",
-        maritalStatus: "वैवाहिक स्थिति *",
-        dob: "जन्म तिथि (दिन / माह / वर्ष) *",
-        nationalId: "आधार कार्ड / पहचान पत्र संख्या *",
-        education: "शिक्षा",
-        country: "देश *",
-        city: "शहर *",
-        address: "पूरा आवासीय पता (मकान / मोहल्ला / क्षेत्र) *",
-        matrimonialText: "क्या इनका नाम समाज के विवाह मार्गदर्शन रिकॉर्ड में शामिल करना चाहते हैं?",
-        familySectionTitle: "परिवार के अन्य सदस्य",
-        addMemberBtn: "+ अगला सदस्य जोड़ें",
-        submitBtn: "पंजीकरण दर्ज करें और एफआरसी प्राप्त करें",
-        savingBtn: "विवरण सुरक्षित किया जा रहा है...",
-        sendWhatsApp: "व्हाट्सएप पर भेजें",
-        footerCopy: "© 2026 वर्ल्ड छीपा फाउंडेशन। सर्वाधिकार सुरक्षित।",
-        sameAddressLabel: "मुखिया का आवासीय पता ही लागू करें",
-        reprintHeading: "एफआरसी खोजें और प्रिंट करें",
-        reprintSub: "अपना विशिष्ट एफआरसी कोड दर्ज करें और प्रमाण पत्र पुनः प्राप्त करें।",
-        fetchReprintBtn: "खोजें और प्रिंट करें",
-        genders: [ { val: "Male", text: "पुरुष" }, { val: "Female", text: "महिला" } ],
-        maritals: [
-          { val: "Married", text: "विवाहित" },
-          { val: "Unmarried", text: "अविवाहित" },
-          { val: "Widowed", text: "विधवा / विधुर" },
-          { val: "Divorced", text: "तलाकशुदा" }
-        ],
-        educations: [
-          "अशिक्षित", "प्राथमिक / मिडिल", "मैट्रिक (10वीं)",
-          "इंटरमीडिएट (12वीं)", "स्नातक", "इंजीनियरिंग", "मेडिकल",
-          "स्नातकोत्तर", "धार्मिक शिक्षा", "तकनीकी डिप्लोमा", "पीएचडी", "अन्य"
-        ],
-        relations: [
-          { val: "Spouse", text: "जीवनसाथी (पत्नी / पति)" },
-          { val: "Son", text: "पुत्र" },
-          { val: "Daughter", text: "पुत्री" },
-          { val: "Father", text: "पिता" },
-          { val: "Mother", text: "माता" },
-          { val: "Brother", text: "भाई" },
-          { val: "Sister", text: "बहन" },
-          { val: "Other", text: "अन्य" }
-        ],
-        communities: [
-          { val: "Chhippa", text: "छीपा समुदाय" },
-          { val: "Non-Chhippa", text: "गैर-छीपा परिवार" }
-        ]
-      }
-    };
+    // --- GLOBAL DATA & CONFIG ---
+    let censusDatabase = JSON.parse(localStorage.getItem('wcf_census_data') || '[]');
+    let secretLogoClicks = 0;
+    let logoTimer = null;
 
-    let currentLang = 'en';
-    let memberCount = 0;
-    let allCensusRecords = []; // Admin cache
-    let secretClickCount = 0;
-    let secretClickTimer = null;
-
-    // Firebase Config
-    const firebaseConfig = {
-      apiKey: "AIzaSyChhippaCensusMasterKey2026",
-      authDomain: "chippa-census.firebaseapp.com",
-      projectId: "chippa-census",
-      storageBucket: "chippa-census.appspot.com",
-      messagingSenderId: "1098234876",
-      appId: "1:1098234876:web:chhippacensuskey"
-    };
-
-    let db = null;
-    try {
-      if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-      db = firebase.firestore();
-      setupUniversalCounterListener();
-    } catch(err) {
-      console.warn("Firebase Init Fallback:", err);
-      document.getElementById('universalCounterDisplay').innerText = "Active";
-    }
-
-    // Universal Counter Live Sync (Count members accurately)
-    function setupUniversalCounterListener() {
-      if (!db) return;
-      db.collection("census_entries").onSnapshot((snapshot) => {
-        let totalCount = 0;
-        allCensusRecords = [];
-        snapshot.forEach(doc => {
-          const data = doc.data();
-          allCensusRecords.push(data);
-          // 1 for Head + count of members
-          totalCount += 1 + (data.members ? data.members.length : 0);
-        });
-        document.getElementById('universalCounterDisplay').innerText = totalCount.toLocaleString();
-        if (!document.getElementById('adminSection').classList.contains('hidden')) {
-          applyAdminFilters();
-        }
-      }, err => {
-        console.error("Counter stream error:", err);
-      });
-    }
-
-    function initDobDropdowns() {
-      const dSel = document.getElementById('headDobDay');
-      const mSel = document.getElementById('headDobMonth');
-      const ySel = document.getElementById('headDobYear');
-
-      dSel.innerHTML = '<option value="">Day</option>' + Array.from({length: 31}, (_, i) => `<option value="${i+1}">${i+1}</option>`).join('');
-      mSel.innerHTML = '<option value="">Month</option>' + Array.from({length: 12}, (_, i) => `<option value="${i+1}">${i+1}</option>`).join('');
+    // --- POPULATE DATE DROPDOWNS ---
+    function initDateDropdowns() {
+      const daySel = document.getElementById('headDobDay');
+      const monthSel = document.getElementById('headDobMonth');
+      const yearSel = document.getElementById('headDobYear');
       
-      let yearsHtml = '<option value="">Year</option>';
-      for (let y = 2026; y >= 1920; y--) { yearsHtml += `<option value="${y}">${y}</option>`; }
-      ySel.innerHTML = yearsHtml;
-    }
+      daySel.innerHTML = '<option value="">Day / दिन</option>';
+      for (let i = 1; i <= 31; i++) {
+        daySel.innerHTML += `<option value="${i}">${i}</option>`;
+      }
 
-    function populateHeadOptions(lang) {
-      const t = i18n[lang];
-      const gSel = document.getElementById('headGender');
-      const curG = gSel.value || "Male";
-      gSel.innerHTML = t.genders.map(g => `<option value="${g.val}">${g.text}</option>`).join('');
-      gSel.value = curG;
-
-      const mSel = document.getElementById('headMarital');
-      const curM = mSel.value || "Married";
-      mSel.innerHTML = t.maritals.map(m => `<option value="${m.val}">${m.text}</option>`).join('');
-      mSel.value = curM;
-
-      const eSel = document.getElementById('headEducation');
-      const curE = eSel.value;
-      eSel.innerHTML = t.educations.map(e => `<option value="${e}">${e}</option>`).join('');
-      if (curE) eSel.value = curE;
-    }
-
-    function setLanguage(lang) {
-      currentLang = lang;
-      const t = i18n[lang];
-
-      ['en', 'ur', 'hi'].forEach(l => {
-        const btn = document.getElementById(`btnLang${l.charAt(0).toUpperCase() + l.slice(1)}`);
-        if (l === lang) {
-          btn.className = "lang-btn px-2.5 py-1 text-xs font-bold rounded bg-emerald-600 text-white";
-        } else {
-          btn.className = "lang-btn px-2.5 py-1 text-xs font-bold rounded text-emerald-200 hover:text-white";
-        }
+      const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+      monthSel.innerHTML = '<option value="">Month / माह</option>';
+      months.forEach((m, idx) => {
+        monthSel.innerHTML += `<option value="${idx + 1}">${m}</option>`;
       });
 
-      document.documentElement.dir = t.dir;
-      const main = document.getElementById('mainContainer');
-      if (t.dir === 'rtl') {
-        main.classList.remove('ltr-dir');
-        main.classList.add('rtl-dir');
-      } else {
-        main.classList.remove('rtl-dir');
-        main.classList.add('ltr-dir');
-      }
-
-      document.getElementById('headerTitle').innerText = t.headerTitle;
-      document.getElementById('headerSubtitle').innerText = t.headerSubtitle;
-      document.getElementById('lblLiveCounterText').innerText = t.liveCounter;
-      document.getElementById('lblTabNew').innerText = t.tabNew;
-      document.getElementById('lblTabReprint').innerText = t.tabReprint;
-      document.getElementById('lblHeadInfoTitle').innerHTML = `<i class="fa-solid fa-user-tie"></i> ${t.headInfoTitle}`;
-      document.getElementById('lblFullName').innerText = t.fullName;
-      document.getElementById('lblFatherName').innerText = t.fatherName;
-      document.getElementById('lblFatherIdNumber').innerText = t.fatherId;
-      document.getElementById('lblGrandfatherName').innerText = t.grandfatherName;
-      document.getElementById('lblGoth').innerText = t.goth;
-      document.getElementById('lblPhoneHead').innerText = t.phoneHead;
-      document.getElementById('lblGender').innerText = t.gender;
-      document.getElementById('lblMaritalStatus').innerText = t.maritalStatus;
-      document.getElementById('lblDob').innerText = t.dob;
-      document.getElementById('lblNationalId').innerText = t.nationalId;
-      document.getElementById('lblEducation').innerText = t.education;
-      document.getElementById('lblCountry').innerText = t.country;
-      document.getElementById('lblCity').innerText = t.city;
-      document.getElementById('lblAddress').innerText = t.address;
-      document.getElementById('lblMatrimonialText').innerText = t.matrimonialText;
-      document.getElementById('lblFamilySectionTitle').innerHTML = `<i class="fa-solid fa-users"></i> ${t.familySectionTitle}`;
-      document.getElementById('lblAddMemberBtn').innerText = t.addMemberBtn;
-      document.getElementById('lblSubmitBtn').innerText = t.submitBtn;
-      document.getElementById('lblSendWhatsApp').innerText = t.sendWhatsApp;
-      document.getElementById('footerCopy').innerText = t.footerCopy;
-
-      document.getElementById('lblReprintHeading').innerText = t.reprintHeading;
-      document.getElementById('lblReprintSub').innerText = t.reprintSub;
-      document.getElementById('lblFetchReprintBtn').innerText = t.fetchReprintBtn;
-
-      populateHeadOptions(lang);
-
-      const countryInput = document.getElementById('country');
-      if (!countryInput.value.trim() || ['Pakistan', 'پاکستان', 'भारत'].includes(countryInput.value.trim())) {
-        countryInput.value = t.defaultCountry;
-      }
-
-      updateAllMembersLanguage(lang);
-    }
-
-    function checkHeadAge() {
-      const year = parseInt(document.getElementById('headDobYear').value);
-      const box = document.getElementById('headIdBox');
-      const input = document.getElementById('headIdNumber');
-      if (year && (2026 - year) >= 18) {
-        box.classList.remove('hidden');
-        input.required = true;
-      } else {
-        box.classList.add('hidden');
-        input.required = false;
+      const currentYear = 2026;
+      yearSel.innerHTML = '<option value="">Year / वर्ष</option>';
+      for (let y = currentYear; y >= currentYear - 110; y--) {
+        yearSel.innerHTML += `<option value="${y}">${y}</option>`;
       }
     }
 
-    function toggleHeadMatrimonial() {
-      const status = document.getElementById('headMarital').value;
-      const box = document.getElementById('headMatrimonialContainer');
-      if (['Unmarried', 'Widowed', 'Divorced'].includes(status)) {
-        box.classList.remove('hidden');
-      } else {
-        box.classList.add('hidden');
-        document.getElementById('headMatrimonialCheck').checked = false;
-      }
-    }
-
+    // --- MEMBER CARD MANAGEMENT ---
     function addMemberCard() {
-      memberCount++;
-      const id = memberCount;
-      const t = i18n[currentLang];
-      const container = document.getElementById('membersContainer');
-      const headAddressVal = document.getElementById('headAddress').value || '';
-
-      const card = document.createElement('div');
-      card.id = `memberCard_${id}`;
-      card.className = "p-4 border border-gray-300 rounded-lg bg-gray-50 relative space-y-4";
-
-      card.innerHTML = `
-        <div class="flex justify-between items-center border-b pb-2">
-          <span class="font-bold text-emerald-900 text-sm">#${id} Member</span>
-          <button type="button" onclick="removeMemberCard(${id})" class="text-red-500 hover:text-red-700 text-xs font-semibold">
-            <i class="fa-solid fa-trash"></i> Remove
-          </button>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
-          <div>
-            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">${t.fullName}</label>
-            <input type="text" id="memName_${id}" required class="w-full px-3 py-2 border rounded bg-white">
+      const memberId = 'mem_' + Date.now();
+      const cardHtml = `
+        <div id="${memberId}" class="p-4 bg-gray-50 border border-gray-200 rounded-lg relative space-y-3">
+          <div class="flex justify-between items-center border-b pb-2">
+            <span class="font-bold text-sm text-emerald-900"># Member (सदस्य)</span>
+            <button type="button" onclick="document.getElementById('${memberId}').remove(); updateUniversalCounter();" class="text-xs text-red-600 hover:text-red-800 font-bold flex items-center gap-1">
+              <i class="fa-solid fa-trash"></i> हटाएं (Remove)
+            </button>
           </div>
-
-          <div>
-            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Relation *</label>
-            <select id="memRelation_${id}" onchange="checkRelation(${id})" class="w-full px-3 py-2 border rounded bg-white"></select>
-          </div>
-
-          <div id="spouseCommunityBox_${id}" class="md:col-span-2 p-2 bg-emerald-50 rounded border border-emerald-200">
-            <label class="block text-xs font-bold text-emerald-900 uppercase mb-1">Community Lineage *</label>
-            <select id="memCommunity_${id}" class="w-full px-3 py-1.5 border rounded bg-white"></select>
-          </div>
-
-          <div>
-            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">${t.phoneOptional}</label>
-            <input type="tel" id="memPhone_${id}" placeholder="Optional mobile number" class="w-full px-3 py-2 border rounded bg-white">
-          </div>
-
-          <div>
-            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">${t.gender}</label>
-            <select id="memGender_${id}" class="w-full px-3 py-2 border rounded bg-white"></select>
-          </div>
-
-          <div>
-            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">${t.maritalStatus}</label>
-            <select id="memMarital_${id}" onchange="toggleMemMatrimonial(${id})" class="w-full px-3 py-2 border rounded bg-white"></select>
-          </div>
-
-          <div class="md:col-span-2">
-            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">${t.dob}</label>
-            <div class="grid grid-cols-3 gap-2">
-              <select id="memDobDay_${id}" class="px-2 py-2 border rounded bg-white"></select>
-              <select id="memDobMonth_${id}" class="px-2 py-2 border rounded bg-white"></select>
-              <select id="memDobYear_${id}" onchange="checkMemberAge(${id})" class="px-2 py-2 border rounded bg-white"></select>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-[11px] font-bold text-gray-600 uppercase mb-1">पूरा नाम (Full Name) *</label>
+              <input type="text" class="mem-name w-full px-3 py-1.5 border rounded text-sm focus:ring-2 focus:ring-emerald-600 outline-none" required>
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-gray-600 uppercase mb-1">रिश्ता / संबंध (Relation) *</label>
+              <select class="mem-relation w-full px-3 py-1.5 border rounded text-sm focus:ring-2 focus:ring-emerald-600 outline-none" required>
+                <option value="Wife">जीवनसाथी / पत्नी (Wife)</option>
+                <option value="Husband">पति (Husband)</option>
+                <option value="Son">बेटा (Son)</option>
+                <option value="Daughter">बेटी (Daughter)</option>
+                <option value="Father">पिता (Father)</option>
+                <option value="Mother">माता (Mother)</option>
+                <option value="Brother">भाई (Brother)</option>
+                <option value="Sister">बहन (Sister)</option>
+                <option value="Other">अन्य (Other)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-gray-600 uppercase mb-1">लिंग (Gender) *</label>
+              <select class="mem-gender w-full px-3 py-1.5 border rounded text-sm focus:ring-2 focus:ring-emerald-600 outline-none" required>
+                <option value="Male">पुरुष (Male)</option>
+                <option value="Female">महिला (Female)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-gray-600 uppercase mb-1">पहचान पत्र / आधार / CNIC</label>
+              <input type="text" class="mem-id w-full px-3 py-1.5 border rounded text-sm outline-none" placeholder="वैकल्पिक / Optional">
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-gray-600 uppercase mb-1">पेशा / व्यवसाय (Occupation)</label>
+              <input type="text" class="mem-occupation w-full px-3 py-1.5 border rounded text-sm outline-none" placeholder="e.g. Student, Tailor, Private Job">
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-gray-600 uppercase mb-1">काम का प्रकार (Job Type)</label>
+              <select class="mem-jobtype w-full px-3 py-1.5 border rounded text-sm outline-none">
+                <option value="None / Dependent">आश्रित / Dependent</option>
+                <option value="Student">विद्यार्थी / Student</option>
+                <option value="Homemaker">गृहणी / Housewife</option>
+                <option value="Business / Self-Employed">व्यापार / Business</option>
+                <option value="Private Job">प्राइवेट नौकरी / Private Job</option>
+                <option value="Govt Job">सरकारी नौकरी / Govt Job</option>
+                <option value="Other">अन्य / Other</option>
+              </select>
             </div>
           </div>
-
-          <div id="memIdBox_${id}" class="hidden md:col-span-2">
-            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">${t.nationalId}</label>
-            <input type="text" id="memIdNum_${id}" placeholder="Identity card number" class="w-full px-3 py-2 border rounded bg-white">
-          </div>
-
-          <div>
-            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">${t.education}</label>
-            <select id="memEdu_${id}" class="w-full px-3 py-2 border rounded bg-white"></select>
-          </div>
-
-          <div id="memMatrimonialContainer_${id}" class="hidden md:col-span-2 p-2 bg-amber-50 border border-amber-200 rounded">
-            <label class="flex items-center space-x-2 text-xs text-amber-900 cursor-pointer">
-              <input type="checkbox" id="memMatrimonialCheck_${id}" class="w-4 h-4 text-emerald-600 rounded">
-              <span>${t.matrimonialText}</span>
+          <!-- Different Address Option -->
+          <div class="pt-1">
+            <label class="inline-flex items-center text-xs text-gray-700 cursor-pointer">
+              <input type="checkbox" onchange="document.getElementById('addr_${memberId}').classList.toggle('hidden')" class="w-3.5 h-3.5 text-emerald-600 rounded">
+              <span class="ml-1.5 font-semibold text-gray-600">क्या सदस्य का पता मुखिया से अलग है? (Different Address)</span>
             </label>
-          </div>
-
-          <div class="md:col-span-2 pt-2 border-t border-gray-200">
-            <label class="flex items-center space-x-2 text-xs font-semibold text-gray-700 mb-1 cursor-pointer">
-              <input type="checkbox" id="sameAddressCheck_${id}" checked onchange="toggleMemberAddress(${id})" class="rounded text-emerald-600">
-              <span id="lblSameAddress_${id}">${t.sameAddressLabel}</span>
-            </label>
-            <textarea id="memAddress_${id}" rows="1" class="w-full px-3 py-1.5 border rounded bg-gray-100 text-xs" readonly>${headAddressVal}</textarea>
+            <div id="addr_${memberId}" class="hidden mt-2">
+              <textarea class="mem-diff-address w-full px-3 py-1.5 border rounded text-xs outline-none focus:ring-2 focus:ring-emerald-600" rows="2" placeholder="सदस्य का अलग पता दर्ज करें (Enter Member's Address)"></textarea>
+            </div>
           </div>
         </div>
       `;
-
-      container.appendChild(card);
-
-      document.getElementById(`memDobDay_${id}`).innerHTML = '<option value="">Day</option>' + Array.from({length: 31}, (_, i) => `<option value="${i+1}">${i+1}</option>`).join('');
-      document.getElementById(`memDobMonth_${id}`).innerHTML = '<option value="">Month</option>' + Array.from({length: 12}, (_, i) => `<option value="${i+1}">${i+1}</option>`).join('');
-      let yearsHtml = '<option value="">Year</option>';
-      for (let y = 2026; y >= 1920; y--) { yearsHtml += `<option value="${y}">${y}</option>`; }
-      document.getElementById(`memDobYear_${id}`).innerHTML = yearsHtml;
-
-      populateMemberOptions(id, currentLang);
-      checkRelation(id);
+      document.getElementById('membersContainer').insertAdjacentHTML('beforeend', cardHtml);
     }
 
-    function populateMemberOptions(id, lang) {
-      const t = i18n[lang];
-      const rSel = document.getElementById(`memRelation_${id}`);
-      if (rSel) {
-        const cur = rSel.value || "Spouse";
-        rSel.innerHTML = t.relations.map(r => `<option value="${r.val}">${r.text}</option>`).join('');
-        rSel.value = cur;
-      }
-      const cSel = document.getElementById(`memCommunity_${id}`);
-      if (cSel) {
-        const cur = cSel.value || "Chhippa";
-        cSel.innerHTML = t.communities.map(c => `<option value="${c.val}">${c.text}</option>`).join('');
-        cSel.value = cur;
-      }
-      const gSel = document.getElementById(`memGender_${id}`);
-      if (gSel) {
-        const cur = gSel.value || "Male";
-        gSel.innerHTML = t.genders.map(g => `<option value="${g.val}">${g.text}</option>`).join('');
-        gSel.value = cur;
-      }
-      const mSel = document.getElementById(`memMarital_${id}`);
-      if (mSel) {
-        const cur = mSel.value || "Married";
-        mSel.innerHTML = t.maritals.map(m => `<option value="${m.val}">${m.text}</option>`).join('');
-        mSel.value = cur;
-      }
-      const eSel = document.getElementById(`memEdu_${id}`);
-      if (eSel) {
-        const cur = eSel.value;
-        eSel.innerHTML = t.educations.map(e => `<option value="${e}">${e}</option>`).join('');
-        if (cur) eSel.value = cur;
-      }
-    }
-
-    function updateAllMembersLanguage(lang) {
-      document.querySelectorAll('[id^="memberCard_"]').forEach(card => {
-        const id = card.id.split('_')[1];
-        populateMemberOptions(id, lang);
-        const sameLbl = document.getElementById(`lblSameAddress_${id}`);
-        if (sameLbl) sameLbl.innerText = i18n[lang].sameAddressLabel;
-      });
-    }
-
-    function removeMemberCard(id) {
-      const card = document.getElementById(`memberCard_${id}`);
-      if (card) card.remove();
-    }
-
-    function checkRelation(id) {
-      const rel = document.getElementById(`memRelation_${id}`).value;
-      const communityBox = document.getElementById(`spouseCommunityBox_${id}`);
-      if (rel === 'Spouse') communityBox.classList.remove('hidden');
-      else communityBox.classList.add('hidden');
-    }
-
-    function checkMemberAge(id) {
-      const yr = parseInt(document.getElementById(`memDobYear_${id}`).value);
-      const box = document.getElementById(`memIdBox_${id}`);
-      const input = document.getElementById(`memIdNum_${id}`);
-      if (yr && (2026 - yr) >= 18) {
-        box.classList.remove('hidden');
-        input.required = true;
-      } else {
-        box.classList.add('hidden');
-        input.required = false;
-      }
-    }
-
-    function toggleMemMatrimonial(id) {
-      const st = document.getElementById(`memMarital_${id}`).value;
-      const box = document.getElementById(`memMatrimonialContainer_${id}`);
-      if (['Unmarried', 'Widowed', 'Divorced'].includes(st)) {
-        box.classList.remove('hidden');
-      } else {
-        box.classList.add('hidden');
-        document.getElementById(`memMatrimonialCheck_${id}`).checked = false;
-      }
-    }
-
-    function toggleMemberAddress(id) {
-      const isSame = document.getElementById(`sameAddressCheck_${id}`).checked;
-      const area = document.getElementById(`memAddress_${id}`);
-      if (isSame) {
-        area.value = document.getElementById('headAddress').value;
-        area.setAttribute('readonly', true);
-        area.className = "w-full px-3 py-1.5 border rounded bg-gray-100 text-xs";
-      } else {
-        area.removeAttribute('readonly');
-        area.className = "w-full px-3 py-1.5 border rounded bg-white text-xs";
-      }
-    }
-
-    function syncMemberAddresses() {
-      const mainAddr = document.getElementById('headAddress').value;
-      document.querySelectorAll('[id^="sameAddressCheck_"]').forEach(check => {
-        const id = check.id.split('_')[1];
-        if (check.checked) {
-          const area = document.getElementById(`memAddress_${id}`);
-          if (area) area.value = mainAddr;
-        }
-      });
-    }
-
-    // View Switching
+    // --- VIEW SWITCHER ---
     function switchView(view) {
-      const formSec = document.getElementById('formSection');
-      const repSec = document.getElementById('reprintSection');
-      const frcSec = document.getElementById('frcResultSection');
-      const adminSec = document.getElementById('adminSection');
-      const tabReg = document.getElementById('tabRegister');
-      const tabRep = document.getElementById('tabReprint');
-
-      adminSec.classList.add('hidden');
+      document.getElementById('formSection').classList.add('hidden');
+      document.getElementById('reprintSection').classList.add('hidden');
+      document.getElementById('frcResultSection').classList.add('hidden');
+      
+      const tabR = document.getElementById('tabRegister');
+      const tabP = document.getElementById('tabReprint');
 
       if (view === 'register') {
-        formSec.classList.remove('hidden');
-        repSec.classList.add('hidden');
-        frcSec.classList.add('hidden');
-        tabReg.className = "flex-1 py-2 rounded-t-lg font-bold text-xs sm:text-sm bg-white text-emerald-900 border-t-2 border-emerald-600 shadow-sm flex items-center justify-center gap-1.5";
-        tabRep.className = "flex-1 py-2 rounded-t-lg font-bold text-xs sm:text-sm bg-gray-200 text-gray-700 hover:bg-gray-300 flex items-center justify-center gap-1.5 transition";
+        document.getElementById('formSection').classList.remove('hidden');
+        tabR.className = "flex-1 py-2 rounded-t-lg font-bold text-xs sm:text-sm bg-white text-emerald-900 border-t-2 border-emerald-600 shadow-sm flex items-center justify-center gap-1.5";
+        tabP.className = "flex-1 py-2 rounded-t-lg font-bold text-xs sm:text-sm bg-gray-200 text-gray-700 hover:bg-gray-300 flex items-center justify-center gap-1.5 transition";
       } else if (view === 'reprint') {
-        formSec.classList.add('hidden');
-        repSec.classList.remove('hidden');
-        frcSec.classList.add('hidden');
-        tabRep.className = "flex-1 py-2 rounded-t-lg font-bold text-xs sm:text-sm bg-white text-emerald-900 border-t-2 border-emerald-600 shadow-sm flex items-center justify-center gap-1.5";
-        tabReg.className = "flex-1 py-2 rounded-t-lg font-bold text-xs sm:text-sm bg-gray-200 text-gray-700 hover:bg-gray-300 flex items-center justify-center gap-1.5 transition";
+        document.getElementById('reprintSection').classList.remove('hidden');
+        tabP.className = "flex-1 py-2 rounded-t-lg font-bold text-xs sm:text-sm bg-white text-emerald-900 border-t-2 border-emerald-600 shadow-sm flex items-center justify-center gap-1.5";
+        tabR.className = "flex-1 py-2 rounded-t-lg font-bold text-xs sm:text-sm bg-gray-200 text-gray-700 hover:bg-gray-300 flex items-center justify-center gap-1.5 transition";
+      } else if (view === 'result') {
+        document.getElementById('frcResultSection').classList.remove('hidden');
       }
     }
 
-    // Submit Handler with Digital Shajra Linking
-    async function handleFormSubmit(e) {
+    // --- FORM SUBMIT HANDLER ---
+    function handleFormSubmit(e) {
       e.preventDefault();
-      const btn = document.getElementById('submitBtn');
-      btn.disabled = true;
-      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> ${i18n[currentLang].savingBtn}`;
 
-      const randomId = Math.floor(100000 + Math.random() * 900000);
-      const frcBaseCode = `WCF-${randomId}`;
+      const baseCode = 'WCF-' + Math.floor(100000 + Math.random() * 900000);
+      const headName = document.getElementById('headName').value.trim();
+      const fatherName = document.getElementById('fatherName').value.trim();
+      const grandfatherName = document.getElementById('grandfatherName').value.trim();
+      const headId = document.getElementById('headIdNumber').value.trim();
+      const goth = document.getElementById('goth').value.trim();
+      const phone = document.getElementById('headPhone').value.trim();
+      const gender = document.getElementById('headGender').value;
+      const marital = document.getElementById('headMarital').value;
+      const dob = `${document.getElementById('headDobDay').value}-${document.getElementById('headDobMonth').value}-${document.getElementById('headDobYear').value}`;
+      const occupation = document.getElementById('headOccupation').value.trim();
+      const jobType = document.getElementById('headJobType').value;
+      const education = document.getElementById('headEducation').value;
+      const country = document.getElementById('country').value.trim();
+      const city = document.getElementById('city').value.trim();
+      const address = document.getElementById('headAddress').value.trim();
 
-      const headRecord = {
-        subCode: `${frcBaseCode}-01`,
-        fullName: document.getElementById('headName').value.trim(),
-        relation: "Head of Family",
-        father: document.getElementById('fatherName').value.trim(),
-        fatherIdNumber: document.getElementById('fatherIdNumber').value.trim() || 'N/A',
-        grandfather: document.getElementById('grandfatherName').value.trim(),
-        goth: document.getElementById('goth').value.trim(),
-        phone: document.getElementById('headPhone').value.trim(),
-        gender: document.getElementById('headGender').value,
-        marital: document.getElementById('headMarital').value,
-        dob: `${document.getElementById('headDobDay').value}/${document.getElementById('headDobMonth').value}/${document.getElementById('headDobYear').value}`,
-        idNumber: document.getElementById('headIdNumber').value.trim() || 'N/A',
-        education: document.getElementById('headEducation').value,
-        country: document.getElementById('country').value.trim(),
-        city: document.getElementById('city').value.trim(),
-        address: document.getElementById('headAddress').value.trim(),
-        matrimonial: document.getElementById('headMatrimonialCheck').checked,
-        community: "Chhippa"
-      };
-
+      // Gather members
+      const memberCards = document.querySelectorAll('#membersContainer > div');
       const members = [];
-      const memberCards = document.querySelectorAll('[id^="memberCard_"]');
-      let subIndex = 2;
-
-      memberCards.forEach(card => {
-        const id = card.id.split('_')[1];
-        const subCode = `${frcBaseCode}-${String(subIndex).padStart(2, '0')}`;
-        subIndex++;
-
+      memberCards.forEach((card, idx) => {
         members.push({
-          subCode: subCode,
-          fullName: document.getElementById(`memName_${id}`).value.trim(),
-          relation: document.getElementById(`memRelation_${id}`).value,
-          community: document.getElementById(`memCommunity_${id}`) ? document.getElementById(`memCommunity_${id}`).value : "Chhippa",
-          phone: document.getElementById(`memPhone_${id}`).value.trim() || 'N/A',
-          gender: document.getElementById(`memGender_${id}`).value,
-          marital: document.getElementById(`memMarital_${id}`).value,
-          dob: `${document.getElementById(`memDobDay_${id}`).value}/${document.getElementById(`memDobMonth_${id}`).value}/${document.getElementById(`memDobYear_${id}`).value}`,
-          idNumber: document.getElementById(`memIdNum_${id}`) ? (document.getElementById(`memIdNum_${id}`).value.trim() || 'N/A') : 'N/A',
-          education: document.getElementById(`memEdu_${id}`).value,
-          address: document.getElementById(`memAddress_${id}`).value.trim(),
-          matrimonial: document.getElementById(`memMatrimonialCheck_${id}`) ? document.getElementById(`memMatrimonialCheck_${id}`).checked : false
+          uid: `${baseCode}-M${idx + 1}`,
+          name: card.querySelector('.mem-name').value.trim(),
+          relation: card.querySelector('.mem-relation').value,
+          gender: card.querySelector('.mem-gender').value,
+          idNumber: card.querySelector('.mem-id').value.trim() || 'N/A',
+          occupation: card.querySelector('.mem-occupation').value.trim() || 'N/A',
+          jobType: card.querySelector('.mem-jobtype').value,
+          diffAddress: card.querySelector('.mem-diff-address') ? card.querySelector('.mem-diff-address').value.trim() : ''
         });
       });
 
-      const submissionPayload = {
-        frcBaseCode: frcBaseCode,
-        createdAt: new Date().toISOString(),
-        issueDate: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
-        head: headRecord,
+      const entry = {
+        frcBaseCode: baseCode,
+        head: {
+          fullName: headName,
+          father: fatherName,
+          grandfather: grandfatherName,
+          nationalId: headId,
+          goth: goth,
+          phone: phone,
+          gender: gender,
+          marital: marital,
+          dob: dob,
+          occupation: occupation,
+          jobType: jobType,
+          education: education,
+          country: country,
+          city: city,
+          address: address
+        },
         members: members,
-        totalHeadCount: members.length + 1
+        createdAt: new Date().toLocaleDateString('en-GB')
       };
 
-      try {
-        if (db) {
-          await db.collection("census_entries").doc(frcBaseCode).set(submissionPayload);
-        }
-      } catch (error) {
-        console.warn("Firestore save fallback:", error);
-      }
+      // Save to localStorage
+      censusDatabase.push(entry);
+      localStorage.setItem('wcf_census_data', JSON.stringify(censusDatabase));
 
-      renderFrcCertificate(submissionPayload);
-      btn.disabled = false;
-      btn.innerHTML = `<i class="fa-solid fa-file-circle-check"></i> ${i18n[currentLang].submitBtn}`;
+      updateUniversalCounter();
+      displayFRCResult(entry);
+      document.getElementById('censusForm').reset();
+      document.getElementById('membersContainer').innerHTML = '';
     }
 
-    // Render Authenticated FRC Certificate
-    function renderFrcCertificate(data) {
-      document.getElementById('formSection').classList.add('hidden');
-      document.getElementById('reprintSection').classList.add('hidden');
-      document.getElementById('adminSection').classList.add('hidden');
-      document.getElementById('frcResultSection').classList.remove('hidden');
-
+    // --- DISPLAY FRC CERTIFICATE ---
+    function displayFRCResult(data) {
       document.getElementById('frcCodeDisplay').innerText = data.frcBaseCode;
       document.getElementById('frcHeadName').innerText = data.head.fullName;
       document.getElementById('frcFatherName').innerText = data.head.father;
@@ -1099,247 +629,251 @@
       document.getElementById('frcContactPhone').innerText = data.head.phone;
       document.getElementById('frcLocation').innerText = `${data.head.city}, ${data.head.country}`;
       document.getElementById('frcAddress').innerText = data.head.address;
-      document.getElementById('frcDateOfIssuance').innerText = data.issueDate || new Date().toLocaleDateString('en-GB');
+      document.getElementById('frcDateOfIssuance').innerText = data.createdAt;
 
-      // Dynamic QR Code pointing to this specific certificate
-      const verifyUrl = `https://worldchhippafoundation.github.io/Census?verify=${data.frcBaseCode}`;
-      document.getElementById('frcQrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(verifyUrl)}`;
+      // QR Code
+      const verifyUrl = encodeURIComponent(`https://worldchhippafoundation.github.io/Census?verify=${data.frcBaseCode}`);
+      document.getElementById('frcQrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${verifyUrl}`;
 
-      // Post-Submission WhatsApp Button Only
-      const waText = encodeURIComponent(
-        `*World Chhippa Foundation - Official FRC Confirmation*\n\n` +
-        `• *FRC Reg No:* ${data.frcBaseCode}\n` +
-        `• *Family Head:* ${data.head.fullName}\n` +
-        `• *Father's Name:* ${data.head.father}\n` +
-        `• *Goth / Clan:* ${data.head.goth}\n` +
-        `• *Phone:* ${data.head.phone}\n` +
-        `• *Total Members Registered:* ${data.totalHeadCount}\n` +
-        `• *City / Country:* ${data.head.city}, ${data.head.country}\n\n` +
-        `Our community census record has been registered successfully.`
-      );
-      document.getElementById('frcWhatsAppBtn').href = `https://wa.me/212708273330?text=${waText}`;
-
+      // Build Table
       const tbody = document.getElementById('frcTableBody');
       tbody.innerHTML = `
-        <tr class="bg-gray-50 font-bold">
-          <td class="p-2 border text-emerald-900 font-mono">${data.head.subCode}</td>
+        <tr class="bg-emerald-50 font-bold">
+          <td class="p-2 border">${data.frcBaseCode}-H</td>
           <td class="p-2 border">${data.head.fullName}</td>
           <td class="p-2 border">Head of Family</td>
           <td class="p-2 border">${data.head.gender}</td>
-          <td class="p-2 border">Chhippa</td>
-          <td class="p-2 border">${data.head.idNumber}</td>
-          <td class="p-2 border font-mono">${data.head.phone}</td>
+          <td class="p-2 border">${data.head.nationalId}</td>
+          <td class="p-2 border">${data.head.occupation} (${data.head.jobType})</td>
+          <td class="p-2 border">${data.head.phone}</td>
         </tr>
       `;
 
       data.members.forEach(m => {
         tbody.innerHTML += `
           <tr>
-            <td class="p-2 border text-emerald-900 font-semibold font-mono">${m.subCode}</td>
-            <td class="p-2 border font-medium">${m.fullName}</td>
+            <td class="p-2 border">${m.uid}</td>
+            <td class="p-2 border">${m.name}</td>
             <td class="p-2 border">${m.relation}</td>
             <td class="p-2 border">${m.gender}</td>
-            <td class="p-2 border">${m.community}</td>
             <td class="p-2 border">${m.idNumber}</td>
-            <td class="p-2 border font-mono">${m.phone}</td>
+            <td class="p-2 border">${m.occupation} (${m.jobType})</td>
+            <td class="p-2 border">${data.head.phone}</td>
           </tr>
         `;
       });
 
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      // Purely Manual WhatsApp Link Setup (NO Auto Open)
+      const waMsg = encodeURIComponent(
+        `*World Chhippa Foundation - FRC Certificate*\n` +
+        `• *FRC No:* ${data.frcBaseCode}\n` +
+        `• *Family Head:* ${data.head.fullName}\n` +
+        `• *Father's Name:* ${data.head.father}\n` +
+        `• *Clan / Shakh:* ${data.head.goth}\n` +
+        `• *Total Members:* ${data.members.length + 1}\n` +
+        `• *City / Country:* ${data.head.city}, ${data.head.country}\n\n` +
+        `Official Verification Link:\nhttps://worldchhippafoundation.github.io/Census?verify=${data.frcBaseCode}`
+      );
+      document.getElementById('frcWhatsAppBtn').href = `https://api.whatsapp.com/send?text=${waMsg}`;
+
+      switchView('result');
     }
 
-    // Reprint Lookup Logic
-    async function fetchReprintFRC() {
-      const codeInput = document.getElementById('reprintCodeInput');
-      const code = codeInput.value.trim().toUpperCase();
-      const errBox = document.getElementById('reprintErrorMsg');
-      errBox.classList.add('hidden');
+    // --- REPRINT FRC ---
+    function fetchReprintFRC() {
+      const code = document.getElementById('reprintCodeInput').value.trim().toUpperCase();
+      const err = document.getElementById('reprintErrorMsg');
+      err.classList.add('hidden');
 
       if (!code) {
-        errBox.innerText = "Please enter your FRC Code (e.g. WCF-123456).";
-        errBox.classList.remove('hidden');
+        err.innerText = "Please enter your FRC Code.";
+        err.classList.remove('hidden');
         return;
       }
 
-      if (!db) {
-        errBox.innerText = "Database connection unavailable.";
-        errBox.classList.remove('hidden');
-        return;
-      }
-
-      try {
-        const doc = await db.collection("census_entries").doc(code).get();
-        if (doc.exists) {
-          renderFrcCertificate(doc.data());
-        } else {
-          errBox.innerText = `Record not found for FRC Code: ${code}. Please check and try again.`;
-          errBox.classList.remove('hidden');
-        }
-      } catch (err) {
-        errBox.innerText = "Error retrieving record. Please try again.";
-        errBox.classList.remove('hidden');
+      const found = censusDatabase.find(e => e.frcBaseCode === code);
+      if (found) {
+        displayFRCResult(found);
+      } else {
+        err.innerText = "No record found for this FRC Registration Code.";
+        err.classList.remove('hidden');
       }
     }
 
-    // Invisible Admin Secret Trigger (3 Taps on 'C' Logo)
+    // --- UNIVERSAL COUNTER ---
+    function updateUniversalCounter() {
+      let count = 0;
+      censusDatabase.forEach(e => {
+        count += 1 + (e.members ? e.members.length : 0);
+      });
+      document.getElementById('universalCounterDisplay').innerText = count.toLocaleString();
+    }
+
+    // --- SECRET ADMIN SYSTEM ---
     function handleSecretLogoClick() {
-      secretClickCount++;
-      clearTimeout(secretClickTimer);
-      secretClickTimer = setTimeout(() => { secretClickCount = 0; }, 1200);
+      secretLogoClicks++;
+      clearTimeout(logoTimer);
+      logoTimer = setTimeout(() => { secretLogoClicks = 0; }, 1500);
 
-      if (secretClickCount === 3) {
-        secretClickCount = 0;
-        const enteredPin = prompt("Enter Master Security PIN:");
-        if (enteredPin === "5492") {
-          openAdminDashboard();
-        } else if (enteredPin !== null) {
-          alert("Unauthorized PIN Access.");
+      if (secretLogoClicks >= 3) {
+        secretLogoClicks = 0;
+        const pin = prompt("Enter Master Administration PIN:");
+        if (pin === "5492") {
+          document.getElementById('adminSection').classList.remove('hidden');
+          renderAdminDirectory();
+          document.getElementById('adminSection').scrollIntoView({ behavior: 'smooth' });
+        } else if (pin !== null) {
+          alert("Unauthorized PIN Code.");
         }
       }
-    }
-
-    function openAdminDashboard() {
-      document.getElementById('formSection').classList.add('hidden');
-      document.getElementById('reprintSection').classList.add('hidden');
-      document.getElementById('frcResultSection').classList.add('hidden');
-      document.getElementById('adminSection').classList.remove('hidden');
-      applyAdminFilters();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function closeAdminDashboard() {
       document.getElementById('adminSection').classList.add('hidden');
-      switchView('register');
     }
 
-    // Admin Filters & Search
-    function applyAdminFilters() {
-      const q = document.getElementById('adminSearchQuery').value.trim().toLowerCase();
-      const maritalFilter = document.getElementById('adminFilterMarital').value;
-      const ageFilter = document.getElementById('adminFilterAge').value;
-      const matFilter = document.getElementById('adminFilterMatrimonial').value;
-
-      const flattened = [];
-      allCensusRecords.forEach(rec => {
-        // Head
-        flattened.push({
-          subCode: rec.head.subCode,
-          name: rec.head.fullName,
-          relation: "Head of Family",
-          father: rec.head.father,
-          goth: rec.head.goth,
-          idNum: rec.head.idNumber,
-          phone: rec.head.phone,
-          marital: rec.head.marital,
-          gender: rec.head.gender,
-          dob: rec.head.dob,
-          cityCountry: `${rec.head.city}, ${rec.head.country}`,
-          matrimonial: rec.head.matrimonial ? "Yes" : "No"
-        });
-        // Members
-        if (rec.members) {
-          rec.members.forEach(m => {
-            flattened.push({
-              subCode: m.subCode,
-              name: m.fullName,
-              relation: m.relation,
-              father: rec.head.fullName,
-              goth: rec.head.goth,
-              idNum: m.idNumber,
-              phone: m.phone,
-              marital: m.marital,
-              gender: m.gender,
-              dob: m.dob,
-              cityCountry: `${rec.head.city}, ${rec.head.country}`,
-              matrimonial: m.matrimonial ? "Yes" : "No"
-            });
-          });
-        }
-      });
-
-      const filtered = flattened.filter(item => {
-        // Query search
-        const matchQ = !q || item.name.toLowerCase().includes(q) || item.subCode.toLowerCase().includes(q) || item.idNum.toLowerCase().includes(q);
-        // Marital
-        const matchM = (maritalFilter === 'ALL') || (item.marital === maritalFilter);
-        // Matrimonial
-        const matchMat = (matFilter === 'ALL') || (matFilter === 'YES' && item.matrimonial === 'Yes');
-        // Age Filter
-        let matchA = true;
-        if (ageFilter !== 'ALL') {
-          const parts = item.dob.split('/');
-          const birthYear = parseInt(parts[2]);
-          const age = birthYear ? (2026 - birthYear) : 0;
-          if (ageFilter === 'ADULT') matchA = age >= 18;
-          if (ageFilter === 'MINOR') matchA = age < 18;
-        }
-        return matchQ && matchM && matchMat && matchA;
-      });
-
-      const tbody = document.getElementById('adminTableBody');
+    function renderAdminDirectory() {
+      const q = document.getElementById('adminSearchInput').value.toLowerCase().trim();
+      const marital = document.getElementById('adminFilterMarital').value;
+      const tbody = document.getElementById('adminDirectoryTableBody');
       tbody.innerHTML = '';
-      filtered.forEach(f => {
+
+      const filtered = censusDatabase.filter(e => {
+        const matchesQ = !q || e.head.fullName.toLowerCase().includes(q) ||
+                         e.frcBaseCode.toLowerCase().includes(q) ||
+                         e.head.goth.toLowerCase().includes(q) ||
+                         e.head.phone.includes(q);
+        const matchesMarital = marital === 'ALL' || e.head.marital === marital;
+        return matchesQ && matchesMarital;
+      });
+
+      filtered.forEach(e => {
         tbody.innerHTML += `
           <tr class="hover:bg-gray-50">
-            <td class="p-2 border font-mono font-bold text-emerald-900">${f.subCode}</td>
-            <td class="p-2 border font-medium">${f.name}</td>
-            <td class="p-2 border text-gray-600">${f.relation}</td>
-            <td class="p-2 border">${f.father}</td>
-            <td class="p-2 border">${f.goth}</td>
-            <td class="p-2 border font-mono">${f.idNum}</td>
-            <td class="p-2 border font-mono">${f.phone}</td>
-            <td class="p-2 border">${f.marital}</td>
-            <td class="p-2 border">${f.cityCountry}</td>
-            <td class="p-2 border font-bold ${f.matrimonial === 'Yes' ? 'text-amber-700' : 'text-gray-400'}">${f.matrimonial}</td>
+            <td class="p-2 border font-mono font-bold">${e.frcBaseCode}</td>
+            <td class="p-2 border font-semibold">${e.head.fullName}</td>
+            <td class="p-2 border">${e.head.father}</td>
+            <td class="p-2 border">${e.head.goth}</td>
+            <td class="p-2 border">${e.head.occupation}</td>
+            <td class="p-2 border">${e.head.phone}</td>
+            <td class="p-2 border">${e.head.marital}</td>
+            <td class="p-2 border">
+              <button onclick="displayFRCResult(${JSON.stringify(e).replace(/"/g, '&quot;')})" class="px-2 py-1 bg-emerald-700 text-white rounded text-[10px] font-bold">FRC</button>
+            </td>
           </tr>
         `;
       });
-
-      document.getElementById('adminRecordCountDisplay').innerText = `Showing ${filtered.length} of ${flattened.length} Records`;
-      window.latestFilteredData = filtered;
     }
 
-    // Export Admin Table to Excel (CSV)
-    function exportAdminDataToExcel() {
-      const data = window.latestFilteredData || [];
-      if (!data.length) {
-        alert("No records to export.");
+    // --- ONE-CLICK COMMUNITY DIRECTORY (A-Z) PDF EXPORT ---
+    function generateCommunityDirectoryPDF() {
+      if (!censusDatabase || censusDatabase.length === 0) {
+        alert("Directory is currently empty. No community records available to export.");
         return;
       }
-      let csv = "Sub Code,Full Name,Relation,Father,Goth,CNIC / ID,Phone,Marital Status,City/Country,Matrimonial\n";
-      data.forEach(r => {
-        csv += `"${r.subCode}","${r.name}","${r.relation}","${r.father}","${r.goth}","${r.idNum}","${r.phone}","${r.marital}","${r.cityCountry}","${r.matrimonial}"\n`;
+
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF('landscape', 'pt', 'a4');
+
+      // Sort heads Alphabetically (A to Z)
+      const sortedRecords = [...censusDatabase].sort((a, b) => {
+        return (a.head.fullName || '').localeCompare(b.head.fullName || '');
       });
-      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.setAttribute("download", `Chhippa_Census_Export_${new Date().toISOString().slice(0,10)}.csv`);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+
+      const tableData = [];
+      sortedRecords.forEach((entry, idx) => {
+        tableData.push([
+          idx + 1,
+          entry.head.fullName || 'N/A',
+          entry.head.father || 'N/A',
+          entry.head.goth || 'N/A',
+          entry.head.occupation || 'N/A',
+          entry.head.phone || 'N/A',
+          entry.head.city || 'N/A',
+          entry.frcBaseCode || 'N/A',
+          (entry.members ? entry.members.length + 1 : 1)
+        ]);
+      });
+
+      // Header
+      doc.setFontSize(18);
+      doc.setTextColor(6, 78, 59);
+      doc.text("WORLD CHHIPPA FOUNDATION", 40, 40);
+
+      doc.setFontSize(11);
+      doc.setTextColor(100);
+      doc.text("Official Global Community Directory (Alphabetical A-Z)", 40, 58);
+
+      const currentDate = new Date().toLocaleDateString('en-GB');
+      doc.setFontSize(9);
+      doc.text(`Generated on: ${currentDate} | Total Registered Families: ${sortedRecords.length}`, 40, 74);
+
+      doc.autoTable({
+        startY: 85,
+        head: [['#', 'Head Full Name', 'Father Name', 'Clan/Shakh', 'Occupation', 'Phone / WhatsApp', 'City', 'FRC No', 'Members']],
+        body: tableData,
+        theme: 'striped',
+        headStyles: { fillColor: [6, 78, 59], textColor: [255, 255, 255], fontStyle: 'bold', fontSize: 9 },
+        bodyStyles: { fontSize: 8, textColor: [30, 41, 59] },
+        alternateRowStyles: { fillColor: [240, 253, 244] },
+        styles: { cellPadding: 4, overflow: 'linebreak' },
+        margin: { left: 40, right: 40 }
+      });
+
+      doc.save(`Chhippa_Community_Directory_A-Z_${currentDate.replace(/\//g, '-')}.pdf`);
     }
 
-    // Auto Check URL for direct FRC verification
-    function checkUrlForVerification() {
-      const params = new URLSearchParams(window.location.search);
-      const verifyCode = params.get('verify');
-      if (verifyCode && db) {
-        db.collection("census_entries").doc(verifyCode.trim().toUpperCase()).get().then(doc => {
-          if (doc.exists) renderFrcCertificate(doc.data());
-        });
+    // --- CSV EXPORT ---
+    function exportCensusCSV() {
+      let csv = "FRC Code,Head Name,Father Name,National ID,Clan,Occupation,Job Type,Phone,City,Country,Members Count\n";
+      censusDatabase.forEach(e => {
+        csv += `"${e.frcBaseCode}","${e.head.fullName}","${e.head.father}","${e.head.nationalId}","${e.head.goth}","${e.head.occupation}","${e.head.jobType}","${e.head.phone}","${e.head.city}","${e.head.country}","${e.members ? e.members.length + 1 : 1}"\n`;
+      });
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = `Chhippa_Census_Export_${Date.now()}.csv`;
+      link.click();
+    }
+
+    // --- LANGUAGE SWITCHER ---
+    function setLanguage(lang) {
+      document.querySelectorAll('.lang-btn').forEach(b => {
+        b.className = "lang-btn px-2.5 py-1 text-xs font-bold rounded text-emerald-200 hover:text-white";
+      });
+
+      if (lang === 'en') {
+        document.getElementById('btnLangEn').className = "lang-btn px-2.5 py-1 text-xs font-bold rounded bg-emerald-600 text-white";
+        document.body.className = "bg-gray-100 font-sans text-gray-800 antialiased ltr-dir";
+        document.getElementById('headerTitle').innerText = "World Chhippa Foundation";
+        document.getElementById('headerSubtitle').innerText = "Global Census & FRC Portal";
+        document.getElementById('lblTabNew').innerText = "New Census Registration";
+        document.getElementById('lblTabReprint').innerText = "Reprint / Download FRC";
+        document.getElementById('lblSubmitBtn').innerText = "Submit Census & Generate FRC";
+      } else if (lang === 'hi') {
+        document.getElementById('btnLangHi').className = "lang-btn px-2.5 py-1 text-xs font-bold rounded bg-emerald-600 text-white";
+        document.body.className = "bg-gray-100 font-sans text-gray-800 antialiased ltr-dir";
+        document.getElementById('headerTitle').innerText = "वर्ल्ड छीपा फाउंडेशन";
+        document.getElementById('headerSubtitle').innerText = "वैश्विक जनगणना एवं एफआरसी पोर्टल";
+        document.getElementById('lblTabNew').innerText = "नई जनगणना पंजीकरण";
+        document.getElementById('lblTabReprint').innerText = "एफआरसी प्रिंट / डाउनलोड करें";
+        document.getElementById('lblSubmitBtn').innerText = "जनगणना जमा करें एवं एफआरसी बनाएं";
+      } else if (lang === 'ur') {
+        document.getElementById('btnLangUr').className = "lang-btn px-2.5 py-1 text-xs font-bold rounded bg-emerald-600 text-white";
+        document.body.className = "bg-gray-100 font-sans text-gray-800 antialiased rtl-dir";
+        document.getElementById('headerTitle').innerText = "ورلڈ چھیپا فاؤنڈیشن";
+        document.getElementById('headerSubtitle').innerText = "عالمی مردم شماری و ایف آر سی پورٹل";
+        document.getElementById('lblTabNew').innerText = "نیا اندراج مردم شماری";
+        document.getElementById('lblTabReprint').innerText = "دوبارہ پرنٹ / ڈاؤن لوڈ ایف آر سی";
+        document.getElementById('lblSubmitBtn').innerText = "مردم شماری جمع کریں اور FRC حاصل کریں";
       }
     }
 
-    window.addEventListener('DOMContentLoaded', () => {
-      initDobDropdowns();
-      setLanguage('en');
-      checkUrlForVerification();
-    });
-    function generateCommunityDirectoryPDF() {
-    alert("Generating Community Directory... Please wait.");
-    }
-    
+    // --- INITIALIZE ON LOAD ---
+    window.onload = function() {
+      initDateDropdowns();
+      updateUniversalCounter();
+    };
   </script>
 </body>
 </html>
