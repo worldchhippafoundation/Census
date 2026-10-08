@@ -10,11 +10,21 @@
   <!-- jsPDF & html2canvas -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <!-- QRCode.js Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&family=Noto+Sans+Devanagari:wght@400;600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     body { font-family: 'Noto Nastaliq Urdu', 'Inter', sans-serif; }
     .font-devanagari { font-family: 'Noto Sans Devanagari', 'Inter', sans-serif; }
     .font-latin { font-family: 'Inter', sans-serif; }
+    
+    /* Fix for Urdu Nastaliq font cut-off in input boxes */
+    input, select, textarea {
+      line-height: 2 !important;
+      padding-top: 0.5rem !important;
+      padding-bottom: 0.5rem !important;
+    }
+
     .watermark-container {
       position: absolute;
       top: 50%;
@@ -34,24 +44,24 @@
 <body class="bg-slate-50 text-slate-900 min-h-screen">
 
   <!-- Top Navigation Header -->
-  <header class="bg-emerald-800 text-white shadow-md sticky top-0 z-50">
+  <header class="bg-emerald-800 text-white shadow-md sticky top-0 z-40">
     <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-3">
       
-      <!-- Official Stamp / Verified Seal Logo -->
+      <!-- Official Stamp Logo (Header) -->
       <div class="flex items-center gap-3">
-        <div class="w-12 h-12 rounded-full border-2 border-dashed border-amber-300 bg-emerald-900 flex flex-col items-center justify-center text-center p-0.5 shadow-md">
+        <div class="w-12 h-12 rounded-full border-2 border-dashed border-amber-300 bg-emerald-950 flex flex-col items-center justify-center text-center p-0.5 shadow-md shrink-0">
           <span class="text-[7px] font-black text-amber-300 leading-none uppercase">WCF</span>
           <span class="text-[9px] font-bold text-white leading-none my-0.5">★ SEAL ★</span>
           <span class="text-[6px] font-semibold text-emerald-200 leading-none uppercase">Official</span>
         </div>
         <div>
-          <h1 id="appTitle" class="text-lg md:text-xl font-bold leading-tight">ورلڈ چھیپا فاؤنڈیشن</h1>
-          <p id="appSub" class="text-xs text-emerald-200">عالمی مردم شماری اور خاندانی رجسٹریشن پورٹل</p>
+          <h1 id="appTitle" class="text-base md:text-xl font-bold leading-tight">ورلڈ چھیپا فاؤنڈیشن</h1>
+          <p id="appSub" class="text-[11px] md:text-xs text-emerald-200">عالمی مردم شماری اور خاندانی رجسٹریشن پورٹل</p>
         </div>
       </div>
 
       <!-- Language Selector -->
-      <div class="flex items-center gap-2 bg-emerald-900/60 p-1.5 rounded-lg border border-emerald-700">
+      <div class="flex items-center gap-2 bg-emerald-900/80 p-1.5 rounded-lg border border-emerald-700">
         <label id="lblLang" class="text-xs text-emerald-200">زبان:</label>
         <select id="langSelect" onchange="changeLanguage(this.value)" class="bg-emerald-800 text-white text-xs md:text-sm font-semibold rounded px-2 py-1 outline-none cursor-pointer">
           <option value="ur" selected>اردو (Urdu)</option>
@@ -67,16 +77,16 @@
 
     <!-- Tab Buttons -->
     <div class="flex gap-3 border-b border-slate-200 pb-3">
-      <button type="button" id="tabNewReg" onclick="switchMainTab('new')" class="bg-emerald-700 text-white px-5 py-2 rounded-lg font-bold text-sm shadow">
+      <button type="button" id="tabNewReg" onclick="switchMainTab('new')" class="bg-emerald-700 text-white px-5 py-2.5 rounded-lg font-bold text-xs md:text-sm shadow">
         + نیا اندراج مردم شماری
       </button>
-      <button type="button" id="tabSearchReg" onclick="switchMainTab('search')" class="bg-slate-200 text-slate-700 hover:bg-slate-300 px-5 py-2 rounded-lg font-bold text-sm">
+      <button type="button" id="tabSearchReg" onclick="switchMainTab('search')" class="bg-slate-200 text-slate-700 hover:bg-slate-300 px-5 py-2.5 rounded-lg font-bold text-xs md:text-sm">
         دوبارہ پرنٹ / سرچ FRC
       </button>
     </div>
 
     <!-- Search Section -->
-    <div id="searchSection" class="hidden bg-white p-6 rounded-xl border border-slate-200 shadow space-y-4">
+    <div id="searchSection" class="hidden bg-white p-5 md:p-6 rounded-xl border border-slate-200 shadow space-y-4">
       <h3 id="searchTitle" class="font-bold text-base text-slate-800">خاندانی رجسٹریشن سرٹیفکیٹ (FRC) تلاش کریں</h3>
       <p id="searchSub" class="text-xs text-slate-500">اپنا تصدیق شدہ FRC کوڈ درج کریں تاکہ سرٹیفکیٹ دوبارہ دیکھا یا پرنٹ کیا جا سکے۔</p>
       <div class="flex flex-col md:flex-row gap-3 max-w-lg">
@@ -94,7 +104,7 @@
       <!-- Head Details Card -->
       <div class="bg-white rounded-xl shadow border border-slate-200 overflow-hidden">
         <div class="bg-emerald-700 text-white px-5 py-3 flex justify-between items-center">
-          <h2 id="headCardTitle" class="font-bold text-base md:text-lg">سرپرستِ خاندان کی تفصیلات</h2>
+          <h2 id="headCardTitle" class="font-bold text-sm md:text-base">سرپرستِ خاندان کی تفصیلات</h2>
           <span class="text-xs bg-emerald-800 px-2.5 py-1 rounded-full font-mono text-emerald-200" id="headBadge">سرپرستِ خاندان</span>
         </div>
 
@@ -102,77 +112,80 @@
           <!-- National ID -->
           <div>
             <label id="lblHeadCNIC" class="block text-xs font-semibold text-slate-700 mb-1">شناختی کارڈ / آدھار نمبر (لازمی)*</label>
-            <input type="text" id="headCNIC" required oninput="checkHeadExistingID(this.value)" placeholder="e.g. 42101-1234567-1" class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
+            <input type="text" id="headCNIC" required oninput="checkHeadExistingID(this.value)" placeholder="e.g. 42101-1234567-1" class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
             <div id="headExistingNotice" class="hidden mt-1 text-xs text-amber-800 bg-amber-50 p-2 rounded border border-amber-200"></div>
           </div>
 
           <!-- Full Name -->
           <div>
             <label id="lblHeadName" class="block text-xs font-semibold text-slate-700 mb-1">مکمل نام (سرپرست)*</label>
-            <input type="text" id="headName" required class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
+            <input type="text" id="headName" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
           </div>
 
           <!-- Father / Guardian Name -->
           <div>
             <label id="lblHeadFather" class="block text-xs font-semibold text-slate-700 mb-1">والد / سرپرست کا نام*</label>
-            <input type="text" id="headFather" required class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
+            <input type="text" id="headFather" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
           </div>
 
           <!-- Gender -->
           <div>
             <label id="lblHeadGender" class="block text-xs font-semibold text-slate-700 mb-1">جنس*</label>
-            <select id="headGender" required class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"></select>
+            <select id="headGender" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"></select>
           </div>
 
           <!-- Sub-Caste / Atak -->
           <div>
             <label id="lblHeadClan" class="block text-xs font-semibold text-slate-700 mb-1">اٹک / ذیلی ذات*</label>
-            <select id="headClan" required onchange="toggleManualInput(this, 'headClanOtherWrap')" class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"></select>
+            <select id="headClan" required onchange="toggleManualInput(this, 'headClanOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"></select>
             <div id="headClanOtherWrap" class="hidden mt-2">
-              <input type="text" id="headClanOther" class="w-full border border-emerald-400 rounded-lg p-2 text-xs bg-emerald-50 outline-none">
+              <input type="text" id="headClanOther" class="w-full border border-emerald-400 rounded-lg px-3 text-xs bg-emerald-50 outline-none">
             </div>
           </div>
 
           <!-- Education -->
           <div>
             <label id="lblHeadEdu" class="block text-xs font-semibold text-slate-700 mb-1">تعلیمی قابلیت*</label>
-            <select id="headEdu" required onchange="toggleManualInput(this, 'headEduOtherWrap')" class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"></select>
+            <select id="headEdu" required onchange="toggleManualInput(this, 'headEduOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"></select>
             <div id="headEduOtherWrap" class="hidden mt-2">
-              <input type="text" id="headEduOther" class="w-full border border-emerald-400 rounded-lg p-2 text-xs bg-emerald-50 outline-none">
+              <input type="text" id="headEduOther" class="w-full border border-emerald-400 rounded-lg px-3 text-xs bg-emerald-50 outline-none">
             </div>
           </div>
 
           <!-- Occupation -->
           <div>
             <label id="lblHeadJob" class="block text-xs font-semibold text-slate-700 mb-1">پیشہ / ملازمت*</label>
-            <select id="headJob" required onchange="toggleManualInput(this, 'headJobOtherWrap')" class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"></select>
+            <select id="headJob" required onchange="toggleManualInput(this, 'headJobOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"></select>
             <div id="headJobOtherWrap" class="hidden mt-2">
-              <input type="text" id="headJobOther" class="w-full border border-emerald-400 rounded-lg p-2 text-xs bg-emerald-50 outline-none">
+              <input type="text" id="headJobOther" class="w-full border border-emerald-400 rounded-lg px-3 text-xs bg-emerald-50 outline-none">
             </div>
           </div>
 
           <!-- Phone -->
           <div>
             <label id="lblHeadPhone" class="block text-xs font-semibold text-slate-700 mb-1">رابطہ فون / واٹس ایپ*</label>
-            <input type="tel" id="headPhone" required placeholder="+92..." class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-emerald-500 outline-none text-right dir-ltr">
+            <input type="tel" id="headPhone" required placeholder="+92..." class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none text-right dir-ltr">
           </div>
 
-          <!-- Country -->
+          <!-- Country Dropdown (All World List) -->
           <div>
             <label id="lblHeadCountry" class="block text-xs font-semibold text-slate-700 mb-1">ملک (Country)*</label>
-            <select id="headCountry" required class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"></select>
+            <select id="headCountry" required onchange="toggleManualInput(this, 'headCountryOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"></select>
+            <div id="headCountryOtherWrap" class="hidden mt-2">
+              <input type="text" id="headCountryOther" class="w-full border border-emerald-400 rounded-lg px-3 text-xs bg-emerald-50 outline-none">
+            </div>
           </div>
 
           <!-- City -->
           <div>
             <label id="lblHeadCity" class="block text-xs font-semibold text-slate-700 mb-1">شہر*</label>
-            <input type="text" id="headCity" required class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
+            <input type="text" id="headCity" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
           </div>
 
           <!-- Address -->
           <div class="md:col-span-2">
             <label id="lblHeadAddress" class="block text-xs font-semibold text-slate-700 mb-1">مکمل رہائشی پتہ*</label>
-            <input type="text" id="headAddress" required class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
+            <input type="text" id="headAddress" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
           </div>
         </div>
       </div>
@@ -181,7 +194,7 @@
       <div class="bg-white rounded-xl shadow border border-slate-200 overflow-hidden">
         <div class="bg-slate-800 text-white px-5 py-3 flex justify-between items-center">
           <div>
-            <h2 id="membersSectionTitle" class="font-bold text-base md:text-lg">دیگر اہل خانہ / اراکین کی تفصیلات</h2>
+            <h2 id="membersSectionTitle" class="font-bold text-sm md:text-base">دیگر اہل خانہ / اراکین کی تفصیلات</h2>
             <p id="membersSectionSub" class="text-xs text-slate-300">بیوی، بچے اور دیگر زیرِ کفالت افراد شامل کریں</p>
           </div>
           <button type="button" onclick="addMemberCard()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs md:text-sm px-3.5 py-1.5 rounded-lg flex items-center gap-1.5 transition">
@@ -200,50 +213,58 @@
       </div>
     </form>
 
-    <!-- FRC Certificate Modal -->
-    <div id="frcModal" class="hidden fixed inset-0 bg-black/75 backdrop-blur-sm z-50 overflow-y-auto p-4 flex items-center justify-center">
-      <div class="bg-white w-full max-w-4xl rounded-2xl shadow-2xl overflow-hidden border border-slate-300 my-8">
+    <!-- FRC Certificate Modal (Responsive & Sticky Mobile Buttons) -->
+    <div id="frcModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 overflow-y-auto p-2 md:p-4 flex flex-col items-center">
+      <div class="bg-white w-full max-w-4xl rounded-xl shadow-2xl overflow-hidden border border-slate-300 my-auto">
         
-        <!-- Header Actions -->
-        <div class="bg-slate-900 text-white p-4 flex flex-wrap justify-between items-center gap-3">
+        <!-- Header Actions: Mobile Sticky Bar -->
+        <div class="bg-slate-900 text-white p-3 md:p-4 sticky top-0 z-50 flex flex-wrap justify-between items-center gap-2 border-b border-slate-700">
           <div>
-            <h3 class="font-bold text-sm md:text-base">سرکاری فیملی رجسٹریشن سرٹیفکیٹ (Official FRC)</h3>
-            <p class="text-[11px] text-slate-400">کامیابی سے تصدیق شدہ دستاویز تیار ہے</p>
+            <h3 class="font-bold text-xs md:text-sm">سرکاری فیملی رجسٹریشن سرٹیفکیٹ (Official FRC)</h3>
+            <p class="text-[10px] text-slate-400">تصدیق شدہ برقی دستاویز</p>
           </div>
           
-          <div class="flex flex-wrap items-center gap-2">
-            <button onclick="downloadFRCAndReset()" id="btnDownloadAction" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-4 py-2 rounded-lg transition shadow">
-              ڈاؤن لوڈ FRC (PDF)
+          <div class="flex items-center gap-1.5 md:gap-2">
+            <button onclick="downloadFRCAndReset()" id="btnDownloadAction" class="bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] md:text-xs font-bold px-3 md:px-4 py-2 rounded-lg transition shadow flex items-center gap-1">
+              ڈاؤن لوڈ PDF
             </button>
-            <button onclick="openDirectWhatsAppHelpline()" class="bg-green-600 hover:bg-green-500 text-white text-xs font-bold px-4 py-2 rounded-lg transition shadow">
-              ہیلپ لائن واٹس ایپ
+            <button onclick="openDirectWhatsAppHelpline()" class="bg-green-600 hover:bg-green-500 text-white text-[11px] md:text-xs font-bold px-3 md:px-4 py-2 rounded-lg transition shadow flex items-center gap-1">
+              واٹس ایپ ہیلپ لائن
             </button>
-            <button onclick="closeFRCModal()" class="bg-slate-700 hover:bg-slate-600 text-white text-xs px-3 py-2 rounded-lg">
+            <button onclick="closeFRCModal()" class="bg-slate-700 hover:bg-slate-600 text-white text-[11px] md:text-xs px-2.5 py-2 rounded-lg">
               بند کریں
             </button>
           </div>
         </div>
 
-        <!-- Renderable Certificate Sheet -->
-        <div class="p-4 md:p-6 overflow-x-auto bg-slate-200 flex justify-center">
-          <div id="frcCertificateSheet" class="relative bg-white w-[794px] min-h-[1050px] p-8 border border-slate-300 shadow text-slate-900 mx-auto overflow-hidden">
+        <!-- Sheet Scroll Container -->
+        <div class="p-3 md:p-6 overflow-x-auto bg-slate-200 flex justify-center">
+          <div id="frcCertificateSheet" class="relative bg-white w-[794px] min-h-[1050px] p-8 border border-slate-300 shadow text-slate-900 shrink-0 overflow-hidden">
             
             <div class="watermark-container">
               World Chhippa Foundation
             </div>
 
-            <!-- FRC Document Header -->
+            <!-- FRC Document Header with Top-Left QR Code (NADRA Style) -->
             <div class="border-b-2 border-emerald-800 pb-3 mb-4 flex justify-between items-start relative z-10">
+              
+              <!-- Left Side: QR Code + Reg Info -->
+              <div class="flex items-center gap-3">
+                <div id="frcQRCode" class="bg-white p-1 border border-emerald-800 rounded shadow-sm"></div>
+                <div class="text-left border border-emerald-800 rounded-lg p-2 bg-emerald-50/60">
+                  <p class="text-[9px] text-slate-500 font-semibold uppercase">FRC Registration No</p>
+                  <p id="frcCodeDisplay" class="text-base font-black text-emerald-900 tracking-wider">WCF-000000</p>
+                  <p id="frcIssueDate" class="text-[10px] text-slate-500 mt-0.5"></p>
+                </div>
+              </div>
+
+              <!-- Right Side: Foundation Title -->
               <div class="text-right">
                 <span class="text-[10px] font-bold text-emerald-800 tracking-wider uppercase">Official Family Registration Certificate</span>
                 <h2 class="text-2xl font-black text-slate-900 mt-0.5">ورلڈ چھیپا فاؤنڈیشن</h2>
                 <p class="text-xs text-slate-500">عالمی مردم شماری ڈائریکٹری و خاندانی شناخت</p>
               </div>
-              <div class="text-left border border-emerald-800 rounded-lg p-2 bg-emerald-50/60">
-                <p class="text-[9px] text-slate-500 font-semibold uppercase">FRC Registration No</p>
-                <p id="frcCodeDisplay" class="text-base font-black text-emerald-900 tracking-wider">WCF-000000</p>
-                <p id="frcIssueDate" class="text-[10px] text-slate-500 mt-0.5"></p>
-              </div>
+
             </div>
 
             <!-- Head Summary -->
@@ -278,18 +299,18 @@
                     <th class="border border-slate-300 p-1.5">نسب</th>
                   </tr>
                 </thead>
-                <tbody id="frcTableBody" class="divide-y divide-slate-200 text-slate-800 text-center"></tbody>
+                <tbody id="frcTableBody" class="divide-y border-slate-200 text-slate-800 text-center"></tbody>
               </table>
             </div>
 
-            <!-- Stamp & Signatures -->
+            <!-- Stamp & Signatures (Matching Header Official Seal) -->
             <div class="mt-8 pt-4 border-t border-slate-300 flex justify-between items-end relative z-10">
               <div class="flex items-center gap-4">
-                <div class="w-24 h-24 rounded-full border-4 border-dashed border-emerald-800 flex flex-col items-center justify-center text-center p-1 relative transform -rotate-6 bg-white/90 shadow">
-                  <span class="text-[7px] font-black text-emerald-900 uppercase">World Chhippa</span>
-                  <span class="text-[13px] font-black text-emerald-900 leading-tight">★ VERIFIED ★</span>
-                  <span class="text-[7px] font-bold text-emerald-800 uppercase mt-0.5">OFFICIAL SEAL</span>
-                  <span class="text-[6px] font-mono text-emerald-700">REG-CERTIFIED</span>
+                <div class="w-24 h-24 rounded-full border-4 border-dashed border-emerald-800 flex flex-col items-center justify-center text-center p-1 relative transform -rotate-6 bg-white/95 shadow-sm">
+                  <span class="text-[7px] font-black text-emerald-950 uppercase leading-none">WORLD CHHIPPA</span>
+                  <span class="text-[13px] font-black text-emerald-900 leading-tight my-0.5">★ SEAL ★</span>
+                  <span class="text-[7px] font-bold text-emerald-800 uppercase leading-none">VERIFIED FRC</span>
+                  <span class="text-[6px] font-mono text-emerald-700 mt-1">OFFICIAL-REG</span>
                 </div>
                 <div class="text-[10px] text-slate-500 space-y-0.5">
                   <p class="font-bold text-slate-700">تصدیق شدہ برقی دستاویز</p>
@@ -354,6 +375,7 @@
         otherClanPlaceholder: "اپنی اٹک / شاخ لکھیں...",
         otherEduPlaceholder: "اپنی تعلیم درج کریں...",
         otherJobPlaceholder: "اپنا پیشہ درج کریں...",
+        otherCountryPlaceholder: "اپنے ملک کا نام درج کریں...",
         relations: {
           Wife: "بیوی",
           Husband: "شوہر",
@@ -449,6 +471,7 @@
         otherClanPlaceholder: "अपना गोत्र दर्ज करें...",
         otherEduPlaceholder: "अपनी शिक्षा लिखें...",
         otherJobPlaceholder: "अपना व्यवसाय लिखें...",
+        otherCountryPlaceholder: "अपने देश का नाम दर्ज करें...",
         relations: {
           Wife: "पत्नी",
           Husband: "पति",
@@ -544,6 +567,7 @@
         otherClanPlaceholder: "Enter Sub-caste / Clan...",
         otherEduPlaceholder: "Enter your education details...",
         otherJobPlaceholder: "Enter your occupation...",
+        otherCountryPlaceholder: "Enter country name...",
         relations: {
           Wife: "Wife",
           Husband: "Husband",
@@ -602,10 +626,34 @@
       }
     };
 
-    const countriesList = [
+    // Complete World Countries List (~240 Entities)
+    const allWorldCountries = [
       "Pakistan", "India", "Morocco", "United Arab Emirates", "Saudi Arabia",
-      "United Kingdom", "United States", "Canada", "Oman", "Qatar",
-      "Kuwait", "Bahrain", "Australia", "South Africa", "Malaysia", "Other"
+      "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan",
+      "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria", "Burkina Faso", "Burundi",
+      "Cabo Verde", "Cambodia", "Cameroon", "Canada", "Central African Republic", "Chad", "Chile", "China", "Colombia", "Comoros", "Congo (Congo-Brazzaville)", "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czechia",
+      "Democratic Republic of the Congo", "Denmark", "Djibouti", "Dominica", "Dominican Republic",
+      "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Eswatini", "Ethiopia",
+      "Fiji", "Finland", "France",
+      "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Greece", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana",
+      "Haiti", "Honduras", "Hungary",
+      "Iceland", "Indonesia", "Iran", "Iraq", "Ireland", "Israel", "Italy", "Ivory Coast",
+      "Jamaica", "Japan", "Jordan",
+      "Kazakhstan", "Kenya", "Kiribati", "Kuwait", "Kyrgyzstan",
+      "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg",
+      "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro", "Mozambique", "Myanmar",
+      "Namibia", "Nauru", "Nepal", "Netherlands", "New Zealand", "Nicaragua", "Niger", "Nigeria", "North Korea", "North Macedonia", "Norway",
+      "Oman",
+      "Palau", "Palestine State", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Poland", "Portugal",
+      "Qatar",
+      "Romania", "Russia", "Rwanda",
+      "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe", "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "South Africa", "South Korea", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Sweden", "Switzerland", "Syria",
+      "Tajikistan", "Tanzania", "Thailand", "Timor-Leste", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan", "Tuvalu",
+      "Uganda", "Ukraine", "United Kingdom", "United States", "Uruguay", "Uzbekistan",
+      "Vanuatu", "Vatican City", "Venezuela", "Vietnam",
+      "Yemen",
+      "Zambia", "Zimbabwe",
+      "Other"
     ];
 
     let currentLang = 'ur';
@@ -650,19 +698,21 @@
       document.getElementById('btnAddMemberBtn').textContent = dict.btnAddMemberBtn;
       document.getElementById('btnSubmitForm').textContent = dict.btnSubmitForm;
 
-      // Update Head Placeholders
+      // Update Head Dynamic Placeholders
       document.getElementById('headClanOther').placeholder = dict.otherClanPlaceholder;
       document.getElementById('headEduOther').placeholder = dict.otherEduPlaceholder;
       document.getElementById('headJobOther').placeholder = dict.otherJobPlaceholder;
+      document.getElementById('headCountryOther').placeholder = dict.otherCountryPlaceholder;
 
       populateSelectOptions('headGender', dict.genders, 'Male');
       populateSelectOptions('headClan', dict.clans, 'Tak');
       populateSelectOptions('headEdu', dict.education, 'Matric');
       populateSelectOptions('headJob', dict.jobs, 'Business');
 
+      // Populate Country list
       const countrySel = document.getElementById('headCountry');
       const prevCountry = countrySel.value || 'Pakistan';
-      countrySel.innerHTML = countriesList.map(c => `<option value="${c}">${c}</option>`).join('');
+      countrySel.innerHTML = allWorldCountries.map(c => `<option value="${c}">${c}</option>`).join('');
       countrySel.value = prevCountry;
 
       refreshMemberCardsLanguage();
@@ -699,15 +749,15 @@
       if (tab === 'new') {
         formEl.classList.remove('hidden');
         searchEl.classList.add('hidden');
-        tabNewBtn.className = "bg-emerald-700 text-white px-5 py-2 rounded-lg font-bold text-sm shadow";
-        tabSearchBtn.className = "bg-slate-200 text-slate-700 hover:bg-slate-300 px-5 py-2 rounded-lg font-bold text-sm";
+        tabNewBtn.className = "bg-emerald-700 text-white px-5 py-2.5 rounded-lg font-bold text-xs md:text-sm shadow";
+        tabSearchBtn.className = "bg-slate-200 text-slate-700 hover:bg-slate-300 px-5 py-2.5 rounded-lg font-bold text-xs md:text-sm";
         searchInput.value = '';
         document.getElementById('searchErrorMsg').classList.add('hidden');
       } else {
         formEl.classList.add('hidden');
         searchEl.classList.remove('hidden');
-        tabSearchBtn.className = "bg-emerald-700 text-white px-5 py-2 rounded-lg font-bold text-sm shadow";
-        tabNewBtn.className = "bg-slate-200 text-slate-700 hover:bg-slate-300 px-5 py-2 rounded-lg font-bold text-sm";
+        tabSearchBtn.className = "bg-emerald-700 text-white px-5 py-2.5 rounded-lg font-bold text-xs md:text-sm shadow";
+        tabNewBtn.className = "bg-slate-200 text-slate-700 hover:bg-slate-300 px-5 py-2.5 rounded-lg font-bold text-xs md:text-sm";
         searchInput.value = '';
         searchInput.focus();
         document.getElementById('searchErrorMsg').classList.add('hidden');
@@ -760,38 +810,38 @@
           
           <div>
             <label class="block text-xs font-semibold text-slate-700 mb-1 lbl-mem-rel">${dict.lblMemRel}</label>
-            <select id="memRel_${id}" onchange="handleRelationChange(${id})" class="w-full border border-slate-300 rounded-lg p-2 text-xs focus:ring-2 focus:ring-emerald-500 outline-none">
+            <select id="memRel_${id}" onchange="handleRelationChange(${id})" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-emerald-500 outline-none">
               ${Object.entries(dict.relations).map(([k, v]) => `<option value="${k}">${v}</option>`).join('')}
             </select>
           </div>
 
           <div>
             <label class="block text-xs font-semibold text-slate-700 mb-1 lbl-mem-name">${dict.lblMemName}</label>
-            <input type="text" id="memName_${id}" required class="w-full border border-slate-300 rounded-lg p-2 text-xs focus:ring-2 focus:ring-emerald-500 outline-none">
+            <input type="text" id="memName_${id}" required class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-emerald-500 outline-none">
           </div>
 
           <div>
             <label class="block text-xs font-semibold text-slate-700 mb-1 lbl-mem-gender">${dict.lblMemGender}</label>
-            <select id="memGender_${id}" class="w-full border border-slate-300 rounded-lg p-2 text-xs focus:ring-2 focus:ring-emerald-500 outline-none">
+            <select id="memGender_${id}" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-emerald-500 outline-none">
               ${Object.entries(dict.genders).map(([k, v]) => `<option value="${k}">${v}</option>`).join('')}
             </select>
           </div>
 
           <div>
             <label class="block text-xs font-semibold text-slate-700 mb-1 lbl-mem-age">${dict.lblMemAge}</label>
-            <input type="number" id="memAge_${id}" min="0" max="120" value="20" oninput="handleAgeChange(${id})" required class="w-full border border-slate-300 rounded-lg p-2 text-xs focus:ring-2 focus:ring-emerald-500 outline-none">
+            <input type="number" id="memAge_${id}" min="0" max="120" value="20" oninput="handleAgeChange(${id})" required class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-emerald-500 outline-none">
           </div>
 
           <div>
             <label class="block text-xs font-semibold text-slate-700 mb-1 lbl-mem-cnic">${dict.lblMemCNIC}</label>
-            <input type="text" id="memCNIC_${id}" required placeholder="e.g. 42101-..." class="w-full border border-slate-300 rounded-lg p-2 text-xs focus:ring-2 focus:ring-emerald-500 outline-none">
+            <input type="text" id="memCNIC_${id}" required placeholder="e.g. 42101-..." class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-emerald-500 outline-none">
             <span id="memCNICHint_${id}" class="text-[10px] text-slate-500 mt-0.5 block">18 سال سے کم عمر کے لیے سرپرست کا کارڈ منسلک ہو جائے گا</span>
           </div>
 
-          <!-- Wife Specific Lineage Wrap (Hidden for all other relations) -->
+          <!-- Wife Specific Lineage -->
           <div id="memWifeLineageWrap_${id}" class="hidden">
             <label class="block text-xs font-semibold text-slate-700 mb-1 lbl-mem-lineage">${dict.lblMemLineage}</label>
-            <select id="memLineage_${id}" class="w-full border border-slate-300 rounded-lg p-2 text-xs focus:ring-2 focus:ring-emerald-500 outline-none">
+            <select id="memLineage_${id}" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-emerald-500 outline-none">
               ${Object.entries(dict.lineage).map(([k, v]) => `<option value="${k}">${v}</option>`).join('')}
             </select>
           </div>
@@ -799,11 +849,11 @@
           <!-- Education -->
           <div>
             <label class="block text-xs font-semibold text-slate-700 mb-1 lbl-mem-edu">${dict.lblMemEdu}</label>
-            <select id="memEdu_${id}" onchange="toggleManualInput(this, 'memEduOtherWrap_${id}')" class="w-full border border-slate-300 rounded-lg p-2 text-xs focus:ring-2 focus:ring-emerald-500 outline-none">
+            <select id="memEdu_${id}" onchange="toggleManualInput(this, 'memEduOtherWrap_${id}')" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-emerald-500 outline-none">
               ${Object.entries(dict.education).map(([k, v]) => `<option value="${k}">${v}</option>`).join('')}
             </select>
             <div id="memEduOtherWrap_${id}" class="hidden mt-2">
-              <input type="text" id="memEduOther_${id}" class="w-full border border-emerald-400 rounded-lg p-2 text-xs bg-emerald-50 outline-none">
+              <input type="text" id="memEduOther_${id}" class="w-full border border-emerald-400 rounded-lg px-3 text-xs bg-emerald-50 outline-none">
             </div>
           </div>
 
@@ -811,12 +861,12 @@
           <div class="md:col-span-2">
             <div>
               <label class="block text-xs font-semibold text-slate-700 mb-1 lbl-mem-job">${dict.lblMemJob}</label>
-              <select id="memJob_${id}" onchange="toggleManualInput(this, 'memJobOtherWrap_${id}')" class="w-full border border-slate-300 rounded-lg p-2 text-xs focus:ring-2 focus:ring-emerald-500 outline-none">
+              <select id="memJob_${id}" onchange="toggleManualInput(this, 'memJobOtherWrap_${id}')" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-emerald-500 outline-none">
                 ${Object.entries(dict.jobs).map(([k, v]) => `<option value="${k}">${v}</option>`).join('')}
               </select>
             </div>
             <div id="memJobOtherWrap_${id}" class="hidden mt-2">
-              <input type="text" id="memJobOther_${id}" class="w-full border border-emerald-400 rounded-lg p-2 text-xs bg-emerald-50 outline-none">
+              <input type="text" id="memJobOther_${id}" class="w-full border border-emerald-400 rounded-lg px-3 text-xs bg-emerald-50 outline-none">
             </div>
           </div>
 
@@ -837,14 +887,12 @@
       const genderSelect = document.getElementById(`memGender_${id}`);
       const wifeLineageWrap = document.getElementById(`memWifeLineageWrap_${id}`);
 
-      // Auto Gender
       if (['Wife', 'Daughter', 'Mother', 'Sister'].includes(rel)) {
         genderSelect.value = 'Female';
       } else if (['Husband', 'Son', 'Father', 'Brother'].includes(rel)) {
         genderSelect.value = 'Male';
       }
 
-      // Wife specific lineage display
       if (rel === 'Wife') {
         wifeLineageWrap.classList.remove('hidden');
       } else {
@@ -887,7 +935,6 @@
         card.querySelector('.lbl-mem-job').textContent = dict.lblMemJob;
         card.querySelector('button').textContent = dict.btnRemove;
 
-        // Placeholders refresh
         const eduOther = document.getElementById(`memEduOther_${id}`);
         if (eduOther) eduOther.placeholder = dict.otherEduPlaceholder;
 
@@ -924,7 +971,10 @@
       const headJob = headJobKey === 'Other' ? (document.getElementById('headJobOther').value.trim() || dict.jobs.Other) : dict.jobs[headJobKey];
       
       const headPhone = document.getElementById('headPhone').value.trim();
-      const headCountry = document.getElementById('headCountry').value;
+      
+      const headCountryKey = document.getElementById('headCountry').value;
+      const headCountry = headCountryKey === 'Other' ? (document.getElementById('headCountryOther').value.trim() || "Other") : headCountryKey;
+
       const headCity = document.getElementById('headCity').value.trim();
       const headAddress = document.getElementById('headAddress').value.trim();
 
@@ -997,6 +1047,28 @@
       document.getElementById('frcHeadPhone').textContent = record.head.phone;
       document.getElementById('frcHeadLocation').textContent = record.head.location;
       document.getElementById('frcHeadLineage').textContent = record.head.lineage;
+
+      // Dynamic NADRA Style QR Code Rendering (Top Left)
+      const qrContainer = document.getElementById('frcQRCode');
+      qrContainer.innerHTML = '';
+      const totalMembersCount = record.members.length + 1; // Head + Members
+      const qrPayload = 
+        `WORLD CHHIPPA FOUNDATION - OFFICIAL VERIFICATION\n` +
+        `FRC Code: ${record.code}\n` +
+        `Head: ${record.head.name}\n` +
+        `Father: ${record.head.father}\n` +
+        `Total Members: ${totalMembersCount}\n` +
+        `Status: REGISTERED & VERIFIED\n` +
+        `Issued: ${record.issueDate}`;
+
+      new QRCode(qrContainer, {
+        text: qrPayload,
+        width: 70,
+        height: 70,
+        colorDark: "#064e3b",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.M
+      });
 
       const tableBody = document.getElementById('frcTableBody');
       tableBody.innerHTML = '';
