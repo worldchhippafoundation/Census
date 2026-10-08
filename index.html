@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>World Chhippa Foundation - Global Census Portal</title>
+  <title>World Chhippa Foundation - Global Census & FRC Portal</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <!-- Firebase SDKs -->
@@ -18,32 +18,80 @@
     }
     .rtl-dir { direction: rtl; text-align: right; }
     .ltr-dir { direction: ltr; text-align: left; }
+    /* Circular Stamp Watermark */
+    .watermark-stamp {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 280px;
+      height: 280px;
+      border: 8px dashed rgba(6, 78, 59, 0.08);
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      user-select: none;
+      z-index: 0;
+    }
+    .watermark-stamp span {
+      font-weight: 900;
+      color: rgba(6, 78, 59, 0.07);
+      text-transform: uppercase;
+      text-align: center;
+    }
   </style>
 </head>
 <body class="bg-gray-100 font-sans text-gray-800 antialiased selection:bg-emerald-600 selection:text-white">
 
   <!-- Header -->
   <header class="bg-emerald-900 text-white shadow-md sticky top-0 z-50">
-    <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
-      <div class="flex items-center space-x-3">
-        <div class="w-10 h-10 rounded-full bg-white text-emerald-900 font-bold flex items-center justify-center text-xl shadow">C</div>
-        <div>
-          <h1 class="text-base font-bold tracking-wide uppercase leading-tight" id="headerTitle">World Chhippa Foundation</h1>
-          <p class="text-xs text-emerald-200" id="headerSubtitle">Global Census & FRC Portal</p>
+    <div class="max-w-4xl mx-auto px-3 sm:px-4 py-2.5 sm:py-3 flex items-center justify-between gap-2">
+      <div class="flex items-center space-x-2.5 min-w-0">
+        <!-- Secret 3-Click Admin Trigger on Logo -->
+        <div id="adminSecretLogo" onclick="handleSecretLogoClick()" title="World Chhippa Foundation" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white text-emerald-900 font-bold flex items-center justify-center text-lg sm:text-xl shadow shrink-0 cursor-pointer select-none active:scale-95 transition">C</div>
+        <div class="truncate">
+          <h1 class="text-xs sm:text-base font-bold tracking-wide uppercase leading-tight truncate" id="headerTitle">World Chhippa Foundation</h1>
+          <p class="text-[10px] sm:text-xs text-emerald-200 truncate" id="headerSubtitle">Global Census & FRC Portal</p>
         </div>
       </div>
-      <!-- Language Switcher -->
-      <div class="flex rounded-md overflow-hidden bg-emerald-950 p-0.5 border border-emerald-700">
-        <button type="button" onclick="setLanguage('en')" class="lang-btn px-3 py-1 text-xs font-semibold rounded bg-emerald-600 text-white" id="btnLangEn">English</button>
-        <button type="button" onclick="setLanguage('ur')" class="lang-btn px-3 py-1 text-xs font-semibold rounded text-emerald-200 hover:text-white" id="btnLangUr">اردو</button>
-        <button type="button" onclick="setLanguage('hi')" class="lang-btn px-3 py-1 text-xs font-semibold rounded text-emerald-200 hover:text-white" id="btnLangHi">हिंदी</button>
+      <!-- Ultra-Compact Language Switcher -->
+      <div class="flex rounded-lg overflow-hidden bg-emerald-950 p-0.5 border border-emerald-700 shrink-0">
+        <button type="button" onclick="setLanguage('en')" class="lang-btn px-2.5 py-1 text-xs font-bold rounded bg-emerald-600 text-white" id="btnLangEn">EN</button>
+        <button type="button" onclick="setLanguage('ur')" class="lang-btn px-2.5 py-1 text-xs font-bold rounded text-emerald-200 hover:text-white" id="btnLangUr">اردو</button>
+        <button type="button" onclick="setLanguage('hi')" class="lang-btn px-2.5 py-1 text-xs font-bold rounded text-emerald-200 hover:text-white" id="btnLangHi">हिंदी</button>
       </div>
     </div>
   </header>
 
+  <!-- Universal Live Counter Banner -->
+  <section class="bg-emerald-800 text-white border-b border-emerald-700 py-2 shadow-inner">
+    <div class="max-w-4xl mx-auto px-4 flex items-center justify-between text-xs sm:text-sm font-semibold">
+      <span class="flex items-center gap-1.5 text-emerald-100">
+        <i class="fa-solid fa-users-viewfinder"></i> <span id="lblLiveCounterText">Total Registered Community Members:</span>
+      </span>
+      <span class="bg-emerald-950 px-3 py-0.5 rounded-full text-emerald-300 font-mono tracking-wider font-bold border border-emerald-600 text-sm sm:text-base" id="universalCounterDisplay">
+        <i class="fa-solid fa-circle-notch fa-spin text-xs"></i>
+      </span>
+    </div>
+  </section>
+
+  <!-- Quick Tabs: New Registration or Reprint FRC -->
+  <div class="max-w-4xl mx-auto px-4 pt-4 flex gap-2 no-print">
+    <button onclick="switchView('register')" id="tabRegister" class="flex-1 py-2 rounded-t-lg font-bold text-xs sm:text-sm bg-white text-emerald-900 border-t-2 border-emerald-600 shadow-sm flex items-center justify-center gap-1.5">
+      <i class="fa-solid fa-user-plus"></i> <span id="lblTabNew">New Census Registration</span>
+    </button>
+    <button onclick="switchView('reprint')" id="tabReprint" class="flex-1 py-2 rounded-t-lg font-bold text-xs sm:text-sm bg-gray-200 text-gray-700 hover:bg-gray-300 flex items-center justify-center gap-1.5 transition">
+      <i class="fa-solid fa-receipt"></i> <span id="lblTabReprint">Reprint / Download FRC</span>
+    </button>
+  </div>
+
   <!-- Main Container -->
   <main class="max-w-4xl mx-auto p-4 sm:p-6" id="mainContainer">
-    <!-- Census Form View -->
+    
+    <!-- SECTION 1: Census Form View -->
     <div id="formSection" class="bg-white rounded-xl shadow-md p-5 sm:p-8 border border-gray-200">
       <form id="censusForm" onsubmit="handleFormSubmit(event)">
 
@@ -65,6 +113,11 @@
             </div>
 
             <div>
+              <label class="block text-xs font-bold text-gray-700 uppercase mb-1" id="lblFatherIdNumber">Father's National ID (For Digital Shajra Link)</label>
+              <input type="text" id="fatherIdNumber" placeholder="If father registered, enter CNIC/Aadhaar" class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-emerald-600 outline-none">
+            </div>
+
+            <div>
               <label class="block text-xs font-bold text-gray-700 uppercase mb-1" id="lblGrandfatherName">Grandfather's Name</label>
               <input type="text" id="grandfatherName" class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-emerald-600 outline-none">
             </div>
@@ -72,6 +125,11 @@
             <div>
               <label class="block text-xs font-bold text-gray-700 uppercase mb-1" id="lblGoth">Goth / Clan *</label>
               <input type="text" id="goth" required placeholder="e.g. Tak, Chauhan..." class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-emerald-600 outline-none">
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-gray-700 uppercase mb-1" id="lblPhoneHead">Phone / WhatsApp Number *</label>
+              <input type="tel" id="headPhone" required placeholder="e.g. +92 300 1234567" class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-emerald-600 outline-none">
             </div>
 
             <div>
@@ -160,45 +218,85 @@
       </form>
     </div>
 
-    <!-- Official FRC View / Print Container -->
+    <!-- SECTION 2: Reprint FRC Lookup View -->
+    <div id="reprintSection" class="hidden bg-white rounded-xl shadow-md p-6 sm:p-8 border border-gray-200">
+      <div class="max-w-md mx-auto text-center space-y-4">
+        <div class="w-16 h-16 bg-emerald-100 text-emerald-800 rounded-full flex items-center justify-center mx-auto text-2xl shadow-sm">
+          <i class="fa-solid fa-file-invoice"></i>
+        </div>
+        <h3 class="text-xl font-bold text-gray-900" id="lblReprintHeading">Retrieve Official FRC</h3>
+        <p class="text-xs text-gray-500" id="lblReprintSub">Enter your Unique FRC Code (e.g. WCF-482910) to view, verify, and reprint your family certificate.</p>
+        
+        <div class="pt-2">
+          <input type="text" id="reprintCodeInput" placeholder="Enter FRC Code (e.g. WCF-123456)" class="w-full px-4 py-3 border-2 border-emerald-600 rounded-lg uppercase tracking-wider font-mono text-center font-bold text-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">
+        </div>
+        
+        <button type="button" onclick="fetchReprintFRC()" id="btnFetchReprint" class="w-full py-3 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-lg shadow transition flex items-center justify-center gap-2">
+          <i class="fa-solid fa-magnifying-glass"></i> <span id="lblFetchReprintBtn">Search & Print FRC</span>
+        </button>
+        <div id="reprintErrorMsg" class="hidden text-xs text-red-600 font-bold bg-red-50 p-2 rounded border border-red-200"></div>
+      </div>
+    </div>
+
+    <!-- SECTION 3: Official FRC Certificate & Print View -->
     <div id="frcResultSection" class="hidden">
-      <!-- Action Toolbar (Back, WhatsApp Send, Print) -->
+      <!-- Toolbar -->
       <div class="flex flex-wrap gap-2 justify-between items-center mb-4 no-print">
-        <button onclick="backToForm()" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 font-semibold rounded text-sm"><i class="fa-solid fa-arrow-left"></i> Edit Form</button>
+        <button onclick="switchView('register')" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 font-semibold rounded text-sm"><i class="fa-solid fa-arrow-left"></i> Back to Portal</button>
         
         <div class="flex gap-2">
-          <!-- WhatsApp confirmation button: Appears ONLY on generated FRC -->
           <a id="frcWhatsAppBtn" href="#" target="_blank" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-bold rounded shadow text-sm flex items-center gap-2 transition">
-            <i class="fa-brands fa-whatsapp text-lg"></i> <span id="lblSendWhatsApp">Send Record to WhatsApp</span>
+            <i class="fa-brands fa-whatsapp text-lg"></i> <span id="lblSendWhatsApp">Send to WhatsApp</span>
           </a>
           
           <button onclick="window.print()" class="px-5 py-2 bg-emerald-800 hover:bg-emerald-900 text-white font-bold rounded shadow text-sm flex items-center gap-2">
-            <i class="fa-solid fa-print"></i> <span>Print FRC (A4)</span>
+            <i class="fa-solid fa-print"></i> <span>Print Official FRC</span>
           </button>
         </div>
       </div>
 
-      <div id="frcPrintArea" class="bg-white border-2 border-emerald-900 rounded-xl p-8 max-w-4xl mx-auto shadow-sm">
-        <div class="flex justify-between items-center border-b-2 border-emerald-800 pb-4 mb-4">
-          <div>
-            <h2 class="text-2xl font-black text-emerald-950 uppercase tracking-tight">World Chhippa Foundation</h2>
-            <p class="text-xs text-gray-600 font-semibold tracking-wider uppercase">Global Community Family Registration Certificate (FRC)</p>
+      <!-- Certificate Paper (A4 Style) -->
+      <div id="frcPrintArea" class="bg-white border-2 border-emerald-900 rounded-xl p-8 max-w-4xl mx-auto shadow-sm relative overflow-hidden">
+        
+        <!-- Subtle Circular Stamp Watermark in Center -->
+        <div class="watermark-stamp">
+          <span class="text-xs tracking-widest mb-1">WORLD CHHIPPA</span>
+          <span class="text-3xl font-black mb-1">FOUNDATION</span>
+          <span class="text-[9px] tracking-widest border-t border-b py-0.5 border-emerald-900/10">AUTHENTIC FRC CENSUS</span>
+          <span class="text-xs font-mono mt-1">★ 2026 ★</span>
+        </div>
+
+        <!-- FRC Header -->
+        <div class="relative z-10 flex justify-between items-center border-b-2 border-emerald-800 pb-4 mb-4">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-full bg-emerald-900 text-white font-black flex items-center justify-center text-2xl shadow">C</div>
+            <div>
+              <h2 class="text-2xl font-black text-emerald-950 uppercase tracking-tight">World Chhippa Foundation</h2>
+              <p class="text-xs text-gray-600 font-semibold tracking-wider uppercase">Official Family Registration Certificate (FRC)</p>
+            </div>
           </div>
-          <div class="text-right">
-            <div class="text-xs font-bold text-gray-500">FRC REGISTRATION NO.</div>
-            <div id="frcCodeDisplay" class="text-xl font-black text-emerald-800">WCF-000000</div>
+          <div class="text-right flex items-center gap-3">
+            <div>
+              <div class="text-xs font-bold text-gray-500">FRC REGISTRATION NO.</div>
+              <div id="frcCodeDisplay" class="text-xl font-black text-emerald-800 font-mono">WCF-000000</div>
+            </div>
+            <!-- Dynamic Verification QR Code -->
+            <img id="frcQrImage" src="" alt="FRC QR Code" class="w-16 h-16 border rounded p-0.5 bg-white shadow-sm">
           </div>
         </div>
 
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs mb-6 bg-emerald-50 p-4 rounded border border-emerald-200">
+        <!-- Details Grid -->
+        <div class="relative z-10 grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs mb-6 bg-emerald-50/80 p-4 rounded border border-emerald-200">
           <div><span class="font-bold text-gray-600 block">Family Head:</span> <span id="frcHeadName" class="font-bold text-sm text-gray-900"></span></div>
           <div><span class="font-bold text-gray-600 block">Father/Husband:</span> <span id="frcFatherName" class="font-semibold text-gray-900"></span></div>
           <div><span class="font-bold text-gray-600 block">Goth / Clan:</span> <span id="frcGoth" class="font-semibold text-gray-900"></span></div>
+          <div><span class="font-bold text-gray-600 block">Contact Phone:</span> <span id="frcContactPhone" class="font-semibold text-gray-900"></span></div>
           <div><span class="font-bold text-gray-600 block">Location:</span> <span id="frcLocation" class="font-semibold text-gray-900"></span></div>
-          <div class="col-span-2 sm:col-span-4"><span class="font-bold text-gray-600 block">Registered Address:</span> <span id="frcAddress" class="text-gray-900"></span></div>
+          <div class="col-span-2 sm:col-span-3"><span class="font-bold text-gray-600 block">Registered Address:</span> <span id="frcAddress" class="text-gray-900"></span></div>
         </div>
 
-        <div class="mb-8">
+        <!-- Table of Members -->
+        <div class="relative z-10 mb-8">
           <table class="w-full text-left text-xs border-collapse">
             <thead>
               <tr class="bg-emerald-900 text-white">
@@ -206,18 +304,21 @@
                 <th class="p-2 border">Full Name</th>
                 <th class="p-2 border">Relation</th>
                 <th class="p-2 border">Gender</th>
-                <th class="p-2 border">Status / Community</th>
+                <th class="p-2 border">Lineage</th>
                 <th class="p-2 border">Identity Card / CNIC</th>
+                <th class="p-2 border">Contact No.</th>
               </tr>
             </thead>
-            <tbody id="frcTableBody" class="divide-y border"></tbody>
+            <tbody id="frcTableBody" class="divide-y border bg-white/90"></tbody>
           </table>
         </div>
 
-        <div class="border-t pt-4 flex justify-between items-end text-xs text-gray-500">
+        <!-- Official Footer -->
+        <div class="relative z-10 border-t pt-4 flex justify-between items-end text-[11px] text-gray-500">
           <div>
             <p>Verification Portal: <strong class="text-gray-700">worldchhippafoundation.github.io/Census</strong></p>
             <p>Helpline: <strong class="text-gray-700">+212 708 273330</strong> | worldchhippafoundation@gmail.com</p>
+            <p class="mt-1 text-[10px] text-emerald-800 font-bold">Date of Issuance: <span id="frcDateOfIssuance"></span></p>
           </div>
           <div class="text-center">
             <div class="h-10 border-b border-gray-400 w-36 mb-1"></div>
@@ -226,9 +327,87 @@
         </div>
       </div>
     </div>
+
+    <!-- SECTION 4: Invisible Master Admin Dashboard (PIN: 5492) -->
+    <div id="adminSection" class="hidden bg-white rounded-xl shadow-lg p-5 sm:p-8 border border-emerald-700 mt-4">
+      <div class="flex flex-wrap justify-between items-center border-b pb-4 mb-4 gap-2">
+        <div>
+          <h2 class="text-xl font-bold text-emerald-950 flex items-center gap-2">
+            <i class="fa-solid fa-shield-halved text-emerald-700"></i> Master Admin Census Console
+          </h2>
+          <p class="text-xs text-gray-500">Authorized Personnel Only | Filter, Search & Export</p>
+        </div>
+        <div class="flex gap-2">
+          <button onclick="exportAdminDataToExcel()" class="px-3 py-1.5 bg-green-700 hover:bg-green-800 text-white rounded text-xs font-bold flex items-center gap-1.5">
+            <i class="fa-solid fa-file-excel"></i> Export Excel (CSV)
+          </button>
+          <button onclick="window.print()" class="px-3 py-1.5 bg-gray-800 hover:bg-black text-white rounded text-xs font-bold flex items-center gap-1.5">
+            <i class="fa-solid fa-print"></i> Print Admin Report
+          </button>
+          <button onclick="closeAdminDashboard()" class="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded text-xs font-bold">
+            <i class="fa-solid fa-xmark"></i> Close
+          </button>
+        </div>
+      </div>
+
+      <!-- Filters Row -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 bg-gray-50 p-4 rounded-lg border mb-6 text-xs">
+        <div>
+          <label class="block font-bold text-gray-700 mb-1">Search (Name / CNIC / FRC)</label>
+          <input type="text" id="adminSearchQuery" oninput="applyAdminFilters()" placeholder="Type to filter..." class="w-full px-2.5 py-1.5 border rounded">
+        </div>
+        <div>
+          <label class="block font-bold text-gray-700 mb-1">Marital Status</label>
+          <select id="adminFilterMarital" onchange="applyAdminFilters()" class="w-full px-2.5 py-1.5 border rounded">
+            <option value="ALL">All Statuses</option>
+            <option value="Married">Married</option>
+            <option value="Unmarried">Unmarried</option>
+            <option value="Widowed">Widowed</option>
+            <option value="Divorced">Divorced</option>
+          </select>
+        </div>
+        <div>
+          <label class="block font-bold text-gray-700 mb-1">Age Category</label>
+          <select id="adminFilterAge" onchange="applyAdminFilters()" class="w-full px-2.5 py-1.5 border rounded">
+            <option value="ALL">All Ages</option>
+            <option value="ADULT">Adults (18+)</option>
+            <option value="MINOR">Minors (Under 18)</option>
+          </select>
+        </div>
+        <div>
+          <label class="block font-bold text-gray-700 mb-1">Matrimonial Matchmaking</label>
+          <select id="adminFilterMatrimonial" onchange="applyAdminFilters()" class="w-full px-2.5 py-1.5 border rounded">
+            <option value="ALL">All Records</option>
+            <option value="YES">Matrimonial Opt-in (Yes)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Admin Data Table -->
+      <div class="overflow-x-auto border rounded-lg max-h-[500px]">
+        <table class="w-full text-left text-xs border-collapse">
+          <thead class="bg-emerald-900 text-white sticky top-0">
+            <tr>
+              <th class="p-2 border">Sub Code</th>
+              <th class="p-2 border">Full Name</th>
+              <th class="p-2 border">Relation</th>
+              <th class="p-2 border">Father</th>
+              <th class="p-2 border">Goth</th>
+              <th class="p-2 border">CNIC / ID</th>
+              <th class="p-2 border">Phone</th>
+              <th class="p-2 border">Status</th>
+              <th class="p-2 border">City/Country</th>
+              <th class="p-2 border">Matrimonial</th>
+            </tr>
+          </thead>
+          <tbody id="adminTableBody" class="divide-y"></tbody>
+        </table>
+      </div>
+      <div class="mt-2 text-right text-xs text-gray-500 font-semibold" id="adminRecordCountDisplay">Showing 0 Records</div>
+    </div>
   </main>
 
-  <!-- Clean Footer (No WhatsApp button here to prevent blank spam) -->
+  <!-- Clean Footer -->
   <footer class="bg-emerald-950 text-white mt-12 py-5 border-t border-emerald-900 text-xs no-print">
     <div class="max-w-4xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
       <div id="footerCopy">© 2026 World Chhippa Foundation. All rights reserved.</div>
@@ -239,17 +418,24 @@
   </footer>
 
   <script>
+    // Master Multilingual Dictionary
     const i18n = {
       en: {
         dir: 'ltr',
         defaultCountry: 'Pakistan',
         headerTitle: "World Chhippa Foundation",
         headerSubtitle: "Global Census & FRC Portal",
+        liveCounter: "Total Registered Community Members:",
+        tabNew: "New Census Registration",
+        tabReprint: "Reprint / Download FRC",
         headInfoTitle: "Head of Family Information",
         fullName: "Full Name *",
         fatherName: "Father's Name *",
+        fatherId: "Father's National ID (For Digital Shajra Link)",
         grandfatherName: "Grandfather's Name",
         goth: "Goth / Clan *",
+        phoneHead: "Phone / WhatsApp Number *",
+        phoneOptional: "Phone / Mobile Number (Optional)",
         gender: "Gender *",
         maritalStatus: "Marital Status *",
         dob: "Date of Birth (Day / Month / Year) *",
@@ -263,9 +449,12 @@
         addMemberBtn: "+ Add Family Member",
         submitBtn: "Submit Census & Generate FRC",
         savingBtn: "Saving Census Record...",
-        sendWhatsApp: "Send Record to WhatsApp",
+        sendWhatsApp: "Send to WhatsApp",
         footerCopy: "© 2026 World Chhippa Foundation. All rights reserved.",
         sameAddressLabel: "Same as Family Head Residential Address",
+        reprintHeading: "Retrieve Official FRC",
+        reprintSub: "Enter your Unique FRC Code (e.g. WCF-482910) to view, verify, and reprint your family certificate.",
+        fetchReprintBtn: "Search & Print FRC",
         genders: [ { val: "Male", text: "Male" }, { val: "Female", text: "Female" } ],
         maritals: [
           { val: "Married", text: "Married" },
@@ -300,11 +489,17 @@
         defaultCountry: 'پاکستان',
         headerTitle: "ورلڈ چھیپا فاؤنڈیشن",
         headerSubtitle: "عالمی مردم شماری و ایف آر سی پورٹل",
+        liveCounter: "کل رجسٹرڈ برادری کے افراد:",
+        tabNew: "نیا مردم شماری اندراج",
+        tabReprint: "ایف آر سی دوبارہ حاصل کریں",
         headInfoTitle: "سربراہ خاندان کی معلومات",
         fullName: "مکمل نام *",
         fatherName: "والد کا نام *",
+        fatherId: "والد کا شناختی کارڈ نمبر (ڈیجیٹل شجرہ لنک کے لیے)",
         grandfatherName: "دادا کا نام",
         goth: "گوتھ / قبیلہ *",
+        phoneHead: "فون / واٹس ایپ نمبر *",
+        phoneOptional: "فون / موبائل نمبر (اختیاری)",
         gender: "جنس *",
         maritalStatus: "ازدواجی حیثیت *",
         dob: "تاریخ پیدائش (دن / مہینہ / سال) *",
@@ -318,9 +513,12 @@
         addMemberBtn: "+ اگلا فرد شامل کریں",
         submitBtn: "اندراج مکمل کریں اور ایف آر سی جاری کریں",
         savingBtn: "اندراج محفوظ ہو رہا ہے...",
-        sendWhatsApp: "واٹس ایپ پر تصدیق بھیجیں",
+        sendWhatsApp: "واٹس ایپ پر بھیجیں",
         footerCopy: "© 2026 ورلڈ چھیپا فاؤنڈیشن۔ جملہ حقوق محفوظ ہیں۔",
         sameAddressLabel: "خاندان کے سربراہ والا پتہ ہی استعمال کریں",
+        reprintHeading: "جاری شدہ ایف آر سی تلاش کریں",
+        reprintSub: "اپنا مخصوص ایف آر سی کوڈ درج کریں اور تصدیق شدہ سرٹیفکیٹ حاصل کریں۔",
+        fetchReprintBtn: "تلاش کریں اور پرنٹ نکالیں",
         genders: [ { val: "Male", text: "مرد" }, { val: "Female", text: "عورت" } ],
         maritals: [
           { val: "Married", text: "شادی شدہ" },
@@ -353,11 +551,17 @@
         defaultCountry: 'भारत',
         headerTitle: "वर्ल्ड छीपा फाउंडेशन",
         headerSubtitle: "वैश्विक जनगणना एवं एफआरसी पोर्टल",
+        liveCounter: "कुल पंजीकृत समाज के सदस्य:",
+        tabNew: "नया जनगणना पंजीकरण",
+        tabReprint: "एफआरसी पुनः प्राप्त करें",
         headInfoTitle: "परिवार के मुखिया का विवरण",
         fullName: "पूरा नाम *",
         fatherName: "पिता का नाम *",
+        fatherId: "पिता का पहचान पत्र (डिजिटल शजरा लिंक के लिए)",
         grandfatherName: "दादा का नाम",
         goth: "गोत्र / कबीला *",
+        phoneHead: "फोन / व्हाट्सएप नंबर *",
+        phoneOptional: "फोन / मोबाइल नंबर (वैकल्पिक)",
         gender: "लिंग *",
         maritalStatus: "वैवाहिक स्थिति *",
         dob: "जन्म तिथि (दिन / माह / वर्ष) *",
@@ -371,9 +575,12 @@
         addMemberBtn: "+ अगला सदस्य जोड़ें",
         submitBtn: "पंजीकरण दर्ज करें और एफआरसी प्राप्त करें",
         savingBtn: "विवरण सुरक्षित किया जा रहा है...",
-        sendWhatsApp: "व्हाट्सएप पर पुष्टि भेजें",
+        sendWhatsApp: "व्हाट्सएप पर भेजें",
         footerCopy: "© 2026 वर्ल्ड छीपा फाउंडेशन। सर्वाधिकार सुरक्षित।",
         sameAddressLabel: "मुखिया का आवासीय पता ही लागू करें",
+        reprintHeading: "एफआरसी खोजें और प्रिंट करें",
+        reprintSub: "अपना विशिष्ट एफआरसी कोड दर्ज करें और प्रमाण पत्र पुनः प्राप्त करें।",
+        fetchReprintBtn: "खोजें और प्रिंट करें",
         genders: [ { val: "Male", text: "पुरुष" }, { val: "Female", text: "महिला" } ],
         maritals: [
           { val: "Married", text: "विवाहित" },
@@ -405,23 +612,66 @@
 
     let currentLang = 'en';
     let memberCount = 0;
+    let allCensusRecords = []; // Admin cache
+    let secretClickCount = 0;
+    let secretClickTimer = null;
+
+    // Firebase Config
+    const firebaseConfig = {
+      apiKey: "AIzaSyChhippaCensusMasterKey2026",
+      authDomain: "chippa-census.firebaseapp.com",
+      projectId: "chippa-census",
+      storageBucket: "chippa-census.appspot.com",
+      messagingSenderId: "1098234876",
+      appId: "1:1098234876:web:chhippacensuskey"
+    };
+
+    let db = null;
+    try {
+      if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+      db = firebase.firestore();
+      setupUniversalCounterListener();
+    } catch(err) {
+      console.warn("Firebase Init Fallback:", err);
+      document.getElementById('universalCounterDisplay').innerText = "Active";
+    }
+
+    // Universal Counter Live Sync (Count members accurately)
+    function setupUniversalCounterListener() {
+      if (!db) return;
+      db.collection("census_entries").onSnapshot((snapshot) => {
+        let totalCount = 0;
+        allCensusRecords = [];
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          allCensusRecords.push(data);
+          // 1 for Head + count of members
+          totalCount += 1 + (data.members ? data.members.length : 0);
+        });
+        document.getElementById('universalCounterDisplay').innerText = totalCount.toLocaleString();
+        if (!document.getElementById('adminSection').classList.contains('hidden')) {
+          applyAdminFilters();
+        }
+      }, err => {
+        console.error("Counter stream error:", err);
+      });
+    }
 
     function initDobDropdowns() {
-      const daySelect = document.getElementById('headDobDay');
-      const monthSelect = document.getElementById('headDobMonth');
-      const yearSelect = document.getElementById('headDobYear');
+      const dSel = document.getElementById('headDobDay');
+      const mSel = document.getElementById('headDobMonth');
+      const ySel = document.getElementById('headDobYear');
 
-      daySelect.innerHTML = '<option value="">Day</option>' + Array.from({length: 31}, (_, i) => `<option value="${i+1}">${i+1}</option>`).join('');
-      monthSelect.innerHTML = '<option value="">Month</option>' + Array.from({length: 12}, (_, i) => `<option value="${i+1}">${i+1}</option>`).join('');
+      dSel.innerHTML = '<option value="">Day</option>' + Array.from({length: 31}, (_, i) => `<option value="${i+1}">${i+1}</option>`).join('');
+      mSel.innerHTML = '<option value="">Month</option>' + Array.from({length: 12}, (_, i) => `<option value="${i+1}">${i+1}</option>`).join('');
       
       let yearsHtml = '<option value="">Year</option>';
       for (let y = 2026; y >= 1920; y--) { yearsHtml += `<option value="${y}">${y}</option>`; }
-      yearSelect.innerHTML = yearsHtml;
+      ySel.innerHTML = yearsHtml;
     }
 
     function populateHeadOptions(lang) {
       const t = i18n[lang];
-
       const gSel = document.getElementById('headGender');
       const curG = gSel.value || "Male";
       gSel.innerHTML = t.genders.map(g => `<option value="${g.val}">${g.text}</option>`).join('');
@@ -445,9 +695,9 @@
       ['en', 'ur', 'hi'].forEach(l => {
         const btn = document.getElementById(`btnLang${l.charAt(0).toUpperCase() + l.slice(1)}`);
         if (l === lang) {
-          btn.className = "lang-btn px-3 py-1 text-xs font-semibold rounded bg-emerald-600 text-white";
+          btn.className = "lang-btn px-2.5 py-1 text-xs font-bold rounded bg-emerald-600 text-white";
         } else {
-          btn.className = "lang-btn px-3 py-1 text-xs font-semibold rounded text-emerald-200 hover:text-white";
+          btn.className = "lang-btn px-2.5 py-1 text-xs font-bold rounded text-emerald-200 hover:text-white";
         }
       });
 
@@ -463,11 +713,16 @@
 
       document.getElementById('headerTitle').innerText = t.headerTitle;
       document.getElementById('headerSubtitle').innerText = t.headerSubtitle;
+      document.getElementById('lblLiveCounterText').innerText = t.liveCounter;
+      document.getElementById('lblTabNew').innerText = t.tabNew;
+      document.getElementById('lblTabReprint').innerText = t.tabReprint;
       document.getElementById('lblHeadInfoTitle').innerHTML = `<i class="fa-solid fa-user-tie"></i> ${t.headInfoTitle}`;
       document.getElementById('lblFullName').innerText = t.fullName;
       document.getElementById('lblFatherName').innerText = t.fatherName;
+      document.getElementById('lblFatherIdNumber').innerText = t.fatherId;
       document.getElementById('lblGrandfatherName').innerText = t.grandfatherName;
       document.getElementById('lblGoth').innerText = t.goth;
+      document.getElementById('lblPhoneHead').innerText = t.phoneHead;
       document.getElementById('lblGender').innerText = t.gender;
       document.getElementById('lblMaritalStatus').innerText = t.maritalStatus;
       document.getElementById('lblDob').innerText = t.dob;
@@ -482,6 +737,10 @@
       document.getElementById('lblSubmitBtn').innerText = t.submitBtn;
       document.getElementById('lblSendWhatsApp').innerText = t.sendWhatsApp;
       document.getElementById('footerCopy').innerText = t.footerCopy;
+
+      document.getElementById('lblReprintHeading').innerText = t.reprintHeading;
+      document.getElementById('lblReprintSub').innerText = t.reprintSub;
+      document.getElementById('lblFetchReprintBtn').innerText = t.fetchReprintBtn;
 
       populateHeadOptions(lang);
 
@@ -553,6 +812,11 @@
           </div>
 
           <div>
+            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">${t.phoneOptional}</label>
+            <input type="tel" id="memPhone_${id}" placeholder="Optional mobile number" class="w-full px-3 py-2 border rounded bg-white">
+          </div>
+
+          <div>
             <label class="block text-xs font-bold text-gray-700 uppercase mb-1">${t.gender}</label>
             <select id="memGender_${id}" class="w-full px-3 py-2 border rounded bg-white"></select>
           </div>
@@ -573,7 +837,7 @@
 
           <div id="memIdBox_${id}" class="hidden md:col-span-2">
             <label class="block text-xs font-bold text-gray-700 uppercase mb-1">${t.nationalId}</label>
-            <input type="text" id="memIdNum_${id}" placeholder="Card number" class="w-full px-3 py-2 border rounded bg-white">
+            <input type="text" id="memIdNum_${id}" placeholder="Identity card number" class="w-full px-3 py-2 border rounded bg-white">
           </div>
 
           <div>
@@ -612,35 +876,30 @@
 
     function populateMemberOptions(id, lang) {
       const t = i18n[lang];
-
       const rSel = document.getElementById(`memRelation_${id}`);
       if (rSel) {
         const cur = rSel.value || "Spouse";
         rSel.innerHTML = t.relations.map(r => `<option value="${r.val}">${r.text}</option>`).join('');
         rSel.value = cur;
       }
-
       const cSel = document.getElementById(`memCommunity_${id}`);
       if (cSel) {
         const cur = cSel.value || "Chhippa";
         cSel.innerHTML = t.communities.map(c => `<option value="${c.val}">${c.text}</option>`).join('');
         cSel.value = cur;
       }
-
       const gSel = document.getElementById(`memGender_${id}`);
       if (gSel) {
         const cur = gSel.value || "Male";
         gSel.innerHTML = t.genders.map(g => `<option value="${g.val}">${g.text}</option>`).join('');
         gSel.value = cur;
       }
-
       const mSel = document.getElementById(`memMarital_${id}`);
       if (mSel) {
         const cur = mSel.value || "Married";
         mSel.innerHTML = t.maritals.map(m => `<option value="${m.val}">${m.text}</option>`).join('');
         mSel.value = cur;
       }
-
       const eSel = document.getElementById(`memEdu_${id}`);
       if (eSel) {
         const cur = eSel.value;
@@ -718,23 +977,33 @@
       });
     }
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyChhippaCensusMasterKey2026",
-      authDomain: "chippa-census.firebaseapp.com",
-      projectId: "chippa-census",
-      storageBucket: "chippa-census.appspot.com",
-      messagingSenderId: "1098234876",
-      appId: "1:1098234876:web:chhippacensuskey"
-    };
+    // View Switching
+    function switchView(view) {
+      const formSec = document.getElementById('formSection');
+      const repSec = document.getElementById('reprintSection');
+      const frcSec = document.getElementById('frcResultSection');
+      const adminSec = document.getElementById('adminSection');
+      const tabReg = document.getElementById('tabRegister');
+      const tabRep = document.getElementById('tabReprint');
 
-    let db = null;
-    try {
-      if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-      db = firebase.firestore();
-    } catch(err) {
-      console.warn("Firebase fallback:", err);
+      adminSec.classList.add('hidden');
+
+      if (view === 'register') {
+        formSec.classList.remove('hidden');
+        repSec.classList.add('hidden');
+        frcSec.classList.add('hidden');
+        tabReg.className = "flex-1 py-2 rounded-t-lg font-bold text-xs sm:text-sm bg-white text-emerald-900 border-t-2 border-emerald-600 shadow-sm flex items-center justify-center gap-1.5";
+        tabRep.className = "flex-1 py-2 rounded-t-lg font-bold text-xs sm:text-sm bg-gray-200 text-gray-700 hover:bg-gray-300 flex items-center justify-center gap-1.5 transition";
+      } else if (view === 'reprint') {
+        formSec.classList.add('hidden');
+        repSec.classList.remove('hidden');
+        frcSec.classList.add('hidden');
+        tabRep.className = "flex-1 py-2 rounded-t-lg font-bold text-xs sm:text-sm bg-white text-emerald-900 border-t-2 border-emerald-600 shadow-sm flex items-center justify-center gap-1.5";
+        tabReg.className = "flex-1 py-2 rounded-t-lg font-bold text-xs sm:text-sm bg-gray-200 text-gray-700 hover:bg-gray-300 flex items-center justify-center gap-1.5 transition";
+      }
     }
 
+    // Submit Handler with Digital Shajra Linking
     async function handleFormSubmit(e) {
       e.preventDefault();
       const btn = document.getElementById('submitBtn');
@@ -749,8 +1018,10 @@
         fullName: document.getElementById('headName').value.trim(),
         relation: "Head of Family",
         father: document.getElementById('fatherName').value.trim(),
+        fatherIdNumber: document.getElementById('fatherIdNumber').value.trim() || 'N/A',
         grandfather: document.getElementById('grandfatherName').value.trim(),
         goth: document.getElementById('goth').value.trim(),
+        phone: document.getElementById('headPhone').value.trim(),
         gender: document.getElementById('headGender').value,
         marital: document.getElementById('headMarital').value,
         dob: `${document.getElementById('headDobDay').value}/${document.getElementById('headDobMonth').value}/${document.getElementById('headDobYear').value}`,
@@ -777,6 +1048,7 @@
           fullName: document.getElementById(`memName_${id}`).value.trim(),
           relation: document.getElementById(`memRelation_${id}`).value,
           community: document.getElementById(`memCommunity_${id}`) ? document.getElementById(`memCommunity_${id}`).value : "Chhippa",
+          phone: document.getElementById(`memPhone_${id}`).value.trim() || 'N/A',
           gender: document.getElementById(`memGender_${id}`).value,
           marital: document.getElementById(`memMarital_${id}`).value,
           dob: `${document.getElementById(`memDobDay_${id}`).value}/${document.getElementById(`memDobMonth_${id}`).value}/${document.getElementById(`memDobYear_${id}`).value}`,
@@ -790,18 +1062,18 @@
       const submissionPayload = {
         frcBaseCode: frcBaseCode,
         createdAt: new Date().toISOString(),
+        issueDate: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
         head: headRecord,
         members: members,
-        totalHeadCount: members.filter(m => m.community === 'Chhippa').length + 1
+        totalHeadCount: members.length + 1
       };
 
-      const savePromise = (db) ? db.collection("census_entries").doc(frcBaseCode).set(submissionPayload) : Promise.resolve();
-      const timeoutPromise = new Promise((resolve) => setTimeout(resolve, 3000));
-
       try {
-        await Promise.race([savePromise, timeoutPromise]);
+        if (db) {
+          await db.collection("census_entries").doc(frcBaseCode).set(submissionPayload);
+        }
       } catch (error) {
-        console.warn("Continuing to render FRC:", error);
+        console.warn("Firestore save fallback:", error);
       }
 
       renderFrcCertificate(submissionPayload);
@@ -809,53 +1081,63 @@
       btn.innerHTML = `<i class="fa-solid fa-file-circle-check"></i> ${i18n[currentLang].submitBtn}`;
     }
 
+    // Render Authenticated FRC Certificate
     function renderFrcCertificate(data) {
       document.getElementById('formSection').classList.add('hidden');
+      document.getElementById('reprintSection').classList.add('hidden');
+      document.getElementById('adminSection').classList.add('hidden');
       document.getElementById('frcResultSection').classList.remove('hidden');
 
       document.getElementById('frcCodeDisplay').innerText = data.frcBaseCode;
       document.getElementById('frcHeadName').innerText = data.head.fullName;
       document.getElementById('frcFatherName').innerText = data.head.father;
       document.getElementById('frcGoth').innerText = data.head.goth;
+      document.getElementById('frcContactPhone').innerText = data.head.phone;
       document.getElementById('frcLocation').innerText = `${data.head.city}, ${data.head.country}`;
       document.getElementById('frcAddress').innerText = data.head.address;
+      document.getElementById('frcDateOfIssuance').innerText = data.issueDate || new Date().toLocaleDateString('en-GB');
 
-      // Setup dynamic WhatsApp link strictly with THIS SUBMISSION'S details
+      // Dynamic QR Code pointing to this specific certificate
+      const verifyUrl = `https://worldchhippafoundation.github.io/Census?verify=${data.frcBaseCode}`;
+      document.getElementById('frcQrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(verifyUrl)}`;
+
+      // Post-Submission WhatsApp Button Only
       const waText = encodeURIComponent(
-        `*World Chhippa Foundation - FRC Submission Confirmation*\n\n` +
-        `• *FRC Registration No:* ${data.frcBaseCode}\n` +
-        `• *Head of Family:* ${data.head.fullName}\n` +
+        `*World Chhippa Foundation - Official FRC Confirmation*\n\n` +
+        `• *FRC Reg No:* ${data.frcBaseCode}\n` +
+        `• *Family Head:* ${data.head.fullName}\n` +
         `• *Father's Name:* ${data.head.father}\n` +
         `• *Goth / Clan:* ${data.head.goth}\n` +
-        `• *Total Members:* ${data.totalHeadCount}\n` +
-        `• *Location:* ${data.head.city}, ${data.head.country}\n\n` +
-        `Our family census record has been registered successfully.`
+        `• *Phone:* ${data.head.phone}\n` +
+        `• *Total Members Registered:* ${data.totalHeadCount}\n` +
+        `• *City / Country:* ${data.head.city}, ${data.head.country}\n\n` +
+        `Our community census record has been registered successfully.`
       );
       document.getElementById('frcWhatsAppBtn').href = `https://wa.me/212708273330?text=${waText}`;
 
       const tbody = document.getElementById('frcTableBody');
-      tbody.innerHTML = '';
-
-      tbody.innerHTML += `
+      tbody.innerHTML = `
         <tr class="bg-gray-50 font-bold">
-          <td class="p-2 border text-emerald-900">${data.head.subCode}</td>
+          <td class="p-2 border text-emerald-900 font-mono">${data.head.subCode}</td>
           <td class="p-2 border">${data.head.fullName}</td>
           <td class="p-2 border">Head of Family</td>
           <td class="p-2 border">${data.head.gender}</td>
           <td class="p-2 border">Chhippa</td>
           <td class="p-2 border">${data.head.idNumber}</td>
+          <td class="p-2 border font-mono">${data.head.phone}</td>
         </tr>
       `;
 
       data.members.forEach(m => {
         tbody.innerHTML += `
           <tr>
-            <td class="p-2 border text-emerald-900 font-semibold">${m.subCode}</td>
+            <td class="p-2 border text-emerald-900 font-semibold font-mono">${m.subCode}</td>
             <td class="p-2 border font-medium">${m.fullName}</td>
             <td class="p-2 border">${m.relation}</td>
             <td class="p-2 border">${m.gender}</td>
             <td class="p-2 border">${m.community}</td>
             <td class="p-2 border">${m.idNumber}</td>
+            <td class="p-2 border font-mono">${m.phone}</td>
           </tr>
         `;
       });
@@ -863,14 +1145,192 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function backToForm() {
+    // Reprint Lookup Logic
+    async function fetchReprintFRC() {
+      const codeInput = document.getElementById('reprintCodeInput');
+      const code = codeInput.value.trim().toUpperCase();
+      const errBox = document.getElementById('reprintErrorMsg');
+      errBox.classList.add('hidden');
+
+      if (!code) {
+        errBox.innerText = "Please enter your FRC Code (e.g. WCF-123456).";
+        errBox.classList.remove('hidden');
+        return;
+      }
+
+      if (!db) {
+        errBox.innerText = "Database connection unavailable.";
+        errBox.classList.remove('hidden');
+        return;
+      }
+
+      try {
+        const doc = await db.collection("census_entries").doc(code).get();
+        if (doc.exists) {
+          renderFrcCertificate(doc.data());
+        } else {
+          errBox.innerText = `Record not found for FRC Code: ${code}. Please check and try again.`;
+          errBox.classList.remove('hidden');
+        }
+      } catch (err) {
+        errBox.innerText = "Error retrieving record. Please try again.";
+        errBox.classList.remove('hidden');
+      }
+    }
+
+    // Invisible Admin Secret Trigger (3 Taps on 'C' Logo)
+    function handleSecretLogoClick() {
+      secretClickCount++;
+      clearTimeout(secretClickTimer);
+      secretClickTimer = setTimeout(() => { secretClickCount = 0; }, 1200);
+
+      if (secretClickCount === 3) {
+        secretClickCount = 0;
+        const enteredPin = prompt("Enter Master Security PIN:");
+        if (enteredPin === "5492") {
+          openAdminDashboard();
+        } else if (enteredPin !== null) {
+          alert("Unauthorized PIN Access.");
+        }
+      }
+    }
+
+    function openAdminDashboard() {
+      document.getElementById('formSection').classList.add('hidden');
+      document.getElementById('reprintSection').classList.add('hidden');
       document.getElementById('frcResultSection').classList.add('hidden');
-      document.getElementById('formSection').classList.remove('hidden');
+      document.getElementById('adminSection').classList.remove('hidden');
+      applyAdminFilters();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function closeAdminDashboard() {
+      document.getElementById('adminSection').classList.add('hidden');
+      switchView('register');
+    }
+
+    // Admin Filters & Search
+    function applyAdminFilters() {
+      const q = document.getElementById('adminSearchQuery').value.trim().toLowerCase();
+      const maritalFilter = document.getElementById('adminFilterMarital').value;
+      const ageFilter = document.getElementById('adminFilterAge').value;
+      const matFilter = document.getElementById('adminFilterMatrimonial').value;
+
+      const flattened = [];
+      allCensusRecords.forEach(rec => {
+        // Head
+        flattened.push({
+          subCode: rec.head.subCode,
+          name: rec.head.fullName,
+          relation: "Head of Family",
+          father: rec.head.father,
+          goth: rec.head.goth,
+          idNum: rec.head.idNumber,
+          phone: rec.head.phone,
+          marital: rec.head.marital,
+          gender: rec.head.gender,
+          dob: rec.head.dob,
+          cityCountry: `${rec.head.city}, ${rec.head.country}`,
+          matrimonial: rec.head.matrimonial ? "Yes" : "No"
+        });
+        // Members
+        if (rec.members) {
+          rec.members.forEach(m => {
+            flattened.push({
+              subCode: m.subCode,
+              name: m.fullName,
+              relation: m.relation,
+              father: rec.head.fullName,
+              goth: rec.head.goth,
+              idNum: m.idNumber,
+              phone: m.phone,
+              marital: m.marital,
+              gender: m.gender,
+              dob: m.dob,
+              cityCountry: `${rec.head.city}, ${rec.head.country}`,
+              matrimonial: m.matrimonial ? "Yes" : "No"
+            });
+          });
+        }
+      });
+
+      const filtered = flattened.filter(item => {
+        // Query search
+        const matchQ = !q || item.name.toLowerCase().includes(q) || item.subCode.toLowerCase().includes(q) || item.idNum.toLowerCase().includes(q);
+        // Marital
+        const matchM = (maritalFilter === 'ALL') || (item.marital === maritalFilter);
+        // Matrimonial
+        const matchMat = (matFilter === 'ALL') || (matFilter === 'YES' && item.matrimonial === 'Yes');
+        // Age Filter
+        let matchA = true;
+        if (ageFilter !== 'ALL') {
+          const parts = item.dob.split('/');
+          const birthYear = parseInt(parts[2]);
+          const age = birthYear ? (2026 - birthYear) : 0;
+          if (ageFilter === 'ADULT') matchA = age >= 18;
+          if (ageFilter === 'MINOR') matchA = age < 18;
+        }
+        return matchQ && matchM && matchMat && matchA;
+      });
+
+      const tbody = document.getElementById('adminTableBody');
+      tbody.innerHTML = '';
+      filtered.forEach(f => {
+        tbody.innerHTML += `
+          <tr class="hover:bg-gray-50">
+            <td class="p-2 border font-mono font-bold text-emerald-900">${f.subCode}</td>
+            <td class="p-2 border font-medium">${f.name}</td>
+            <td class="p-2 border text-gray-600">${f.relation}</td>
+            <td class="p-2 border">${f.father}</td>
+            <td class="p-2 border">${f.goth}</td>
+            <td class="p-2 border font-mono">${f.idNum}</td>
+            <td class="p-2 border font-mono">${f.phone}</td>
+            <td class="p-2 border">${f.marital}</td>
+            <td class="p-2 border">${f.cityCountry}</td>
+            <td class="p-2 border font-bold ${f.matrimonial === 'Yes' ? 'text-amber-700' : 'text-gray-400'}">${f.matrimonial}</td>
+          </tr>
+        `;
+      });
+
+      document.getElementById('adminRecordCountDisplay').innerText = `Showing ${filtered.length} of ${flattened.length} Records`;
+      window.latestFilteredData = filtered;
+    }
+
+    // Export Admin Table to Excel (CSV)
+    function exportAdminDataToExcel() {
+      const data = window.latestFilteredData || [];
+      if (!data.length) {
+        alert("No records to export.");
+        return;
+      }
+      let csv = "Sub Code,Full Name,Relation,Father,Goth,CNIC / ID,Phone,Marital Status,City/Country,Matrimonial\n";
+      data.forEach(r => {
+        csv += `"${r.subCode}","${r.name}","${r.relation}","${r.father}","${r.goth}","${r.idNum}","${r.phone}","${r.marital}","${r.cityCountry}","${r.matrimonial}"\n`;
+      });
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.setAttribute("download", `Chhippa_Census_Export_${new Date().toISOString().slice(0,10)}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    // Auto Check URL for direct FRC verification
+    function checkUrlForVerification() {
+      const params = new URLSearchParams(window.location.search);
+      const verifyCode = params.get('verify');
+      if (verifyCode && db) {
+        db.collection("census_entries").doc(verifyCode.trim().toUpperCase()).get().then(doc => {
+          if (doc.exists) renderFrcCertificate(doc.data());
+        });
+      }
     }
 
     window.addEventListener('DOMContentLoaded', () => {
       initDobDropdowns();
       setLanguage('en');
+      checkUrlForVerification();
     });
   </script>
 </body>
