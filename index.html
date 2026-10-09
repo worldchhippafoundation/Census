@@ -97,14 +97,17 @@
       </button>
     </div>
 
-    <!-- Search Section (Supports FRC Code OR Phone Number) -->
+    <!-- Search Section (Supports FRC Code OR Phone Number + Add Member Option) -->
     <div id="searchSection" class="hidden bg-white p-5 md:p-6 rounded-xl border border-slate-200 shadow space-y-4">
       <h3 id="searchTitle" class="font-bold text-base text-slate-800">خاندانی رجسٹریشن سرٹیفکیٹ (FRC) تلاش کریں</h3>
-      <p id="searchSub" class="text-xs text-slate-500">اپنا تصدیق شدہ FRC کوڈ (مثلاً WCF-123456) یا رجسٹرڈ موبائل نمبر درج کریں تاکہ سرٹیفکیٹ دوبارہ دیکھا یا پرنٹ کیا جا سکے۔</p>
-      <div class="flex flex-col md:flex-row gap-3 max-w-lg">
+      <p id="searchSub" class="text-xs text-slate-500">اپنا تصدیق شدہ FRC کوڈ (مثلاً WCF-123456) یا رجسٹرڈ موبائل نمبر درج کریں تاکہ سرٹیفکیٹ دوبارہ دیکھا، پرنٹ یا اپڈیٹ کیا جا سکے۔</p>
+      <div class="flex flex-col md:flex-row gap-3 max-w-xl">
         <input type="text" id="searchFRCInput" placeholder="FRC کوڈ یا موبائل فون نمبر درج کریں..." class="border border-slate-300 rounded-lg p-2.5 text-sm font-mono outline-none focus:ring-2 focus:ring-emerald-600 flex-1">
-        <button type="button" id="btnSearchAction" onclick="searchAndReprintFRC()" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-6 py-2.5 rounded-lg text-sm shadow">
+        <button type="button" id="btnSearchAction" onclick="searchAndReprintFRC()" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-5 py-2.5 rounded-lg text-sm shadow">
           تلاش و پرنٹ کریں
+        </button>
+        <button type="button" id="btnSearchAddMember" onclick="loadFRCForAddingMember()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2.5 rounded-lg text-sm shadow">
+          + نیا رکن شامل کریں
         </button>
       </div>
       <p id="searchErrorMsg" class="text-xs text-red-600 font-semibold hidden"></p>
@@ -113,6 +116,12 @@
     <!-- Census Registration Form -->
     <form id="censusForm" onsubmit="handleFormSubmit(event)" class="space-y-6">
       
+      <!-- Existing Family Update Banner (Hidden by default) -->
+      <div id="updatingFamilyBanner" class="hidden bg-blue-50 border border-blue-300 p-3 rounded-xl flex justify-between items-center text-xs text-blue-900 font-bold">
+        <span>🔄 موجودہ خاندانی ریکارڈ کو اپڈیٹ کیا جا رہا ہے (FRC: <span id="updatingFRCCode"></span>)</span>
+        <button type="button" onclick="cancelUpdatingFamily()" class="text-red-600 hover:underline">منسوخ کریں (نئے اندراج پر جائیں)</button>
+      </div>
+
       <!-- Head Details Card -->
       <div class="bg-white rounded-xl shadow border border-slate-200 overflow-hidden">
         <div class="bg-emerald-700 text-white px-5 py-3 flex justify-between items-center">
@@ -138,6 +147,12 @@
           <div>
             <label id="lblHeadFather" class="block text-xs font-semibold text-slate-700 mb-1">والد / سرپرست کا نام*</label>
             <input type="text" id="headFather" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
+          </div>
+
+          <!-- Head Date of Birth -->
+          <div>
+            <label id="lblHeadDOB" class="block text-xs font-semibold text-slate-700 mb-1">تاریخِ پیدائش (Date of Birth)*</label>
+            <input type="date" id="headDOB" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
           </div>
 
           <!-- Gender -->
@@ -296,16 +311,18 @@
                 </div>
               </div>
 
-              <!-- Table -->
+              <!-- Table with Date of Birth & Marital Status Columns -->
               <div class="relative z-10 mb-6">
                 <table class="w-full border-collapse border border-slate-300 text-xs">
                   <thead>
                     <tr class="bg-emerald-800 text-white text-center font-bold">
-                      <th class="border border-slate-300 p-1.5 w-8">#</th>
+                      <th class="border border-slate-300 p-1.5 w-7">#</th>
                       <th id="thUID" class="border border-slate-300 p-1.5">منفرد شناختی کوڈ</th>
                       <th id="thName" class="border border-slate-300 p-1.5">مکمل نام</th>
                       <th id="thRel" class="border border-slate-300 p-1.5">رشتہ</th>
                       <th id="thGen" class="border border-slate-300 p-1.5">جنس</th>
+                      <th id="thDOB" class="border border-slate-300 p-1.5">تاریخِ پیدائش</th>
+                      <th id="thMarital" class="border border-slate-300 p-1.5">ازدواجی حیثیت</th>
                       <th id="thCNIC" class="border border-slate-300 p-1.5">شناختی کارڈ / بے فارم</th>
                       <th id="thEdu" class="border border-slate-300 p-1.5">تعلیم</th>
                       <th id="thJob" class="border border-slate-300 p-1.5">پیشہ</th>
@@ -316,10 +333,10 @@
                 </table>
               </div>
 
-              <!-- Stamp & Signatures (Matching Header Official PNG Seal) -->
+              <!-- Stamp & Signatures (Fixed: Straight 0deg, No Rotate, No Dark Artifacts) -->
               <div class="mt-8 pt-4 border-t border-slate-300 flex justify-between items-end relative z-10">
                 <div class="flex items-center gap-4">
-                  <img src="stamp.png" alt="Official Verified Seal" class="w-24 h-24 object-contain transform -rotate-6">
+                  <img src="stamp.png" alt="Official Verified Seal" class="w-24 h-24 object-contain shadow-none">
                   <div class="text-[10px] text-slate-500 space-y-0.5">
                     <p id="frcDocCertified" class="font-bold text-slate-700">تصدیق شدہ برقی دستاویز</p>
                     <p id="frcDocCertSub">ورلڈ چھیپا فاؤنڈیشن کا مستند ڈیجیٹل سرٹیفکیٹ۔</p>
@@ -365,7 +382,7 @@
           </div>
         </div>
 
-        <!-- City & Country Filter Section (NEW) -->
+        <!-- City & Country Filter Section -->
         <div class="bg-emerald-50/70 border border-emerald-200 p-3.5 rounded-xl space-y-2.5">
           <h4 class="text-xs font-bold text-emerald-950 flex items-center gap-1.5">
             <span>🏙️</span> <span>شہر / ملک کے لحاظ سے فلٹر اور PDF رپورٹ (City-Wise Directory):</span>
@@ -427,13 +444,14 @@
         tabNew: "+ نیا اندراج مردم شماری",
         tabSearch: "دوبارہ پرنٹ / سرچ FRC",
         searchTitle: "خاندانی رجسٹریشن سرٹیفکیٹ (FRC) تلاش کریں",
-        searchSub: "اپنا تصدیق شدہ FRC کوڈ (مثلاً WCF-123456) یا رجسٹرڈ موبائل نمبر درج کریں تاکہ سرٹیفکیٹ دوبارہ دیکھا یا پرنٹ کیا جا سکے۔",
+        searchSub: "اپنا تصدیق شدہ FRC کوڈ (مثلاً WCF-123456) یا رجسٹرڈ موبائل نمبر درج کریں تاکہ سرٹیفکیٹ دوبارہ دیکھا، پرنٹ یا اپڈیٹ کیا جا سکے۔",
         btnSearchAction: "تلاش و پرنٹ کریں",
         headCardTitle: "سرپرستِ خاندان کی تفصیلات",
         headBadge: "سرپرستِ خاندان",
         lblHeadCNIC: "شناختی کارڈ / آدھار نمبر (لازمی)*",
         lblHeadName: "مکمل نام (سرپرست)*",
         lblHeadFather: "والد / سرپرست کا نام*",
+        lblHeadDOB: "تاریخِ پیدائش (Date of Birth)*",
         lblHeadGender: "جنس*",
         lblHeadClan: "اٹک / ذیلی ذات*",
         lblHeadEdu: "تعلیمی قابلیت*",
@@ -449,8 +467,10 @@
         memberCardTitle: "رکن #",
         lblMemRel: "سرپرست سے رشتہ*",
         lblMemName: "مکمل نام*",
+        lblMemDOB: "تاریخِ پیدائش (DOB)*",
         lblMemGender: "جنس*",
-        lblMemAge: "عمر*",
+        lblMemMarital: "ازدواجی حیثیت (Marital Status)*",
+        lblMemAge: "عمر (Age)*",
         lblMemCNIC: "شناختی کارڈ / بے فارم*",
         lblMemEdu: "تعلیمی قابلیت*",
         lblMemLineage: "بیوی کا نسب*",
@@ -475,6 +495,8 @@
         thName: "مکمل نام",
         thRel: "رشتہ",
         thGen: "جنس",
+        thDOB: "تاریخِ پیدائش",
+        thMarital: "ازدواجی حیثیت",
         thCNIC: "شناختی کارڈ / بے فارم",
         thEdu: "تعلیم",
         thJob: "پیشہ",
@@ -492,6 +514,12 @@
           Brother: "بھائی",
           Sister: "بہن",
           Other: "دیگر"
+        },
+        maritalStatuses: {
+          Unmarried: "غیر شادی شدہ (Unmarried)",
+          Married: "شادی شدہ (Married)",
+          Widowed: "بیوہ / رنڈوا (Widowed)",
+          Divorced: "طلاق یافتہ (Divorced)"
         },
         genders: {
           Male: "مرد",
@@ -545,13 +573,14 @@
         tabNew: "+ नया पंजीकरण जनगणना",
         tabSearch: "पुनः प्रिंट / खोज FRC",
         searchTitle: "परिवार पंजीकरण प्रमाणपत्र (FRC) खोजें",
-        searchSub: "अपना सत्यापित FRC कोड (उदा. WCF-123456) या मोबाइल नंबर दर्ज करें ताकि प्रमाणपत्र पुनः देखा या प्रिंट किया जा सके।",
+        searchSub: "अपना सत्यापित FRC कोड (उदा. WCF-123456) या मोबाइल नंबर दर्ज करें ताकि प्रमाणपत्र पुनः देखा, प्रिंट या अपडेट किया जा सके।",
         btnSearchAction: "खोजें और प्रिंट करें",
         headCardTitle: "परिवार के मुखिया का विवरण",
         headBadge: "परिवार के मुखिया",
         lblHeadCNIC: "पहचान पत्र / आधार नंबर (अनिवार्य)*",
         lblHeadName: "पूरा नाम (मुखिया)*",
         lblHeadFather: "पिता / संरक्षक का नाम*",
+        lblHeadDOB: "जन्म तिथि (Date of Birth)*",
         lblHeadGender: "लिंग*",
         lblHeadClan: "गोत्र / उप-जाति*",
         lblHeadEdu: "शैक्षणिक योग्यता*",
@@ -567,8 +596,10 @@
         memberCardTitle: "सदस्य #",
         lblMemRel: "मुखिया से संबंध*",
         lblMemName: "पूरा नाम*",
+        lblMemDOB: "जन्म तिथि (DOB)*",
         lblMemGender: "लिंग*",
-        lblMemAge: "उम्र*",
+        lblMemMarital: "वैवाहिक स्थिति (Marital Status)*",
+        lblMemAge: "उम्र (Age)*",
         lblMemCNIC: "पहचान पत्र / जन्म प्रमाण पत्र*",
         lblMemEdu: "शैक्षणिक योग्यता*",
         lblMemLineage: "पत्नी का वंश*",
@@ -593,6 +624,8 @@
         thName: "पूरा नाम",
         thRel: "संबंध",
         thGen: "लिंग",
+        thDOB: "जन्म तिथि",
+        thMarital: "वैवाहिक स्थिति",
         thCNIC: "पहचान पत्र / जन्म प्रमाण",
         thEdu: "शिक्षा",
         thJob: "व्यवसाय",
@@ -610,6 +643,12 @@
           Brother: "भाई",
           Sister: "बहन",
           Other: "अन्य"
+        },
+        maritalStatuses: {
+          Unmarried: "अविवाहित (Unmarried)",
+          Married: "विवाहित (Married)",
+          Widowed: "विधवा / विधुर (Widowed)",
+          Divorced: "तलाकशुदा (Divorced)"
         },
         genders: {
           Male: "पुरुष",
@@ -663,13 +702,14 @@
         tabNew: "+ New Census Registration",
         tabSearch: "Reprint / Search FRC",
         searchTitle: "Search Family Registration Certificate (FRC)",
-        searchSub: "Enter your verified FRC Code (e.g. WCF-123456) or registered mobile number to view or reprint.",
+        searchSub: "Enter your verified FRC Code (e.g. WCF-123456) or registered mobile number to view, reprint or update.",
         btnSearchAction: "Search & Print FRC",
         headCardTitle: "Head of Family Details",
         headBadge: "Head of Family",
         lblHeadCNIC: "National ID / Aadhaar / CNIC (Mandatory)*",
         lblHeadName: "Full Name (Head)*",
         lblHeadFather: "Father / Guardian Name*",
+        lblHeadDOB: "Date of Birth (DOB)*",
         lblHeadGender: "Gender*",
         lblHeadClan: "Clan / Sub-Caste*",
         lblHeadEdu: "Education Level*",
@@ -685,7 +725,9 @@
         memberCardTitle: "Member #",
         lblMemRel: "Relation with Head*",
         lblMemName: "Full Name*",
+        lblMemDOB: "Date of Birth (DOB)*",
         lblMemGender: "Gender*",
+        lblMemMarital: "Marital Status*",
         lblMemAge: "Age*",
         lblMemCNIC: "National ID / B-Form / Child ID*",
         lblMemEdu: "Education Level*",
@@ -711,6 +753,8 @@
         thName: "Full Name",
         thRel: "Relation",
         thGen: "Gender",
+        thDOB: "Date of Birth",
+        thMarital: "Marital Status",
         thCNIC: "National ID / B-Form",
         thEdu: "Education",
         thJob: "Occupation",
@@ -728,6 +772,12 @@
           Brother: "Brother",
           Sister: "Sister",
           Other: "Other"
+        },
+        maritalStatuses: {
+          Unmarried: "Unmarried",
+          Married: "Married",
+          Widowed: "Widowed",
+          Divorced: "Divorced"
         },
         genders: {
           Male: "Male",
@@ -808,6 +858,7 @@
 
     let currentLang = 'ur';
     let memberCount = 0;
+    let editingExistingFRCCode = null; // Lock for existing family updates
     
     // Persistent Storage (LocalStorage)
     let storedFRCRecords = {}; 
@@ -909,6 +960,7 @@
       document.getElementById('lblHeadCNIC').textContent = dict.lblHeadCNIC;
       document.getElementById('lblHeadName').textContent = dict.lblHeadName;
       document.getElementById('lblHeadFather').textContent = dict.lblHeadFather;
+      document.getElementById('lblHeadDOB').textContent = dict.lblHeadDOB;
       document.getElementById('lblHeadGender').textContent = dict.lblHeadGender;
       document.getElementById('lblHeadClan').textContent = dict.lblHeadClan;
       document.getElementById('lblHeadEdu').textContent = dict.lblHeadEdu;
@@ -1013,7 +1065,7 @@
         }
       });
 
-      if (foundPrevious) {
+      if (foundPrevious && editingExistingFRCCode !== foundPrevious.parentFRC) {
         notice.innerHTML = `<strong>سابقہ ریکارڈ موجود ہے:</strong> یہ شناختی نمبر پہلے FRC (<strong>${foundPrevious.parentFRC}</strong>) میں <strong>${foundPrevious.relation}</strong> کے طور پر درج ہے (سرپرست: ${foundPrevious.parentHead})۔ نیا فارم جمع کرنے پر ان کا الگ FRC جاری ہو گا، پرانا ریکارڈ منسلک رہے گا اور آبادی میں ڈبل شمار نہیں ہو گا۔`;
         notice.classList.remove('hidden');
       } else {
@@ -1021,7 +1073,22 @@
       }
     }
 
-    function addMemberCard() {
+    // Auto-calculate Age from Date of Birth
+    function handleDOBChange(id) {
+      const dobVal = document.getElementById(`memDOB_${id}`).value;
+      if (!dobVal) return;
+
+      const birthDate = new Date(dobVal);
+      const diff = Date.now() - birthDate.getTime();
+      const ageDate = new Date(diff);
+      const calculatedAge = Math.abs(ageDate.getUTCFullYear() - 1970);
+
+      const ageInput = document.getElementById(`memAge_${id}`);
+      ageInput.value = isNaN(calculatedAge) ? 0 : calculatedAge;
+      handleAgeChange(id);
+    }
+
+    function addMemberCard(existingData = null) {
       memberCount++;
       const id = memberCount;
       const dict = i18n[currentLang];
@@ -1049,10 +1116,24 @@
             <input type="text" id="memName_${id}" required class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-emerald-500 outline-none">
           </div>
 
+          <!-- Date of Birth -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1 lbl-mem-dob">${dict.lblMemDOB}</label>
+            <input type="date" id="memDOB_${id}" onchange="handleDOBChange(${id})" required class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-emerald-500 outline-none">
+          </div>
+
           <div>
             <label class="block text-xs font-semibold text-slate-700 mb-1 lbl-mem-gender">${dict.lblMemGender}</label>
             <select id="memGender_${id}" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-emerald-500 outline-none">
               ${Object.entries(dict.genders).map(([k, v]) => `<option value="${k}">${v}</option>`).join('')}
+            </select>
+          </div>
+
+          <!-- Marital Status (NEW) -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1 lbl-mem-marital">${dict.lblMemMarital}</label>
+            <select id="memMarital_${id}" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-emerald-500 outline-none">
+              ${Object.entries(dict.maritalStatuses).map(([k, v]) => `<option value="${k}">${v}</option>`).join('')}
             </select>
           </div>
 
@@ -1104,6 +1185,17 @@
 
       document.getElementById('membersContainer').appendChild(card);
       handleRelationChange(id);
+
+      // Pre-fill if editing existing member
+      if (existingData) {
+        document.getElementById(`memName_${id}`).value = existingData.name || '';
+        document.getElementById(`memCNIC_${id}`).value = existingData.cnic || '';
+        document.getElementById(`memAge_${id}`).value = existingData.age || 20;
+        if (existingData.dob) document.getElementById(`memDOB_${id}`).value = existingData.dob;
+        if (existingData.maritalStatusKey) document.getElementById(`memMarital_${id}`).value = existingData.maritalStatusKey;
+        if (existingData.relationKey) document.getElementById(`memRel_${id}`).value = existingData.relationKey;
+        handleRelationChange(id);
+      }
     }
 
     function removeMemberCard(id) {
@@ -1114,6 +1206,7 @@
     function handleRelationChange(id) {
       const rel = document.getElementById(`memRel_${id}`).value;
       const genderSelect = document.getElementById(`memGender_${id}`);
+      const maritalSelect = document.getElementById(`memMarital_${id}`);
       const wifeLineageWrap = document.getElementById(`memWifeLineageWrap_${id}`);
 
       if (['Wife', 'Daughter', 'Mother', 'Sister'].includes(rel)) {
@@ -1124,6 +1217,10 @@
 
       if (rel === 'Wife') {
         wifeLineageWrap.classList.remove('hidden');
+        maritalSelect.value = 'Married';
+      } else if (rel === 'Husband') {
+        wifeLineageWrap.classList.add('hidden');
+        maritalSelect.value = 'Married';
       } else {
         wifeLineageWrap.classList.add('hidden');
       }
@@ -1156,7 +1253,9 @@
         card.querySelector('.member-title').textContent = `${dict.memberCardTitle} ${id}`;
         card.querySelector('.lbl-mem-rel').textContent = dict.lblMemRel;
         card.querySelector('.lbl-mem-name').textContent = dict.lblMemName;
+        card.querySelector('.lbl-mem-dob').textContent = dict.lblMemDOB;
         card.querySelector('.lbl-mem-gender').textContent = dict.lblMemGender;
+        card.querySelector('.lbl-mem-marital').textContent = dict.lblMemMarital;
         card.querySelector('.lbl-mem-age').textContent = dict.lblMemAge;
         card.querySelector('.lbl-mem-cnic').textContent = dict.lblMemCNIC;
         card.querySelector('.lbl-mem-edu').textContent = dict.lblMemEdu;
@@ -1172,6 +1271,7 @@
 
         populateSelectOptions(`memRel_${id}`, dict.relations);
         populateSelectOptions(`memGender_${id}`, dict.genders);
+        populateSelectOptions(`memMarital_${id}`, dict.maritalStatuses, 'Unmarried');
         populateSelectOptions(`memLineage_${id}`, dict.lineage, 'Chhippa');
         populateSelectOptions(`memEdu_${id}`, dict.education, 'Matric');
         populateSelectOptions(`memJob_${id}`, dict.jobs, 'Student');
@@ -1180,15 +1280,87 @@
       });
     }
 
+    // Load Existing FRC into form to add member without duplicating family
+    function loadFRCForAddingMember() {
+      const inputVal = document.getElementById('searchFRCInput').value.trim();
+      const cleanUpper = inputVal.toUpperCase();
+      const errEl = document.getElementById('searchErrorMsg');
+
+      if (!inputVal) {
+        errEl.textContent = "براہ کرم FRC کوڈ یا فون نمبر درج کریں۔";
+        errEl.classList.remove('hidden');
+        return;
+      }
+
+      let foundRecord = storedFRCRecords[cleanUpper];
+      if (!foundRecord) {
+        const cleanPhoneInput = inputVal.replace(/[^0-9]/g, '');
+        foundRecord = Object.values(storedFRCRecords).find(rec => {
+          if (!rec.head || !rec.head.phone) return false;
+          const recPhone = rec.head.phone.replace(/[^0-9]/g, '');
+          return recPhone.endsWith(cleanPhoneInput) || cleanPhoneInput.endsWith(recPhone);
+        });
+      }
+
+      if (!foundRecord) {
+        errEl.textContent = `کوڈ یا نمبر (${inputVal}) کا کوئی ریکارڈ نہیں ملا۔`;
+        errEl.classList.remove('hidden');
+        return;
+      }
+
+      errEl.classList.add('hidden');
+      editingExistingFRCCode = foundRecord.code;
+
+      // Switch to Form tab
+      switchMainTab('new');
+      document.getElementById('updatingFamilyBanner').classList.remove('hidden');
+      document.getElementById('updatingFRCCode').textContent = foundRecord.code;
+      document.getElementById('btnSubmitForm').textContent = `خاندان کو اپڈیٹ کریں (${foundRecord.code})`;
+
+      // Fill Head Details
+      document.getElementById('headCNIC').value = foundRecord.head.cnic;
+      document.getElementById('headName').value = foundRecord.head.name;
+      document.getElementById('headFather').value = foundRecord.head.father;
+      if (foundRecord.head.dob) document.getElementById('headDOB').value = foundRecord.head.dob;
+      document.getElementById('headPhone').value = foundRecord.head.phone;
+      document.getElementById('headAddress').value = foundRecord.head.address;
+
+      // Split location into city & country
+      const locParts = (foundRecord.head.location || "").split(',');
+      if (locParts[0]) document.getElementById('headCity').value = locParts[0].trim();
+
+      // Populate Existing Members
+      const container = document.getElementById('membersContainer');
+      container.innerHTML = '';
+      memberCount = 0;
+
+      if (foundRecord.members && Array.isArray(foundRecord.members)) {
+        foundRecord.members.forEach(m => addMemberCard(m));
+      }
+
+      // Add one empty member card ready for the new member
+      addMemberCard();
+    }
+
+    function cancelUpdatingFamily() {
+      editingExistingFRCCode = null;
+      document.getElementById('updatingFamilyBanner').classList.add('hidden');
+      document.getElementById('censusForm').reset();
+      document.getElementById('membersContainer').innerHTML = '';
+      memberCount = 0;
+      document.getElementById('btnSubmitForm').textContent = i18n[currentLang].btnSubmitForm;
+    }
+
     function handleFormSubmit(e) {
       e.preventDefault();
 
       const dict = i18n[currentLang];
-      const frcCode = `WCF-${Math.floor(100000 + Math.random() * 900000)}`;
+      const frcCode = editingExistingFRCCode || `WCF-${Math.floor(100000 + Math.random() * 900000)}`;
 
       const headCNIC = document.getElementById('headCNIC').value.trim();
       const headName = document.getElementById('headName').value.trim();
       const headFather = document.getElementById('headFather').value.trim();
+      const headDOB = document.getElementById('headDOB').value;
       const headGenderKey = document.getElementById('headGender').value;
       const headClanKey = document.getElementById('headClan').value;
       const headClan = headClanKey === 'Other' ? (document.getElementById('headClanOther').value.trim() || dict.clans.Other) : dict.clans[headClanKey];
@@ -1207,16 +1379,29 @@
       const headCity = document.getElementById('headCity').value.trim();
       const headAddress = document.getElementById('headAddress').value.trim();
 
+      // Intra-family CNIC Duplicate Detection (Prevents same CNIC on multiple members)
+      const familyCNICs = [headCNIC];
       const members = [];
       const cards = document.querySelectorAll('[id^="memberCard_"]');
+      let duplicateFound = false;
+
       cards.forEach((card, idx) => {
         const id = card.id.split('_')[1];
         const mRelKey = document.getElementById(`memRel_${id}`).value;
         const mName = document.getElementById(`memName_${id}`).value.trim();
+        const mDOB = document.getElementById(`memDOB_${id}`).value;
         const mGenderKey = document.getElementById(`memGender_${id}`).value;
+        const mMaritalKey = document.getElementById(`memMarital_${id}`).value;
         const mAgeVal = document.getElementById(`memAge_${id}`).value;
         const mCNIC = document.getElementById(`memCNIC_${id}`).value.trim();
         
+        if (familyCNICs.includes(mCNIC) && !mCNIC.includes('-C') && !mCNIC.includes('CHILD-')) {
+          alert(`غلطی: شناختی کارڈ (${mCNIC}) خاندان کے اندر دو مرتبہ درج کیا گیا ہے! براہ کرم درست شناختی کارڈ درج کریں۔`);
+          duplicateFound = true;
+          return;
+        }
+        familyCNICs.push(mCNIC);
+
         let mLineage = dict.lineage.Chhippa;
         if (mRelKey === 'Wife') {
           const mLineageKey = document.getElementById(`memLineage_${id}`).value;
@@ -1235,6 +1420,9 @@
           relation: dict.relations[mRelKey],
           relationKey: mRelKey,
           gender: dict.genders[mGenderKey],
+          dob: mDOB,
+          maritalStatus: dict.maritalStatuses[mMaritalKey],
+          maritalStatusKey: mMaritalKey,
           age: parseInt(mAgeVal) || 0,
           cnic: mCNIC,
           edu: mEdu,
@@ -1243,6 +1431,8 @@
         });
       });
 
+      if (duplicateFound) return;
+
       const record = {
         code: frcCode,
         lang: currentLang,
@@ -1250,7 +1440,9 @@
         head: {
           name: headName,
           father: headFather,
+          dob: headDOB,
           gender: dict.genders[headGenderKey],
+          maritalStatus: dict.maritalStatuses.Married,
           cnic: headCNIC,
           clan: headClan,
           lineage: dict.lineage.Chhippa,
@@ -1271,6 +1463,10 @@
       }
 
       lastGeneratedFRC = record;
+      editingExistingFRCCode = null;
+      document.getElementById('updatingFamilyBanner').classList.add('hidden');
+      document.getElementById('btnSubmitForm').textContent = dict.btnSubmitForm;
+
       updateCensusCounters();
       displayFRCModal(record);
     }
@@ -1305,6 +1501,8 @@
       document.getElementById('thName').textContent = dict.thName;
       document.getElementById('thRel').textContent = dict.thRel;
       document.getElementById('thGen').textContent = dict.thGen;
+      document.getElementById('thDOB').textContent = dict.thDOB;
+      document.getElementById('thMarital').textContent = dict.thMarital;
       document.getElementById('thCNIC').textContent = dict.thCNIC;
       document.getElementById('thEdu').textContent = dict.thEdu;
       document.getElementById('thJob').textContent = dict.thJob;
@@ -1353,11 +1551,13 @@
       headRow.className = "bg-emerald-50/50 font-bold";
       headRow.innerHTML = `
         <td class="border border-slate-300 p-1.5">1</td>
-        <td class="border border-slate-300 p-1.5 font-mono text-[11px] text-emerald-900">${record.code}-H</td>
+        <td class="border border-slate-300 p-1.5 font-mono text-[10px] text-emerald-900">${record.code}-H</td>
         <td class="border border-slate-300 p-1.5">${record.head.name}</td>
         <td class="border border-slate-300 p-1.5">${dict.headBadge}</td>
         <td class="border border-slate-300 p-1.5">${record.head.gender}</td>
-        <td class="border border-slate-300 p-1.5 font-mono">${record.head.cnic}</td>
+        <td class="border border-slate-300 p-1.5 text-[9px] font-mono">${record.head.dob || '-'}</td>
+        <td class="border border-slate-300 p-1.5 text-[10px]">${dict.maritalStatuses.Married.split(' ')[0]}</td>
+        <td class="border border-slate-300 p-1.5 font-mono text-[10px]">${record.head.cnic}</td>
         <td class="border border-slate-300 p-1.5">${record.head.edu}</td>
         <td class="border border-slate-300 p-1.5">${record.head.job}</td>
         <td class="border border-slate-300 p-1.5 text-emerald-800 font-bold">${record.head.lineage}</td>
@@ -1368,11 +1568,13 @@
         const row = document.createElement('tr');
         row.innerHTML = `
           <td class="border border-slate-300 p-1.5">${idx + 2}</td>
-          <td class="border border-slate-300 p-1.5 font-mono text-[11px] text-slate-600">${m.uniqueId}</td>
+          <td class="border border-slate-300 p-1.5 font-mono text-[10px] text-slate-600">${m.uniqueId}</td>
           <td class="border border-slate-300 p-1.5 font-medium">${m.name}</td>
           <td class="border border-slate-300 p-1.5">${m.relation}</td>
           <td class="border border-slate-300 p-1.5">${m.gender}</td>
-          <td class="border border-slate-300 p-1.5 font-mono">${m.cnic}</td>
+          <td class="border border-slate-300 p-1.5 text-[9px] font-mono">${m.dob || '-'}</td>
+          <td class="border border-slate-300 p-1.5 text-[10px]">${m.maritalStatus ? m.maritalStatus.split(' ')[0] : '-'}</td>
+          <td class="border border-slate-300 p-1.5 font-mono text-[10px]">${m.cnic}</td>
           <td class="border border-slate-300 p-1.5">${m.edu}</td>
           <td class="border border-slate-300 p-1.5">${m.job}</td>
           <td class="border border-slate-300 p-1.5 ${m.lineage.includes('غیر') || m.lineage.includes('Non') ? 'text-amber-800 font-semibold' : 'text-emerald-800 font-bold'}">${m.lineage}</td>
@@ -1458,6 +1660,8 @@
       memberCount = 0;
       document.getElementById('headExistingNotice').classList.add('hidden');
       document.getElementById('searchFRCInput').value = '';
+      document.getElementById('updatingFamilyBanner').classList.add('hidden');
+      editingExistingFRCCode = null;
 
       // Prevent Browser Resubmission State
       if (window.history.replaceState) {
@@ -1480,10 +1684,8 @@
         return;
       }
 
-      // Check by Code first
       let foundRecord = storedFRCRecords[cleanUpper];
 
-      // If not found by code, search by Head Phone Number
       if (!foundRecord) {
         const cleanPhoneInput = inputVal.replace(/[^0-9]/g, '');
         foundRecord = Object.values(storedFRCRecords).find(rec => {
@@ -1532,7 +1734,7 @@
       document.getElementById('adminModal').classList.add('hidden');
     }
 
-    // 1-Click: City / Country Wise Directory PDF Export (NEW)
+    // 1-Click: City / Country Wise Directory PDF Export
     function exportCityWisePDF() {
       const inputCity = document.getElementById('adminCityInput').value.trim();
       const dropCity = document.getElementById('adminCityDropdown').value.trim();
@@ -1561,18 +1763,15 @@
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF('p', 'mm', 'a4');
 
-      // Top Title (NADRA / Directory Style)
       doc.setFontSize(15);
       doc.setTextColor(6, 78, 59);
       doc.text("World Chhippa Foundation - City Census Directory", 14, 15);
 
-      // Subtitle with Selected City, Total Families & Date
       doc.setFontSize(9);
       doc.setTextColor(51, 65, 85);
       const todayDate = new Date().toLocaleDateString('en-GB');
       doc.text(`City: ${searchTarget} | Total Families: ${matchedRecords.length} | Date: ${todayDate}`, 14, 21);
 
-      // Table Header Strip
       let y = 30;
       doc.setFillColor(236, 253, 245);
       doc.rect(14, y - 5, 182, 8, 'F');
@@ -1597,7 +1796,6 @@
           doc.addPage();
           y = 20;
 
-          // Repeat header on new page
           doc.setFillColor(236, 253, 245);
           doc.rect(14, y - 5, 182, 8, 'F');
           doc.setFont("helvetica", "bold");
@@ -1630,7 +1828,6 @@
         doc.text(String(totalMems), 162, y);
         doc.text(fullAddr.substring(0, 16), 173, y);
 
-        // Separator line
         doc.setDrawColor(226, 232, 240);
         doc.line(14, y + 2, 196, y + 2);
         y += 7;
@@ -1698,7 +1895,7 @@
       doc.save(`WCF_Phone_Directory_${new Date().toISOString().slice(0, 10)}.pdf`);
     }
 
-    // 1-Click: 18+ Unmarried Boys & Girls Directory PDF Export
+    // 1-Click: 18+ Unmarried Boys & Girls Directory PDF Export (Filtered accurately by Marital Status)
     function exportAdultUnmarriedPDF() {
       const allRecords = Object.values(storedFRCRecords);
       const adultsList = [];
@@ -1708,13 +1905,16 @@
           rec.members.forEach(m => {
             const isChild = (m.relationKey === 'Son' || m.relationKey === 'Daughter' || m.relation.includes('بیٹا') || m.relation.includes('بیٹی'));
             const ageNum = parseInt(m.age) || 0;
-            if (isChild && ageNum >= 18) {
+            const isUnmarried = (m.maritalStatusKey === 'Unmarried' || !m.maritalStatusKey);
+
+            if (isChild && ageNum >= 18 && isUnmarried) {
               adultsList.push({
                 frcCode: rec.code,
                 headName: rec.head.name,
                 headPhone: rec.head.phone,
                 name: m.name,
                 gender: m.gender,
+                dob: m.dob || 'N/A',
                 age: ageNum,
                 edu: m.edu,
                 job: m.job,
@@ -1751,9 +1951,9 @@
       doc.text("#", 16, y);
       doc.text("Name", 24, y);
       doc.text("Gender", 60, y);
-      doc.text("Age", 78, y);
-      doc.text("Education/Job", 90, y);
-      doc.text("Guardian (Phone)", 135, y);
+      doc.text("Age / DOB", 78, y);
+      doc.text("Education/Job", 102, y);
+      doc.text("Guardian (Phone)", 140, y);
 
       doc.setFont("helvetica", "normal");
       y += 7;
@@ -1766,9 +1966,9 @@
         doc.text(String(idx + 1), 16, y);
         doc.text(item.name.substring(0, 20), 24, y);
         doc.text(item.gender, 60, y);
-        doc.text(String(item.age), 78, y);
-        doc.text(`${item.edu} / ${item.job}`.substring(0, 24), 90, y);
-        doc.text(`${item.headName} (${item.headPhone})`.substring(0, 30), 135, y);
+        doc.text(`${item.age} yrs (${item.dob})`.substring(0, 18), 78, y);
+        doc.text(`${item.edu} / ${item.job}`.substring(0, 22), 102, y);
+        doc.text(`${item.headName} (${item.headPhone})`.substring(0, 28), 140, y);
 
         doc.setDrawColor(226, 232, 240);
         doc.line(14, y + 2, 196, y + 2);
