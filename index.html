@@ -49,11 +49,7 @@
       
       <!-- Official Stamp Logo (Header) -->
       <div class="flex items-center gap-3">
-        <div class="w-12 h-12 rounded-full border-2 border-dashed border-amber-300 bg-emerald-950 flex flex-col items-center justify-center text-center p-0.5 shadow-md shrink-0">
-          <span class="text-[7px] font-black text-amber-300 leading-none uppercase">WCF</span>
-          <span class="text-[9px] font-bold text-white leading-none my-0.5">★ SEAL ★</span>
-          <span class="text-[6px] font-semibold text-emerald-200 leading-none uppercase">Official</span>
-        </div>
+        <img src="stamp.png" alt="WCF Official Seal" class="w-12 h-12 rounded-full object-contain shrink-0 shadow-sm border border-emerald-600 bg-white">
         <div>
           <h1 id="appTitle" class="text-base md:text-xl font-bold leading-tight">ورلڈ چھیپا فاؤنڈیشن</h1>
           <p id="appSub" class="text-[11px] md:text-xs text-emerald-200">عالمی مردم شماری اور خاندانی رجسٹریشن پورٹل</p>
@@ -237,97 +233,94 @@
           </div>
         </div>
 
-        <!-- Sheet Scroll Container -->
-        <div class="p-3 md:p-6 overflow-x-auto bg-slate-200 flex justify-center">
-          <div id="frcCertificateSheet" class="relative bg-white w-[794px] min-h-[1050px] p-8 border border-slate-300 shadow text-slate-900 shrink-0 overflow-hidden">
-            
-            <div class="watermark-container">
-              World Chhippa Foundation
-            </div>
-
-            <!-- FRC Document Header with Top-Left QR Code (NADRA Style) -->
-            <div class="border-b-2 border-emerald-800 pb-3 mb-4 flex justify-between items-start relative z-10">
+        <!-- Sheet Scroll Container with Auto-Fit Scaling -->
+        <div class="p-2 md:p-6 overflow-x-auto bg-slate-200 flex justify-center w-full">
+          <div id="frcScaleWrapper" class="origin-top transition-transform duration-200 flex justify-center">
+            <div id="frcCertificateSheet" class="relative bg-white w-[794px] min-h-[1050px] p-8 border border-slate-300 shadow text-slate-900 overflow-hidden shrink-0">
               
-              <!-- Left Side: QR Code + Reg Info -->
-              <div class="flex items-center gap-3">
-                <div id="frcQRCode" class="bg-white p-1 border border-emerald-800 rounded shadow-sm"></div>
-                <div class="text-left border border-emerald-800 rounded-lg p-2 bg-emerald-50/60">
-                  <p class="text-[9px] text-slate-500 font-semibold uppercase">FRC Registration No</p>
-                  <p id="frcCodeDisplay" class="text-base font-black text-emerald-900 tracking-wider">WCF-000000</p>
-                  <p id="frcIssueDate" class="text-[10px] text-slate-500 mt-0.5"></p>
+              <div class="watermark-container">
+                World Chhippa Foundation
+              </div>
+
+              <!-- FRC Document Header with Top-Left QR Code (NADRA Style) -->
+              <div id="frcDocHeader" class="border-b-2 border-emerald-800 pb-3 mb-4 flex justify-between items-start relative z-10">
+                
+                <!-- QR Code + Reg Info -->
+                <div class="flex items-center gap-3">
+                  <div id="frcQRCode" class="bg-white p-1 border border-emerald-800 rounded shadow-sm"></div>
+                  <div class="text-left border border-emerald-800 rounded-lg p-2 bg-emerald-50/60">
+                    <p id="frcRegLabel" class="text-[9px] text-slate-500 font-semibold uppercase">FRC Registration No</p>
+                    <p id="frcCodeDisplay" class="text-base font-black text-emerald-900 tracking-wider">WCF-000000</p>
+                    <p id="frcIssueDate" class="text-[10px] text-slate-500 mt-0.5"></p>
+                  </div>
+                </div>
+
+                <!-- Foundation Title -->
+                <div id="frcTitleSection" class="text-right">
+                  <span id="frcDocBadge" class="text-[10px] font-bold text-emerald-800 tracking-wider uppercase">Official Family Registration Certificate</span>
+                  <h2 id="frcDocOrg" class="text-2xl font-black text-slate-900 mt-0.5">ورلڈ چھیپا فاؤنڈیشن</h2>
+                  <p id="frcDocTagline" class="text-xs text-slate-500">عالمی مردم شماری ڈائریکٹری و خاندانی شناخت</p>
+                </div>
+
+              </div>
+
+              <!-- Head Summary -->
+              <div class="bg-slate-50 border border-slate-200 rounded-lg p-3.5 mb-4 text-xs grid grid-cols-2 gap-3 relative z-10 leading-relaxed">
+                <div>
+                  <p><span id="frcLblHeadName" class="font-bold text-slate-700">سرپرستِ خاندان:</span> <span id="frcHeadName" class="font-semibold text-slate-900"></span></p>
+                  <p><span id="frcLblHeadFather" class="font-bold text-slate-700">والد / سرپرست:</span> <span id="frcHeadFather" class="text-slate-800"></span></p>
+                  <p><span id="frcLblHeadClan" class="font-bold text-slate-700">اٹک / شاخ:</span> <span id="frcHeadClan" class="text-slate-800"></span></p>
+                  <p><span id="frcLblHeadEdu" class="font-bold text-slate-700">تعلیمی قابلیت:</span> <span id="frcHeadEdu" class="text-slate-800"></span></p>
+                </div>
+                <div>
+                  <p><span id="frcLblHeadCNIC" class="font-bold text-slate-700">شناختی کارڈ:</span> <span id="frcHeadCNIC" class="text-slate-800 font-mono"></span></p>
+                  <p><span id="frcLblHeadPhone" class="font-bold text-slate-700">رابطہ فون:</span> <span id="frcHeadPhone" class="text-slate-800 font-mono"></span></p>
+                  <p><span id="frcLblHeadLoc" class="font-bold text-slate-700">ملک و شہر:</span> <span id="frcHeadLocation" class="text-slate-800"></span></p>
+                  <p><span id="frcLblHeadLineage" class="font-bold text-slate-700">کمیونٹی نسب:</span> <span id="frcHeadLineage" class="text-emerald-800 font-bold">چھیپا</span></p>
                 </div>
               </div>
 
-              <!-- Right Side: Foundation Title -->
-              <div class="text-right">
-                <span class="text-[10px] font-bold text-emerald-800 tracking-wider uppercase">Official Family Registration Certificate</span>
-                <h2 class="text-2xl font-black text-slate-900 mt-0.5">ورلڈ چھیپا فاؤنڈیشن</h2>
-                <p class="text-xs text-slate-500">عالمی مردم شماری ڈائریکٹری و خاندانی شناخت</p>
+              <!-- Table -->
+              <div class="relative z-10 mb-6">
+                <table class="w-full border-collapse border border-slate-300 text-xs">
+                  <thead>
+                    <tr class="bg-emerald-800 text-white text-center font-bold">
+                      <th class="border border-slate-300 p-1.5 w-8">#</th>
+                      <th id="thUID" class="border border-slate-300 p-1.5">منفرد شناختی کوڈ</th>
+                      <th id="thName" class="border border-slate-300 p-1.5">مکمل نام</th>
+                      <th id="thRel" class="border border-slate-300 p-1.5">رشتہ</th>
+                      <th id="thGen" class="border border-slate-300 p-1.5">جنس</th>
+                      <th id="thCNIC" class="border border-slate-300 p-1.5">شناختی کارڈ / بے فارم</th>
+                      <th id="thEdu" class="border border-slate-300 p-1.5">تعلیم</th>
+                      <th id="thJob" class="border border-slate-300 p-1.5">پیشہ</th>
+                      <th id="thLineage" class="border border-slate-300 p-1.5">نسب</th>
+                    </tr>
+                  </thead>
+                  <tbody id="frcTableBody" class="divide-y border-slate-200 text-slate-800 text-center"></tbody>
+                </table>
               </div>
 
-            </div>
-
-            <!-- Head Summary -->
-            <div class="bg-slate-50 border border-slate-200 rounded-lg p-3.5 mb-4 text-xs grid grid-cols-2 gap-3 relative z-10 leading-relaxed">
-              <div>
-                <p><span class="font-bold text-slate-700">سرپرستِ خاندان:</span> <span id="frcHeadName" class="font-semibold text-slate-900"></span></p>
-                <p><span class="font-bold text-slate-700">والد / سرپرست:</span> <span id="frcHeadFather" class="text-slate-800"></span></p>
-                <p><span class="font-bold text-slate-700">اٹک / شاخ:</span> <span id="frcHeadClan" class="text-slate-800"></span></p>
-                <p><span class="font-bold text-slate-700">تعلیمی قابلیت:</span> <span id="frcHeadEdu" class="text-slate-800"></span></p>
-              </div>
-              <div>
-                <p><span class="font-bold text-slate-700">شناختی کارڈ:</span> <span id="frcHeadCNIC" class="text-slate-800 font-mono"></span></p>
-                <p><span class="font-bold text-slate-700">رابطہ فون:</span> <span id="frcHeadPhone" class="text-slate-800 font-mono"></span></p>
-                <p><span class="font-bold text-slate-700">ملک و شہر:</span> <span id="frcHeadLocation" class="text-slate-800"></span></p>
-                <p><span class="font-bold text-slate-700">کمیونٹی نسب:</span> <span id="frcHeadLineage" class="text-emerald-800 font-bold">چھیپا</span></p>
-              </div>
-            </div>
-
-            <!-- Table -->
-            <div class="relative z-10 mb-6">
-              <table class="w-full border-collapse border border-slate-300 text-xs">
-                <thead>
-                  <tr class="bg-emerald-800 text-white text-center font-bold">
-                    <th class="border border-slate-300 p-1.5 w-8">#</th>
-                    <th class="border border-slate-300 p-1.5">منفرد شناختی کوڈ</th>
-                    <th class="border border-slate-300 p-1.5">مکمل نام</th>
-                    <th class="border border-slate-300 p-1.5">رشتہ</th>
-                    <th class="border border-slate-300 p-1.5">جنس</th>
-                    <th class="border border-slate-300 p-1.5">شناختی کارڈ / بے فارم</th>
-                    <th class="border border-slate-300 p-1.5">تعلیم</th>
-                    <th class="border border-slate-300 p-1.5">پیشہ</th>
-                    <th class="border border-slate-300 p-1.5">نسب</th>
-                  </tr>
-                </thead>
-                <tbody id="frcTableBody" class="divide-y border-slate-200 text-slate-800 text-center"></tbody>
-              </table>
-            </div>
-
-            <!-- Stamp & Signatures (Matching Header Official Seal) -->
-            <div class="mt-8 pt-4 border-t border-slate-300 flex justify-between items-end relative z-10">
-              <div class="flex items-center gap-4">
-                <div class="w-24 h-24 rounded-full border-4 border-dashed border-emerald-800 flex flex-col items-center justify-center text-center p-1 relative transform -rotate-6 bg-white/95 shadow-sm">
-                  <span class="text-[7px] font-black text-emerald-950 uppercase leading-none">WORLD CHHIPPA</span>
-                  <span class="text-[13px] font-black text-emerald-900 leading-tight my-0.5">★ SEAL ★</span>
-                  <span class="text-[7px] font-bold text-emerald-800 uppercase leading-none">VERIFIED FRC</span>
-                  <span class="text-[6px] font-mono text-emerald-700 mt-1">OFFICIAL-REG</span>
+              <!-- Stamp & Signatures (Matching Header Official PNG Seal) -->
+              <div class="mt-8 pt-4 border-t border-slate-300 flex justify-between items-end relative z-10">
+                <div class="flex items-center gap-4">
+                  <img src="stamp.png" alt="Official Verified Seal" class="w-24 h-24 object-contain transform -rotate-6">
+                  <div class="text-[10px] text-slate-500 space-y-0.5">
+                    <p id="frcDocCertified" class="font-bold text-slate-700">تصدیق شدہ برقی دستاویز</p>
+                    <p id="frcDocCertSub">ورلڈ چھیپا فاؤنڈیشن کا مستند ڈیجیٹل سرٹیفکیٹ۔</p>
+                    <p class="font-mono text-emerald-800">Helpline: +212 708 273330</p>
+                  </div>
                 </div>
-                <div class="text-[10px] text-slate-500 space-y-0.5">
-                  <p class="font-bold text-slate-700">تصدیق شدہ برقی دستاویز</p>
-                  <p>ورلڈ چھیپا فاؤنڈیشن کا مستند ڈیجیٹل سرٹیفکیٹ۔</p>
-                  <p class="font-mono text-emerald-800">Helpline: +212 708 273330</p>
+
+                <div class="text-center">
+                  <div class="w-36 border-b border-slate-700 pb-1 mb-1 text-xs font-semibold text-slate-800 italic">
+                    Registrar WCF
+                  </div>
+                  <p id="frcDocSig" class="text-[10px] font-bold text-slate-600">مجاز دستخط و مہر</p>
+                  <p class="text-[8px] text-slate-400">Authorized Digital Signature</p>
                 </div>
               </div>
 
-              <div class="text-center">
-                <div class="w-36 border-b border-slate-700 pb-1 mb-1 text-xs font-semibold text-slate-800 italic">
-                  Registrar WCF
-                </div>
-                <p class="text-[10px] font-bold text-slate-600">مجاز دستخط و مہر</p>
-                <p class="text-[8px] text-slate-400">Authorized Digital Signature</p>
-              </div>
             </div>
-
           </div>
         </div>
       </div>
@@ -376,6 +369,28 @@
         otherEduPlaceholder: "اپنی تعلیم درج کریں...",
         otherJobPlaceholder: "اپنا پیشہ درج کریں...",
         otherCountryPlaceholder: "اپنے ملک کا نام درج کریں...",
+        frcDocBadge: "Official Family Registration Certificate",
+        frcDocOrg: "ورلڈ چھیپا فاؤنڈیشن",
+        frcDocTagline: "عالمی مردم شماری ڈائریکٹری و خاندانی شناخت",
+        frcLblHeadName: "سرپرستِ خاندان:",
+        frcLblHeadFather: "والد / سرپرست:",
+        frcLblHeadClan: "اٹک / شاخ:",
+        frcLblHeadEdu: "تعلیمی قابلیت:",
+        frcLblHeadCNIC: "شناختی کارڈ:",
+        frcLblHeadPhone: "رابطہ فون:",
+        frcLblHeadLoc: "ملک و شہر:",
+        frcLblHeadLineage: "کمیونٹی نسب:",
+        thUID: "منفرد شناختی کوڈ",
+        thName: "مکمل نام",
+        thRel: "رشتہ",
+        thGen: "جنس",
+        thCNIC: "شناختی کارڈ / بے فارم",
+        thEdu: "تعلیم",
+        thJob: "پیشہ",
+        thLineage: "نسب",
+        frcDocCertified: "تصدیق شدہ برقی دستاویز",
+        frcDocCertSub: "ورلڈ چھیپا فاؤنڈیشن کا مستند ڈیجیٹل سرٹیفکیٹ۔",
+        frcDocSig: "مجاز دستخط و مہر",
         relations: {
           Wife: "بیوی",
           Husband: "شوہر",
@@ -472,6 +487,28 @@
         otherEduPlaceholder: "अपनी शिक्षा लिखें...",
         otherJobPlaceholder: "अपना व्यवसाय लिखें...",
         otherCountryPlaceholder: "अपने देश का नाम दर्ज करें...",
+        frcDocBadge: "Official Family Registration Certificate",
+        frcDocOrg: "वर्ल्ड छीपा फाउंडेशन",
+        frcDocTagline: "वैश्विक जनगणना निर्देशिका एवं पारिवारिक पहचान",
+        frcLblHeadName: "परिवार के मुखिया:",
+        frcLblHeadFather: "पिता / संरक्षक:",
+        frcLblHeadClan: "गोत्र / उप-जाति:",
+        frcLblHeadEdu: "शैक्षणिक योग्यता:",
+        frcLblHeadCNIC: "पहचान पत्र:",
+        frcLblHeadPhone: "संपर्क फ़ोन:",
+        frcLblHeadLoc: "देश एवं शहर:",
+        frcLblHeadLineage: "सामुदायिक वंश:",
+        thUID: "विशिष्ट पहचान कोड",
+        thName: "पूरा नाम",
+        thRel: "संबंध",
+        thGen: "लिंग",
+        thCNIC: "पहचान पत्र / जन्म प्रमाण",
+        thEdu: "शिक्षा",
+        thJob: "व्यवसाय",
+        thLineage: "वंश",
+        frcDocCertified: "सत्यापित इलेक्ट्रॉनिक दस्तावेज़",
+        frcDocCertSub: "वर्ल्ड छीपा फाउंडेशन का प्रामाणिक डिजिटल प्रमाणपत्र।",
+        frcDocSig: "अधिकृत हस्ताक्षर एवं मुहर",
         relations: {
           Wife: "पत्नी",
           Husband: "पति",
@@ -568,6 +605,28 @@
         otherEduPlaceholder: "Enter your education details...",
         otherJobPlaceholder: "Enter your occupation...",
         otherCountryPlaceholder: "Enter country name...",
+        frcDocBadge: "Official Family Registration Certificate",
+        frcDocOrg: "World Chhippa Foundation",
+        frcDocTagline: "Global Census Directory & Family Identity",
+        frcLblHeadName: "Head of Family:",
+        frcLblHeadFather: "Father / Guardian:",
+        frcLblHeadClan: "Clan / Sub-Caste:",
+        frcLblHeadEdu: "Education Level:",
+        frcLblHeadCNIC: "National ID:",
+        frcLblHeadPhone: "Contact Phone:",
+        frcLblHeadLoc: "Country & City:",
+        frcLblHeadLineage: "Community Lineage:",
+        thUID: "Unique ID",
+        thName: "Full Name",
+        thRel: "Relation",
+        thGen: "Gender",
+        thCNIC: "National ID / B-Form",
+        thEdu: "Education",
+        thJob: "Occupation",
+        thLineage: "Lineage",
+        frcDocCertified: "Certified Digital Document",
+        frcDocCertSub: "Authentic Digital Certificate of World Chhippa Foundation.",
+        frcDocSig: "Authorized Signature & Seal",
         relations: {
           Wife: "Wife",
           Husband: "Husband",
@@ -1013,6 +1072,7 @@
 
       const record = {
         code: frcCode,
+        lang: currentLang,
         issueDate: new Date().toLocaleDateString('en-GB'),
         head: {
           name: headName,
@@ -1037,6 +1097,43 @@
     }
 
     function displayFRCModal(record) {
+      const recLang = record.lang || currentLang;
+      const dict = i18n[recLang];
+
+      const sheet = document.getElementById('frcCertificateSheet');
+      const isRTL = recLang === 'ur';
+      sheet.setAttribute('dir', isRTL ? 'rtl' : 'ltr');
+      sheet.className = `relative bg-white w-[794px] min-h-[1050px] p-8 border border-slate-300 shadow text-slate-900 overflow-hidden shrink-0 ${recLang === 'hi' ? 'font-devanagari' : (recLang === 'en' ? 'font-latin' : '')}`;
+
+      const titleSection = document.getElementById('frcTitleSection');
+      if (titleSection) {
+        titleSection.className = isRTL ? 'text-right' : 'text-left';
+      }
+
+      document.getElementById('frcDocBadge').textContent = dict.frcDocBadge;
+      document.getElementById('frcDocOrg').textContent = dict.frcDocOrg;
+      document.getElementById('frcDocTagline').textContent = dict.frcDocTagline;
+      document.getElementById('frcLblHeadName').textContent = dict.frcLblHeadName;
+      document.getElementById('frcLblHeadFather').textContent = dict.frcLblHeadFather;
+      document.getElementById('frcLblHeadClan').textContent = dict.frcLblHeadClan;
+      document.getElementById('frcLblHeadEdu').textContent = dict.frcLblHeadEdu;
+      document.getElementById('frcLblHeadCNIC').textContent = dict.frcLblHeadCNIC;
+      document.getElementById('frcLblHeadPhone').textContent = dict.frcLblHeadPhone;
+      document.getElementById('frcLblHeadLoc').textContent = dict.frcLblHeadLoc;
+      document.getElementById('frcLblHeadLineage').textContent = dict.frcLblHeadLineage;
+
+      document.getElementById('thUID').textContent = dict.thUID;
+      document.getElementById('thName').textContent = dict.thName;
+      document.getElementById('thRel').textContent = dict.thRel;
+      document.getElementById('thGen').textContent = dict.thGen;
+      document.getElementById('thCNIC').textContent = dict.thCNIC;
+      document.getElementById('thEdu').textContent = dict.thEdu;
+      document.getElementById('thJob').textContent = dict.thJob;
+      document.getElementById('thLineage').textContent = dict.thLineage;
+      document.getElementById('frcDocCertified').textContent = dict.frcDocCertified;
+      document.getElementById('frcDocCertSub').textContent = dict.frcDocCertSub;
+      document.getElementById('frcDocSig').textContent = dict.frcDocSig;
+
       document.getElementById('frcCodeDisplay').textContent = record.code;
       document.getElementById('frcIssueDate').textContent = `Date: ${record.issueDate}`;
       document.getElementById('frcHeadName').textContent = record.head.name;
@@ -1051,7 +1148,7 @@
       // Dynamic NADRA Style QR Code Rendering (Top Left)
       const qrContainer = document.getElementById('frcQRCode');
       qrContainer.innerHTML = '';
-      const totalMembersCount = record.members.length + 1; // Head + Members
+      const totalMembersCount = record.members.length + 1;
       const qrPayload = 
         `WORLD CHHIPPA FOUNDATION - OFFICIAL VERIFICATION\n` +
         `FRC Code: ${record.code}\n` +
@@ -1079,7 +1176,7 @@
         <td class="border border-slate-300 p-1.5">1</td>
         <td class="border border-slate-300 p-1.5 font-mono text-[11px] text-emerald-900">${record.code}-H</td>
         <td class="border border-slate-300 p-1.5">${record.head.name}</td>
-        <td class="border border-slate-300 p-1.5">${i18n[currentLang].headBadge}</td>
+        <td class="border border-slate-300 p-1.5">${dict.headBadge}</td>
         <td class="border border-slate-300 p-1.5">${record.head.gender}</td>
         <td class="border border-slate-300 p-1.5 font-mono">${record.head.cnic}</td>
         <td class="border border-slate-300 p-1.5">${record.head.edu}</td>
@@ -1103,6 +1200,20 @@
         `;
         tableBody.appendChild(row);
       });
+
+      // Mobile Vertical Screen Scaling (Auto-Fit without rotating screen)
+      const wrapper = document.getElementById('frcScaleWrapper');
+      if (wrapper) {
+        const screenWidth = window.innerWidth;
+        if (screenWidth < 820) {
+          const scale = (screenWidth - 24) / 794;
+          wrapper.style.transform = `scale(${scale})`;
+          wrapper.style.marginBottom = `-${(1050 * (1 - scale))}px`;
+        } else {
+          wrapper.style.transform = 'none';
+          wrapper.style.marginBottom = '0px';
+        }
+      }
 
       document.getElementById('frcModal').classList.remove('hidden');
     }
@@ -1132,6 +1243,12 @@
       btn.textContent = "ڈاؤن لوڈ ہو رہا ہے...";
       btn.disabled = true;
 
+      const wrapper = document.getElementById('frcScaleWrapper');
+      const prevTransform = wrapper.style.transform;
+      const prevMargin = wrapper.style.marginBottom;
+      wrapper.style.transform = 'none';
+      wrapper.style.marginBottom = '0px';
+
       const sheet = document.getElementById('frcCertificateSheet');
       const { jsPDF } = window.jspdf;
 
@@ -1140,6 +1257,9 @@
         useCORS: true,
         logging: false
       });
+
+      wrapper.style.transform = prevTransform;
+      wrapper.style.marginBottom = prevMargin;
 
       const imgData = canvas.toDataURL('image/jpeg', 0.95);
       const pdf = new jsPDF('p', 'mm', 'a4');
