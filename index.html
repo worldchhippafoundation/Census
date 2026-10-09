@@ -39,34 +39,6 @@
       text-transform: uppercase;
       letter-spacing: 4px;
     }
-
-    /* Vector Blue Rubber Stamp Style */
-    .vector-blue-stamp {
-      width: 96px;
-      height: 96px;
-      border: 3px double #0d3b66;
-      border-radius: 50%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      color: #0d3b66;
-      text-transform: uppercase;
-      font-family: 'Inter', sans-serif;
-      transform: rotate(-7deg);
-      background: radial-gradient(circle, rgba(13,59,102,0.03) 0%, rgba(255,255,255,0.95) 100%);
-      box-shadow: inset 0 0 4px rgba(13,59,102,0.3);
-      position: relative;
-      user-select: none;
-    }
-    .vector-blue-stamp::before {
-      content: '';
-      position: absolute;
-      inset: 3px;
-      border: 1px dashed #0d3b66;
-      border-radius: 50%;
-      pointer-events: none;
-    }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-900 min-h-screen">
@@ -75,13 +47,10 @@
   <header class="bg-emerald-800 text-white shadow-md sticky top-0 z-40">
     <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-3">
       
-      <!-- Official Header Area -->
-      <div class="flex items-center gap-3 cursor-pointer select-none" id="headerLogoArea" title="Official Seal (5-Clicks Admin)">
-        <div class="w-12 h-12 rounded-full border border-emerald-500 bg-white flex items-center justify-center text-emerald-800 font-bold text-xs shadow-sm">
-          WCF
-        </div>
+      <!-- Official Header Logo Restored (Point #1: stamp.png) -->
+      <div class="flex items-center gap-3 cursor-pointer select-none" id="headerLogoArea" title="Official Seal (5 Clicks Admin Panel)">
+        <img src="stamp.png" alt="WCF Official Seal" class="w-12 h-12 rounded-full object-contain shrink-0 shadow-sm border border-emerald-500 bg-white hover:opacity-95 transition">
         <div>
-          <!-- Dynamic Top Title (Point #8) -->
           <h1 id="appTitle" class="text-base md:text-xl font-bold leading-tight">چھیپا خاندانی رجسٹریشن سرٹیفکیٹ</h1>
           <p id="appSub" class="text-[11px] md:text-xs text-emerald-200">ورلڈ چھیپا فاؤنڈیشن — عالمی مردم شماری پورٹل</p>
         </div>
@@ -129,52 +98,78 @@
       </button>
     </div>
 
-    <!-- City Stats Public Query Dashboard Section -->
+    <!-- Open Population Dashboard Section (Point #5: Unrestricted City / Country Query) -->
     <div id="cityStatsSection" class="hidden bg-white p-5 md:p-6 rounded-xl border border-slate-200 shadow space-y-4">
-      <h3 id="cityStatsTitle" class="font-bold text-base text-slate-800">اپنے شہر کی کمیونٹی آبادی چیک کریں</h3>
-      <p id="cityStatsSub" class="text-xs text-slate-500">اپنا رجسٹرڈ FRC کوڈ اور شناختی کارڈ / آدھار نمبر درج کر کے اپنے شہر کی مجموعی آبادی کے اعداد و شمار دیکھیں۔</p>
-      <div class="flex flex-col md:flex-row gap-3 max-w-xl">
-        <input type="text" id="cityStatFrcInput" placeholder="FRC کوڈ درج کریں (مثلاً WCF-123456)" class="border border-slate-300 rounded-lg p-2.5 text-sm font-mono outline-none focus:ring-2 focus:ring-emerald-600 flex-1">
-        <input type="text" id="cityStatCnicInput" placeholder="شناختی کارڈ نمبر درج کریں" class="border border-slate-300 rounded-lg p-2.5 text-sm font-mono outline-none focus:ring-2 focus:ring-emerald-600 flex-1">
-        <button type="button" id="btnCityStatsAction" onclick="queryCityPopulationStats()" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-5 py-2.5 rounded-lg text-sm shadow">
-          تصدیق و ڈیٹا دیکھیں
+      <h3 id="cityStatsTitle" class="font-bold text-base text-slate-800">کمیونٹی آبادی ڈیش بورڈ (گلوبل سرچ)</h3>
+      <p id="cityStatsSub" class="text-xs text-slate-500">اپنا تصدیق شدہ FRC کوڈ یا رجسٹرڈ موبائل نمبر درج کریں تاکہ رسائی حاصل ہو سکے، اور کسی بھی ملک یا شہر کی آبادی دیکھیں۔</p>
+      
+      <!-- Verification Input -->
+      <div id="popAuthBox" class="flex flex-col md:flex-row gap-3 max-w-xl">
+        <input type="text" id="cityStatAuthInput" placeholder="FRC کوڈ یا موبائل فون نمبر درج کریں..." class="border border-slate-300 rounded-lg p-2.5 text-sm font-mono outline-none focus:ring-2 focus:ring-emerald-600 flex-1">
+        <button type="button" id="btnCityStatsVerify" onclick="verifyAndOpenPopulationDashboard()" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-5 py-2.5 rounded-lg text-sm shadow">
+          تصدیق و رسائی
         </button>
       </div>
       <p id="cityStatsErrorMsg" class="text-xs text-red-600 font-semibold hidden"></p>
 
-      <div id="cityStatsResultCard" class="hidden mt-4 p-5 bg-emerald-50/60 border border-emerald-300 rounded-xl space-y-3">
-        <div class="flex justify-between items-center border-b border-emerald-200 pb-2">
-          <h4 class="font-bold text-sm text-emerald-950">
-            شہر: <span id="statResCityName" class="text-emerald-700 text-base font-black"></span>
-          </h4>
-          <span class="text-xs bg-emerald-200 text-emerald-900 px-2 py-0.5 rounded font-semibold">مجموعی شماریات (Aggregate Only)</span>
+      <!-- Active Search Area (Unlocked after verification) -->
+      <div id="popFilterArea" class="hidden pt-3 border-t border-slate-200 space-y-3">
+        <div class="bg-emerald-50 border border-emerald-200 p-3 rounded-lg flex flex-wrap items-center justify-between gap-2 text-xs">
+          <span class="text-emerald-900 font-semibold">✅ رسائی منظور: آپ کسی بھی ملک یا شہر کی مردم شماری کا جائزہ لے سکتے ہیں۔</span>
+          <button type="button" onclick="lockPopulationDashboard()" class="text-slate-500 hover:text-red-600 font-bold underline">لاک کریں</button>
         </div>
-        <div class="grid grid-cols-2 md:grid-cols-5 gap-3 text-center">
-          <div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm">
-            <span class="text-[10px] text-slate-500 block" id="lblStatFamilies">کل خاندان:</span>
-            <span id="statResFamilies" class="text-lg font-black text-slate-800">0</span>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1" id="lblPopCountry">ملک منتخب کریں:</label>
+            <select id="popCountrySelect" onchange="runPublicPopulationQuery()" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white outline-none focus:ring-2 focus:ring-emerald-500"></select>
           </div>
-          <div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm">
-            <span class="text-[10px] text-slate-500 block" id="lblStatTotalPop">کل آبادی (افراد):</span>
-            <span id="statResTotalPop" class="text-lg font-black text-emerald-800">0</span>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1" id="lblPopCity">شہر (اختیاری یا سب):</label>
+            <input type="text" id="popCityInput" oninput="runPublicPopulationQuery()" placeholder="شہر کا نام لکھیں (خالی = تمام شہر)" class="w-full border border-slate-300 rounded-lg p-2 text-xs outline-none focus:ring-2 focus:ring-emerald-500">
           </div>
-          <div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm">
-            <span class="text-[10px] text-slate-500 block" id="lblStatMales">بالغ مرد (18+):</span>
-            <span id="statResMales" class="text-lg font-black text-blue-700">0</span>
+          <div class="flex items-end">
+            <button type="button" onclick="runPublicPopulationQuery()" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-2 rounded-lg text-xs shadow">
+              اعداد و شمار اپڈیٹ کریں
+            </button>
           </div>
-          <div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm">
-            <span class="text-[10px] text-slate-500 block" id="lblStatFemales">بالغ خواتین (18+):</span>
-            <span id="statResFemales" class="text-lg font-black text-purple-700">0</span>
+        </div>
+
+        <!-- Dynamic Aggregate Results Display -->
+        <div id="cityStatsResultCard" class="mt-4 p-5 bg-emerald-50/80 border border-emerald-300 rounded-xl space-y-3">
+          <div class="flex justify-between items-center border-b border-emerald-200 pb-2">
+            <h4 class="font-bold text-sm text-emerald-950">
+              منتخب علاقہ: <span id="statResAreaName" class="text-emerald-800 text-base font-black">All</span>
+            </h4>
+            <span class="text-xs bg-emerald-200 text-emerald-900 px-2.5 py-0.5 rounded-full font-bold">مجموعی شماریات (Aggregate)</span>
           </div>
-          <div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm col-span-2 md:col-span-1">
-            <span class="text-[10px] text-slate-500 block" id="lblStatMinors">نابالغ بچے (<18):</span>
-            <span id="statResMinors" class="text-lg font-black text-amber-600">0</span>
+          <div class="grid grid-cols-2 md:grid-cols-5 gap-3 text-center">
+            <div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm">
+              <span class="text-[10px] text-slate-500 block" id="lblStatFamilies">کل خاندان:</span>
+              <span id="statResFamilies" class="text-lg font-black text-slate-800">0</span>
+            </div>
+            <div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm">
+              <span class="text-[10px] text-slate-500 block" id="lblStatTotalPop">کل آبادی (افراد):</span>
+              <span id="statResTotalPop" class="text-lg font-black text-emerald-800">0</span>
+            </div>
+            <div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm">
+              <span class="text-[10px] text-slate-500 block" id="lblStatMales">بالغ مرد (18+):</span>
+              <span id="statResMales" class="text-lg font-black text-blue-700">0</span>
+            </div>
+            <div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm">
+              <span class="text-[10px] text-slate-500 block" id="lblStatFemales">بالغ خواتین (18+):</span>
+              <span id="statResFemales" class="text-lg font-black text-purple-700">0</span>
+            </div>
+            <div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm col-span-2 md:col-span-1">
+              <span class="text-[10px] text-slate-500 block" id="lblStatMinors">نابالغ بچے (<18):</span>
+              <span id="statResMinors" class="text-lg font-black text-amber-600">0</span>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Search Section (Language Synced for Button & Placeholder - Point #1) -->
+    <!-- Search Section (Language Synced) -->
     <div id="searchSection" class="hidden bg-white p-5 md:p-6 rounded-xl border border-slate-200 shadow space-y-4">
       <h3 id="searchTitle" class="font-bold text-base text-slate-800">خاندانی رجسٹریشن سرٹیفکیٹ (FRC) تلاش کریں</h3>
       <p id="searchSub" class="text-xs text-slate-500">اپنا تصدیق شدہ FRC کوڈ (مثلاً WCF-123456) یا رجسٹرڈ موبائل نمبر درج کریں تاکہ سرٹیفکیٹ دوبارہ دیکھا، پرنٹ یا اپڈیٹ کیا جا سکے۔</p>
@@ -198,7 +193,7 @@
         <button type="button" onclick="cancelUpdatingFamily()" class="text-red-600 hover:underline">منسوخ کریں (نئے اندراج پر جائیں)</button>
       </div>
 
-      <!-- Head Details Card (Mandatory * in Red - Point #9) -->
+      <!-- Head Details Card (Mandatory * in Red) -->
       <div class="bg-white rounded-xl shadow border border-slate-200 overflow-hidden">
         <div class="bg-emerald-700 text-white px-5 py-3 flex justify-between items-center">
           <h2 id="headCardTitle" class="font-bold text-sm md:text-base">سرپرستِ خاندان کی تفصیلات</h2>
@@ -212,7 +207,6 @@
               شناختی کارڈ / آدھار نمبر (لازمی)<span class="text-red-500 font-bold ml-0.5">*</span>
             </label>
             <input type="text" id="headCNIC" required oninput="checkHeadExistingID(this.value)" placeholder="e.g. 42101-1234567-1" class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
-            <!-- Language Synced Caution Box (Point #3) -->
             <div id="headExistingNotice" class="hidden mt-1 text-xs text-amber-800 bg-amber-50 p-2 rounded border border-amber-200"></div>
           </div>
 
@@ -349,7 +343,7 @@
       </div>
     </form>
 
-    <!-- FRC Certificate Modal (Language Synced Bar) -->
+    <!-- FRC Certificate Modal -->
     <div id="frcModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 overflow-y-auto p-2 md:p-4 flex flex-col items-center">
       <div class="bg-white w-full max-w-4xl rounded-xl shadow-2xl overflow-hidden border border-slate-300 my-auto">
         
@@ -372,7 +366,7 @@
           </div>
         </div>
 
-        <!-- Sheet Scroll Container: Fit to 1 Page (Points #4, #5, #6, #7, #10) -->
+        <!-- Sheet Scroll Container: Fit to 1 Page -->
         <div class="p-2 md:p-4 overflow-x-auto bg-slate-200 flex justify-center w-full">
           <div id="frcScaleWrapper" class="origin-top transition-transform duration-200 flex justify-center">
             <div id="frcCertificateSheet" class="relative bg-white w-[794px] min-h-[1050px] p-6 border border-slate-300 shadow text-slate-900 overflow-hidden shrink-0 flex flex-col justify-between">
@@ -381,7 +375,7 @@
                 World Chhippa Foundation
               </div>
 
-              <!-- Top Content Wrapper -->
+              <!-- Top Section -->
               <div>
                 <!-- FRC Header -->
                 <div id="frcDocHeader" class="border-b-2 border-emerald-800 pb-2 mb-3 flex justify-between items-start relative z-10">
@@ -417,7 +411,7 @@
                   </div>
                 </div>
 
-                <!-- Table with Address & Sequential IDs (Points #4 & #10) -->
+                <!-- Table with Address & Strict Sequential IDs (Point #4) -->
                 <div class="relative z-10 mb-3">
                   <table class="w-full border-collapse border border-slate-300 text-[10px]">
                     <thead>
@@ -441,43 +435,55 @@
                 </div>
               </div>
 
-              <!-- Bottom Dedicated Structure (Points #5, #6, #7) -->
+              <!-- Bottom Order (Point #3: Row 1 = Dedicated Box + Blue Stamp/Signature, Row 2 = Bottom Most Founders Strip) -->
               <div class="mt-auto relative z-10 pt-2 border-t border-slate-300 space-y-2">
                 
-                <!-- Founders Wide Horizontal Strip (Point #5) -->
-                <div class="bg-amber-50/80 border border-amber-200 rounded px-3 py-1.5 text-center font-latin">
-                  <p class="text-[9px] font-bold text-amber-950 uppercase tracking-wide">
-                    Thank you to all those who laid the foundation of the World Chhippa Foundation:
-                  </p>
-                  <p class="text-[8.5px] font-semibold text-slate-700 mt-0.5">
-                    • Subrati Deen Bhatti (Nimbi Jodhan) IND &nbsp;&nbsp;|&nbsp;&nbsp; 
-                    • Mrs. Saleem Rao (Ghachi Pur Walay) PAK &nbsp;&nbsp;|&nbsp;&nbsp; 
-                    • Sufyan Tak / Safwan Tak (Neemray Walay) PAK
-                  </p>
-                </div>
-
-                <!-- Bottom Row: Architect Dedication on Left + Vector Blue Stamp on Right -->
+                <!-- Row 1: Left = Architect Box | Right = Blue Vector Stamp & Signatures -->
                 <div class="flex justify-between items-end gap-3 pt-1">
                   
-                  <!-- Extreme Bottom-Left Architect Box (Point #6) -->
-                  <div class="bg-slate-50 border border-slate-300 rounded p-2 font-latin text-left max-w-xs shadow-sm">
-                    <span class="text-[7.5px] text-slate-500 uppercase tracking-wider block font-semibold">
+                  <!-- Left: Dedicated Box (Above thanks strip) -->
+                  <div class="bg-slate-50 border border-slate-300 rounded p-2.5 font-latin text-left max-w-sm shadow-sm">
+                    <span class="text-[8px] text-slate-500 uppercase tracking-wider block font-semibold">
                       Conceived, Architected & Dedicated to Chhippa Community by:
                     </span>
-                    <strong class="text-[11px] font-black text-emerald-800 tracking-wide block mt-0.5">
+                    <strong class="text-[12px] font-black text-emerald-800 tracking-wide block mt-0.5">
                       M. WASEEM SADIQ TAK (Neemray Walay)
                     </strong>
                   </div>
 
-                  <!-- Extreme Bottom-Right: Vector Blue Rubber Stamp & Signature (Point #7) -->
+                  <!-- Right: Pure Vector Blue Rubber Stamp (Point #2: VERIFIED only) & Signature -->
                   <div class="flex items-center gap-3 shrink-0">
                     
-                    <!-- Pure Vector Blue Rubber Stamp -->
-                    <div class="vector-blue-stamp">
-                      <span class="text-[5.5px] font-black tracking-widest text-center leading-none">WORLD CHHIPPA<br>FOUNDATION</span>
-                      <div class="w-8 h-px bg-[#0d3b66] my-0.5 opacity-60"></div>
-                      <span class="text-[7.5px] font-bold tracking-wider leading-none">VERIFIED</span>
-                      <span class="text-[5px] tracking-widest opacity-80 mt-0.5 leading-none">★ SEAL ★</span>
+                    <!-- Circular Royal Blue Vector SVG Rubber Stamp -->
+                    <div class="w-24 h-24 select-none shrink-0" title="Official Verified Stamp">
+                      <svg viewBox="0 0 200 200" class="w-full h-full transform -rotate-6">
+                        <!-- Outer Double Rings -->
+                        <circle cx="100" cy="100" r="95" fill="none" stroke="#0d3b66" stroke-width="4.5" />
+                        <circle cx="100" cy="100" r="88" fill="none" stroke="#0d3b66" stroke-width="1.8" stroke-dasharray="4,2" />
+                        <circle cx="100" cy="100" r="62" fill="none" stroke="#0d3b66" stroke-width="2.5" />
+                        
+                        <!-- Circular Curved Top Text -->
+                        <path id="curveTop" d="M 28,100 A 72,72 0 0,1 172,100" fill="none" />
+                        <text fill="#0d3b66" font-family="'Inter', sans-serif" font-weight="900" font-size="12.5" letter-spacing="2">
+                          <textPath href="#curveTop" startOffset="50%" text-anchor="middle">
+                            ★ WORLD CHHIPPA FOUNDATION ★
+                          </textPath>
+                        </text>
+
+                        <!-- Circular Curved Bottom Text -->
+                        <path id="curveBottom" d="M 172,100 A 72,72 0 0,1 28,100" fill="none" />
+                        <text fill="#0d3b66" font-family="'Inter', sans-serif" font-weight="800" font-size="9.5" letter-spacing="2.5">
+                          <textPath href="#curveBottom" startOffset="50%" text-anchor="middle">
+                            GLOBAL CENSUS DIRECTORY
+                          </textPath>
+                        </text>
+
+                        <!-- Center Stars & Pure VERIFIED Text (No Official Seal) -->
+                        <text x="100" y="86" fill="#0d3b66" font-family="'Inter', sans-serif" font-size="11" text-anchor="middle" font-weight="bold">★ ★ ★</text>
+                        <text x="100" y="107" fill="#0d3b66" font-family="'Inter', sans-serif" font-weight="900" font-size="19" text-anchor="middle" letter-spacing="1.5">VERIFIED</text>
+                        <line x1="45" y1="114" x2="155" y2="114" stroke="#0d3b66" stroke-width="1.5" />
+                        <text x="100" y="125" fill="#0d3b66" font-family="'Inter', sans-serif" font-size="8" text-anchor="middle" font-weight="bold" letter-spacing="1">AUTHENTIC</text>
+                      </svg>
                     </div>
 
                     <!-- Signature & Registrar -->
@@ -494,6 +500,18 @@
 
                   </div>
 
+                </div>
+
+                <!-- Row 2: Bottom-Most Strip: Founders Tribute Strip (Point #3) -->
+                <div class="bg-amber-50/90 border border-amber-200 rounded px-3 py-1.5 text-center font-latin mt-1">
+                  <p class="text-[9px] font-bold text-amber-950 uppercase tracking-wide">
+                    Thank you to all those who laid the foundation of the World Chhippa Foundation:
+                  </p>
+                  <p class="text-[8.5px] font-semibold text-slate-700 mt-0.5">
+                    • Subrati Deen Bhatti (Nimbi Jodhan) IND &nbsp;&nbsp;|&nbsp;&nbsp; 
+                    • Mrs. Saleem Rao (Ghachi Pur Walay) PAK &nbsp;&nbsp;|&nbsp;&nbsp; 
+                    • Sufyan Tak / Safwan Tak (Neemray Walay) PAK
+                  </p>
                 </div>
 
               </div>
@@ -612,9 +630,8 @@
         btnSearchAddMember: "+ نیا رکن شامل کریں",
         cautionHeadPrefix: "سابقہ ریکارڈ موجود ہے:",
         cautionHeadDesc: "یہ شناختی نمبر پہلے FRC ({frc}) میں {rel} کے طور پر درج ہے (سرپرست: {head})۔ نیا فارم جمع کرنے پر ان کا الگ FRC جاری ہوگا، پرانا ریکارڈ منسلک رہے گا اور آبادی میں ڈبل شمار نہیں ہوگا۔",
-        cityStatsTitle: "اپنے شہر کی کمیونٹی آبادی چیک کریں",
-        cityStatsSub: "اپنا رجسٹرڈ FRC کوڈ اور شناختی کارڈ / آدھار نمبر درج کر کے اپنے شہر کی مجموعی آبادی کے اعداد و شمار دیکھیں۔",
-        btnCityStatsAction: "تصدیق و ڈیٹا دیکھیں",
+        cityStatsTitle: "کمیونٹی آبادی ڈیش بورڈ (گلوبل سرچ)",
+        cityStatsSub: "اپنا تصدیق شدہ FRC کوڈ یا رجسٹرڈ موبائل نمبر درج کریں تاکہ رسائی حاصل ہو سکے، اور کسی بھی ملک یا شہر کی آبادی دیکھیں۔",
         lblStatFamilies: "کل خاندان:",
         lblStatTotalPop: "کل آبادی (افراد):",
         lblStatMales: "بالغ مرد (18+):",
@@ -766,9 +783,8 @@
         btnSearchAddMember: "+ नया सदस्य जोड़ें",
         cautionHeadPrefix: "पूर्व रिकॉर्ड उपलब्ध है:",
         cautionHeadDesc: "यह पहचान पत्र पहले FRC ({frc}) में {rel} के रूप में दर्ज है (मुखिया: {head})। नया फॉर्म जमा करने पर इनका अलग FRC जारी होगा, पुराना रिकॉर्ड जुड़ा रहेगा और आबादी में दोहराव नहीं होगा।",
-        cityStatsTitle: "अपने शहर की समुदाय आबादी देखें",
-        cityStatsSub: "अपना पंजीकृत FRC कोड और पहचान पत्र नंबर दर्ज करके अपने शहर की कुल आबादी के आंकड़े देखें।",
-        btnCityStatsAction: "सत्यापन एवं डेटा देखें",
+        cityStatsTitle: "समुदाय आबादी डैशबोर्ड (वैश्विक खोज)",
+        cityStatsSub: "अपना सत्यापित FRC कोड या मोबाइल नंबर दर्ज करके किसी भी देश या शहर की आबादी के आंकड़े देखें।",
         lblStatFamilies: "कुल परिवार:",
         lblStatTotalPop: "कुल आबादी (व्यक्ति):",
         lblStatMales: "वयस्क पुरुष (18+):",
@@ -920,9 +936,8 @@
         btnSearchAddMember: "+ Add New Member",
         cautionHeadPrefix: "Previous Record Exists:",
         cautionHeadDesc: "This National ID is already registered under FRC ({frc}) as {rel} (Head: {head}). Submitting a new form will issue a separate FRC without duplicate population count.",
-        cityStatsTitle: "Check City Community Population",
-        cityStatsSub: "Enter your registered FRC Code and National ID / Aadhaar to view aggregate population statistics of your city.",
-        btnCityStatsAction: "Verify & View Stats",
+        cityStatsTitle: "Community Population Dashboard (Global Search)",
+        cityStatsSub: "Enter your verified FRC Code or registered Mobile Number to gain access and check population for any country or city.",
         lblStatFamilies: "Total Families:",
         lblStatTotalPop: "Total Population:",
         lblStatMales: "Adult Males (18+):",
@@ -1080,6 +1095,7 @@
     let currentLang = 'ur';
     let memberCount = 0;
     let editingExistingFRCCode = null;
+    let isPopDashboardUnlocked = false;
     
     let storedFRCRecords = {}; 
     try {
@@ -1093,9 +1109,16 @@
 
     function populateAdminCountryOptions() {
       const cSel = document.getElementById('adminCountryDropdown');
-      if (!cSel) return;
-      cSel.innerHTML = '<option value="">-- All / Select Country --</option>' + 
-        allWorldCountries.map(c => `<option value="${c}">${c}</option>`).join('');
+      if (cSel) {
+        cSel.innerHTML = '<option value="">-- All / Select Country --</option>' + 
+          allWorldCountries.map(c => `<option value="${c}">${c}</option>`).join('');
+      }
+
+      const pSel = document.getElementById('popCountrySelect');
+      if (pSel) {
+        pSel.innerHTML = '<option value="">-- All Countries (تمام ممالک) --</option>' + 
+          allWorldCountries.map(c => `<option value="${c}">${c}</option>`).join('');
+      }
     }
 
     function updateCensusCounters() {
@@ -1139,7 +1162,6 @@
       document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
       document.body.className = `bg-slate-50 text-slate-900 min-h-screen ${lang === 'hi' ? 'font-devanagari' : (lang === 'en' ? 'font-latin' : '')}`;
 
-      // Dynamic Title (Point #8)
       document.getElementById('appTitle').textContent = dict.appTitle;
       document.getElementById('appSub').textContent = dict.appSub;
       document.getElementById('lblLang').textContent = dict.lblLang;
@@ -1147,17 +1169,14 @@
       document.getElementById('tabSearchReg').textContent = dict.tabSearch;
       document.getElementById('tabCityStats').textContent = dict.tabCityStats;
       
-      // Search Sync (Point #1)
       document.getElementById('searchTitle').textContent = dict.searchTitle;
       document.getElementById('searchSub').textContent = dict.searchSub;
       document.getElementById('searchFRCInput').placeholder = dict.searchPlaceholder;
       document.getElementById('btnSearchAction').textContent = dict.btnSearchAction;
       document.getElementById('btnSearchAddMember').textContent = dict.btnSearchAddMember;
 
-      // City Stats UI
       document.getElementById('cityStatsTitle').textContent = dict.cityStatsTitle;
       document.getElementById('cityStatsSub').textContent = dict.cityStatsSub;
-      document.getElementById('btnCityStatsAction').textContent = dict.btnCityStatsAction;
       document.getElementById('lblStatFamilies').textContent = dict.lblStatFamilies;
       document.getElementById('lblStatTotalPop').textContent = dict.lblStatTotalPop;
       document.getElementById('lblStatMales').textContent = dict.lblStatMales;
@@ -1167,7 +1186,6 @@
       document.getElementById('headCardTitle').textContent = dict.headCardTitle;
       document.getElementById('headBadge').textContent = dict.headBadge;
 
-      // Head Labels with Red * (Point #9)
       document.getElementById('lblHeadCNIC').innerHTML = `${dict.lblHeadCNIC}<span class="text-red-500 font-bold ml-0.5">*</span>`;
       document.getElementById('lblHeadName').innerHTML = `${dict.lblHeadName}<span class="text-red-500 font-bold ml-0.5">*</span>`;
       document.getElementById('lblHeadFather').innerHTML = `${dict.lblHeadFather}<span class="text-red-500 font-bold ml-0.5">*</span>`;
@@ -1187,7 +1205,6 @@
       document.getElementById('btnAddMemberBtn').textContent = dict.btnAddMemberBtn;
       document.getElementById('btnSubmitForm').textContent = dict.btnSubmitForm;
 
-      // Modal Buttons Sync
       document.getElementById('modalTopHeading').textContent = dict.modalTopHeading;
       document.getElementById('modalTopSub').textContent = dict.modalTopSub;
       document.getElementById('btnDownloadAction').textContent = dict.btnDownloadPdf;
@@ -1212,7 +1229,6 @@
 
       refreshMemberCardsLanguage();
       
-      // Refresh Caution Notice Language if open (Point #3)
       const cnicVal = document.getElementById('headCNIC').value;
       if (cnicVal) checkHeadExistingID(cnicVal);
     }
@@ -1271,11 +1287,135 @@
         tabCityBtn.className = activeCls;
         tabNewBtn.className = inactiveCls;
         tabSearchBtn.className = inactiveCls;
-        document.getElementById('cityStatFrcInput').focus();
+        if (!isPopDashboardUnlocked) {
+          document.getElementById('cityStatAuthInput').focus();
+        }
       }
     }
 
-    // Dynamic Linking Caution Box Language Synced (Point #3)
+    // Open Population Dashboard Logic (Point #5)
+    function verifyAndOpenPopulationDashboard() {
+      const inputVal = document.getElementById('cityStatAuthInput').value.trim();
+      const errEl = document.getElementById('cityStatsErrorMsg');
+      const authBox = document.getElementById('popAuthBox');
+      const filterArea = document.getElementById('popFilterArea');
+
+      if (!inputVal) {
+        errEl.textContent = "براہ کرم FRC کوڈ یا فون نمبر درج کریں۔";
+        errEl.classList.remove('hidden');
+        return;
+      }
+
+      const cleanUpper = inputVal.toUpperCase();
+      const cleanPhoneInput = inputVal.replace(/[^0-9]/g, '');
+
+      const allRecords = Object.values(storedFRCRecords);
+      const isMatched = allRecords.some(rec => {
+        if (rec.code && rec.code.toUpperCase() === cleanUpper) return true;
+        if (rec.head && rec.head.phone) {
+          const recPhone = rec.head.phone.replace(/[^0-9]/g, '');
+          if (cleanPhoneInput && (recPhone.endsWith(cleanPhoneInput) || cleanPhoneInput.endsWith(recPhone))) return true;
+        }
+        if (rec.members && Array.isArray(rec.members)) {
+          return rec.members.some(m => {
+            if (m.phone) {
+              const mPhone = m.phone.replace(/[^0-9]/g, '');
+              if (cleanPhoneInput && (mPhone.endsWith(cleanPhoneInput) || cleanPhoneInput.endsWith(mPhone))) return true;
+            }
+            return false;
+          });
+        }
+        return false;
+      });
+
+      if (!isMatched) {
+        errEl.textContent = `درج کردہ شناخت (${inputVal}) رجسٹرڈ نہیں ملی۔ درست FRC کوڈ یا فون نمبر درج کریں۔`;
+        errEl.classList.remove('hidden');
+        return;
+      }
+
+      errEl.classList.add('hidden');
+      isPopDashboardUnlocked = true;
+      authBox.classList.add('hidden');
+      filterArea.classList.remove('hidden');
+      runPublicPopulationQuery();
+    }
+
+    function lockPopulationDashboard() {
+      isPopDashboardUnlocked = false;
+      document.getElementById('popAuthBox').classList.remove('hidden');
+      document.getElementById('popFilterArea').classList.add('hidden');
+      document.getElementById('cityStatAuthInput').value = '';
+    }
+
+    function runPublicPopulationQuery() {
+      const selectedCountry = document.getElementById('popCountrySelect').value.trim().toLowerCase();
+      const inputCity = document.getElementById('popCityInput').value.trim().toLowerCase();
+
+      const allRecords = Object.values(storedFRCRecords);
+
+      let famCount = 0;
+      let totalPop = 0;
+      let males = 0;
+      let females = 0;
+      let minors = 0;
+
+      allRecords.forEach(rec => {
+        const headCountry = (rec.head && rec.head.country) ? rec.head.country.trim().toLowerCase() : '';
+        const headCity = (rec.head && rec.head.city) ? rec.head.city.trim().toLowerCase() : '';
+
+        let matchHead = true;
+        if (selectedCountry && !headCountry.includes(selectedCountry)) matchHead = false;
+        if (inputCity && !headCity.includes(inputCity)) matchHead = false;
+
+        if (matchHead) {
+          famCount++;
+          totalPop++;
+          const hAge = parseInt(rec.head.age) || 35;
+          if (hAge < 18) {
+            minors++;
+          } else if (rec.head.genderKey === 'Male' || rec.head.gender === 'مرد' || rec.head.gender === 'Male') {
+            males++;
+          } else {
+            females++;
+          }
+        }
+
+        if (rec.members && Array.isArray(rec.members)) {
+          rec.members.forEach(m => {
+            const mCountry = (m.country || headCountry).trim().toLowerCase();
+            const mCity = (m.city || headCity).trim().toLowerCase();
+
+            let matchMem = true;
+            if (selectedCountry && !mCountry.includes(selectedCountry)) matchMem = false;
+            if (inputCity && !mCity.includes(inputCity)) matchMem = false;
+
+            if (matchMem) {
+              totalPop++;
+              const mAge = parseInt(m.age) || 0;
+              if (mAge < 18) {
+                minors++;
+              } else if (m.genderKey === 'Male' || m.gender === 'مرد' || m.gender === 'Male') {
+                males++;
+              } else {
+                females++;
+              }
+            }
+          });
+        }
+      });
+
+      const areaTitle = (selectedCountry ? document.getElementById('popCountrySelect').value : 'All Countries') + 
+        (inputCity ? ` - ${document.getElementById('popCityInput').value}` : '');
+
+      document.getElementById('statResAreaName').textContent = areaTitle;
+      document.getElementById('statResFamilies').textContent = famCount;
+      document.getElementById('statResTotalPop').textContent = totalPop;
+      document.getElementById('statResMales').textContent = males;
+      document.getElementById('statResFemales').textContent = females;
+      document.getElementById('statResMinors').textContent = minors;
+    }
+
     function checkHeadExistingID(val) {
       const notice = document.getElementById('headExistingNotice');
       const cleanVal = val.trim();
@@ -1337,7 +1477,6 @@
       }
     }
 
-    // Add Member Card with Optional Phone Box & Red * (Points #2 & #9)
     function addMemberCard(existingData = null) {
       memberCount++;
       const id = memberCount;
@@ -1410,7 +1549,6 @@
             <span id="memCNICHint_${id}" class="text-[10px] text-slate-500 mt-0.5 block">18 سال سے کم عمر کے لیے سرپرست کا کارڈ منسلک ہو جائے گا</span>
           </div>
 
-          <!-- Optional Phone Field for Member (Point #2) -->
           <div>
             <label class="block text-xs font-semibold text-slate-700 mb-1 lbl-mem-phone">
               ${dict.lblMemPhoneOpt}
@@ -1418,7 +1556,6 @@
             <input type="tel" id="memPhone_${id}" placeholder="+92..." class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-emerald-500 outline-none text-right dir-ltr">
           </div>
 
-          <!-- Wife Specific Lineage -->
           <div id="memWifeLineageWrap_${id}" class="hidden">
             <label class="block text-xs font-semibold text-slate-700 mb-1 lbl-mem-lineage">
               ${dict.lblMemLineage}<span class="text-red-500 font-bold ml-0.5">*</span>
@@ -1428,7 +1565,6 @@
             </select>
           </div>
 
-          <!-- Education -->
           <div>
             <label class="block text-xs font-semibold text-slate-700 mb-1 lbl-mem-edu">
               ${dict.lblMemEdu}<span class="text-red-500 font-bold ml-0.5">*</span>
@@ -1441,7 +1577,6 @@
             </div>
           </div>
 
-          <!-- Occupation -->
           <div>
             <label class="block text-xs font-semibold text-slate-700 mb-1 lbl-mem-job">
               ${dict.lblMemJob}<span class="text-red-500 font-bold ml-0.5">*</span>
@@ -1454,7 +1589,6 @@
             </div>
           </div>
 
-          <!-- Smart Address Choice -->
           <div class="md:col-span-2">
             <label class="block text-xs font-semibold text-slate-700 mb-1 lbl-mem-addr">
               ${dict.lblMemAddrChoice}<span class="text-red-500 font-bold ml-0.5">*</span>
@@ -1465,7 +1599,6 @@
             </select>
           </div>
 
-          <!-- Collapsible Other Address Box -->
           <div id="memOtherAddrWrap_${id}" class="hidden md:col-span-3 bg-emerald-50/70 p-3 rounded-lg border border-emerald-200 grid grid-cols-1 md:grid-cols-3 gap-2">
             <div>
               <label class="block text-[11px] font-semibold text-slate-700 mb-0.5">
@@ -1665,89 +1798,6 @@
       document.getElementById('btnSubmitForm').textContent = i18n[currentLang].btnSubmitForm;
     }
 
-    function queryCityPopulationStats() {
-      const frcVal = document.getElementById('cityStatFrcInput').value.trim().toUpperCase();
-      const cnicVal = document.getElementById('cityStatCnicInput').value.trim();
-      const errEl = document.getElementById('cityStatsErrorMsg');
-      const cardEl = document.getElementById('cityStatsResultCard');
-
-      if (!frcVal || !cnicVal) {
-        errEl.textContent = "براہ کرم FRC کوڈ اور شناختی کارڈ نمبر دونوں درج کریں۔";
-        errEl.classList.remove('hidden');
-        cardEl.classList.add('hidden');
-        return;
-      }
-
-      const allRecords = Object.values(storedFRCRecords);
-      const matchedRecord = allRecords.find(rec => {
-        if (rec.code.toUpperCase() !== frcVal) return false;
-        if (rec.head && rec.head.cnic.trim() === cnicVal) return true;
-        if (rec.members && Array.isArray(rec.members)) {
-          return rec.members.some(m => m.cnic && m.cnic.trim() === cnicVal);
-        }
-        return false;
-      });
-
-      if (!matchedRecord) {
-        errEl.textContent = "درج کردہ FRC کوڈ یا شناختی کارڈ کا ریکارڈ تصدیق نہیں ہو سکا۔";
-        errEl.classList.remove('hidden');
-        cardEl.classList.add('hidden');
-        return;
-      }
-
-      errEl.classList.add('hidden');
-      const targetCity = (matchedRecord.head.city || '').trim().toLowerCase();
-
-      let famCount = 0;
-      let totalPop = 0;
-      let males = 0;
-      let females = 0;
-      let minors = 0;
-
-      allRecords.forEach(rec => {
-        const headCity = (rec.head && rec.head.city) ? rec.head.city.trim().toLowerCase() : '';
-        if (headCity === targetCity) {
-          famCount++;
-          totalPop++;
-          const hAge = parseInt(rec.head.age) || 35;
-          if (hAge < 18) {
-            minors++;
-          } else if (rec.head.genderKey === 'Male' || rec.head.gender === 'مرد' || rec.head.gender === 'Male') {
-            males++;
-          } else {
-            females++;
-          }
-        }
-
-        if (rec.members && Array.isArray(rec.members)) {
-          rec.members.forEach(m => {
-            const mCity = (m.city || headCity).trim().toLowerCase();
-            if (mCity === targetCity) {
-              totalPop++;
-              const mAge = parseInt(m.age) || 0;
-              if (mAge < 18) {
-                minors++;
-              } else if (m.genderKey === 'Male' || m.gender === 'مرد' || m.gender === 'Male') {
-                males++;
-              } else {
-                females++;
-              }
-            }
-          });
-        }
-      });
-
-      document.getElementById('statResCityName').textContent = matchedRecord.head.city || targetCity;
-      document.getElementById('statResFamilies').textContent = famCount;
-      document.getElementById('statResTotalPop').textContent = totalPop;
-      document.getElementById('statResMales').textContent = males;
-      document.getElementById('statResFemales').textContent = females;
-      document.getElementById('statResMinors').textContent = minors;
-
-      cardEl.classList.remove('hidden');
-    }
-
-    // Submit with Sequential IDs: -1, -2, -3 (Point #10)
     function handleFormSubmit(e) {
       e.preventDefault();
 
@@ -1823,7 +1873,6 @@
           mAddress = document.getElementById(`memAddress_${id}`).value.trim() || headAddress;
         }
 
-        // Sequential IDs: WCF-XXXXXX-2, WCF-XXXXXX-3 (Point #10)
         members.push({
           uniqueId: `${frcCode}-${idx + 2}`,
           name: mName,
@@ -1856,7 +1905,7 @@
         lang: currentLang,
         issueDate: new Date().toLocaleDateString('en-GB'),
         head: {
-          uniqueId: `${frcCode}-1`, // Sequential Head ID
+          uniqueId: `${frcCode}-1`,
           name: headName,
           father: headFather,
           dob: headDOB,
@@ -1897,7 +1946,7 @@
       displayFRCModal(record);
     }
 
-    // Display FRC Certificate with Smart Address & Sequential IDs (Points #4 & #10)
+    // Display FRC Certificate with Strict Override on Sequential IDs (Point #4)
     function displayFRCModal(record) {
       const recLang = record.lang || currentLang;
       const dict = i18n[recLang];
@@ -1972,11 +2021,12 @@
       const tableBody = document.getElementById('frcTableBody');
       tableBody.innerHTML = '';
 
+      // Strict Head ID: WCF-XXXXXX-1
       const headRow = document.createElement('tr');
       headRow.className = "bg-emerald-50/50 font-bold";
       headRow.innerHTML = `
         <td class="border border-slate-300 p-1">1</td>
-        <td class="border border-slate-300 p-1 font-mono text-[9px] text-emerald-900">${record.head.uniqueId || (record.code + '-1')}</td>
+        <td class="border border-slate-300 p-1 font-mono text-[9px] text-emerald-900">${record.code}-1</td>
         <td class="border border-slate-300 p-1 text-[9.5px]">${record.head.name}</td>
         <td class="border border-slate-300 p-1">${dict.headBadge}</td>
         <td class="border border-slate-300 p-1">${record.head.gender}</td>
@@ -1990,14 +2040,15 @@
       `;
       tableBody.appendChild(headRow);
 
+      // Strict Member IDs: WCF-XXXXXX-2, WCF-XXXXXX-3...
       record.members.forEach((m, idx) => {
         const row = document.createElement('tr');
-        // Smart Address Display (Point #10): If custom, show custom city/address
+        const forcedSequentialId = `${record.code}-${idx + 2}`;
         const locDisplay = m.addrChoice === 'other' ? `${m.city}` : `${record.head.city}`;
 
         row.innerHTML = `
           <td class="border border-slate-300 p-1">${idx + 2}</td>
-          <td class="border border-slate-300 p-1 font-mono text-[9px] text-slate-600">${m.uniqueId}</td>
+          <td class="border border-slate-300 p-1 font-mono text-[9px] text-slate-600">${forcedSequentialId}</td>
           <td class="border border-slate-300 p-1 font-medium text-[9.5px]">${m.name}</td>
           <td class="border border-slate-300 p-1">${m.relation}</td>
           <td class="border border-slate-300 p-1">${m.gender}</td>
@@ -2055,7 +2106,6 @@
       window.open(`https://wa.me/${targetPhone}?text=${msg}`, '_blank');
     }
 
-    // Download PDF 1-Page Fit without Cutting (Point #4)
     async function downloadFRCPDFOnly() {
       const btn = document.getElementById('btnDownloadAction');
       const originalText = btn.textContent;
@@ -2124,9 +2174,7 @@
       }
     }
 
-    // ==========================================
-    // ADMIN PANEL TRIGGER & 1-CLICK PDFS
-    // ==========================================
+    // Admin Panel Trigger & 1-Click PDFs
     let logoTapCount = 0;
     const headerLogoArea = document.getElementById('headerLogoArea');
     if (headerLogoArea) {
