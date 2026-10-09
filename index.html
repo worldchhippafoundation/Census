@@ -96,6 +96,55 @@
       <button type="button" id="tabSearchReg" onclick="switchMainTab('search')" class="bg-slate-200 text-slate-700 hover:bg-slate-300 px-5 py-2.5 rounded-lg font-bold text-xs md:text-sm">
         دوبارہ پرنٹ / سرچ FRC
       </button>
+      <button type="button" id="tabCityStats" onclick="switchMainTab('city')" class="bg-slate-200 text-slate-700 hover:bg-slate-300 px-5 py-2.5 rounded-lg font-bold text-xs md:text-sm">
+        شہر وار آبادی ڈیش بورڈ
+      </button>
+    </div>
+
+    <!-- City Stats Public Query Dashboard Section (New Feature #6) -->
+    <div id="cityStatsSection" class="hidden bg-white p-5 md:p-6 rounded-xl border border-slate-200 shadow space-y-4">
+      <h3 id="cityStatsTitle" class="font-bold text-base text-slate-800">اپنے شہر کی کمیونٹی آبادی چیک کریں</h3>
+      <p id="cityStatsSub" class="text-xs text-slate-500">اپنا رجسٹرڈ FRC کوڈ اور شناختی کارڈ / آدھار نمبر درج کر کے اپنے شہر کی مجموعی آبادی کے اعداد و شمار دیکھیں۔</p>
+      <div class="flex flex-col md:flex-row gap-3 max-w-xl">
+        <input type="text" id="cityStatFrcInput" placeholder="FRC کوڈ درج کریں (مثلاً WCF-123456)" class="border border-slate-300 rounded-lg p-2.5 text-sm font-mono outline-none focus:ring-2 focus:ring-emerald-600 flex-1">
+        <input type="text" id="cityStatCnicInput" placeholder="شناختی کارڈ نمبر درج کریں" class="border border-slate-300 rounded-lg p-2.5 text-sm font-mono outline-none focus:ring-2 focus:ring-emerald-600 flex-1">
+        <button type="button" id="btnCityStatsAction" onclick="queryCityPopulationStats()" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-5 py-2.5 rounded-lg text-sm shadow">
+          تصدیق و ڈیٹا دیکھیں
+        </button>
+      </div>
+      <p id="cityStatsErrorMsg" class="text-xs text-red-600 font-semibold hidden"></p>
+
+      <!-- Results Card (Privacy-Protected Aggregate View) -->
+      <div id="cityStatsResultCard" class="hidden mt-4 p-5 bg-emerald-50/60 border border-emerald-300 rounded-xl space-y-3">
+        <div class="flex justify-between items-center border-b border-emerald-200 pb-2">
+          <h4 class="font-bold text-sm text-emerald-950">
+            شہر: <span id="statResCityName" class="text-emerald-700 text-base font-black"></span>
+          </h4>
+          <span class="text-xs bg-emerald-200 text-emerald-900 px-2 py-0.5 rounded font-semibold">مجموعی شماریات (Aggregate Only)</span>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-3 text-center">
+          <div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm">
+            <span class="text-[10px] text-slate-500 block" id="lblStatFamilies">کل خاندان:</span>
+            <span id="statResFamilies" class="text-lg font-black text-slate-800">0</span>
+          </div>
+          <div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm">
+            <span class="text-[10px] text-slate-500 block" id="lblStatTotalPop">کل آبادی (افراد):</span>
+            <span id="statResTotalPop" class="text-lg font-black text-emerald-800">0</span>
+          </div>
+          <div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm">
+            <span class="text-[10px] text-slate-500 block" id="lblStatMales">بالغ مرد (18+):</span>
+            <span id="statResMales" class="text-lg font-black text-blue-700">0</span>
+          </div>
+          <div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm">
+            <span class="text-[10px] text-slate-500 block" id="lblStatFemales">بالغ خواتین (18+):</span>
+            <span id="statResFemales" class="text-lg font-black text-purple-700">0</span>
+          </div>
+          <div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm col-span-2 md:col-span-1">
+            <span class="text-[10px] text-slate-500 block" id="lblStatMinors">نابالغ بچے (<18):</span>
+            <span id="statResMinors" class="text-lg font-black text-amber-600">0</span>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Search Section (Supports FRC Code OR Phone Number + Add Member Option) -->
@@ -162,6 +211,12 @@
             <select id="headGender" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"></select>
           </div>
 
+          <!-- Marital Status for Head (New Feature #2) -->
+          <div>
+            <label id="lblHeadMarital" class="block text-xs font-semibold text-slate-700 mb-1">ازدواجی حیثیت (Marital Status)*</label>
+            <select id="headMarital" required class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-emerald-500 outline-none"></select>
+          </div>
+
           <!-- Sub-Caste / Atak -->
           <div>
             <label id="lblHeadClan" class="block text-xs font-semibold text-slate-700 mb-1">اٹک / ذیلی ذات*</label>
@@ -211,7 +266,7 @@
           </div>
 
           <!-- Address -->
-          <div class="md:col-span-2">
+          <div class="md:col-span-3">
             <label id="lblHeadAddress" class="block text-xs font-semibold text-slate-700 mb-1">مکمل رہائشی پتہ*</label>
             <input type="text" id="headAddress" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
           </div>
@@ -241,25 +296,25 @@
       </div>
     </form>
 
-    <!-- FRC Certificate Modal (Responsive & Sticky Mobile Buttons) -->
+    <!-- FRC Certificate Modal (Responsive & Sticky Mobile Buttons - Sarkari removed & synced) -->
     <div id="frcModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 overflow-y-auto p-2 md:p-4 flex flex-col items-center">
       <div class="bg-white w-full max-w-4xl rounded-xl shadow-2xl overflow-hidden border border-slate-300 my-auto">
         
-        <!-- Header Actions: Mobile Sticky Bar -->
+        <!-- Header Actions: Mobile Sticky Bar (Language Synced & Sarkari removed) -->
         <div class="bg-slate-900 text-white p-3 md:p-4 sticky top-0 z-50 flex flex-wrap justify-between items-center gap-2 border-b border-slate-700">
           <div>
-            <h3 class="font-bold text-xs md:text-sm">سرکاری فیملی رجسٹریشن سرٹیفکیٹ (Official FRC)</h3>
-            <p class="text-[10px] text-slate-400">تصدیق شدہ برقی دستاویز</p>
+            <h3 id="modalTopHeading" class="font-bold text-xs md:text-sm">خاندانی رجسٹریشن سرٹیفکیٹ (Official FRC)</h3>
+            <p id="modalTopSub" class="text-[10px] text-slate-400">تصدیق شدہ برقی دستاویز</p>
           </div>
           
           <div class="flex items-center gap-1.5 md:gap-2">
-            <button onclick="downloadFRCAndReset()" id="btnDownloadAction" class="bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] md:text-xs font-bold px-3 md:px-4 py-2 rounded-lg transition shadow flex items-center gap-1">
+            <button onclick="downloadFRCPDFOnly()" id="btnDownloadAction" class="bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] md:text-xs font-bold px-3 md:px-4 py-2 rounded-lg transition shadow flex items-center gap-1">
               ڈاؤن لوڈ PDF
             </button>
-            <button onclick="openDirectWhatsAppHelpline()" class="bg-green-600 hover:bg-green-500 text-white text-[11px] md:text-xs font-bold px-3 md:px-4 py-2 rounded-lg transition shadow flex items-center gap-1">
+            <button onclick="openDirectWhatsAppHelpline()" id="btnModalWhatsApp" class="bg-green-600 hover:bg-green-500 text-white text-[11px] md:text-xs font-bold px-3 md:px-4 py-2 rounded-lg transition shadow flex items-center gap-1">
               واٹس ایپ ہیلپ لائن
             </button>
-            <button onclick="closeFRCModal()" class="bg-slate-700 hover:bg-slate-600 text-white text-[11px] md:text-xs px-2.5 py-2 rounded-lg">
+            <button onclick="closeFRCModal()" id="btnModalClose" class="bg-slate-700 hover:bg-slate-600 text-white text-[11px] md:text-xs px-2.5 py-2 rounded-lg">
               بند کریں
             </button>
           </div>
@@ -268,7 +323,7 @@
         <!-- Sheet Scroll Container with Auto-Fit Scaling -->
         <div class="p-2 md:p-6 overflow-x-auto bg-slate-200 flex justify-center w-full">
           <div id="frcScaleWrapper" class="origin-top transition-transform duration-200 flex justify-center">
-            <div id="frcCertificateSheet" class="relative bg-white w-[794px] min-h-[1050px] p-8 border border-slate-300 shadow text-slate-900 overflow-hidden shrink-0">
+            <div id="frcCertificateSheet" class="relative bg-white w-[794px] min-h-[1080px] p-8 border border-slate-300 shadow text-slate-900 overflow-hidden shrink-0">
               
               <div class="watermark-container">
                 World Chhippa Foundation
@@ -312,12 +367,12 @@
                 </div>
               </div>
 
-              <!-- Table with Date of Birth & Marital Status Columns -->
-              <div class="relative z-10 mb-6">
+              <!-- Table with Date of Birth, Marital Status & Location Columns -->
+              <div class="relative z-10 mb-5">
                 <table class="w-full border-collapse border border-slate-300 text-xs">
                   <thead>
                     <tr class="bg-emerald-800 text-white text-center font-bold">
-                      <th class="border border-slate-300 p-1.5 w-7">#</th>
+                      <th class="border border-slate-300 p-1.5 w-6">#</th>
                       <th id="thUID" class="border border-slate-300 p-1.5">منفرد شناختی کوڈ</th>
                       <th id="thName" class="border border-slate-300 p-1.5">مکمل نام</th>
                       <th id="thRel" class="border border-slate-300 p-1.5">رشتہ</th>
@@ -327,6 +382,7 @@
                       <th id="thCNIC" class="border border-slate-300 p-1.5">شناختی کارڈ / بے فارم</th>
                       <th id="thEdu" class="border border-slate-300 p-1.5">تعلیم</th>
                       <th id="thJob" class="border border-slate-300 p-1.5">پیشہ</th>
+                      <th id="thLoc" class="border border-slate-300 p-1.5">شہر و رہائش</th>
                       <th id="thLineage" class="border border-slate-300 p-1.5">نسب</th>
                     </tr>
                   </thead>
@@ -334,27 +390,50 @@
                 </table>
               </div>
 
-              <!-- Stamp & Authorized Signature Area (Bottom-Right Updated) -->
-              <div class="mt-8 pt-4 border-t border-slate-300 flex justify-between items-end relative z-10">
-                <div class="flex items-center gap-4">
-                  <img src="stamp.png" alt="Official Verified Seal" class="w-24 h-24 object-contain shadow-none">
-                  <div class="text-[10px] text-slate-500 space-y-0.5">
-                    <p id="frcDocCertified" class="font-bold text-slate-700">تصدیق شدہ برقی دستاویز</p>
-                    <p id="frcDocCertSub">ورلڈ چھیپا فاؤنڈیشن کا مستند ڈیجیٹل سرٹیفکیٹ۔</p>
-                    <p class="font-mono text-emerald-800">Helpline: +212 708 273330</p>
+              <!-- Tribute, Seal & Signature Area (Bottom-Left Tribute & Bottom-Right Seal) -->
+              <div class="mt-6 pt-4 border-t border-slate-300 flex justify-between items-end relative z-10 gap-4">
+                
+                <!-- Bottom-Left: Founders Tribute & Architect Dedication Box -->
+                <div class="bg-slate-50 border border-slate-200 rounded-lg p-3 text-left max-w-sm flex-1 font-latin leading-tight">
+                  <p class="text-[9.5px] font-bold text-amber-900 mb-1">
+                    Thank you to all those who laid the foundation of the World Chhippa Foundation:
+                  </p>
+                  <ul class="text-[8.5px] text-slate-700 space-y-0.5 list-disc list-inside mb-2">
+                    <li>Subrati Deen Bhatti (Nimbi Jodhan) IND</li>
+                    <li>Mrs. Saleem Rao (Ghachi Pur Walay) PAK</li>
+                    <li>Sufyan Tak / Safwan Tak (Neemray Walay) PAK</li>
+                  </ul>
+                  <div class="border-t border-slate-200 pt-1.5">
+                    <span class="text-[8px] text-slate-500 block">Conceived, Architected & Dedicated to Chhippa Community by:</span>
+                    <strong class="text-[11px] font-black text-emerald-800 tracking-wide block">
+                      M. WASEEM SADIQ TAK (Neemray Walay)
+                    </strong>
                   </div>
                 </div>
 
-                <div class="text-center">
-                  <div class="text-emerald-900 font-signature text-xl font-bold leading-tight select-none">
-                    M.Waseem Sadiq Tak
+                <!-- Bottom-Right: Official Seal & Signature -->
+                <div class="flex items-center gap-4 shrink-0">
+                  <div class="flex items-center gap-2">
+                    <img src="stamp.png" alt="Official Verified Seal" class="w-20 h-20 object-contain shadow-none">
+                    <div class="text-[9px] text-slate-500 space-y-0.5 text-right">
+                      <p id="frcDocCertified" class="font-bold text-slate-700">تصدیق شدہ برقی دستاویز</p>
+                      <p id="frcDocCertSub">ورلڈ چھیپا فاؤنڈیشن کا مستند ڈیجیٹل سرٹیفکیٹ۔</p>
+                      <p class="font-mono text-emerald-800">Helpline: +212 708 273330</p>
+                    </div>
                   </div>
-                  <div class="w-48 border-b border-slate-700 pb-1 mb-1 text-[11px] font-semibold text-slate-800">
-                    M.Waseem Sadiq Tak (Neemray Walay)
+
+                  <div class="text-center">
+                    <div class="text-emerald-900 font-signature text-xl font-bold leading-tight select-none">
+                      M.Waseem Sadiq Tak
+                    </div>
+                    <div class="w-44 border-b border-slate-700 pb-1 mb-1 text-[10px] font-semibold text-slate-800">
+                      M.Waseem Sadiq Tak (Neemray Walay)
+                    </div>
+                    <p id="frcDocSig" class="text-[9px] font-bold text-slate-600">Registrar WCF (مجاز دستخط و مہر)</p>
+                    <p class="text-[8px] text-slate-400">Authorized Digital Signature</p>
                   </div>
-                  <p id="frcDocSig" class="text-[10px] font-bold text-slate-600">Registrar WCF (مجاز دستخط و مہر)</p>
-                  <p class="text-[8px] text-slate-400">Authorized Digital Signature</p>
                 </div>
+
               </div>
 
             </div>
@@ -439,6 +518,26 @@
     </div>
   </main>
 
+  <!-- Portal Dedicated Footer Tribute Strip (New Feature #7) -->
+  <footer class="bg-slate-900 text-white py-6 mt-12 border-t-2 border-emerald-600 font-latin text-center">
+    <div class="max-w-4xl mx-auto px-4 space-y-2">
+      <p class="text-amber-400 font-bold text-xs md:text-sm">
+        Thank you to all those who laid the foundation of the World Chhippa Foundation:
+      </p>
+      <p class="text-slate-300 text-xs tracking-wide">
+        • Subrati Deen Bhatti (Nimbi Jodhan) IND &nbsp;|&nbsp;
+        • Mrs. Saleem Rao (Ghachi Pur Walay) PAK &nbsp;|&nbsp;
+        • Sufyan Tak / Safwan Tak (Neemray Walay) PAK
+      </p>
+      <div class="pt-2 border-t border-slate-700 max-w-lg mx-auto">
+        <span class="text-[11px] text-slate-400 block">Conceived, Architected & Dedicated to Chhippa Community by:</span>
+        <h4 class="text-base md:text-lg font-black text-emerald-400 tracking-wider mt-0.5">
+          M. WASEEM SADIQ TAK (Neemray Walay)
+        </h4>
+      </div>
+    </div>
+  </footer>
+
   <script>
     const i18n = {
       ur: {
@@ -447,9 +546,18 @@
         lblLang: "زبان:",
         tabNew: "+ نیا اندراج مردم شماری",
         tabSearch: "دوبارہ پرنٹ / سرچ FRC",
+        tabCityStats: "شہر وار آبادی ڈیش بورڈ",
         searchTitle: "خاندانی رجسٹریشن سرٹیفکیٹ (FRC) تلاش کریں",
         searchSub: "اپنا تصدیق شدہ FRC کوڈ (مثلاً WCF-123456) یا رجسٹرڈ موبائل نمبر درج کریں تاکہ سرٹیفکیٹ دوبارہ دیکھا، پرنٹ یا اپڈیٹ کیا جا سکے۔",
         btnSearchAction: "تلاش و پرنٹ کریں",
+        cityStatsTitle: "اپنے شہر کی کمیونٹی آبادی چیک کریں",
+        cityStatsSub: "اپنا رجسٹرڈ FRC کوڈ اور شناختی کارڈ / آدھار نمبر درج کر کے اپنے شہر کی مجموعی آبادی کے اعداد و شمار دیکھیں۔",
+        btnCityStatsAction: "تصدیق و ڈیٹا دیکھیں",
+        lblStatFamilies: "کل خاندان:",
+        lblStatTotalPop: "کل آبادی (افراد):",
+        lblStatMales: "بالغ مرد (18+):",
+        lblStatFemales: "بالغ خواتین (18+):",
+        lblStatMinors: "نابالغ بچے (<18):",
         headCardTitle: "سرپرستِ خاندان کی تفصیلات",
         headBadge: "سرپرستِ خاندان",
         lblHeadCNIC: "شناختی کارڈ / آدھار نمبر (لازمی)*",
@@ -457,6 +565,7 @@
         lblHeadFather: "والد / سرپرست کا نام*",
         lblHeadDOB: "تاریخِ پیدائش (Date of Birth)*",
         lblHeadGender: "جنس*",
+        lblHeadMarital: "ازدواجی حیثیت (Marital Status)*",
         lblHeadClan: "اٹک / ذیلی ذات*",
         lblHeadEdu: "تعلیمی قابلیت*",
         lblHeadJob: "پیشہ / ملازمت*",
@@ -479,11 +588,22 @@
         lblMemEdu: "تعلیمی قابلیت*",
         lblMemLineage: "بیوی کا نسب*",
         lblMemJob: "پیشہ / ملازمت*",
+        lblMemAddrChoice: "رہائش کا پتہ*",
+        optSameAsHead: "سرپرست والا پتہ (Same as Head)",
+        optOtherAddr: "دیگر (مختلف شہر یا ملک)",
+        lblMemCountry: "ملک*",
+        lblMemCity: "شہر*",
+        lblMemAddress: "رہائشی پتہ*",
         btnRemove: "ختم کریں",
         otherClanPlaceholder: "اپنی اٹک / شاخ لکھیں...",
         otherEduPlaceholder: "اپنی تعلیم درج کریں...",
         otherJobPlaceholder: "اپنا پیشہ درج کریں...",
         otherCountryPlaceholder: "اپنے ملک کا نام درج کریں...",
+        modalTopHeading: "خاندانی رجسٹریشن سرٹیفکیٹ (Official FRC)",
+        modalTopSub: "تصدیق شدہ برقی دستاویز",
+        btnDownloadPdf: "ڈاؤن لوڈ PDF",
+        btnWhatsappHelp: "واٹس ایپ ہیلپ لائن",
+        btnCloseModal: "بند کریں",
         frcDocBadge: "Official Family Registration Certificate",
         frcDocOrg: "ورلڈ چھیپا فاؤنڈیشن",
         frcDocTagline: "عالمی مردم شماری ڈائریکٹری و خاندانی شناخت",
@@ -504,6 +624,7 @@
         thCNIC: "شناختی کارڈ / بے فارم",
         thEdu: "تعلیم",
         thJob: "پیشہ",
+        thLoc: "شہر و رہائش",
         thLineage: "نسب",
         frcDocCertified: "تصدیق شدہ برقی دستاویز",
         frcDocCertSub: "ورلڈ چھیپا فاؤنڈیشن کا مستند ڈیجیٹل سرٹیفکیٹ۔",
@@ -520,8 +641,8 @@
           Other: "دیگر"
         },
         maritalStatuses: {
-          Unmarried: "غیر شادی شدہ (Unmarried)",
           Married: "شادی شدہ (Married)",
+          Unmarried: "غیر شادی شدہ (Unmarried)",
           Widowed: "بیوہ / رنڈوا (Widowed)",
           Divorced: "طلاق یافتہ (Divorced)"
         },
@@ -576,9 +697,18 @@
         lblLang: "भाषा:",
         tabNew: "+ नया पंजीकरण जनगणना",
         tabSearch: "पुनः प्रिंट / खोज FRC",
+        tabCityStats: "शहर वार आबादी डैशबोर्ड",
         searchTitle: "परिवार पंजीकरण प्रमाणपत्र (FRC) खोजें",
         searchSub: "अपना सत्यापित FRC कोड (उदा. WCF-123456) या मोबाइल नंबर दर्ज करें ताकि प्रमाणपत्र पुनः देखा, प्रिंट या अपडेट किया जा सके।",
         btnSearchAction: "खोजें और प्रिंट करें",
+        cityStatsTitle: "अपने शहर की समुदाय आबादी देखें",
+        cityStatsSub: "अपना पंजीकृत FRC कोड और पहचान पत्र नंबर दर्ज करके अपने शहर की कुल आबादी के आंकड़े देखें।",
+        btnCityStatsAction: "सत्यापन एवं डेटा देखें",
+        lblStatFamilies: "कुल परिवार:",
+        lblStatTotalPop: "कुल आबादी (व्यक्ति):",
+        lblStatMales: "वयस्क पुरुष (18+):",
+        lblStatFemales: "वयस्क महिला (18+):",
+        lblStatMinors: "नाबालिग बच्चे (<18):",
         headCardTitle: "परिवार के मुखिया का विवरण",
         headBadge: "परिवार के मुखिया",
         lblHeadCNIC: "पहचान पत्र / आधार नंबर (अनिवार्य)*",
@@ -586,6 +716,7 @@
         lblHeadFather: "पिता / संरक्षक का नाम*",
         lblHeadDOB: "जन्म तिथि (Date of Birth)*",
         lblHeadGender: "लिंग*",
+        lblHeadMarital: "वैवाहिक स्थिति (Marital Status)*",
         lblHeadClan: "गोत्र / उप-जाति*",
         lblHeadEdu: "शैक्षणिक योग्यता*",
         lblHeadJob: "व्यवसाय / पेशा*",
@@ -608,11 +739,22 @@
         lblMemEdu: "शैक्षणिक योग्यता*",
         lblMemLineage: "पत्नी का वंश*",
         lblMemJob: "व्यवसाय / पेशा*",
+        lblMemAddrChoice: "निवास का पता*",
+        optSameAsHead: "मुखिया वाला पता (Same as Head)",
+        optOtherAddr: "अन्य (अलग शहर या देश)",
+        lblMemCountry: "देश*",
+        lblMemCity: "शहर*",
+        lblMemAddress: "आवासीय पता*",
         btnRemove: "हटाएं",
         otherClanPlaceholder: "अपना गोत्र दर्ज करें...",
         otherEduPlaceholder: "अपनी शिक्षा लिखें...",
         otherJobPlaceholder: "अपना व्यवसाय लिखें...",
         otherCountryPlaceholder: "अपने देश का नाम दर्ज करें...",
+        modalTopHeading: "पारिवारिक पंजीकरण प्रमाण पत्र (Official FRC)",
+        modalTopSub: "प्रमाणित डिजिटल दस्तावेज़",
+        btnDownloadPdf: "PDF डाउनलोड करें",
+        btnWhatsappHelp: "व्हाट्सएप हेल्पलाइन",
+        btnCloseModal: "बंद करें",
         frcDocBadge: "Official Family Registration Certificate",
         frcDocOrg: "वर्ल्ड छीपा फाउंडेशन",
         frcDocTagline: "वैश्विक जनगणना निर्देशिका एवं पारिवारिक पहचान",
@@ -633,6 +775,7 @@
         thCNIC: "पहचान पत्र / जन्म प्रमाण",
         thEdu: "शिक्षा",
         thJob: "व्यवसाय",
+        thLoc: "शहर व पता",
         thLineage: "वंश",
         frcDocCertified: "सत्यापित इलेक्ट्रॉनिक दस्तावेज़",
         frcDocCertSub: "वर्ल्ड छीपा फाउंडेशन का प्रामाणिक डिजिटल प्रमाणपत्र।",
@@ -649,8 +792,8 @@
           Other: "अन्य"
         },
         maritalStatuses: {
-          Unmarried: "अविवाहित (Unmarried)",
           Married: "विवाहित (Married)",
+          Unmarried: "अविवाहित (Unmarried)",
           Widowed: "विधवा / विधुर (Widowed)",
           Divorced: "तलाकशुदा (Divorced)"
         },
@@ -705,9 +848,18 @@
         lblLang: "Language:",
         tabNew: "+ New Census Registration",
         tabSearch: "Reprint / Search FRC",
+        tabCityStats: "City Population Dashboard",
         searchTitle: "Search Family Registration Certificate (FRC)",
         searchSub: "Enter your verified FRC Code (e.g. WCF-123456) or registered mobile number to view, reprint or update.",
         btnSearchAction: "Search & Print FRC",
+        cityStatsTitle: "Check City Community Population",
+        cityStatsSub: "Enter your registered FRC Code and National ID / Aadhaar to view aggregate population statistics of your city.",
+        btnCityStatsAction: "Verify & View Stats",
+        lblStatFamilies: "Total Families:",
+        lblStatTotalPop: "Total Population:",
+        lblStatMales: "Adult Males (18+):",
+        lblStatFemales: "Adult Females (18+):",
+        lblStatMinors: "Minors (<18):",
         headCardTitle: "Head of Family Details",
         headBadge: "Head of Family",
         lblHeadCNIC: "National ID / Aadhaar / CNIC (Mandatory)*",
@@ -715,6 +867,7 @@
         lblHeadFather: "Father / Guardian Name*",
         lblHeadDOB: "Date of Birth (DOB)*",
         lblHeadGender: "Gender*",
+        lblHeadMarital: "Marital Status*",
         lblHeadClan: "Clan / Sub-Caste*",
         lblHeadEdu: "Education Level*",
         lblHeadJob: "Occupation / Job*",
@@ -737,11 +890,22 @@
         lblMemEdu: "Education Level*",
         lblMemLineage: "Wife Lineage*",
         lblMemJob: "Occupation / Job*",
+        lblMemAddrChoice: "Residential Address*",
+        optSameAsHead: "Same as Head Address",
+        optOtherAddr: "Other (Different City / Country)",
+        lblMemCountry: "Country*",
+        lblMemCity: "City*",
+        lblMemAddress: "Residential Address*",
         btnRemove: "Remove",
         otherClanPlaceholder: "Enter Sub-caste / Clan...",
         otherEduPlaceholder: "Enter your education details...",
         otherJobPlaceholder: "Enter your occupation...",
         otherCountryPlaceholder: "Enter country name...",
+        modalTopHeading: "Family Registration Certificate (Official FRC)",
+        modalTopSub: "Certified Digital Document",
+        btnDownloadPdf: "Download PDF",
+        btnWhatsappHelp: "WhatsApp Helpline",
+        btnCloseModal: "Close",
         frcDocBadge: "Official Family Registration Certificate",
         frcDocOrg: "World Chhippa Foundation",
         frcDocTagline: "Global Census Directory & Family Identity",
@@ -762,6 +926,7 @@
         thCNIC: "National ID / B-Form",
         thEdu: "Education",
         thJob: "Occupation",
+        thLoc: "City & Address",
         thLineage: "Lineage",
         frcDocCertified: "Certified Digital Document",
         frcDocCertSub: "Authentic Digital Certificate of World Chhippa Foundation.",
@@ -778,8 +943,8 @@
           Other: "Other"
         },
         maritalStatuses: {
-          Unmarried: "Unmarried",
           Married: "Married",
+          Unmarried: "Unmarried",
           Widowed: "Widowed",
           Divorced: "Divorced"
         },
@@ -931,9 +1096,20 @@
       document.getElementById('lblLang').textContent = dict.lblLang;
       document.getElementById('tabNewReg').textContent = dict.tabNew;
       document.getElementById('tabSearchReg').textContent = dict.tabSearch;
+      document.getElementById('tabCityStats').textContent = dict.tabCityStats;
       document.getElementById('searchTitle').textContent = dict.searchTitle;
       document.getElementById('searchSub').textContent = dict.searchSub;
       document.getElementById('btnSearchAction').textContent = dict.btnSearchAction;
+
+      // City Stats UI Language Sync
+      document.getElementById('cityStatsTitle').textContent = dict.cityStatsTitle;
+      document.getElementById('cityStatsSub').textContent = dict.cityStatsSub;
+      document.getElementById('btnCityStatsAction').textContent = dict.btnCityStatsAction;
+      document.getElementById('lblStatFamilies').textContent = dict.lblStatFamilies;
+      document.getElementById('lblStatTotalPop').textContent = dict.lblStatTotalPop;
+      document.getElementById('lblStatMales').textContent = dict.lblStatMales;
+      document.getElementById('lblStatFemales').textContent = dict.lblStatFemales;
+      document.getElementById('lblStatMinors').textContent = dict.lblStatMinors;
       
       document.getElementById('headCardTitle').textContent = dict.headCardTitle;
       document.getElementById('headBadge').textContent = dict.headBadge;
@@ -943,6 +1119,7 @@
       document.getElementById('lblHeadFather').textContent = dict.lblHeadFather;
       document.getElementById('lblHeadDOB').textContent = dict.lblHeadDOB;
       document.getElementById('lblHeadGender').textContent = dict.lblHeadGender;
+      document.getElementById('lblHeadMarital').textContent = dict.lblHeadMarital;
       document.getElementById('lblHeadClan').textContent = dict.lblHeadClan;
       document.getElementById('lblHeadEdu').textContent = dict.lblHeadEdu;
       document.getElementById('lblHeadJob').textContent = dict.lblHeadJob;
@@ -956,12 +1133,20 @@
       document.getElementById('btnAddMemberBtn').textContent = dict.btnAddMemberBtn;
       document.getElementById('btnSubmitForm').textContent = dict.btnSubmitForm;
 
+      // Modal Buttons Language Sync (New Feature #4)
+      document.getElementById('modalTopHeading').textContent = dict.modalTopHeading;
+      document.getElementById('modalTopSub').textContent = dict.modalTopSub;
+      document.getElementById('btnDownloadAction').textContent = dict.btnDownloadPdf;
+      document.getElementById('btnModalWhatsApp').textContent = dict.btnWhatsappHelp;
+      document.getElementById('btnModalClose').textContent = dict.btnCloseModal;
+
       document.getElementById('headClanOther').placeholder = dict.otherClanPlaceholder;
       document.getElementById('headEduOther').placeholder = dict.otherEduPlaceholder;
       document.getElementById('headJobOther').placeholder = dict.otherJobPlaceholder;
       document.getElementById('headCountryOther').placeholder = dict.otherCountryPlaceholder;
 
       populateSelectOptions('headGender', dict.genders, 'Male');
+      populateSelectOptions('headMarital', dict.maritalStatuses, 'Married');
       populateSelectOptions('headClan', dict.clans, 'Tak');
       populateSelectOptions('headEdu', dict.education, 'Matric');
       populateSelectOptions('headJob', dict.jobs, 'Business');
@@ -998,25 +1183,37 @@
     function switchMainTab(tab) {
       const formEl = document.getElementById('censusForm');
       const searchEl = document.getElementById('searchSection');
+      const cityEl = document.getElementById('cityStatsSection');
       const tabNewBtn = document.getElementById('tabNewReg');
       const tabSearchBtn = document.getElementById('tabSearchReg');
-      const searchInput = document.getElementById('searchFRCInput');
+      const tabCityBtn = document.getElementById('tabCityStats');
+
+      const activeCls = "bg-emerald-700 text-white px-5 py-2.5 rounded-lg font-bold text-xs md:text-sm shadow";
+      const inactiveCls = "bg-slate-200 text-slate-700 hover:bg-slate-300 px-5 py-2.5 rounded-lg font-bold text-xs md:text-sm";
 
       if (tab === 'new') {
         formEl.classList.remove('hidden');
         searchEl.classList.add('hidden');
-        tabNewBtn.className = "bg-emerald-700 text-white px-5 py-2.5 rounded-lg font-bold text-xs md:text-sm shadow";
-        tabSearchBtn.className = "bg-slate-200 text-slate-700 hover:bg-slate-300 px-5 py-2.5 rounded-lg font-bold text-xs md:text-sm";
-        searchInput.value = '';
-        document.getElementById('searchErrorMsg').classList.add('hidden');
-      } else {
+        cityEl.classList.add('hidden');
+        tabNewBtn.className = activeCls;
+        tabSearchBtn.className = inactiveCls;
+        tabCityBtn.className = inactiveCls;
+      } else if (tab === 'search') {
         formEl.classList.add('hidden');
         searchEl.classList.remove('hidden');
-        tabSearchBtn.className = "bg-emerald-700 text-white px-5 py-2.5 rounded-lg font-bold text-xs md:text-sm shadow";
-        tabNewBtn.className = "bg-slate-200 text-slate-700 hover:bg-slate-300 px-5 py-2.5 rounded-lg font-bold text-xs md:text-sm";
-        searchInput.value = '';
-        searchInput.focus();
-        document.getElementById('searchErrorMsg').classList.add('hidden');
+        cityEl.classList.add('hidden');
+        tabSearchBtn.className = activeCls;
+        tabNewBtn.className = inactiveCls;
+        tabCityBtn.className = inactiveCls;
+        document.getElementById('searchFRCInput').focus();
+      } else if (tab === 'city') {
+        formEl.classList.add('hidden');
+        searchEl.classList.add('hidden');
+        cityEl.classList.remove('hidden');
+        tabCityBtn.className = activeCls;
+        tabNewBtn.className = inactiveCls;
+        tabSearchBtn.className = inactiveCls;
+        document.getElementById('cityStatFrcInput').focus();
       }
     }
 
@@ -1064,6 +1261,16 @@
       const ageInput = document.getElementById(`memAge_${id}`);
       ageInput.value = isNaN(calculatedAge) ? 0 : calculatedAge;
       handleAgeChange(id);
+    }
+
+    function toggleMemberAddressMode(id) {
+      const choice = document.getElementById(`memAddrChoice_${id}`).value;
+      const wrap = document.getElementById(`memOtherAddrWrap_${id}`);
+      if (choice === 'other') {
+        wrap.classList.remove('hidden');
+      } else {
+        wrap.classList.add('hidden');
+      }
     }
 
     function addMemberCard(existingData = null) {
@@ -1146,15 +1353,40 @@
           </div>
 
           <!-- Occupation -->
-          <div class="md:col-span-2">
-            <div>
-              <label class="block text-xs font-semibold text-slate-700 mb-1 lbl-mem-job">${dict.lblMemJob}</label>
-              <select id="memJob_${id}" onchange="toggleManualInput(this, 'memJobOtherWrap_${id}')" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-emerald-500 outline-none">
-                ${Object.entries(dict.jobs).map(([k, v]) => `<option value="${k}">${v}</option>`).join('')}
-              </select>
-            </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1 lbl-mem-job">${dict.lblMemJob}</label>
+            <select id="memJob_${id}" onchange="toggleManualInput(this, 'memJobOtherWrap_${id}')" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-emerald-500 outline-none">
+              ${Object.entries(dict.jobs).map(([k, v]) => `<option value="${k}">${v}</option>`).join('')}
+            </select>
             <div id="memJobOtherWrap_${id}" class="hidden mt-2">
               <input type="text" id="memJobOther_${id}" class="w-full border border-emerald-400 rounded-lg px-3 text-xs bg-emerald-50 outline-none">
+            </div>
+          </div>
+
+          <!-- Smart Address Choice (New Feature #3) -->
+          <div class="md:col-span-2">
+            <label class="block text-xs font-semibold text-slate-700 mb-1 lbl-mem-addr">${dict.lblMemAddrChoice}</label>
+            <select id="memAddrChoice_${id}" onchange="toggleMemberAddressMode(${id})" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-emerald-500 outline-none bg-white">
+              <option value="same">${dict.optSameAsHead}</option>
+              <option value="other">${dict.optOtherAddr}</option>
+            </select>
+          </div>
+
+          <!-- Collapsible Other Address Box -->
+          <div id="memOtherAddrWrap_${id}" class="hidden md:col-span-3 bg-emerald-50/70 p-3 rounded-lg border border-emerald-200 grid grid-cols-1 md:grid-cols-3 gap-2">
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-700 mb-0.5">${dict.lblMemCountry}</label>
+              <select id="memCountry_${id}" class="w-full border border-slate-300 rounded px-2 py-1 text-xs bg-white">
+                ${allWorldCountries.map(c => `<option value="${c}">${c}</option>`).join('')}
+              </select>
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-700 mb-0.5">${dict.lblMemCity}</label>
+              <input type="text" id="memCity_${id}" placeholder="e.g. Lahore, Jodhpur..." class="w-full border border-slate-300 rounded px-2 py-1 text-xs bg-white">
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-700 mb-0.5">${dict.lblMemAddress}</label>
+              <input type="text" id="memAddress_${id}" placeholder="Street, Colony, House..." class="w-full border border-slate-300 rounded px-2 py-1 text-xs bg-white">
             </div>
           </div>
 
@@ -1171,6 +1403,14 @@
         if (existingData.dob) document.getElementById(`memDOB_${id}`).value = existingData.dob;
         if (existingData.maritalStatusKey) document.getElementById(`memMarital_${id}`).value = existingData.maritalStatusKey;
         if (existingData.relationKey) document.getElementById(`memRel_${id}`).value = existingData.relationKey;
+        
+        if (existingData.addrChoice === 'other') {
+          document.getElementById(`memAddrChoice_${id}`).value = 'other';
+          document.getElementById(`memOtherAddrWrap_${id}`).classList.remove('hidden');
+          if (existingData.country) document.getElementById(`memCountry_${id}`).value = existingData.country;
+          if (existingData.city) document.getElementById(`memCity_${id}`).value = existingData.city;
+          if (existingData.address) document.getElementById(`memAddress_${id}`).value = existingData.address;
+        }
         handleRelationChange(id);
       }
     }
@@ -1238,6 +1478,7 @@
         card.querySelector('.lbl-mem-edu').textContent = dict.lblMemEdu;
         card.querySelector('.lbl-mem-lineage').textContent = dict.lblMemLineage;
         card.querySelector('.lbl-mem-job').textContent = dict.lblMemJob;
+        card.querySelector('.lbl-mem-addr').textContent = dict.lblMemAddrChoice;
         card.querySelector('button').textContent = dict.btnRemove;
 
         const eduOther = document.getElementById(`memEduOther_${id}`);
@@ -1296,6 +1537,7 @@
       document.getElementById('headName').value = foundRecord.head.name;
       document.getElementById('headFather').value = foundRecord.head.father;
       if (foundRecord.head.dob) document.getElementById('headDOB').value = foundRecord.head.dob;
+      if (foundRecord.head.maritalStatusKey) document.getElementById('headMarital').value = foundRecord.head.maritalStatusKey;
       document.getElementById('headPhone').value = foundRecord.head.phone;
       document.getElementById('headAddress').value = foundRecord.head.address;
 
@@ -1322,6 +1564,94 @@
       document.getElementById('btnSubmitForm').textContent = i18n[currentLang].btnSubmitForm;
     }
 
+    // New Feature #6: City-Wise Population Stats Query
+    function queryCityPopulationStats() {
+      const frcVal = document.getElementById('cityStatFrcInput').value.trim().toUpperCase();
+      const cnicVal = document.getElementById('cityStatCnicInput').value.trim();
+      const errEl = document.getElementById('cityStatsErrorMsg');
+      const cardEl = document.getElementById('cityStatsResultCard');
+
+      if (!frcVal || !cnicVal) {
+        errEl.textContent = "براہ کرم FRC کوڈ اور شناختی کارڈ نمبر دونوں درج کریں۔";
+        errEl.classList.remove('hidden');
+        cardEl.classList.add('hidden');
+        return;
+      }
+
+      const allRecords = Object.values(storedFRCRecords);
+      const matchedRecord = allRecords.find(rec => {
+        if (rec.code.toUpperCase() !== frcVal) return false;
+        if (rec.head && rec.head.cnic.trim() === cnicVal) return true;
+        if (rec.members && Array.isArray(rec.members)) {
+          return rec.members.some(m => m.cnic && m.cnic.trim() === cnicVal);
+        }
+        return false;
+      });
+
+      if (!matchedRecord) {
+        errEl.textContent = "درج کردہ FRC کوڈ یا شناختی کارڈ کا ریکارڈ تصدیق نہیں ہو سکا۔";
+        errEl.classList.remove('hidden');
+        cardEl.classList.add('hidden');
+        return;
+      }
+
+      errEl.classList.add('hidden');
+      const targetCity = (matchedRecord.head.city || '').trim().toLowerCase();
+
+      let famCount = 0;
+      let totalPop = 0;
+      let males = 0;
+      let females = 0;
+      let minors = 0;
+
+      allRecords.forEach(rec => {
+        const headCity = (rec.head && rec.head.city) ? rec.head.city.trim().toLowerCase() : '';
+        if (headCity === targetCity) {
+          famCount++;
+        }
+
+        // Count Head if living in targetCity
+        if (headCity === targetCity) {
+          totalPop++;
+          const hAge = parseInt(rec.head.age) || 35;
+          if (hAge < 18) {
+            minors++;
+          } else if (rec.head.genderKey === 'Male' || rec.head.gender === 'مرد' || rec.head.gender === 'Male') {
+            males++;
+          } else {
+            females++;
+          }
+        }
+
+        // Count Members based on their smart address city
+        if (rec.members && Array.isArray(rec.members)) {
+          rec.members.forEach(m => {
+            const mCity = (m.city || headCity).trim().toLowerCase();
+            if (mCity === targetCity) {
+              totalPop++;
+              const mAge = parseInt(m.age) || 0;
+              if (mAge < 18) {
+                minors++;
+              } else if (m.genderKey === 'Male' || m.gender === 'مرد' || m.gender === 'Male') {
+                males++;
+              } else {
+                females++;
+              }
+            }
+          });
+        }
+      });
+
+      document.getElementById('statResCityName').textContent = matchedRecord.head.city || targetCity;
+      document.getElementById('statResFamilies').textContent = famCount;
+      document.getElementById('statResTotalPop').textContent = totalPop;
+      document.getElementById('statResMales').textContent = males;
+      document.getElementById('statResFemales').textContent = females;
+      document.getElementById('statResMinors').textContent = minors;
+
+      cardEl.classList.remove('hidden');
+    }
+
     function handleFormSubmit(e) {
       e.preventDefault();
 
@@ -1333,6 +1663,7 @@
       const headFather = document.getElementById('headFather').value.trim();
       const headDOB = document.getElementById('headDOB').value;
       const headGenderKey = document.getElementById('headGender').value;
+      const headMaritalKey = document.getElementById('headMarital').value;
       const headClanKey = document.getElementById('headClan').value;
       const headClan = headClanKey === 'Other' ? (document.getElementById('headClanOther').value.trim() || dict.clans.Other) : dict.clans[headClanKey];
       
@@ -1384,8 +1715,20 @@
         const mJobKey = document.getElementById(`memJob_${id}`).value;
         const mJob = mJobKey === 'Other' ? (document.getElementById(`memJobOther_${id}`).value.trim() || dict.jobs.Other) : dict.jobs[mJobKey];
 
+        const mAddrChoice = document.getElementById(`memAddrChoice_${id}`).value;
+        let mCountry = headCountry;
+        let mCity = headCity;
+        let mAddress = headAddress;
+
+        if (mAddrChoice === 'other') {
+          mCountry = document.getElementById(`memCountry_${id}`).value;
+          mCity = document.getElementById(`memCity_${id}`).value.trim() || headCity;
+          mAddress = document.getElementById(`memAddress_${id}`).value.trim() || headAddress;
+        }
+
+        // Sequential Unique ID Generation (New Feature #1): WCF-XXXXXX-2, WCF-XXXXXX-3...
         members.push({
-          uniqueId: `${frcCode}-M${idx + 1}`,
+          uniqueId: `${frcCode}-${idx + 2}`,
           name: mName,
           relation: dict.relations[mRelKey],
           relationKey: mRelKey,
@@ -1400,6 +1743,10 @@
           eduKey: mEduKey,
           job: mJob,
           jobKey: mJobKey,
+          addrChoice: mAddrChoice,
+          country: mCountry,
+          city: mCity,
+          address: mAddress,
           lineage: mLineage
         });
       });
@@ -1411,13 +1758,14 @@
         lang: currentLang,
         issueDate: new Date().toLocaleDateString('en-GB'),
         head: {
+          uniqueId: `${frcCode}-1`, // Sequential Head ID (New Feature #1)
           name: headName,
           father: headFather,
           dob: headDOB,
           gender: dict.genders[headGenderKey],
           genderKey: headGenderKey,
-          maritalStatus: dict.maritalStatuses.Married,
-          maritalStatusKey: 'Married',
+          maritalStatus: dict.maritalStatuses[headMaritalKey],
+          maritalStatusKey: headMaritalKey,
           cnic: headCNIC,
           clan: headClan,
           clanKey: headClanKey,
@@ -1458,7 +1806,7 @@
       const sheet = document.getElementById('frcCertificateSheet');
       const isRTL = recLang === 'ur';
       sheet.setAttribute('dir', isRTL ? 'rtl' : 'ltr');
-      sheet.className = `relative bg-white w-[794px] min-h-[1050px] p-8 border border-slate-300 shadow text-slate-900 overflow-hidden shrink-0 ${recLang === 'hi' ? 'font-devanagari' : (recLang === 'en' ? 'font-latin' : '')}`;
+      sheet.className = `relative bg-white w-[794px] min-h-[1080px] p-8 border border-slate-300 shadow text-slate-900 overflow-hidden shrink-0 ${recLang === 'hi' ? 'font-devanagari' : (recLang === 'en' ? 'font-latin' : '')}`;
 
       const titleSection = document.getElementById('frcTitleSection');
       if (titleSection) {
@@ -1486,6 +1834,7 @@
       document.getElementById('thCNIC').textContent = dict.thCNIC;
       document.getElementById('thEdu').textContent = dict.thEdu;
       document.getElementById('thJob').textContent = dict.thJob;
+      document.getElementById('thLoc').textContent = dict.thLoc;
       document.getElementById('thLineage').textContent = dict.thLineage;
       document.getElementById('frcDocCertified').textContent = dict.frcDocCertified;
       document.getElementById('frcDocCertSub').textContent = dict.frcDocCertSub;
@@ -1530,15 +1879,16 @@
       headRow.className = "bg-emerald-50/50 font-bold";
       headRow.innerHTML = `
         <td class="border border-slate-300 p-1.5">1</td>
-        <td class="border border-slate-300 p-1.5 font-mono text-[10px] text-emerald-900">${record.code}-H</td>
+        <td class="border border-slate-300 p-1.5 font-mono text-[10px] text-emerald-900">${record.head.uniqueId || (record.code + '-1')}</td>
         <td class="border border-slate-300 p-1.5">${record.head.name}</td>
         <td class="border border-slate-300 p-1.5">${dict.headBadge}</td>
         <td class="border border-slate-300 p-1.5">${record.head.gender}</td>
         <td class="border border-slate-300 p-1.5 text-[9px] font-mono">${record.head.dob || '-'}</td>
-        <td class="border border-slate-300 p-1.5 text-[10px]">${dict.maritalStatuses.Married.split(' ')[0]}</td>
+        <td class="border border-slate-300 p-1.5 text-[10px]">${(record.head.maritalStatus || 'Married').split(' ')[0]}</td>
         <td class="border border-slate-300 p-1.5 font-mono text-[10px]">${record.head.cnic}</td>
         <td class="border border-slate-300 p-1.5">${record.head.edu}</td>
         <td class="border border-slate-300 p-1.5">${record.head.job}</td>
+        <td class="border border-slate-300 p-1.5 text-[10px]">${record.head.city}</td>
         <td class="border border-slate-300 p-1.5 text-emerald-800 font-bold">${record.head.lineage}</td>
       `;
       tableBody.appendChild(headRow);
@@ -1556,6 +1906,7 @@
           <td class="border border-slate-300 p-1.5 font-mono text-[10px]">${m.cnic}</td>
           <td class="border border-slate-300 p-1.5">${m.edu}</td>
           <td class="border border-slate-300 p-1.5">${m.job}</td>
+          <td class="border border-slate-300 p-1.5 text-[10px]">${m.city || record.head.city}</td>
           <td class="border border-slate-300 p-1.5 ${m.lineage.includes('غیر') || m.lineage.includes('Non') ? 'text-amber-800 font-semibold' : 'text-emerald-800 font-bold'}">${m.lineage}</td>
         `;
         tableBody.appendChild(row);
@@ -1567,7 +1918,7 @@
         if (screenWidth < 820) {
           const scale = (screenWidth - 24) / 794;
           wrapper.style.transform = `scale(${scale})`;
-          wrapper.style.marginBottom = `-${(1050 * (1 - scale))}px`;
+          wrapper.style.marginBottom = `-${(1080 * (1 - scale))}px`;
         } else {
           wrapper.style.transform = 'none';
           wrapper.style.marginBottom = '0px';
@@ -1577,8 +1928,17 @@
       document.getElementById('frcModal').classList.remove('hidden');
     }
 
+    // Modal Close Function (Manual only)
     function closeFRCModal() {
       document.getElementById('frcModal').classList.add('hidden');
+      document.getElementById('censusForm').reset();
+      document.getElementById('membersContainer').innerHTML = '';
+      memberCount = 0;
+      document.getElementById('headExistingNotice').classList.add('hidden');
+      document.getElementById('searchFRCInput').value = '';
+      document.getElementById('updatingFamilyBanner').classList.add('hidden');
+      editingExistingFRCCode = null;
+      changeLanguage(currentLang);
     }
 
     function openDirectWhatsAppHelpline() {
@@ -1596,7 +1956,8 @@
       window.open(`https://wa.me/${targetPhone}?text=${msg}`, '_blank');
     }
 
-    async function downloadFRCAndReset() {
+    // Download PDF Flow Fix (New Feature #5): Modal stays OPEN, Reset happens only on explicit close
+    async function downloadFRCPDFOnly() {
       const btn = document.getElementById('btnDownloadAction');
       const originalText = btn.textContent;
       btn.textContent = "ڈاؤن لوڈ ہو رہا ہے...";
@@ -1631,22 +1992,7 @@
       btn.textContent = originalText;
       btn.disabled = false;
 
-      closeFRCModal();
-
-      document.getElementById('censusForm').reset();
-      document.getElementById('membersContainer').innerHTML = '';
-      memberCount = 0;
-      document.getElementById('headExistingNotice').classList.add('hidden');
-      document.getElementById('searchFRCInput').value = '';
-      document.getElementById('updatingFamilyBanner').classList.add('hidden');
-      editingExistingFRCCode = null;
-
-      if (window.history.replaceState) {
-        window.history.replaceState(null, null, window.location.href);
-      }
-
-      changeLanguage(currentLang);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      // Notice: Modal is NOT closed here. User can share via WhatsApp or click Close at leisure.
     }
 
     function searchAndReprintFRC() {
