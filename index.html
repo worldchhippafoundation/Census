@@ -47,7 +47,7 @@
   <header class="bg-emerald-800 text-white shadow-md sticky top-0 z-40">
     <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-3">
       
-      <!-- Official Header Logo Restored (Point #1: stamp.png) -->
+      <!-- Official Header Logo Restored (stamp.png) -->
       <div class="flex items-center gap-3 cursor-pointer select-none" id="headerLogoArea" title="Official Seal (5 Clicks Admin Panel)">
         <img src="stamp.png" alt="WCF Official Seal" class="w-12 h-12 rounded-full object-contain shrink-0 shadow-sm border border-emerald-500 bg-white hover:opacity-95 transition">
         <div>
@@ -98,12 +98,12 @@
       </button>
     </div>
 
-    <!-- Open Population Dashboard Section (Point #5: Unrestricted City / Country Query) -->
+    <!-- Open Population Dashboard Section (Language Synced Auth Box) -->
     <div id="cityStatsSection" class="hidden bg-white p-5 md:p-6 rounded-xl border border-slate-200 shadow space-y-4">
       <h3 id="cityStatsTitle" class="font-bold text-base text-slate-800">کمیونٹی آبادی ڈیش بورڈ (گلوبل سرچ)</h3>
       <p id="cityStatsSub" class="text-xs text-slate-500">اپنا تصدیق شدہ FRC کوڈ یا رجسٹرڈ موبائل نمبر درج کریں تاکہ رسائی حاصل ہو سکے، اور کسی بھی ملک یا شہر کی آبادی دیکھیں۔</p>
       
-      <!-- Verification Input -->
+      <!-- Verification Input with Language Sync -->
       <div id="popAuthBox" class="flex flex-col md:flex-row gap-3 max-w-xl">
         <input type="text" id="cityStatAuthInput" placeholder="FRC کوڈ یا موبائل فون نمبر درج کریں..." class="border border-slate-300 rounded-lg p-2.5 text-sm font-mono outline-none focus:ring-2 focus:ring-emerald-600 flex-1">
         <button type="button" id="btnCityStatsVerify" onclick="verifyAndOpenPopulationDashboard()" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-5 py-2.5 rounded-lg text-sm shadow">
@@ -411,7 +411,7 @@
                   </div>
                 </div>
 
-                <!-- Table with Address & Strict Sequential IDs (Point #4) -->
+                <!-- Table with Address & Strict Sequential IDs -->
                 <div class="relative z-10 mb-3">
                   <table class="w-full border-collapse border border-slate-300 text-[10px]">
                     <thead>
@@ -435,7 +435,7 @@
                 </div>
               </div>
 
-              <!-- Bottom Order (Point #3: Row 1 = Dedicated Box + Blue Stamp/Signature, Row 2 = Bottom Most Founders Strip) -->
+              <!-- Bottom Order: Row 1 = Dedicated Box + Blue Stamp/Signature, Row 2 = Bottom Most Founders Strip -->
               <div class="mt-auto relative z-10 pt-2 border-t border-slate-300 space-y-2">
                 
                 <!-- Row 1: Left = Architect Box | Right = Blue Vector Stamp & Signatures -->
@@ -451,7 +451,7 @@
                     </strong>
                   </div>
 
-                  <!-- Right: Pure Vector Blue Rubber Stamp (Point #2: VERIFIED only) & Signature -->
+                  <!-- Right: Pure Vector Blue Rubber Stamp & Signature -->
                   <div class="flex items-center gap-3 shrink-0">
                     
                     <!-- Circular Royal Blue Vector SVG Rubber Stamp -->
@@ -478,7 +478,7 @@
                           </textPath>
                         </text>
 
-                        <!-- Center Stars & Pure VERIFIED Text (No Official Seal) -->
+                        <!-- Center Stars & Pure VERIFIED Text -->
                         <text x="100" y="86" fill="#0d3b66" font-family="'Inter', sans-serif" font-size="11" text-anchor="middle" font-weight="bold">★ ★ ★</text>
                         <text x="100" y="107" fill="#0d3b66" font-family="'Inter', sans-serif" font-weight="900" font-size="19" text-anchor="middle" letter-spacing="1.5">VERIFIED</text>
                         <line x1="45" y1="114" x2="155" y2="114" stroke="#0d3b66" stroke-width="1.5" />
@@ -502,7 +502,7 @@
 
                 </div>
 
-                <!-- Row 2: Bottom-Most Strip: Founders Tribute Strip (Point #3) -->
+                <!-- Row 2: Bottom-Most Strip: Founders Tribute Strip -->
                 <div class="bg-amber-50/90 border border-amber-200 rounded px-3 py-1.5 text-center font-latin mt-1">
                   <p class="text-[9px] font-bold text-amber-950 uppercase tracking-wide">
                     Thank you to all those who laid the foundation of the World Chhippa Foundation:
@@ -632,6 +632,8 @@
         cautionHeadDesc: "یہ شناختی نمبر پہلے FRC ({frc}) میں {rel} کے طور پر درج ہے (سرپرست: {head})۔ نیا فارم جمع کرنے پر ان کا الگ FRC جاری ہوگا، پرانا ریکارڈ منسلک رہے گا اور آبادی میں ڈبل شمار نہیں ہوگا۔",
         cityStatsTitle: "کمیونٹی آبادی ڈیش بورڈ (گلوبل سرچ)",
         cityStatsSub: "اپنا تصدیق شدہ FRC کوڈ یا رجسٹرڈ موبائل نمبر درج کریں تاکہ رسائی حاصل ہو سکے، اور کسی بھی ملک یا شہر کی آبادی دیکھیں۔",
+        popAuthPlaceholder: "FRC کوڈ یا موبائل فون نمبر درج کریں...",
+        btnCityStatsVerify: "تصدیق و رسائی",
         lblStatFamilies: "کل خاندان:",
         lblStatTotalPop: "کل آبادی (افراد):",
         lblStatMales: "بالغ مرد (18+):",
@@ -785,6 +787,8 @@
         cautionHeadDesc: "यह पहचान पत्र पहले FRC ({frc}) में {rel} के रूप में दर्ज है (मुखिया: {head})। नया फॉर्म जमा करने पर इनका अलग FRC जारी होगा, पुराना रिकॉर्ड जुड़ा रहेगा और आबादी में दोहराव नहीं होगा।",
         cityStatsTitle: "समुदाय आबादी डैशबोर्ड (वैश्विक खोज)",
         cityStatsSub: "अपना सत्यापित FRC कोड या मोबाइल नंबर दर्ज करके किसी भी देश या शहर की आबादी के आंकड़े देखें।",
+        popAuthPlaceholder: "FRC कोड या मोबाइल फोन नंबर दर्ज करें...",
+        btnCityStatsVerify: "सत्यापन एवं पहुंच",
         lblStatFamilies: "कुल परिवार:",
         lblStatTotalPop: "कुल आबादी (व्यक्ति):",
         lblStatMales: "वयस्क पुरुष (18+):",
@@ -938,6 +942,8 @@
         cautionHeadDesc: "This National ID is already registered under FRC ({frc}) as {rel} (Head: {head}). Submitting a new form will issue a separate FRC without duplicate population count.",
         cityStatsTitle: "Community Population Dashboard (Global Search)",
         cityStatsSub: "Enter your verified FRC Code or registered Mobile Number to gain access and check population for any country or city.",
+        popAuthPlaceholder: "Enter FRC Code or Mobile Number...",
+        btnCityStatsVerify: "Verify & Access",
         lblStatFamilies: "Total Families:",
         lblStatTotalPop: "Total Population:",
         lblStatMales: "Adult Males (18+):",
@@ -1177,6 +1183,8 @@
 
       document.getElementById('cityStatsTitle').textContent = dict.cityStatsTitle;
       document.getElementById('cityStatsSub').textContent = dict.cityStatsSub;
+      document.getElementById('cityStatAuthInput').placeholder = dict.popAuthPlaceholder;
+      document.getElementById('btnCityStatsVerify').textContent = dict.btnCityStatsVerify;
       document.getElementById('lblStatFamilies').textContent = dict.lblStatFamilies;
       document.getElementById('lblStatTotalPop').textContent = dict.lblStatTotalPop;
       document.getElementById('lblStatMales').textContent = dict.lblStatMales;
@@ -1293,7 +1301,6 @@
       }
     }
 
-    // Open Population Dashboard Logic (Point #5)
     function verifyAndOpenPopulationDashboard() {
       const inputVal = document.getElementById('cityStatAuthInput').value.trim();
       const errEl = document.getElementById('cityStatsErrorMsg');
@@ -1946,7 +1953,6 @@
       displayFRCModal(record);
     }
 
-    // Display FRC Certificate with Strict Override on Sequential IDs (Point #4)
     function displayFRCModal(record) {
       const recLang = record.lang || currentLang;
       const dict = i18n[recLang];
@@ -2021,7 +2027,6 @@
       const tableBody = document.getElementById('frcTableBody');
       tableBody.innerHTML = '';
 
-      // Strict Head ID: WCF-XXXXXX-1
       const headRow = document.createElement('tr');
       headRow.className = "bg-emerald-50/50 font-bold";
       headRow.innerHTML = `
@@ -2040,7 +2045,6 @@
       `;
       tableBody.appendChild(headRow);
 
-      // Strict Member IDs: WCF-XXXXXX-2, WCF-XXXXXX-3...
       record.members.forEach((m, idx) => {
         const row = document.createElement('tr');
         const forcedSequentialId = `${record.code}-${idx + 2}`;
