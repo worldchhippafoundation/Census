@@ -47,23 +47,39 @@
   <header class="bg-emerald-800 text-white shadow-md sticky top-0 z-40">
     <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-3">
       
-      <!-- Official Stamp Logo (Header) -->
-      <div class="flex items-center gap-3">
-        <img src="stamp.png" alt="WCF Official Seal" class="w-12 h-12 rounded-full object-contain shrink-0 shadow-sm border border-emerald-600 bg-white">
+      <!-- Official Stamp Logo (Header) - 5 Clicks Trigger Admin Panel -->
+      <div class="flex items-center gap-3 cursor-pointer select-none" id="headerLogoArea" title="Official Seal">
+        <img src="stamp.png" alt="WCF Official Seal" class="w-12 h-12 rounded-full object-contain shrink-0 shadow-sm border border-emerald-600 bg-white hover:opacity-90 transition">
         <div>
           <h1 id="appTitle" class="text-base md:text-xl font-bold leading-tight">ورلڈ چھیپا فاؤنڈیشن</h1>
           <p id="appSub" class="text-[11px] md:text-xs text-emerald-200">عالمی مردم شماری اور خاندانی رجسٹریشن پورٹل</p>
         </div>
       </div>
 
-      <!-- Language Selector -->
-      <div class="flex items-center gap-2 bg-emerald-900/80 p-1.5 rounded-lg border border-emerald-700">
-        <label id="lblLang" class="text-xs text-emerald-200">زبان:</label>
-        <select id="langSelect" onchange="changeLanguage(this.value)" class="bg-emerald-800 text-white text-xs md:text-sm font-semibold rounded px-2 py-1 outline-none cursor-pointer">
-          <option value="ur" selected>اردو (Urdu)</option>
-          <option value="hi">हिन्दी (Hindi)</option>
-          <option value="en">English</option>
-        </select>
+      <!-- Live Census Counter & Language Selector -->
+      <div class="flex items-center gap-3 flex-wrap">
+        <!-- Live Counter Display -->
+        <div class="flex items-center gap-3 bg-emerald-950/70 border border-emerald-600/50 px-3 py-1 rounded-lg text-xs font-mono">
+          <div>
+            <span class="text-[10px] text-emerald-300 block">خاندان (Families):</span>
+            <span id="liveTotalFamilies" class="font-bold text-amber-300 text-sm">0</span>
+          </div>
+          <div class="w-px h-6 bg-emerald-700"></div>
+          <div>
+            <span class="text-[10px] text-emerald-300 block">کل افراد (Unique):</span>
+            <span id="liveTotalMembers" class="font-bold text-white text-sm">0</span>
+          </div>
+        </div>
+
+        <!-- Language Selector -->
+        <div class="flex items-center gap-2 bg-emerald-900/80 p-1.5 rounded-lg border border-emerald-700">
+          <label id="lblLang" class="text-xs text-emerald-200">زبان:</label>
+          <select id="langSelect" onchange="changeLanguage(this.value)" class="bg-emerald-800 text-white text-xs md:text-sm font-semibold rounded px-2 py-1 outline-none cursor-pointer">
+            <option value="ur" selected>اردو (Urdu)</option>
+            <option value="hi">हिन्दी (Hindi)</option>
+            <option value="en">English</option>
+          </select>
+        </div>
       </div>
 
     </div>
@@ -81,12 +97,12 @@
       </button>
     </div>
 
-    <!-- Search Section -->
+    <!-- Search Section (Supports FRC Code OR Phone Number) -->
     <div id="searchSection" class="hidden bg-white p-5 md:p-6 rounded-xl border border-slate-200 shadow space-y-4">
       <h3 id="searchTitle" class="font-bold text-base text-slate-800">خاندانی رجسٹریشن سرٹیفکیٹ (FRC) تلاش کریں</h3>
-      <p id="searchSub" class="text-xs text-slate-500">اپنا تصدیق شدہ FRC کوڈ درج کریں تاکہ سرٹیفکیٹ دوبارہ دیکھا یا پرنٹ کیا جا سکے۔</p>
+      <p id="searchSub" class="text-xs text-slate-500">اپنا تصدیق شدہ FRC کوڈ (مثلاً WCF-123456) یا رجسٹرڈ موبائل نمبر درج کریں تاکہ سرٹیفکیٹ دوبارہ دیکھا یا پرنٹ کیا جا سکے۔</p>
       <div class="flex flex-col md:flex-row gap-3 max-w-lg">
-        <input type="text" id="searchFRCInput" placeholder="e.g. WCF-719813" class="border border-slate-300 rounded-lg p-2.5 text-sm uppercase font-mono outline-none focus:ring-2 focus:ring-emerald-600 flex-1">
+        <input type="text" id="searchFRCInput" placeholder="FRC کوڈ یا موبائل فون نمبر درج کریں..." class="border border-slate-300 rounded-lg p-2.5 text-sm font-mono outline-none focus:ring-2 focus:ring-emerald-600 flex-1">
         <button type="button" id="btnSearchAction" onclick="searchAndReprintFRC()" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-6 py-2.5 rounded-lg text-sm shadow">
           تلاش و پرنٹ کریں
         </button>
@@ -142,7 +158,7 @@
           <!-- Education -->
           <div>
             <label id="lblHeadEdu" class="block text-xs font-semibold text-slate-700 mb-1">تعلیمی قابلیت*</label>
-            <select id="headEdu" required onchange="toggleManualInput(this, 'headEduOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"></select>
+            <select id="headEdu" required onchange="toggleManualInput(this, 'headEduOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-slate-700 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"></select>
             <div id="headEduOtherWrap" class="hidden mt-2">
               <input type="text" id="headEduOther" class="w-full border border-emerald-400 rounded-lg px-3 text-xs bg-emerald-50 outline-none">
             </div>
@@ -325,6 +341,81 @@
         </div>
       </div>
     </div>
+
+    <!-- Hidden Admin Panel Modal (PIN 5492 Protected) -->
+    <div id="adminModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 overflow-y-auto p-4 flex items-center justify-center">
+      <div class="bg-white w-full max-w-2xl rounded-xl shadow-2xl border border-slate-300 p-6 space-y-5 text-slate-800">
+        <div class="flex justify-between items-center border-b pb-3">
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-emerald-600 animate-pulse"></span>
+            <h3 class="font-bold text-base text-emerald-900">ایڈمن ڈائریکٹری و مردم شماری مینیجر (Admin Control)</h3>
+          </div>
+          <button type="button" onclick="closeAdminModal()" class="text-slate-400 hover:text-slate-700 font-bold text-2xl leading-none">&times;</button>
+        </div>
+        
+        <!-- Live Counters in Admin -->
+        <div class="grid grid-cols-2 gap-4 bg-slate-50 p-3 rounded-lg border border-slate-200 text-center font-mono">
+          <div>
+            <span class="text-xs text-slate-500 block">کل رجسٹرڈ خاندان (Families):</span>
+            <span id="adminTotalFam" class="text-xl font-bold text-emerald-800">0</span>
+          </div>
+          <div>
+            <span class="text-xs text-slate-500 block">منفرد افراد (Unique Population):</span>
+            <span id="adminTotalMem" class="text-xl font-bold text-emerald-800">0</span>
+          </div>
+        </div>
+
+        <!-- City & Country Filter Section (NEW) -->
+        <div class="bg-emerald-50/70 border border-emerald-200 p-3.5 rounded-xl space-y-2.5">
+          <h4 class="text-xs font-bold text-emerald-950 flex items-center gap-1.5">
+            <span>🏙️</span> <span>شہر / ملک کے لحاظ سے فلٹر اور PDF رپورٹ (City-Wise Directory):</span>
+          </h4>
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-2">
+            <select id="adminCityDropdown" onchange="syncAdminCityInput(this.value)" class="md:col-span-5 border border-slate-300 rounded-lg p-2 text-xs font-semibold bg-white outline-none focus:ring-2 focus:ring-emerald-600">
+              <option value="">-- رجسٹرڈ شہر منتخب کریں --</option>
+            </select>
+            <input type="text" id="adminCityInput" placeholder="یا شہر / ملک خود لکھیں..." class="md:col-span-4 border border-slate-300 rounded-lg px-2.5 py-2 text-xs bg-white outline-none focus:ring-2 focus:ring-emerald-600">
+            <button type="button" onclick="exportCityWisePDF()" class="md:col-span-3 bg-teal-700 hover:bg-teal-800 text-white text-xs font-bold py-2 px-2.5 rounded-lg shadow transition flex items-center justify-center gap-1">
+              <span>ڈاؤن لوڈ PDF</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 1-Click Directory PDF Reports -->
+        <div class="space-y-2">
+          <h4 class="text-xs font-bold text-slate-600 uppercase tracking-wider">ون کلک ڈائریکٹری رپورٹس (Instant PDF Export):</h4>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5">
+            <button type="button" onclick="exportPhoneDirectoryPDF()" class="bg-blue-700 hover:bg-blue-800 text-white text-xs font-bold p-3 rounded-lg shadow text-center flex flex-col items-center justify-center gap-1 transition">
+              <span class="text-base">📱</span>
+              <span>فون ڈائریکٹری PDF</span>
+            </button>
+            <button type="button" onclick="exportAdultUnmarriedPDF()" class="bg-purple-700 hover:bg-purple-800 text-white text-xs font-bold p-3 rounded-lg shadow text-center flex flex-col items-center justify-center gap-1 transition">
+              <span class="text-base">🎓</span>
+              <span>18+ غیر شادی شدہ PDF</span>
+            </button>
+            <button type="button" onclick="exportNonChhippaWivesPDF()" class="bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold p-3 rounded-lg shadow text-center flex flex-col items-center justify-center gap-1 transition">
+              <span class="text-base">🌸</span>
+              <span>غیر چھیپا خواتین PDF</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Database Maintenance & Backup -->
+        <div class="pt-3 border-t border-slate-200 flex flex-wrap gap-2 justify-between items-center">
+          <button type="button" onclick="exportCensusJSON()" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold px-4 py-2.5 rounded-lg shadow transition">
+            💾 بیک اپ ڈاؤن لوڈ (JSON Backup)
+          </button>
+          <div class="flex gap-2">
+            <button type="button" onclick="clearAllCensusData()" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-4 py-2.5 rounded-lg shadow transition">
+              ⚠️ تمام ٹیسٹ ڈیٹا صاف کریں
+            </button>
+            <button type="button" onclick="closeAdminModal()" class="bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs font-bold px-4 py-2.5 rounded-lg transition">
+              بند کریں
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </main>
 
   <script>
@@ -336,7 +427,7 @@
         tabNew: "+ نیا اندراج مردم شماری",
         tabSearch: "دوبارہ پرنٹ / سرچ FRC",
         searchTitle: "خاندانی رجسٹریشن سرٹیفکیٹ (FRC) تلاش کریں",
-        searchSub: "اپنا تصدیق شدہ FRC کوڈ درج کریں تاکہ سرٹیفکیٹ دوبارہ دیکھا یا پرنٹ کیا جا سکے۔",
+        searchSub: "اپنا تصدیق شدہ FRC کوڈ (مثلاً WCF-123456) یا رجسٹرڈ موبائل نمبر درج کریں تاکہ سرٹیفکیٹ دوبارہ دیکھا یا پرنٹ کیا جا سکے۔",
         btnSearchAction: "تلاش و پرنٹ کریں",
         headCardTitle: "سرپرستِ خاندان کی تفصیلات",
         headBadge: "سرپرستِ خاندان",
@@ -454,7 +545,7 @@
         tabNew: "+ नया पंजीकरण जनगणना",
         tabSearch: "पुनः प्रिंट / खोज FRC",
         searchTitle: "परिवार पंजीकरण प्रमाणपत्र (FRC) खोजें",
-        searchSub: "अपना सत्यापित FRC कोड दर्ज करें ताकि प्रमाणपत्र पुनः देखा या प्रिंट किया जा सके।",
+        searchSub: "अपना सत्यापित FRC कोड (उदा. WCF-123456) या मोबाइल नंबर दर्ज करें ताकि प्रमाणपत्र पुनः देखा या प्रिंट किया जा सके।",
         btnSearchAction: "खोजें और प्रिंट करें",
         headCardTitle: "परिवार के मुखिया का विवरण",
         headBadge: "परिवार के मुखिया",
@@ -572,7 +663,7 @@
         tabNew: "+ New Census Registration",
         tabSearch: "Reprint / Search FRC",
         searchTitle: "Search Family Registration Certificate (FRC)",
-        searchSub: "Enter your verified FRC Code to view or reprint your certificate.",
+        searchSub: "Enter your verified FRC Code (e.g. WCF-123456) or registered mobile number to view or reprint.",
         btnSearchAction: "Search & Print FRC",
         headCardTitle: "Head of Family Details",
         headBadge: "Head of Family",
@@ -717,8 +808,83 @@
 
     let currentLang = 'ur';
     let memberCount = 0;
-    const storedFRCRecords = {}; 
+    
+    // Persistent Storage (LocalStorage)
+    let storedFRCRecords = {}; 
+    try {
+      const savedData = localStorage.getItem('WCF_CENSUS_RECORDS');
+      if (savedData) storedFRCRecords = JSON.parse(savedData);
+    } catch (e) {
+      storedFRCRecords = {};
+    }
+
     let lastGeneratedFRC = null;
+
+    // Populate Cities in Admin Dropdown Dynamically
+    function populateAdminCityOptions() {
+      const citySelect = document.getElementById('adminCityDropdown');
+      if (!citySelect) return;
+
+      const cities = new Set();
+      Object.values(storedFRCRecords).forEach(rec => {
+        if (rec.head && rec.head.location) {
+          const parts = rec.head.location.split(',');
+          if (parts[0]) {
+            const cityName = parts[0].trim();
+            if (cityName) cities.add(cityName);
+          }
+        }
+      });
+
+      const currentVal = citySelect.value;
+      citySelect.innerHTML = '<option value="">-- رجسٹرڈ شہر منتخب کریں --</option>' + 
+        Array.from(cities).sort().map(c => `<option value="${c}">${c}</option>`).join('');
+
+      if (cities.has(currentVal)) {
+        citySelect.value = currentVal;
+      }
+    }
+
+    function syncAdminCityInput(val) {
+      if (val) {
+        document.getElementById('adminCityInput').value = val;
+      }
+    }
+
+    // Update Live Census Counters (Families & Unique Population)
+    function updateCensusCounters() {
+      const allRecords = Object.values(storedFRCRecords);
+      const totalFamilies = allRecords.length;
+      const uniqueCNICSet = new Set();
+
+      allRecords.forEach(rec => {
+        if (rec.head && rec.head.cnic) {
+          const hCnic = rec.head.cnic.trim();
+          if (hCnic) uniqueCNICSet.add(hCnic);
+        }
+        if (rec.members && Array.isArray(rec.members)) {
+          rec.members.forEach(m => {
+            if (m.cnic) {
+              const mCnic = m.cnic.trim();
+              if (mCnic) uniqueCNICSet.add(mCnic);
+            }
+          });
+        }
+      });
+
+      const famEl = document.getElementById('liveTotalFamilies');
+      const memEl = document.getElementById('liveTotalMembers');
+      if (famEl) famEl.textContent = totalFamilies;
+      if (memEl) memEl.textContent = uniqueCNICSet.size;
+
+      // Update Admin Counters if visible
+      const adminFamEl = document.getElementById('adminTotalFam');
+      const adminMemEl = document.getElementById('adminTotalMem');
+      if (adminFamEl) adminFamEl.textContent = totalFamilies;
+      if (adminMemEl) adminMemEl.textContent = uniqueCNICSet.size;
+
+      populateAdminCityOptions();
+    }
 
     function changeLanguage(lang) {
       currentLang = lang;
@@ -823,6 +989,7 @@
       }
     }
 
+    // Dynamic Linking for Married Daughter / Son
     function checkHeadExistingID(val) {
       const notice = document.getElementById('headExistingNotice');
       const cleanVal = val.trim();
@@ -831,20 +998,23 @@
         return;
       }
 
-      let foundAsMember = false;
-      let existingFRCCode = '';
-      
+      let foundPrevious = null;
       Object.values(storedFRCRecords).forEach(rec => {
-        rec.members.forEach(m => {
-          if (m.cnic === cleanVal) {
-            foundAsMember = true;
-            existingFRCCode = rec.code;
+        if (rec.members) {
+          const match = rec.members.find(m => m.cnic === cleanVal);
+          if (match) {
+            foundPrevious = {
+              parentFRC: rec.code,
+              relation: match.relation,
+              name: match.name,
+              parentHead: rec.head.name
+            };
           }
-        });
+        }
       });
 
-      if (foundAsMember) {
-        notice.innerHTML = `<strong>ریکارڈ موجود ہے:</strong> یہ شناختی نمبر پہلے FRC (${existingFRCCode}) میں ممبر کے طور پر درج ہے۔ نیا فارم جمع کرنے پر یہ شخص سرپرستِ خاندان بن جائے گا اور ڈیٹا بیس میں ڈپلیکیٹ پرسن کا اندراج نہیں ہو گا۔`;
+      if (foundPrevious) {
+        notice.innerHTML = `<strong>سابقہ ریکارڈ موجود ہے:</strong> یہ شناختی نمبر پہلے FRC (<strong>${foundPrevious.parentFRC}</strong>) میں <strong>${foundPrevious.relation}</strong> کے طور پر درج ہے (سرپرست: ${foundPrevious.parentHead})۔ نیا فارم جمع کرنے پر ان کا الگ FRC جاری ہو گا، پرانا ریکارڈ منسلک رہے گا اور آبادی میں ڈبل شمار نہیں ہو گا۔`;
         notice.classList.remove('hidden');
       } else {
         notice.classList.add('hidden');
@@ -1044,6 +1214,7 @@
         const mRelKey = document.getElementById(`memRel_${id}`).value;
         const mName = document.getElementById(`memName_${id}`).value.trim();
         const mGenderKey = document.getElementById(`memGender_${id}`).value;
+        const mAgeVal = document.getElementById(`memAge_${id}`).value;
         const mCNIC = document.getElementById(`memCNIC_${id}`).value.trim();
         
         let mLineage = dict.lineage.Chhippa;
@@ -1062,7 +1233,9 @@
           uniqueId: `${frcCode}-M${idx + 1}`,
           name: mName,
           relation: dict.relations[mRelKey],
+          relationKey: mRelKey,
           gender: dict.genders[mGenderKey],
+          age: parseInt(mAgeVal) || 0,
           cnic: mCNIC,
           edu: mEdu,
           job: mJob,
@@ -1091,8 +1264,14 @@
       };
 
       storedFRCRecords[frcCode] = record;
-      lastGeneratedFRC = record;
+      try {
+        localStorage.setItem('WCF_CENSUS_RECORDS', JSON.stringify(storedFRCRecords));
+      } catch (err) {
+        console.error("Local storage error:", err);
+      }
 
+      lastGeneratedFRC = record;
+      updateCensusCounters();
       displayFRCModal(record);
     }
 
@@ -1280,34 +1459,435 @@
       document.getElementById('headExistingNotice').classList.add('hidden');
       document.getElementById('searchFRCInput').value = '';
 
+      // Prevent Browser Resubmission State
+      if (window.history.replaceState) {
+        window.history.replaceState(null, null, window.location.href);
+      }
+
       changeLanguage(currentLang);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
+    // Advanced Search: Supports FRC Code OR Head Mobile Phone Number
     function searchAndReprintFRC() {
-      const inputVal = document.getElementById('searchFRCInput').value.trim().toUpperCase();
+      const inputVal = document.getElementById('searchFRCInput').value.trim();
+      const cleanUpper = inputVal.toUpperCase();
       const errEl = document.getElementById('searchErrorMsg');
 
       if (!inputVal) {
-        errEl.textContent = "براہ کرم درست FRC کوڈ درج کریں۔";
+        errEl.textContent = "براہ کرم FRC کوڈ یا فون نمبر درج کریں۔";
         errEl.classList.remove('hidden');
         return;
       }
 
-      const foundRecord = storedFRCRecords[inputVal];
+      // Check by Code first
+      let foundRecord = storedFRCRecords[cleanUpper];
+
+      // If not found by code, search by Head Phone Number
+      if (!foundRecord) {
+        const cleanPhoneInput = inputVal.replace(/[^0-9]/g, '');
+        foundRecord = Object.values(storedFRCRecords).find(rec => {
+          if (!rec.head || !rec.head.phone) return false;
+          const recPhone = rec.head.phone.replace(/[^0-9]/g, '');
+          return recPhone.endsWith(cleanPhoneInput) || cleanPhoneInput.endsWith(recPhone);
+        });
+      }
+
       if (foundRecord) {
         errEl.classList.add('hidden');
         lastGeneratedFRC = foundRecord;
         displayFRCModal(foundRecord);
       } else {
-        errEl.textContent = `کوڈ (${inputVal}) کا کوئی ریکارڈ نہیں ملا۔ براہ کرم کوڈ کی تصدیق کریں۔`;
+        errEl.textContent = `درج کردہ معلومات (${inputVal}) کا کوئی ریکارڈ نہیں ملا۔ براہ کرم FRC کوڈ یا فون نمبر کی تصدیق کریں۔`;
         errEl.classList.remove('hidden');
       }
     }
 
+    // ==========================================
+    // HIDDEN ADMIN PANEL TRIGGER & 1-CLICK PDFS
+    // ==========================================
+    let logoTapCount = 0;
+    const headerLogoArea = document.getElementById('headerLogoArea');
+    if (headerLogoArea) {
+      headerLogoArea.addEventListener('click', () => {
+        logoTapCount++;
+        if (logoTapCount >= 5) {
+          logoTapCount = 0;
+          openAdminModal();
+        }
+      });
+    }
+
+    function openAdminModal() {
+      const pin = prompt("ایڈمن رسائی کے لیے 4 ہندسوں کا پن (PIN) درج کریں:");
+      if (pin === "5492") {
+        updateCensusCounters();
+        document.getElementById('adminModal').classList.remove('hidden');
+      } else if (pin !== null) {
+        alert("غلط سیکیورٹی پن (Invalid PIN)!");
+      }
+    }
+
+    function closeAdminModal() {
+      document.getElementById('adminModal').classList.add('hidden');
+    }
+
+    // 1-Click: City / Country Wise Directory PDF Export (NEW)
+    function exportCityWisePDF() {
+      const inputCity = document.getElementById('adminCityInput').value.trim();
+      const dropCity = document.getElementById('adminCityDropdown').value.trim();
+      const searchTarget = (inputCity || dropCity).trim();
+
+      if (!searchTarget) {
+        alert("براہ کرم فہرست سے شہر منتخب کریں یا ان پٹ باکس میں شہر کا نام درج کریں!");
+        return;
+      }
+
+      const allRecords = Object.values(storedFRCRecords);
+      const queryLower = searchTarget.toLowerCase();
+
+      const matchedRecords = allRecords.filter(rec => {
+        if (!rec.head) return false;
+        const loc = (rec.head.location || "").toLowerCase();
+        const addr = (rec.head.address || "").toLowerCase();
+        return loc.includes(queryLower) || addr.includes(queryLower);
+      });
+
+      if (matchedRecords.length === 0) {
+        alert(`شہر / علاقے "${searchTarget}" کا کوئی ریکارڈ موجود نہیں ہے!`);
+        return;
+      }
+
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF('p', 'mm', 'a4');
+
+      // Top Title (NADRA / Directory Style)
+      doc.setFontSize(15);
+      doc.setTextColor(6, 78, 59);
+      doc.text("World Chhippa Foundation - City Census Directory", 14, 15);
+
+      // Subtitle with Selected City, Total Families & Date
+      doc.setFontSize(9);
+      doc.setTextColor(51, 65, 85);
+      const todayDate = new Date().toLocaleDateString('en-GB');
+      doc.text(`City: ${searchTarget} | Total Families: ${matchedRecords.length} | Date: ${todayDate}`, 14, 21);
+
+      // Table Header Strip
+      let y = 30;
+      doc.setFillColor(236, 253, 245);
+      doc.rect(14, y - 5, 182, 8, 'F');
+
+      doc.setFontSize(8.5);
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(6, 78, 59);
+      doc.text("#", 16, y);
+      doc.text("FRC Code", 23, y);
+      doc.text("Head & Father Name", 48, y);
+      doc.text("Clan (Atak)", 98, y);
+      doc.text("Phone / WhatsApp", 124, y);
+      doc.text("Members", 158, y);
+      doc.text("Address", 173, y);
+
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(15, 23, 42);
+      y += 7;
+
+      matchedRecords.forEach((rec, idx) => {
+        if (y > 275) {
+          doc.addPage();
+          y = 20;
+
+          // Repeat header on new page
+          doc.setFillColor(236, 253, 245);
+          doc.rect(14, y - 5, 182, 8, 'F');
+          doc.setFont("helvetica", "bold");
+          doc.setTextColor(6, 78, 59);
+          doc.text("#", 16, y);
+          doc.text("FRC Code", 23, y);
+          doc.text("Head & Father Name", 48, y);
+          doc.text("Clan (Atak)", 98, y);
+          doc.text("Phone / WhatsApp", 124, y);
+          doc.text("Members", 158, y);
+          doc.text("Address", 173, y);
+          doc.setFont("helvetica", "normal");
+          doc.setTextColor(15, 23, 42);
+          y += 7;
+        }
+
+        const hName = (rec.head && rec.head.name) ? rec.head.name : "N/A";
+        const hFather = (rec.head && rec.head.father) ? `s/o ${rec.head.father}` : "";
+        const headCombined = `${hName} ${hFather}`.trim();
+        const clan = (rec.head && rec.head.clan) ? rec.head.clan : "Chhippa";
+        const phone = (rec.head && rec.head.phone) ? rec.head.phone : "N/A";
+        const totalMems = (rec.members ? rec.members.length : 0) + 1;
+        const fullAddr = (rec.head && rec.head.address) ? rec.head.address : (rec.head.location || "N/A");
+
+        doc.text(String(idx + 1), 16, y);
+        doc.text(rec.code || "", 23, y);
+        doc.text(headCombined.substring(0, 26), 48, y);
+        doc.text(clan.substring(0, 14), 98, y);
+        doc.text(phone.substring(0, 16), 124, y);
+        doc.text(String(totalMems), 162, y);
+        doc.text(fullAddr.substring(0, 16), 173, y);
+
+        // Separator line
+        doc.setDrawColor(226, 232, 240);
+        doc.line(14, y + 2, 196, y + 2);
+        y += 7;
+      });
+
+      const cleanFileNameCity = searchTarget.replace(/[^a-zA-Z0-9_-]/g, '_');
+      doc.save(`WCF_Census_Directory_${cleanFileNameCity}_${new Date().toISOString().slice(0, 10)}.pdf`);
+    }
+
+    // 1-Click: Phone Directory PDF Export
+    function exportPhoneDirectoryPDF() {
+      const allRecords = Object.values(storedFRCRecords);
+      if (allRecords.length === 0) {
+        alert("کوئی ریکارڈ موجود نہیں ہے!");
+        return;
+      }
+
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF('p', 'mm', 'a4');
+
+      doc.setFontSize(15);
+      doc.setTextColor(6, 78, 59);
+      doc.text("World Chhippa Foundation - Global Phone Directory", 14, 15);
+
+      doc.setFontSize(9);
+      doc.setTextColor(100, 116, 139);
+      doc.text(`Generated: ${new Date().toLocaleDateString('en-GB')} | Total Records: ${allRecords.length}`, 14, 21);
+
+      let y = 30;
+      doc.setFillColor(241, 245, 249);
+      doc.rect(14, y - 5, 182, 8, 'F');
+
+      doc.setFontSize(9);
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(0, 0, 0);
+      doc.text("#", 16, y);
+      doc.text("FRC Code", 25, y);
+      doc.text("Full Name", 60, y);
+      doc.text("Phone / WhatsApp", 120, y);
+      doc.text("City / Country", 160, y);
+
+      doc.setFont("helvetica", "normal");
+      y += 7;
+
+      allRecords.forEach((rec, idx) => {
+        if (y > 280) {
+          doc.addPage();
+          y = 20;
+        }
+        const name = (rec.head && rec.head.name) ? rec.head.name : "N/A";
+        const phone = (rec.head && rec.head.phone) ? rec.head.phone : "N/A";
+        const loc = (rec.head && rec.head.location) ? rec.head.location : "N/A";
+
+        doc.text(String(idx + 1), 16, y);
+        doc.text(rec.code || "", 25, y);
+        doc.text(name.substring(0, 25), 60, y);
+        doc.text(phone, 120, y);
+        doc.text(loc.substring(0, 20), 160, y);
+
+        doc.setDrawColor(226, 232, 240);
+        doc.line(14, y + 2, 196, y + 2);
+        y += 7;
+      });
+
+      doc.save(`WCF_Phone_Directory_${new Date().toISOString().slice(0, 10)}.pdf`);
+    }
+
+    // 1-Click: 18+ Unmarried Boys & Girls Directory PDF Export
+    function exportAdultUnmarriedPDF() {
+      const allRecords = Object.values(storedFRCRecords);
+      const adultsList = [];
+
+      allRecords.forEach(rec => {
+        if (rec.members && Array.isArray(rec.members)) {
+          rec.members.forEach(m => {
+            const isChild = (m.relationKey === 'Son' || m.relationKey === 'Daughter' || m.relation.includes('بیٹا') || m.relation.includes('بیٹی'));
+            const ageNum = parseInt(m.age) || 0;
+            if (isChild && ageNum >= 18) {
+              adultsList.push({
+                frcCode: rec.code,
+                headName: rec.head.name,
+                headPhone: rec.head.phone,
+                name: m.name,
+                gender: m.gender,
+                age: ageNum,
+                edu: m.edu,
+                job: m.job,
+                city: rec.head.location
+              });
+            }
+          });
+        }
+      });
+
+      if (adultsList.length === 0) {
+        alert("18 سال سے زائد غیر شادی شدہ افراد کا کوئی ریکارڈ نہیں ملا!");
+        return;
+      }
+
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF('p', 'mm', 'a4');
+
+      doc.setFontSize(15);
+      doc.setTextColor(88, 28, 135);
+      doc.text("WCF - 18+ Unmarried Boys & Girls Directory", 14, 15);
+
+      doc.setFontSize(9);
+      doc.setTextColor(100, 116, 139);
+      doc.text(`Generated: ${new Date().toLocaleDateString('en-GB')} | Total Count: ${adultsList.length}`, 14, 21);
+
+      let y = 30;
+      doc.setFillColor(243, 232, 255);
+      doc.rect(14, y - 5, 182, 8, 'F');
+
+      doc.setFontSize(9);
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(0, 0, 0);
+      doc.text("#", 16, y);
+      doc.text("Name", 24, y);
+      doc.text("Gender", 60, y);
+      doc.text("Age", 78, y);
+      doc.text("Education/Job", 90, y);
+      doc.text("Guardian (Phone)", 135, y);
+
+      doc.setFont("helvetica", "normal");
+      y += 7;
+
+      adultsList.forEach((item, idx) => {
+        if (y > 280) {
+          doc.addPage();
+          y = 20;
+        }
+        doc.text(String(idx + 1), 16, y);
+        doc.text(item.name.substring(0, 20), 24, y);
+        doc.text(item.gender, 60, y);
+        doc.text(String(item.age), 78, y);
+        doc.text(`${item.edu} / ${item.job}`.substring(0, 24), 90, y);
+        doc.text(`${item.headName} (${item.headPhone})`.substring(0, 30), 135, y);
+
+        doc.setDrawColor(226, 232, 240);
+        doc.line(14, y + 2, 196, y + 2);
+        y += 7;
+      });
+
+      doc.save(`WCF_Unmarried_Adults_${new Date().toISOString().slice(0, 10)}.pdf`);
+    }
+
+    // 1-Click: Non-Chhippa Wives Directory PDF Export
+    function exportNonChhippaWivesPDF() {
+      const allRecords = Object.values(storedFRCRecords);
+      const nonChhippaList = [];
+
+      allRecords.forEach(rec => {
+        if (rec.members && Array.isArray(rec.members)) {
+          rec.members.forEach(m => {
+            const isWife = (m.relationKey === 'Wife' || m.relation.includes('بیوی'));
+            const isNonChhippa = m.lineage.includes('غیر') || m.lineage.includes('Non');
+            if (isWife && isNonChhippa) {
+              nonChhippaList.push({
+                frcCode: rec.code,
+                wifeName: m.name,
+                husbandName: rec.head.name,
+                phone: rec.head.phone,
+                location: rec.head.location
+              });
+            }
+          });
+        }
+      });
+
+      if (nonChhippaList.length === 0) {
+        alert("غیر چھیپا خواتین کا کوئی ریکارڈ موجود نہیں ہے!");
+        return;
+      }
+
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF('p', 'mm', 'a4');
+
+      doc.setFontSize(15);
+      doc.setTextColor(180, 83, 9);
+      doc.text("WCF - Non-Chhippa Wives Directory Report", 14, 15);
+
+      doc.setFontSize(9);
+      doc.setTextColor(100, 116, 139);
+      doc.text(`Generated: ${new Date().toLocaleDateString('en-GB')} | Total: ${nonChhippaList.length}`, 14, 21);
+
+      let y = 30;
+      doc.setFillColor(254, 243, 199);
+      doc.rect(14, y - 5, 182, 8, 'F');
+
+      doc.setFontSize(9);
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(0, 0, 0);
+      doc.text("#", 16, y);
+      doc.text("FRC Code", 24, y);
+      doc.text("Wife Name", 55, y);
+      doc.text("Husband Name", 95, y);
+      doc.text("Contact / City", 140, y);
+
+      doc.setFont("helvetica", "normal");
+      y += 7;
+
+      nonChhippaList.forEach((item, idx) => {
+        if (y > 280) {
+          doc.addPage();
+          y = 20;
+        }
+        doc.text(String(idx + 1), 16, y);
+        doc.text(item.frcCode, 24, y);
+        doc.text(item.wifeName.substring(0, 20), 55, y);
+        doc.text(item.husbandName.substring(0, 22), 95, y);
+        doc.text(`${item.phone} (${item.location})`.substring(0, 28), 140, y);
+
+        doc.setDrawColor(226, 232, 240);
+        doc.line(14, y + 2, 196, y + 2);
+        y += 7;
+      });
+
+      doc.save(`WCF_Non_Chhippa_Wives_${new Date().toISOString().slice(0, 10)}.pdf`);
+    }
+
+    // Backup JSON Download
+    function exportCensusJSON() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(storedFRCRecords, null, 2));
+      const dlAnchor = document.createElement('a');
+      dlAnchor.setAttribute("href", dataStr);
+      dlAnchor.setAttribute("download", `WCF_Census_Backup_${new Date().toISOString().slice(0, 10)}.json`);
+      document.body.appendChild(dlAnchor);
+      dlAnchor.click();
+      dlAnchor.remove();
+    }
+
+    // Clear All Test Records
+    function clearAllCensusData() {
+      if (confirm("کیا آپ واقعی تمام ریکارڈز صاف کرنا چاہتے ہیں؟ یہ عمل واپس نہیں ہو سکتا۔")) {
+        storedFRCRecords = {};
+        localStorage.removeItem('WCF_CENSUS_RECORDS');
+        updateCensusCounters();
+        closeAdminModal();
+        alert("ڈیٹا بیس کامیابی سے صاف کر دیا گیا ہے۔");
+      }
+    }
+
+    // Page Load Setup: Ensures clean form state & loads live counts
     window.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('censusForm');
+      if (form) form.reset();
+
+      const modal = document.getElementById('frcModal');
+      if (modal) modal.classList.add('hidden');
+
+      const adminModal = document.getElementById('adminModal');
+      if (adminModal) adminModal.classList.add('hidden');
+
       document.getElementById('langSelect').value = 'ur';
       changeLanguage('ur');
+      updateCensusCounters();
     });
   </script>
 </body>
