@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="google" content="notranslate">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>World Chhippa Foundation - Global Census & FRC Portal (v1.9)</title>
+  <title>World Chhippa Foundation - Global Census & FRC Portal (v1.10)</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- jsPDF & html2canvas -->
@@ -389,17 +389,18 @@
                   </div>
                 </div>
 
-                <!-- Head Summary Compact -->
+                <!-- Head Summary Compact (v1.10: Full Residential Address Display Included) -->
                 <div class="bg-slate-50 border border-slate-200 rounded-lg p-2.5 mb-3 text-[11px] grid grid-cols-2 gap-2 relative z-10 leading-snug">
-                  <div>
+                  <div class="space-y-0.5">
                     <p><span id="frcLblHeadName" class="font-bold text-slate-700">Head of Family:</span> <span id="frcHeadName" class="font-semibold text-slate-900"></span></p>
                     <p><span id="frcLblHeadFather" class="font-bold text-slate-700">Father / Guardian:</span> <span id="frcHeadFather" class="text-slate-800"></span></p>
                     <p><span id="frcLblHeadClan" class="font-bold text-slate-700">Clan / Sub-Caste:</span> <span id="frcHeadClan" class="text-slate-800"></span></p>
                     <p><span id="frcLblHeadEdu" class="font-bold text-slate-700">Education Level:</span> <span id="frcHeadEdu" class="text-slate-800"></span></p>
                   </div>
-                  <div>
+                  <div class="space-y-0.5">
                     <p><span id="frcLblHeadPhone" class="font-bold text-slate-700">Contact Phone:</span> <span id="frcHeadPhone" class="text-slate-800 font-mono"></span></p>
                     <p><span id="frcLblHeadLoc" class="font-bold text-slate-700">Country & City:</span> <span id="frcHeadLocation" class="text-slate-800"></span></p>
+                    <p><span id="frcLblHeadAddress" class="font-bold text-slate-700">Residential Address:</span> <span id="frcHeadAddress" class="text-slate-800 text-[10.5px]"></span></p>
                     <p><span id="frcLblHeadLineage" class="font-bold text-slate-700">Community Lineage:</span> <span id="frcHeadLineage" class="text-emerald-800 font-bold">Chhippa</span></p>
                   </div>
                 </div>
@@ -679,6 +680,7 @@
         frcLblHeadEdu: "تعلیمی قابلیت:",
         frcLblHeadPhone: "رابطہ فون:",
         frcLblHeadLoc: "ملک و شہر:",
+        frcLblHeadAddress: "رہائشی پتہ:",
         frcLblHeadLineage: "کمیونٹی نسب:",
         thUID: "شناختی کوڈ",
         thName: "مکمل نام",
@@ -746,7 +748,7 @@
         lblStatFemales: "वयस्क महिला (18+):",
         lblStatMinors: "नाबालिग बच्चे (<18):",
         headCardTitle: "परिवार के मुखिया का विवरण",
-        headBadge: "परिवार کے मुखिया",
+        headBadge: "परिवार के मुखिया",
         lblHeadName: "पूरा नाम (मुखिया)",
         lblHeadFather: "पिता / संरक्षक का नाम",
         lblHeadDOB: "जन्म तिथि (Date of Birth)",
@@ -799,6 +801,7 @@
         frcLblHeadEdu: "शैक्षणिक योग्यता:",
         frcLblHeadPhone: "संपर्क फ़ोन:",
         frcLblHeadLoc: "देश एवं शहर:",
+        frcLblHeadAddress: "आवासीय पता:",
         frcLblHeadLineage: "सामुदायिक वंश:",
         thUID: "पहचान कोड",
         thName: "पूरा नाम",
@@ -919,6 +922,7 @@
         frcLblHeadEdu: "Education Level:",
         frcLblHeadPhone: "Contact Phone:",
         frcLblHeadLoc: "Country & City:",
+        frcLblHeadAddress: "Residential Address:",
         frcLblHeadLineage: "Community Lineage:",
         thUID: "Unique ID",
         thName: "Full Name",
@@ -1802,6 +1806,7 @@
       document.getElementById('frcLblHeadEdu').textContent = dict.frcLblHeadEdu;
       document.getElementById('frcLblHeadPhone').textContent = dict.frcLblHeadPhone;
       document.getElementById('frcLblHeadLoc').textContent = dict.frcLblHeadLoc;
+      document.getElementById('frcLblHeadAddress').textContent = dict.frcLblHeadAddress;
       document.getElementById('frcLblHeadLineage').textContent = dict.frcLblHeadLineage;
 
       document.getElementById('thUID').textContent = dict.thUID;
@@ -1824,6 +1829,7 @@
       document.getElementById('frcHeadEdu').textContent = record.head.edu;
       document.getElementById('frcHeadPhone').textContent = record.head.phone;
       document.getElementById('frcHeadLocation').textContent = record.head.location;
+      document.getElementById('frcHeadAddress').textContent = record.head.address || '-';
       document.getElementById('frcHeadLineage').textContent = record.head.lineage;
 
       const qrContainer = document.getElementById('frcQRCode');
