@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ur" dir="rtl" class="notranslate" translate="no">
+<html lang="en" dir="ltr" class="notranslate" translate="no">
 <head>
   <meta charset="UTF-8">
   <meta name="google" content="notranslate">
@@ -59,7 +59,7 @@
     }
   </style>
 </head>
-<body class="bg-slate-50 text-slate-900 min-h-screen">
+<body class="bg-slate-50 text-slate-900 min-h-screen font-latin">
 
   <!-- Top Navigation Header -->
   <header class="bg-emerald-800 text-white shadow-md sticky top-0 z-40">
@@ -69,8 +69,8 @@
       <div class="flex items-center gap-3 cursor-pointer select-none" id="headerLogoArea" title="Official Seal (5 Clicks Admin Panel)">
         <img src="stamp.png" alt="WCF Official Seal" class="w-12 h-12 rounded-full object-contain shrink-0 shadow-sm border border-emerald-500 bg-white hover:opacity-95 transition">
         <div>
-          <h1 id="appTitle" class="text-base md:text-xl font-bold leading-relaxed mb-2">چھیپا خاندانی رجسٹریشن سرٹیفکیٹ</h1>
-          <p id="appSub" class="text-[11px] md:text-xs text-emerald-200 leading-normal mt-1">ورلڈ چھیپا فاؤنڈیشن — عالمی مردم شماری پورٹل</p>
+          <h1 id="appTitle" class="text-base md:text-xl font-bold leading-relaxed mb-2">Chhippa Family Registration Certificate</h1>
+          <p id="appSub" class="text-[11px] md:text-xs text-emerald-200 leading-normal mt-1">World Chhippa Foundation — Global Census Portal</p>
         </div>
       </div>
 
@@ -78,22 +78,22 @@
       <div class="flex items-center gap-3 flex-wrap">
         <div class="flex items-center gap-3 bg-emerald-950/70 border border-emerald-600/50 px-3 py-1 rounded-lg text-xs font-mono">
           <div>
-            <span id="lblLiveFamilies" class="text-[10px] text-emerald-300 block">خاندان (Families):</span>
+            <span id="lblLiveFamilies" class="text-[10px] text-emerald-300 block">Families:</span>
             <span id="liveTotalFamilies" class="font-bold text-amber-300 text-sm">0</span>
           </div>
           <div class="w-px h-6 bg-emerald-700"></div>
           <div>
-            <span id="lblLiveMembers" class="text-[10px] text-emerald-300 block">کل افراد (Unique):</span>
+            <span id="lblLiveMembers" class="text-[10px] text-emerald-300 block">Unique Individuals:</span>
             <span id="liveTotalMembers" class="font-bold text-white text-sm">0</span>
           </div>
         </div>
 
         <div class="flex items-center gap-2 bg-emerald-900/80 p-1.5 rounded-lg border border-emerald-700">
-          <label id="lblLang" class="text-xs text-emerald-200 !mb-0 !leading-none">زبان:</label>
+          <label id="lblLang" class="text-xs text-emerald-200 !mb-0 !leading-none">Language:</label>
           <select id="langSelect" onchange="changeLanguage(this.value)" class="bg-emerald-800 text-white text-xs md:text-sm font-semibold rounded px-2 py-1 outline-none cursor-pointer">
-            <option value="ur" selected>اردو (Urdu)</option>
+            <option value="en" selected>English</option>
+            <option value="ur">اردو (Urdu)</option>
             <option value="hi">हिन्दी (Hindi)</option>
-            <option value="en">English</option>
           </select>
         </div>
       </div>
@@ -106,47 +106,47 @@
     <!-- Tab Buttons -->
     <div class="flex gap-3 border-b border-slate-200 pb-3">
       <button type="button" id="tabNewReg" onclick="switchMainTab('new')" class="bg-emerald-700 text-white px-5 py-2.5 rounded-lg font-bold text-xs md:text-sm shadow">
-        + نیا اندراج مردم شماری
+        + New Census Registration
       </button>
       <button type="button" id="tabSearchReg" onclick="switchMainTab('search')" class="bg-slate-200 text-slate-700 hover:bg-slate-300 px-5 py-2.5 rounded-lg font-bold text-xs md:text-sm">
-        دوبارہ پرنٹ / سرچ FRC
+        Reprint / Search FRC
       </button>
       <button type="button" id="tabCityStats" onclick="switchMainTab('city')" class="bg-slate-200 text-slate-700 hover:bg-slate-300 px-5 py-2.5 rounded-lg font-bold text-xs md:text-sm">
-        شہر وار آبادی ڈیش بورڈ
+        City Population Dashboard
       </button>
     </div>
 
     <!-- Population Dashboard Section -->
     <div id="cityStatsSection" class="hidden bg-white p-5 md:p-6 rounded-xl border border-slate-200 shadow space-y-4">
-      <h3 id="cityStatsTitle" class="font-bold text-base text-slate-800">کمیونٹی آبادی ڈیش بورڈ (گلوبل سرچ)</h3>
-      <p id="cityStatsSub" class="text-xs text-slate-500">اپنا تصدیق شدہ FRC کوڈ یا رجسٹرڈ موبائل نمبر درج کریں تاکہ رسائی حاصل ہو سکے، اور کسی بھی ملک یا شہر کی آبادی دیکھیں۔</p>
+      <h3 id="cityStatsTitle" class="font-bold text-base text-slate-800">Community Population Dashboard (Global Search)</h3>
+      <p id="cityStatsSub" class="text-xs text-slate-500">Enter your verified FRC Code or registered Mobile Number to gain access and check population for any country or city.</p>
       
       <div id="popAuthBox" class="flex flex-col md:flex-row gap-3 max-w-xl">
-        <input type="text" id="cityStatAuthInput" placeholder="FRC کوڈ یا موبائل فون نمبر درج کریں..." class="border border-slate-300 rounded-lg p-2.5 text-sm font-mono outline-none focus:ring-2 focus:ring-emerald-600 flex-1">
+        <input type="text" id="cityStatAuthInput" placeholder="Enter FRC Code or Mobile Number..." class="border border-slate-300 rounded-lg p-2.5 text-sm font-mono outline-none focus:ring-2 focus:ring-emerald-600 flex-1">
         <button type="button" id="btnCityStatsVerify" onclick="verifyAndOpenPopulationDashboard()" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-5 py-2.5 rounded-lg text-sm shadow">
-          تصدیق و رسائی
+          Verify & Access
         </button>
       </div>
       <p id="cityStatsErrorMsg" class="text-xs text-red-600 font-semibold hidden"></p>
 
       <div id="popFilterArea" class="hidden pt-3 border-t border-slate-200 space-y-3">
         <div class="bg-emerald-50 border border-emerald-200 p-3 rounded-lg flex flex-wrap items-center justify-between gap-2 text-xs">
-          <span id="popAccessNoticeText" class="text-emerald-900 font-semibold">✅ رسائی منظور: آپ کسی بھی ملک یا شہر کی مردم شماری کا جائزہ لے سکتے ہیں۔</span>
-          <button type="button" id="btnPopLock" onclick="lockPopulationDashboard()" class="text-slate-500 hover:text-red-600 font-bold underline">لاک کریں</button>
+          <span id="popAccessNoticeText" class="text-emerald-900 font-semibold">✅ Access Granted: You can view census records for any country or city.</span>
+          <button type="button" id="btnPopLock" onclick="lockPopulationDashboard()" class="text-slate-500 hover:text-red-600 font-bold underline">Lock</button>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
           <div>
-            <label class="block text-xs font-semibold text-slate-700 mb-1" id="lblPopCountry">ملک منتخب کریں:</label>
+            <label class="block text-xs font-semibold text-slate-700 mb-1" id="lblPopCountry">Select Country:</label>
             <select id="popCountrySelect" onchange="runPublicPopulationQuery()" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white outline-none focus:ring-2 focus:ring-emerald-500"></select>
           </div>
           <div>
-            <label class="block text-xs font-semibold text-slate-700 mb-1" id="lblPopCity">شہر (اختیاری یا سب):</label>
-            <input type="text" id="popCityInput" oninput="runPublicPopulationQuery()" placeholder="شہر کا نام لکھیں (خالی = تمام شہر)" class="w-full border border-slate-300 rounded-lg p-2 text-xs outline-none focus:ring-2 focus:ring-emerald-500">
+            <label class="block text-xs font-semibold text-slate-700 mb-1" id="lblPopCity">City (Optional or All):</label>
+            <input type="text" id="popCityInput" oninput="runPublicPopulationQuery()" placeholder="Enter city name (Empty = All cities)" class="w-full border border-slate-300 rounded-lg p-2 text-xs outline-none focus:ring-2 focus:ring-emerald-500">
           </div>
           <div class="flex items-end">
             <button type="button" id="btnPopUpdateStats" onclick="runPublicPopulationQuery()" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-2 rounded-lg text-xs shadow">
-              اعداد و شمار اپڈیٹ کریں
+              Update Statistics
             </button>
           </div>
         </div>
@@ -154,29 +154,29 @@
         <div id="cityStatsResultCard" class="mt-4 p-5 bg-emerald-50/80 border border-emerald-300 rounded-xl space-y-3">
           <div class="flex justify-between items-center border-b border-emerald-200 pb-2">
             <h4 class="font-bold text-sm text-emerald-950">
-              <span id="lblStatResAreaHeading">منتخب علاقہ:</span> <span id="statResAreaName" class="text-emerald-800 text-base font-black">All</span>
+              <span id="lblStatResAreaHeading">Selected Area:</span> <span id="statResAreaName" class="text-emerald-800 text-base font-black">All</span>
             </h4>
-            <span id="badgeAggregateStats" class="text-xs bg-emerald-200 text-emerald-900 px-2.5 py-0.5 rounded-full font-bold">مجموعی شماریات (Aggregate)</span>
+            <span id="badgeAggregateStats" class="text-xs bg-emerald-200 text-emerald-900 px-2.5 py-0.5 rounded-full font-bold">Aggregate Statistics</span>
           </div>
           <div class="grid grid-cols-2 md:grid-cols-5 gap-3 text-center">
             <div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm">
-              <span class="text-[10px] text-slate-500 block" id="lblStatFamilies">کل خاندان:</span>
+              <span class="text-[10px] text-slate-500 block" id="lblStatFamilies">Total Families:</span>
               <span id="statResFamilies" class="text-lg font-black text-slate-800">0</span>
             </div>
             <div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm">
-              <span class="text-[10px] text-slate-500 block" id="lblStatTotalPop">کل آبادی (افراد):</span>
+              <span class="text-[10px] text-slate-500 block" id="lblStatTotalPop">Total Population:</span>
               <span id="statResTotalPop" class="text-lg font-black text-emerald-800">0</span>
             </div>
             <div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm">
-              <span class="text-[10px] text-slate-500 block" id="lblStatMales">بالغ مرد (18+):</span>
+              <span class="text-[10px] text-slate-500 block" id="lblStatMales">Adult Males (18+):</span>
               <span id="statResMales" class="text-lg font-black text-blue-700">0</span>
             </div>
             <div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm">
-              <span class="text-[10px] text-slate-500 block" id="lblStatFemales">بالغ خواتین (18+):</span>
+              <span class="text-[10px] text-slate-500 block" id="lblStatFemales">Adult Females (18+):</span>
               <span id="statResFemales" class="text-lg font-black text-purple-700">0</span>
             </div>
             <div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm col-span-2 md:col-span-1">
-              <span class="text-[10px] text-slate-500 block" id="lblStatMinors">نابالغ بچے (<18):</span>
+              <span class="text-[10px] text-slate-500 block" id="lblStatMinors">Minors (<18):</span>
               <span id="statResMinors" class="text-lg font-black text-amber-600">0</span>
             </div>
           </div>
@@ -186,15 +186,15 @@
 
     <!-- Search Section -->
     <div id="searchSection" class="hidden bg-white p-5 md:p-6 rounded-xl border border-slate-200 shadow space-y-4">
-      <h3 id="searchTitle" class="font-bold text-base text-slate-800">خاندانی رجسٹریشن سرٹیفکیٹ (FRC) تلاش کریں</h3>
-      <p id="searchSub" class="text-xs text-slate-500">اپنا تصدیق شدہ FRC کوڈ (مثلاً WCF-123456) یا رجسٹرڈ موبائل نمبر درج کریں تاکہ سرٹیفکیٹ دوبارہ دیکھا، پرنٹ یا اپڈیٹ کیا جا سکے۔</p>
+      <h3 id="searchTitle" class="font-bold text-base text-slate-800">Search Family Registration Certificate (FRC)</h3>
+      <p id="searchSub" class="text-xs text-slate-500">Enter your verified FRC Code (e.g. WCF-123456) or registered mobile number to view, reprint or update.</p>
       <div class="flex flex-col md:flex-row gap-3 max-w-xl">
-        <input type="text" id="searchFRCInput" placeholder="FRC کوڈ یا موبائل فون نمبر درج کریں..." class="border border-slate-300 rounded-lg p-2.5 text-sm font-mono outline-none focus:ring-2 focus:ring-emerald-600 flex-1">
+        <input type="text" id="searchFRCInput" placeholder="Enter FRC Code or Mobile Number..." class="border border-slate-300 rounded-lg p-2.5 text-sm font-mono outline-none focus:ring-2 focus:ring-emerald-600 flex-1">
         <button type="button" id="btnSearchAction" onclick="searchAndReprintFRC()" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-5 py-2.5 rounded-lg text-sm shadow">
-          تلاش و پرنٹ کریں
+          Search & Print FRC
         </button>
         <button type="button" id="btnSearchAddMember" onclick="loadFRCForAddingMember()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2.5 rounded-lg text-sm shadow">
-          + نیا رکن شامل کریں
+          + Add New Member
         </button>
       </div>
       <p id="searchErrorMsg" class="text-xs text-red-600 font-semibold hidden"></p>
@@ -204,56 +204,56 @@
     <form id="censusForm" onsubmit="handleFormSubmit(event)" class="space-y-6">
       
       <div id="updatingFamilyBanner" class="hidden bg-blue-50 border border-blue-300 p-3 rounded-xl flex justify-between items-center text-xs text-blue-900 font-bold">
-        <span>🔄 موجودہ خاندانی ریکارڈ کو اپڈیٹ کیا جا رہا ہے (FRC: <span id="updatingFRCCode"></span>)</span>
-        <button type="button" onclick="cancelUpdatingFamily()" class="text-red-600 hover:underline">منسوخ کریں (نئے اندراج پر جائیں)</button>
+        <span>🔄 Updating Existing Record (FRC: <span id="updatingFRCCode"></span>)</span>
+        <button type="button" onclick="cancelUpdatingFamily()" class="text-red-600 hover:underline">Cancel</button>
       </div>
 
-      <!-- Head Details Card (No CNIC/Aadhaar Box) -->
+      <!-- Head Details Card -->
       <div class="bg-white rounded-xl shadow border border-slate-200 overflow-hidden">
         <div class="bg-emerald-700 text-white px-5 py-3 flex justify-between items-center">
-          <h2 id="headCardTitle" class="font-bold text-sm md:text-base">سرپرستِ خاندان کی تفصیلات</h2>
-          <span class="text-xs bg-emerald-800 px-2.5 py-1 rounded-full font-mono text-emerald-200" id="headBadge">سرپرستِ خاندان</span>
+          <h2 id="headCardTitle" class="font-bold text-sm md:text-base">Head of Family Details</h2>
+          <span class="text-xs bg-emerald-800 px-2.5 py-1 rounded-full font-mono text-emerald-200" id="headBadge">Head of Family</span>
         </div>
 
         <div class="p-5 grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <label id="lblHeadName" class="block text-xs font-semibold text-slate-700">
-              مکمل نام (سرپرست)<span class="text-red-500 font-bold ml-1 mr-1">*</span>
+              Full Name (Head)<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
             <input type="text" id="headName" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
           </div>
 
           <div>
             <label id="lblHeadFather" class="block text-xs font-semibold text-slate-700">
-              والد / سرپرست کا نام<span class="text-red-500 font-bold ml-1 mr-1">*</span>
+              Father / Guardian Name<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
             <input type="text" id="headFather" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
           </div>
 
           <div>
             <label id="lblHeadDOB" class="block text-xs font-semibold text-slate-700">
-              تاریخِ پیدائش (Date of Birth)<span class="text-red-500 font-bold ml-1 mr-1">*</span>
+              Date of Birth (DOB)<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
             <input type="date" id="headDOB" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
           </div>
 
           <div>
             <label id="lblHeadGender" class="block text-xs font-semibold text-slate-700">
-              جنس<span class="text-red-500 font-bold ml-1 mr-1">*</span>
+              Gender<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
             <select id="headGender" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"></select>
           </div>
 
           <div>
             <label id="lblHeadMarital" class="block text-xs font-semibold text-slate-700">
-              ازدواجی حیثیت (Marital Status)<span class="text-red-500 font-bold ml-1 mr-1">*</span>
+              Marital Status<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
             <select id="headMarital" required class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-emerald-500 outline-none"></select>
           </div>
 
           <div>
             <label id="lblHeadClan" class="block text-xs font-semibold text-slate-700">
-              اٹک / ذیلی ذات<span class="text-red-500 font-bold ml-1 mr-1">*</span>
+              Clan / Sub-Caste<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
             <select id="headClan" required onchange="toggleManualInput(this, 'headClanOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-emerald-500 outline-none"></select>
             <div id="headClanOtherWrap" class="hidden mt-2">
@@ -263,7 +263,7 @@
 
           <div>
             <label id="lblHeadEdu" class="block text-xs font-semibold text-slate-700">
-              تعلیمی قابلیت<span class="text-red-500 font-bold ml-1 mr-1">*</span>
+              Education Level<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
             <select id="headEdu" required onchange="toggleManualInput(this, 'headEduOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-slate-700 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"></select>
             <div id="headEduOtherWrap" class="hidden mt-2">
@@ -273,7 +273,7 @@
 
           <div>
             <label id="lblHeadJob" class="block text-xs font-semibold text-slate-700">
-              پیشہ / ملازمت<span class="text-red-500 font-bold ml-1 mr-1">*</span>
+              Occupation / Job<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
             <select id="headJob" required onchange="toggleManualInput(this, 'headJobOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-emerald-500 outline-none"></select>
             <div id="headJobOtherWrap" class="hidden mt-2">
@@ -283,14 +283,14 @@
 
           <div>
             <label id="lblHeadPhone" class="block text-xs font-semibold text-slate-700">
-              رابطہ فون / واٹس ایپ<span class="text-red-500 font-bold ml-1 mr-1">*</span>
+              Contact Phone / WhatsApp<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
-            <input type="tel" id="headPhone" required placeholder="+92..." class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none text-right dir-ltr">
+            <input type="tel" id="headPhone" required placeholder="+92..." class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none text-left">
           </div>
 
           <div>
             <label id="lblHeadCountry" class="block text-xs font-semibold text-slate-700">
-              ملک (Country)<span class="text-red-500 font-bold ml-1 mr-1">*</span>
+              Country<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
             <select id="headCountry" required onchange="toggleManualInput(this, 'headCountryOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"></select>
             <div id="headCountryOtherWrap" class="hidden mt-2">
@@ -300,14 +300,14 @@
 
           <div>
             <label id="lblHeadCity" class="block text-xs font-semibold text-slate-700">
-              شہر<span class="text-red-500 font-bold ml-1 mr-1">*</span>
+              City<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
             <input type="text" id="headCity" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
           </div>
 
           <div class="md:col-span-3">
             <label id="lblHeadAddress" class="block text-xs font-semibold text-slate-700">
-              مکمل رہائشی پتہ<span class="text-red-500 font-bold ml-1 mr-1">*</span>
+              Full Residential Address<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
             <input type="text" id="headAddress" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
           </div>
@@ -318,11 +318,11 @@
       <div class="bg-white rounded-xl shadow border border-slate-200 overflow-hidden">
         <div class="bg-slate-800 text-white px-5 py-3 flex justify-between items-center">
           <div>
-            <h2 id="membersSectionTitle" class="font-bold text-sm md:text-base">دیگر اہل خانہ / اراکین کی تفصیلات</h2>
-            <p id="membersSectionSub" class="text-xs text-slate-300">بیوی، بچے اور دیگر زیرِ کفالت افراد شامل کریں</p>
+            <h2 id="membersSectionTitle" class="font-bold text-sm md:text-base">Family Members Details</h2>
+            <p id="membersSectionSub" class="text-xs text-slate-300">Add Spouse, Children & Dependents</p>
           </div>
           <button type="button" onclick="addMemberCard()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs md:text-sm px-3.5 py-1.5 rounded-lg flex items-center gap-1.5 transition">
-            <span class="text-base leading-none">+</span> <span id="btnAddMemberBtn">نیا رکن شامل کریں</span>
+            <span class="text-base leading-none">+</span> <span id="btnAddMemberBtn">Add New Member</span>
           </button>
         </div>
 
@@ -332,7 +332,7 @@
       <!-- Submit Action Bar -->
       <div class="flex justify-end p-2">
         <button type="submit" id="btnSubmitForm" class="w-full md:w-auto bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-8 py-3 rounded-xl shadow-lg transition text-base">
-          مکمل فارم جمع کریں اور FRC جاری کریں
+          Submit Form & Issue Official FRC
         </button>
       </div>
     </form>
@@ -343,19 +343,19 @@
         
         <div class="bg-slate-900 text-white p-3 md:p-4 sticky top-0 z-50 flex flex-wrap justify-between items-center gap-2 border-b border-slate-700">
           <div>
-            <h3 id="modalTopHeading" class="font-bold text-xs md:text-sm">خاندانی رجسٹریشن سرٹیفکیٹ (Official FRC)</h3>
-            <p id="modalTopSub" class="text-[10px] text-slate-400">تصدیق شدہ برقی دستاویز</p>
+            <h3 id="modalTopHeading" class="font-bold text-xs md:text-sm">Family Registration Certificate (Official FRC)</h3>
+            <p id="modalTopSub" class="text-[10px] text-slate-400">Certified Digital Document</p>
           </div>
           
           <div class="flex items-center gap-1.5 md:gap-2">
             <button onclick="downloadFRCPDFOnly()" id="btnDownloadAction" class="bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] md:text-xs font-bold px-3 md:px-4 py-2 rounded-lg transition shadow flex items-center gap-1">
-              ڈاؤن لوڈ PDF
+              Download PDF
             </button>
             <button onclick="openDirectWhatsAppHelpline()" id="btnModalWhatsApp" class="bg-green-600 hover:bg-green-500 text-white text-[11px] md:text-xs font-bold px-3 md:px-4 py-2 rounded-lg transition shadow flex items-center gap-1">
-              واٹس ایپ ہیلپ لائن
+              WhatsApp Helpline
             </button>
             <button onclick="closeFRCModal()" id="btnModalClose" class="bg-slate-700 hover:bg-slate-600 text-white text-[11px] md:text-xs px-2.5 py-2 rounded-lg">
-              بند کریں
+              Close
             </button>
           </div>
         </div>
@@ -363,7 +363,7 @@
         <!-- Sheet Scroll Container: Fit to 1 Page -->
         <div class="p-2 md:p-4 overflow-x-auto bg-slate-200 flex justify-center w-full">
           <div id="frcScaleWrapper" class="origin-top transition-transform duration-200 flex justify-center">
-            <div id="frcCertificateSheet" class="relative bg-white w-[794px] min-h-[1050px] p-6 border border-slate-300 shadow text-slate-900 overflow-hidden shrink-0 flex flex-col justify-between">
+            <div id="frcCertificateSheet" class="relative bg-white w-[794px] min-h-[1050px] p-6 border border-slate-300 shadow text-slate-900 overflow-hidden shrink-0 flex flex-col justify-between font-latin">
               
               <div class="watermark-container">
                 World Chhippa Foundation
@@ -384,23 +384,23 @@
 
                   <div id="frcTitleSection" class="text-right">
                     <span id="frcDocBadge" class="text-[9px] font-bold text-emerald-800 tracking-wider uppercase">Official Family Registration Certificate</span>
-                    <h2 id="frcDocOrg" class="text-xl font-black text-slate-900 mt-0.5">ورلڈ چھیپا فاؤنڈیشن</h2>
-                    <p id="frcDocTagline" class="text-[11px] text-slate-500">عالمی مردم شماری ڈائریکٹری و خاندانی شناخت</p>
+                    <h2 id="frcDocOrg" class="text-xl font-black text-slate-900 mt-0.5">World Chhippa Foundation</h2>
+                    <p id="frcDocTagline" class="text-[11px] text-slate-500">Global Census Directory & Family Identity</p>
                   </div>
                 </div>
 
                 <!-- Head Summary Compact -->
                 <div class="bg-slate-50 border border-slate-200 rounded-lg p-2.5 mb-3 text-[11px] grid grid-cols-2 gap-2 relative z-10 leading-snug">
                   <div>
-                    <p><span id="frcLblHeadName" class="font-bold text-slate-700">سرپرستِ خاندان:</span> <span id="frcHeadName" class="font-semibold text-slate-900"></span></p>
-                    <p><span id="frcLblHeadFather" class="font-bold text-slate-700">والد / سرپرست:</span> <span id="frcHeadFather" class="text-slate-800"></span></p>
-                    <p><span id="frcLblHeadClan" class="font-bold text-slate-700">اٹک / شاخ:</span> <span id="frcHeadClan" class="text-slate-800"></span></p>
-                    <p><span id="frcLblHeadEdu" class="font-bold text-slate-700">تعلیمی قابلیت:</span> <span id="frcHeadEdu" class="text-slate-800"></span></p>
+                    <p><span id="frcLblHeadName" class="font-bold text-slate-700">Head of Family:</span> <span id="frcHeadName" class="font-semibold text-slate-900"></span></p>
+                    <p><span id="frcLblHeadFather" class="font-bold text-slate-700">Father / Guardian:</span> <span id="frcHeadFather" class="text-slate-800"></span></p>
+                    <p><span id="frcLblHeadClan" class="font-bold text-slate-700">Clan / Sub-Caste:</span> <span id="frcHeadClan" class="text-slate-800"></span></p>
+                    <p><span id="frcLblHeadEdu" class="font-bold text-slate-700">Education Level:</span> <span id="frcHeadEdu" class="text-slate-800"></span></p>
                   </div>
                   <div>
-                    <p><span id="frcLblHeadPhone" class="font-bold text-slate-700">رابطہ فون:</span> <span id="frcHeadPhone" class="text-slate-800 font-mono"></span></p>
-                    <p><span id="frcLblHeadLoc" class="font-bold text-slate-700">ملک و شہر:</span> <span id="frcHeadLocation" class="text-slate-800"></span></p>
-                    <p><span id="frcLblHeadLineage" class="font-bold text-slate-700">کمیونٹی نسب:</span> <span id="frcHeadLineage" class="text-emerald-800 font-bold">چھیپا</span></p>
+                    <p><span id="frcLblHeadPhone" class="font-bold text-slate-700">Contact Phone:</span> <span id="frcHeadPhone" class="text-slate-800 font-mono"></span></p>
+                    <p><span id="frcLblHeadLoc" class="font-bold text-slate-700">Country & City:</span> <span id="frcHeadLocation" class="text-slate-800"></span></p>
+                    <p><span id="frcLblHeadLineage" class="font-bold text-slate-700">Community Lineage:</span> <span id="frcHeadLineage" class="text-emerald-800 font-bold">Chhippa</span></p>
                   </div>
                 </div>
 
@@ -410,16 +410,16 @@
                     <thead>
                       <tr class="bg-emerald-800 text-white text-center font-bold">
                         <th class="border border-slate-300 p-1 w-5">#</th>
-                        <th id="thUID" class="border border-slate-300 p-1">شناختی کوڈ</th>
-                        <th id="thName" class="border border-slate-300 p-1">مکمل نام</th>
-                        <th id="thRel" class="border border-slate-300 p-1">رشتہ</th>
-                        <th id="thGen" class="border border-slate-300 p-1">جنس</th>
-                        <th id="thDOB" class="border border-slate-300 p-1">تاریخِ پیدائش</th>
-                        <th id="thMarital" class="border border-slate-300 p-1">ازدواجی حیثیت</th>
-                        <th id="thEdu" class="border border-slate-300 p-1">تعلیم</th>
-                        <th id="thJob" class="border border-slate-300 p-1">پیشہ</th>
-                        <th id="thLoc" class="border border-slate-300 p-1">شہر و رہائش</th>
-                        <th id="thLineage" class="border border-slate-300 p-1">نسب</th>
+                        <th id="thUID" class="border border-slate-300 p-1">Unique ID</th>
+                        <th id="thName" class="border border-slate-300 p-1">Full Name</th>
+                        <th id="thRel" class="border border-slate-300 p-1">Relation</th>
+                        <th id="thGen" class="border border-slate-300 p-1">Gender</th>
+                        <th id="thDOB" class="border border-slate-300 p-1">Date of Birth</th>
+                        <th id="thMarital" class="border border-slate-300 p-1">Marital Status</th>
+                        <th id="thEdu" class="border border-slate-300 p-1">Education</th>
+                        <th id="thJob" class="border border-slate-300 p-1">Occupation</th>
+                        <th id="thLoc" class="border border-slate-300 p-1">City & Address</th>
+                        <th id="thLineage" class="border border-slate-300 p-1">Lineage</th>
                       </tr>
                     </thead>
                     <tbody id="frcTableBody" class="divide-y border-slate-200 text-slate-800 text-center leading-tight"></tbody>
@@ -474,7 +474,7 @@
                       <div class="w-40 border-b border-slate-700 pb-0.5 mb-0.5 text-[9.5px] font-semibold text-slate-800">
                         M.Waseem Sadiq Tak (Neemray Walay)
                       </div>
-                      <p id="frcDocSig" class="text-[8.5px] font-bold text-slate-600">Registrar WCF (مجاز دستخط و مہر)</p>
+                      <p id="frcDocSig" class="text-[8.5px] font-bold text-slate-600">Registrar WCF (Authorized Signature & Seal)</p>
                       <p class="text-[7.5px] text-slate-400">Authorized Digital Signature</p>
                     </div>
                   </div>
@@ -746,7 +746,7 @@
         lblStatFemales: "वयस्क महिला (18+):",
         lblStatMinors: "नाबालिग बच्चे (<18):",
         headCardTitle: "परिवार के मुखिया का विवरण",
-        headBadge: "परिवार के मुखिया",
+        headBadge: "परिवार کے मुखिया",
         lblHeadName: "पूरा नाम (मुखिया)",
         lblHeadFather: "पिता / संरक्षक का नाम",
         lblHeadDOB: "जन्म तिथि (Date of Birth)",
@@ -970,7 +970,7 @@
       "Thailand", "Tunisia", "Turkey", "United Kingdom", "United States", "Yemen", "Other"
     ];
 
-    let currentLang = 'ur';
+    let currentLang = 'en';
     let memberCount = 0;
     let editingExistingFRCCode = null;
     let isPopDashboardUnlocked = false;
@@ -985,7 +985,6 @@
 
     let lastGeneratedFRC = null;
 
-    // Smart Fingerprint Normalizer for Duplicate Prevention (No CNIC Required)
     function generateCleanKey(name, father, dob, clan) {
       const clean = (str) => (str || '')
         .toLowerCase()
@@ -1004,7 +1003,7 @@
 
       const pSel = document.getElementById('popCountrySelect');
       if (pSel) {
-        const dict = i18n[currentLang] || i18n.ur;
+        const dict = i18n[currentLang] || i18n.en;
         const defaultText = dict.popCountryDefault || '-- All Countries --';
         pSel.innerHTML = `<option value="">${defaultText}</option>` + 
           allWorldCountries.map(c => `<option value="${c}">${c}</option>`).join('');
@@ -1202,7 +1201,7 @@
       const filterArea = document.getElementById('popFilterArea');
 
       if (!inputVal) {
-        errEl.textContent = "براہ کرم FRC کوڈ یا فون نمبر درج کریں۔";
+        errEl.textContent = "Please enter FRC Code or Mobile Number.";
         errEl.classList.remove('hidden');
         return;
       }
@@ -1230,7 +1229,7 @@
       });
 
       if (!isMatched) {
-        errEl.textContent = `درج کردہ شناخت (${inputVal}) رجسٹرڈ نہیں ملی۔ درست FRC کوڈ یا فون نمبر درج کریں۔`;
+        errEl.textContent = `Identity (${inputVal}) not found. Please enter valid FRC Code or Mobile Number.`;
         errEl.classList.remove('hidden');
         return;
       }
@@ -1408,7 +1407,7 @@
             <label class="block text-xs font-semibold text-slate-700 lbl-mem-phone">
               ${dict.lblMemPhoneOpt}
             </label>
-            <input type="tel" id="memPhone_${id}" placeholder="+92..." class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-emerald-500 outline-none text-right dir-ltr">
+            <input type="tel" id="memPhone_${id}" placeholder="+92..." class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-emerald-500 outline-none text-left">
           </div>
 
           <div id="memWifeLineageWrap_${id}" class="hidden">
@@ -1572,7 +1571,7 @@
       const errEl = document.getElementById('searchErrorMsg');
 
       if (!inputVal) {
-        errEl.textContent = "براہ کرم FRC کوڈ یا فون نمبر درج کریں۔";
+        errEl.textContent = "Please enter FRC Code or Mobile Number.";
         errEl.classList.remove('hidden');
         return;
       }
@@ -1588,7 +1587,7 @@
       }
 
       if (!foundRecord) {
-        errEl.textContent = `کوڈ یا نمبر (${inputVal}) کا کوئی ریکارڈ نہیں ملا۔`;
+        errEl.textContent = `Record (${inputVal}) not found.`;
         errEl.classList.remove('hidden');
         return;
       }
@@ -1599,7 +1598,7 @@
       switchMainTab('new');
       document.getElementById('updatingFamilyBanner').classList.remove('hidden');
       document.getElementById('updatingFRCCode').textContent = foundRecord.code;
-      document.getElementById('btnSubmitForm').textContent = `خاندان کو اپڈیٹ کریں (${foundRecord.code})`;
+      document.getElementById('btnSubmitForm').textContent = `Update Family (${foundRecord.code})`;
 
       document.getElementById('headName').value = foundRecord.head.name;
       document.getElementById('headFather').value = foundRecord.head.father;
@@ -1666,7 +1665,7 @@
         });
 
         if (existingRecord) {
-          alert(`نوٹ: سرپرست (${headName} ولد ${headFather}) کا ریکارڈ پورٹل میں پہلے سے موجود ہے (FRC: ${existingRecord.code})۔ سسٹم آپ کا پرانا تصدیق شدہ FRC کھول رہا ہے۔`);
+          alert(`Notice: Head of family (${headName} s/o ${headFather}) already exists in portal (FRC: ${existingRecord.code}). Opening existing verified FRC.`);
           lastGeneratedFRC = existingRecord;
           displayFRCModal(existingRecord);
           return;
@@ -1920,13 +1919,13 @@
       if (!lastGeneratedFRC) return;
       const targetPhone = "212708273330"; 
       const msg = encodeURIComponent(
-        `*ورلڈ چھیپا فاؤنڈیشن - FRC تصدیق*\n` +
-        `FRC کوڈ: ${lastGeneratedFRC.code}\n` +
-        `سرپرستِ خاندان: ${lastGeneratedFRC.head.name}\n` +
-        `والد کا نام: ${lastGeneratedFRC.head.father}\n` +
-        `فون: ${lastGeneratedFRC.head.phone}\n` +
-        `شہر و ملک: ${lastGeneratedFRC.head.location}\n` +
-        `ارکان کی تعداد: ${lastGeneratedFRC.members.length + 1}`
+        `*World Chhippa Foundation - FRC Verification*\n` +
+        `FRC Code: ${lastGeneratedFRC.code}\n` +
+        `Head: ${lastGeneratedFRC.head.name}\n` +
+        `Father: ${lastGeneratedFRC.head.father}\n` +
+        `Phone: ${lastGeneratedFRC.head.phone}\n` +
+        `Location: ${lastGeneratedFRC.head.location}\n` +
+        `Total Members: ${lastGeneratedFRC.members.length + 1}`
       );
       window.open(`https://wa.me/${targetPhone}?text=${msg}`, '_blank');
     }
@@ -1934,7 +1933,7 @@
     async function downloadFRCPDFOnly() {
       const btn = document.getElementById('btnDownloadAction');
       const originalText = btn.textContent;
-      btn.textContent = "ڈاؤن لوڈ ہو رہا ہے...";
+      btn.textContent = "Downloading...";
       btn.disabled = true;
 
       const wrapper = document.getElementById('frcScaleWrapper');
@@ -1973,7 +1972,7 @@
       const errEl = document.getElementById('searchErrorMsg');
 
       if (!inputVal) {
-        errEl.textContent = "براہ کرم FRC کوڈ یا فون نمبر درج کریں۔";
+        errEl.textContent = "Please enter FRC Code or Mobile Number.";
         errEl.classList.remove('hidden');
         return;
       }
@@ -1994,7 +1993,7 @@
         lastGeneratedFRC = foundRecord;
         displayFRCModal(foundRecord);
       } else {
-        errEl.textContent = `درج کردہ معلومات (${inputVal}) کا کوئی ریکارڈ نہیں ملا۔ براہ کرم FRC کوڈ یا فون نمبر کی تصدیق کریں۔`;
+        errEl.textContent = `Record (${inputVal}) not found. Please verify details.`;
         errEl.classList.remove('hidden');
       }
     }
@@ -2043,7 +2042,7 @@
 
       const allRecords = Object.values(storedFRCRecords);
       if (allRecords.length === 0) {
-        alert("Database mein koi record mojood nahi hai! Pehle FRC register karein.");
+        alert("No records found in database!");
         return;
       }
 
@@ -2407,8 +2406,8 @@
       const adminModal = document.getElementById('adminModal');
       if (adminModal) adminModal.classList.add('hidden');
 
-      document.getElementById('langSelect').value = 'ur';
-      changeLanguage('ur');
+      document.getElementById('langSelect').value = 'en';
+      changeLanguage('en');
       updateCensusCounters();
     });
   </script>
