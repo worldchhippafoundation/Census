@@ -14,11 +14,30 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&family=Noto+Sans+Devanagari:wght@400;600;700&family=Inter:wght@400;600;700;800;900&family=Great+Vibes&display=swap" rel="stylesheet">
   <style>
-    body { font-family: 'Noto Nastaliq Urdu', 'Inter', sans-serif; }
-    .font-devanagari { font-family: 'Noto Sans Devanagari', 'Inter', sans-serif; }
-    .font-latin { font-family: 'Inter', sans-serif; }
+    /* Nastaliq text overlap prevention */
+    body { 
+      font-family: 'Noto Nastaliq Urdu', 'Inter', sans-serif; 
+      line-height: 2.1;
+      word-spacing: 1.5px;
+    }
+    .font-devanagari { 
+      font-family: 'Noto Sans Devanagari', 'Inter', sans-serif; 
+      line-height: 1.6;
+      word-spacing: normal;
+    }
+    .font-latin { 
+      font-family: 'Inter', sans-serif; 
+      line-height: 1.5;
+      word-spacing: normal;
+    }
     .font-signature { font-family: 'Great Vibes', cursive; }
     
+    label {
+      line-height: 2.2 !important;
+      margin-bottom: 0.35rem !important;
+      display: inline-block;
+    }
+
     input, select, textarea {
       line-height: 1.8 !important;
       padding-top: 0.45rem !important;
@@ -47,7 +66,7 @@
   <header class="bg-emerald-800 text-white shadow-md sticky top-0 z-40">
     <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-3">
       
-      <!-- Official Header Logo Restored (stamp.png) -->
+      <!-- Official Header Logo (stamp.png) -->
       <div class="flex items-center gap-3 cursor-pointer select-none" id="headerLogoArea" title="Official Seal (5 Clicks Admin Panel)">
         <img src="stamp.png" alt="WCF Official Seal" class="w-12 h-12 rounded-full object-contain shrink-0 shadow-sm border border-emerald-500 bg-white hover:opacity-95 transition">
         <div>
@@ -56,22 +75,22 @@
         </div>
       </div>
 
-      <!-- Live Census Counter & Language Selector -->
+      <!-- Live Census Counter with Language Synced Labels -->
       <div class="flex items-center gap-3 flex-wrap">
         <div class="flex items-center gap-3 bg-emerald-950/70 border border-emerald-600/50 px-3 py-1 rounded-lg text-xs font-mono">
           <div>
-            <span class="text-[10px] text-emerald-300 block">خاندان (Families):</span>
+            <span id="lblLiveFamilies" class="text-[10px] text-emerald-300 block">خاندان (Families):</span>
             <span id="liveTotalFamilies" class="font-bold text-amber-300 text-sm">0</span>
           </div>
           <div class="w-px h-6 bg-emerald-700"></div>
           <div>
-            <span class="text-[10px] text-emerald-300 block">کل افراد (Unique):</span>
+            <span id="lblLiveMembers" class="text-[10px] text-emerald-300 block">کل افراد (Unique):</span>
             <span id="liveTotalMembers" class="font-bold text-white text-sm">0</span>
           </div>
         </div>
 
         <div class="flex items-center gap-2 bg-emerald-900/80 p-1.5 rounded-lg border border-emerald-700">
-          <label id="lblLang" class="text-xs text-emerald-200">زبان:</label>
+          <label id="lblLang" class="text-xs text-emerald-200 !mb-0 !leading-none">زبان:</label>
           <select id="langSelect" onchange="changeLanguage(this.value)" class="bg-emerald-800 text-white text-xs md:text-sm font-semibold rounded px-2 py-1 outline-none cursor-pointer">
             <option value="ur" selected>اردو (Urdu)</option>
             <option value="hi">हिन्दी (Hindi)</option>
@@ -98,7 +117,7 @@
       </button>
     </div>
 
-    <!-- Open Population Dashboard Section (Language Synced Auth Box) -->
+    <!-- Open Population Dashboard Section -->
     <div id="cityStatsSection" class="hidden bg-white p-5 md:p-6 rounded-xl border border-slate-200 shadow space-y-4">
       <h3 id="cityStatsTitle" class="font-bold text-base text-slate-800">کمیونٹی آبادی ڈیش بورڈ (گلوبل سرچ)</h3>
       <p id="cityStatsSub" class="text-xs text-slate-500">اپنا تصدیق شدہ FRC کوڈ یا رجسٹرڈ موبائل نمبر درج کریں تاکہ رسائی حاصل ہو سکے، اور کسی بھی ملک یا شہر کی آبادی دیکھیں۔</p>
@@ -112,7 +131,7 @@
       </div>
       <p id="cityStatsErrorMsg" class="text-xs text-red-600 font-semibold hidden"></p>
 
-      <!-- Active Search Area (Unlocked after verification) -->
+      <!-- Active Search Area -->
       <div id="popFilterArea" class="hidden pt-3 border-t border-slate-200 space-y-3">
         <div class="bg-emerald-50 border border-emerald-200 p-3 rounded-lg flex flex-wrap items-center justify-between gap-2 text-xs">
           <span class="text-emerald-900 font-semibold">✅ رسائی منظور: آپ کسی بھی ملک یا شہر کی مردم شماری کا جائزہ لے سکتے ہیں۔</span>
@@ -169,7 +188,7 @@
       </div>
     </div>
 
-    <!-- Search Section (Language Synced) -->
+    <!-- Search Section -->
     <div id="searchSection" class="hidden bg-white p-5 md:p-6 rounded-xl border border-slate-200 shadow space-y-4">
       <h3 id="searchTitle" class="font-bold text-base text-slate-800">خاندانی رجسٹریشن سرٹیفکیٹ (FRC) تلاش کریں</h3>
       <p id="searchSub" class="text-xs text-slate-500">اپنا تصدیق شدہ FRC کوڈ (مثلاً WCF-123456) یا رجسٹرڈ موبائل نمبر درج کریں تاکہ سرٹیفکیٹ دوبارہ دیکھا، پرنٹ یا اپڈیٹ کیا جا سکے۔</p>
@@ -193,7 +212,7 @@
         <button type="button" onclick="cancelUpdatingFamily()" class="text-red-600 hover:underline">منسوخ کریں (نئے اندراج پر جائیں)</button>
       </div>
 
-      <!-- Head Details Card (Mandatory * in Red) -->
+      <!-- Head Details Card -->
       <div class="bg-white rounded-xl shadow border border-slate-200 overflow-hidden">
         <div class="bg-emerald-700 text-white px-5 py-3 flex justify-between items-center">
           <h2 id="headCardTitle" class="font-bold text-sm md:text-base">سرپرستِ خاندان کی تفصیلات</h2>
@@ -203,8 +222,8 @@
         <div class="p-5 grid grid-cols-1 md:grid-cols-3 gap-4">
           <!-- National ID -->
           <div>
-            <label id="lblHeadCNIC" class="block text-xs font-semibold text-slate-700 mb-1">
-              شناختی کارڈ / آدھار نمبر (لازمی)<span class="text-red-500 font-bold ml-0.5">*</span>
+            <label id="lblHeadCNIC" class="block text-xs font-semibold text-slate-700">
+              شناختی کارڈ / آدھار نمبر (لازمی)<span class="text-red-500 font-bold ml-1">*</span>
             </label>
             <input type="text" id="headCNIC" required oninput="checkHeadExistingID(this.value)" placeholder="e.g. 42101-1234567-1" class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
             <div id="headExistingNotice" class="hidden mt-1 text-xs text-amber-800 bg-amber-50 p-2 rounded border border-amber-200"></div>
@@ -212,48 +231,48 @@
 
           <!-- Full Name -->
           <div>
-            <label id="lblHeadName" class="block text-xs font-semibold text-slate-700 mb-1">
-              مکمل نام (سرپرست)<span class="text-red-500 font-bold ml-0.5">*</span>
+            <label id="lblHeadName" class="block text-xs font-semibold text-slate-700">
+              مکمل نام (سرپرست)<span class="text-red-500 font-bold ml-1">*</span>
             </label>
             <input type="text" id="headName" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
           </div>
 
           <!-- Father / Guardian Name -->
           <div>
-            <label id="lblHeadFather" class="block text-xs font-semibold text-slate-700 mb-1">
-              والد / سرپرست کا نام<span class="text-red-500 font-bold ml-0.5">*</span>
+            <label id="lblHeadFather" class="block text-xs font-semibold text-slate-700">
+              والد / سرپرست کا نام<span class="text-red-500 font-bold ml-1">*</span>
             </label>
             <input type="text" id="headFather" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
           </div>
 
           <!-- Head Date of Birth -->
           <div>
-            <label id="lblHeadDOB" class="block text-xs font-semibold text-slate-700 mb-1">
-              تاریخِ پیدائش (Date of Birth)<span class="text-red-500 font-bold ml-0.5">*</span>
+            <label id="lblHeadDOB" class="block text-xs font-semibold text-slate-700">
+              تاریخِ پیدائش (Date of Birth)<span class="text-red-500 font-bold ml-1">*</span>
             </label>
             <input type="date" id="headDOB" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
           </div>
 
           <!-- Gender -->
           <div>
-            <label id="lblHeadGender" class="block text-xs font-semibold text-slate-700 mb-1">
-              جنس<span class="text-red-500 font-bold ml-0.5">*</span>
+            <label id="lblHeadGender" class="block text-xs font-semibold text-slate-700">
+              جنس<span class="text-red-500 font-bold ml-1">*</span>
             </label>
             <select id="headGender" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"></select>
           </div>
 
           <!-- Marital Status -->
           <div>
-            <label id="lblHeadMarital" class="block text-xs font-semibold text-slate-700 mb-1">
-              ازدواجی حیثیت (Marital Status)<span class="text-red-500 font-bold ml-0.5">*</span>
+            <label id="lblHeadMarital" class="block text-xs font-semibold text-slate-700">
+              ازدواجی حیثیت (Marital Status)<span class="text-red-500 font-bold ml-1">*</span>
             </label>
             <select id="headMarital" required class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-emerald-500 outline-none"></select>
           </div>
 
           <!-- Sub-Caste / Atak -->
           <div>
-            <label id="lblHeadClan" class="block text-xs font-semibold text-slate-700 mb-1">
-              اٹک / ذیلی ذات<span class="text-red-500 font-bold ml-0.5">*</span>
+            <label id="lblHeadClan" class="block text-xs font-semibold text-slate-700">
+              اٹک / ذیلی ذات<span class="text-red-500 font-bold ml-1">*</span>
             </label>
             <select id="headClan" required onchange="toggleManualInput(this, 'headClanOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-emerald-500 outline-none"></select>
             <div id="headClanOtherWrap" class="hidden mt-2">
@@ -263,8 +282,8 @@
 
           <!-- Education -->
           <div>
-            <label id="lblHeadEdu" class="block text-xs font-semibold text-slate-700 mb-1">
-              تعلیمی قابلیت<span class="text-red-500 font-bold ml-0.5">*</span>
+            <label id="lblHeadEdu" class="block text-xs font-semibold text-slate-700">
+              تعلیمی قابلیت<span class="text-red-500 font-bold ml-1">*</span>
             </label>
             <select id="headEdu" required onchange="toggleManualInput(this, 'headEduOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-slate-700 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"></select>
             <div id="headEduOtherWrap" class="hidden mt-2">
@@ -274,8 +293,8 @@
 
           <!-- Occupation -->
           <div>
-            <label id="lblHeadJob" class="block text-xs font-semibold text-slate-700 mb-1">
-              پیشہ / ملازمت<span class="text-red-500 font-bold ml-0.5">*</span>
+            <label id="lblHeadJob" class="block text-xs font-semibold text-slate-700">
+              پیشہ / ملازمت<span class="text-red-500 font-bold ml-1">*</span>
             </label>
             <select id="headJob" required onchange="toggleManualInput(this, 'headJobOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-emerald-500 outline-none"></select>
             <div id="headJobOtherWrap" class="hidden mt-2">
@@ -285,16 +304,16 @@
 
           <!-- Phone -->
           <div>
-            <label id="lblHeadPhone" class="block text-xs font-semibold text-slate-700 mb-1">
-              رابطہ فون / واٹس ایپ<span class="text-red-500 font-bold ml-0.5">*</span>
+            <label id="lblHeadPhone" class="block text-xs font-semibold text-slate-700">
+              رابطہ فون / واٹس ایپ<span class="text-red-500 font-bold ml-1">*</span>
             </label>
             <input type="tel" id="headPhone" required placeholder="+92..." class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none text-right dir-ltr">
           </div>
 
           <!-- Country Dropdown -->
           <div>
-            <label id="lblHeadCountry" class="block text-xs font-semibold text-slate-700 mb-1">
-              ملک (Country)<span class="text-red-500 font-bold ml-0.5">*</span>
+            <label id="lblHeadCountry" class="block text-xs font-semibold text-slate-700">
+              ملک (Country)<span class="text-red-500 font-bold ml-1">*</span>
             </label>
             <select id="headCountry" required onchange="toggleManualInput(this, 'headCountryOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"></select>
             <div id="headCountryOtherWrap" class="hidden mt-2">
@@ -304,16 +323,16 @@
 
           <!-- City -->
           <div>
-            <label id="lblHeadCity" class="block text-xs font-semibold text-slate-700 mb-1">
-              شہر<span class="text-red-500 font-bold ml-0.5">*</span>
+            <label id="lblHeadCity" class="block text-xs font-semibold text-slate-700">
+              شہر<span class="text-red-500 font-bold ml-1">*</span>
             </label>
             <input type="text" id="headCity" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
           </div>
 
           <!-- Address -->
           <div class="md:col-span-3">
-            <label id="lblHeadAddress" class="block text-xs font-semibold text-slate-700 mb-1">
-              مکمل رہائشی پتہ<span class="text-red-500 font-bold ml-0.5">*</span>
+            <label id="lblHeadAddress" class="block text-xs font-semibold text-slate-700">
+              مکمل رہائشی پتہ<span class="text-red-500 font-bold ml-1">*</span>
             </label>
             <input type="text" id="headAddress" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
           </div>
@@ -451,10 +470,10 @@
                     </strong>
                   </div>
 
-                  <!-- Right: Pure Vector Blue Rubber Stamp & Signature -->
+                  <!-- Right: Pure Vector Blue Rubber Stamp (Calibrated Arc - No Letter Cut) & Signature -->
                   <div class="flex items-center gap-3 shrink-0">
                     
-                    <!-- Circular Royal Blue Vector SVG Rubber Stamp -->
+                    <!-- Circular Royal Blue Vector SVG Rubber Stamp (Calibrated in v1.7) -->
                     <div class="w-24 h-24 select-none shrink-0" title="Official Verified Stamp">
                       <svg viewBox="0 0 200 200" class="w-full h-full transform -rotate-6">
                         <!-- Outer Double Rings -->
@@ -462,17 +481,17 @@
                         <circle cx="100" cy="100" r="88" fill="none" stroke="#0d3b66" stroke-width="1.8" stroke-dasharray="4,2" />
                         <circle cx="100" cy="100" r="62" fill="none" stroke="#0d3b66" stroke-width="2.5" />
                         
-                        <!-- Circular Curved Top Text -->
-                        <path id="curveTop" d="M 28,100 A 72,72 0 0,1 172,100" fill="none" />
-                        <text fill="#0d3b66" font-family="'Inter', sans-serif" font-weight="900" font-size="12.5" letter-spacing="2">
+                        <!-- Calibrated Circular Curved Top Text (No W or N Cut) -->
+                        <path id="curveTop" d="M 22,100 A 78,78 0 0,1 178,100" fill="none" />
+                        <text fill="#0d3b66" font-family="'Inter', sans-serif" font-weight="900" font-size="10.5" letter-spacing="1">
                           <textPath href="#curveTop" startOffset="50%" text-anchor="middle">
                             ★ WORLD CHHIPPA FOUNDATION ★
                           </textPath>
                         </text>
 
-                        <!-- Circular Curved Bottom Text -->
-                        <path id="curveBottom" d="M 172,100 A 72,72 0 0,1 28,100" fill="none" />
-                        <text fill="#0d3b66" font-family="'Inter', sans-serif" font-weight="800" font-size="9.5" letter-spacing="2.5">
+                        <!-- Calibrated Circular Curved Bottom Text -->
+                        <path id="curveBottom" d="M 176,100 A 76,76 0 0,1 24,100" fill="none" />
+                        <text fill="#0d3b66" font-family="'Inter', sans-serif" font-weight="800" font-size="8.5" letter-spacing="1.5">
                           <textPath href="#curveBottom" startOffset="50%" text-anchor="middle">
                             GLOBAL CENSUS DIRECTORY
                           </textPath>
@@ -620,6 +639,8 @@
         appTitle: "چھیپا خاندانی رجسٹریشن سرٹیفکیٹ",
         appSub: "ورلڈ چھیپا فاؤنڈیشن — عالمی مردم شماری پورٹل",
         lblLang: "زبان:",
+        lblLiveFamilies: "خاندان (Families):",
+        lblLiveMembers: "کل افراد (Unique):",
         tabNew: "+ نیا اندراج مردم شماری",
         tabSearch: "دوبارہ پرنٹ / سرچ FRC",
         tabCityStats: "شہر وار آبادی ڈیش بورڈ",
@@ -775,6 +796,8 @@
         appTitle: "छीपा पारिवारिक पंजीकरण प्रमाण पत्र",
         appSub: "वर्ल्ड छीपा फाउंडेशन — वैश्विक जनगणना पोर्टल",
         lblLang: "भाषा:",
+        lblLiveFamilies: "परिवार (Families):",
+        lblLiveMembers: "कुल सदस्य (Unique):",
         tabNew: "+ नया पंजीकरण जनगणना",
         tabSearch: "पुनः प्रिंट / खोज FRC",
         tabCityStats: "शहर वार आबादी डैशबोर्ड",
@@ -930,6 +953,8 @@
         appTitle: "Chhippa Family Registration Certificate",
         appSub: "World Chhippa Foundation — Global Census Portal",
         lblLang: "Language:",
+        lblLiveFamilies: "Families:",
+        lblLiveMembers: "Unique Individuals:",
         tabNew: "+ New Census Registration",
         tabSearch: "Reprint / Search FRC",
         tabCityStats: "City Population Dashboard",
@@ -1171,6 +1196,11 @@
       document.getElementById('appTitle').textContent = dict.appTitle;
       document.getElementById('appSub').textContent = dict.appSub;
       document.getElementById('lblLang').textContent = dict.lblLang;
+
+      // Live Counter Labels Sync (Fix #2)
+      document.getElementById('lblLiveFamilies').textContent = dict.lblLiveFamilies;
+      document.getElementById('lblLiveMembers').textContent = dict.lblLiveMembers;
+
       document.getElementById('tabNewReg').textContent = dict.tabNew;
       document.getElementById('tabSearchReg').textContent = dict.tabSearch;
       document.getElementById('tabCityStats').textContent = dict.tabCityStats;
@@ -1194,19 +1224,20 @@
       document.getElementById('headCardTitle').textContent = dict.headCardTitle;
       document.getElementById('headBadge').textContent = dict.headBadge;
 
-      document.getElementById('lblHeadCNIC').innerHTML = `${dict.lblHeadCNIC}<span class="text-red-500 font-bold ml-0.5">*</span>`;
-      document.getElementById('lblHeadName').innerHTML = `${dict.lblHeadName}<span class="text-red-500 font-bold ml-0.5">*</span>`;
-      document.getElementById('lblHeadFather').innerHTML = `${dict.lblHeadFather}<span class="text-red-500 font-bold ml-0.5">*</span>`;
-      document.getElementById('lblHeadDOB').innerHTML = `${dict.lblHeadDOB}<span class="text-red-500 font-bold ml-0.5">*</span>`;
-      document.getElementById('lblHeadGender').innerHTML = `${dict.lblHeadGender}<span class="text-red-500 font-bold ml-0.5">*</span>`;
-      document.getElementById('lblHeadMarital').innerHTML = `${dict.lblHeadMarital}<span class="text-red-500 font-bold ml-0.5">*</span>`;
-      document.getElementById('lblHeadClan').innerHTML = `${dict.lblHeadClan}<span class="text-red-500 font-bold ml-0.5">*</span>`;
-      document.getElementById('lblHeadEdu').innerHTML = `${dict.lblHeadEdu}<span class="text-red-500 font-bold ml-0.5">*</span>`;
-      document.getElementById('lblHeadJob').innerHTML = `${dict.lblHeadJob}<span class="text-red-500 font-bold ml-0.5">*</span>`;
-      document.getElementById('lblHeadPhone').innerHTML = `${dict.lblHeadPhone}<span class="text-red-500 font-bold ml-0.5">*</span>`;
-      document.getElementById('lblHeadCountry').innerHTML = `${dict.lblHeadCountry}<span class="text-red-500 font-bold ml-0.5">*</span>`;
-      document.getElementById('lblHeadCity').innerHTML = `${dict.lblHeadCity}<span class="text-red-500 font-bold ml-0.5">*</span>`;
-      document.getElementById('lblHeadAddress').innerHTML = `${dict.lblHeadAddress}<span class="text-red-500 font-bold ml-0.5">*</span>`;
+      // Spaced labels for clear Nastaliq reading (Fix #3)
+      document.getElementById('lblHeadCNIC').innerHTML = `${dict.lblHeadCNIC} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`;
+      document.getElementById('lblHeadName').innerHTML = `${dict.lblHeadName} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`;
+      document.getElementById('lblHeadFather').innerHTML = `${dict.lblHeadFather} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`;
+      document.getElementById('lblHeadDOB').innerHTML = `${dict.lblHeadDOB} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`;
+      document.getElementById('lblHeadGender').innerHTML = `${dict.lblHeadGender} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`;
+      document.getElementById('lblHeadMarital').innerHTML = `${dict.lblHeadMarital} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`;
+      document.getElementById('lblHeadClan').innerHTML = `${dict.lblHeadClan} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`;
+      document.getElementById('lblHeadEdu').innerHTML = `${dict.lblHeadEdu} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`;
+      document.getElementById('lblHeadJob').innerHTML = `${dict.lblHeadJob} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`;
+      document.getElementById('lblHeadPhone').innerHTML = `${dict.lblHeadPhone} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`;
+      document.getElementById('lblHeadCountry').innerHTML = `${dict.lblHeadCountry} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`;
+      document.getElementById('lblHeadCity').innerHTML = `${dict.lblHeadCity} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`;
+      document.getElementById('lblHeadAddress').innerHTML = `${dict.lblHeadAddress} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`;
 
       document.getElementById('membersSectionTitle').textContent = dict.membersSectionTitle;
       document.getElementById('membersSectionSub').textContent = dict.membersSectionSub;
@@ -1501,8 +1532,8 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
           
           <div>
-            <label class="block text-xs font-semibold text-slate-700 mb-1 lbl-mem-rel">
-              ${dict.lblMemRel}<span class="text-red-500 font-bold ml-0.5">*</span>
+            <label class="block text-xs font-semibold text-slate-700 lbl-mem-rel">
+              ${dict.lblMemRel} <span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
             <select id="memRel_${id}" onchange="handleRelationChange(${id})" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-emerald-500 outline-none">
               ${Object.entries(dict.relations).map(([k, v]) => `<option value="${k}">${v}</option>`).join('')}
@@ -1510,22 +1541,22 @@
           </div>
 
           <div>
-            <label class="block text-xs font-semibold text-slate-700 mb-1 lbl-mem-name">
-              ${dict.lblMemName}<span class="text-red-500 font-bold ml-0.5">*</span>
+            <label class="block text-xs font-semibold text-slate-700 lbl-mem-name">
+              ${dict.lblMemName} <span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
             <input type="text" id="memName_${id}" required class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-emerald-500 outline-none">
           </div>
 
           <div>
-            <label class="block text-xs font-semibold text-slate-700 mb-1 lbl-mem-dob">
-              ${dict.lblMemDOB}<span class="text-red-500 font-bold ml-0.5">*</span>
+            <label class="block text-xs font-semibold text-slate-700 lbl-mem-dob">
+              ${dict.lblMemDOB} <span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
             <input type="date" id="memDOB_${id}" onchange="handleDOBChange(${id})" required class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-emerald-500 outline-none">
           </div>
 
           <div>
-            <label class="block text-xs font-semibold text-slate-700 mb-1 lbl-mem-gender">
-              ${dict.lblMemGender}<span class="text-red-500 font-bold ml-0.5">*</span>
+            <label class="block text-xs font-semibold text-slate-700 lbl-mem-gender">
+              ${dict.lblMemGender} <span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
             <select id="memGender_${id}" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-emerald-500 outline-none">
               ${Object.entries(dict.genders).map(([k, v]) => `<option value="${k}">${v}</option>`).join('')}
@@ -1533,8 +1564,8 @@
           </div>
 
           <div>
-            <label class="block text-xs font-semibold text-slate-700 mb-1 lbl-mem-marital">
-              ${dict.lblMemMarital}<span class="text-red-500 font-bold ml-0.5">*</span>
+            <label class="block text-xs font-semibold text-slate-700 lbl-mem-marital">
+              ${dict.lblMemMarital} <span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
             <select id="memMarital_${id}" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-emerald-500 outline-none">
               ${Object.entries(dict.maritalStatuses).map(([k, v]) => `<option value="${k}">${v}</option>`).join('')}
@@ -1542,30 +1573,30 @@
           </div>
 
           <div>
-            <label class="block text-xs font-semibold text-slate-700 mb-1 lbl-mem-age">
-              ${dict.lblMemAge}<span class="text-red-500 font-bold ml-0.5">*</span>
+            <label class="block text-xs font-semibold text-slate-700 lbl-mem-age">
+              ${dict.lblMemAge} <span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
             <input type="number" id="memAge_${id}" min="0" max="120" value="20" oninput="handleAgeChange(${id})" required class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-emerald-500 outline-none">
           </div>
 
           <div>
-            <label class="block text-xs font-semibold text-slate-700 mb-1 lbl-mem-cnic">
-              ${dict.lblMemCNIC}<span class="text-red-500 font-bold ml-0.5">*</span>
+            <label class="block text-xs font-semibold text-slate-700 lbl-mem-cnic">
+              ${dict.lblMemCNIC} <span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
             <input type="text" id="memCNIC_${id}" required placeholder="e.g. 42101-..." class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-emerald-500 outline-none">
             <span id="memCNICHint_${id}" class="text-[10px] text-slate-500 mt-0.5 block">18 سال سے کم عمر کے لیے سرپرست کا کارڈ منسلک ہو جائے گا</span>
           </div>
 
           <div>
-            <label class="block text-xs font-semibold text-slate-700 mb-1 lbl-mem-phone">
+            <label class="block text-xs font-semibold text-slate-700 lbl-mem-phone">
               ${dict.lblMemPhoneOpt}
             </label>
             <input type="tel" id="memPhone_${id}" placeholder="+92..." class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-emerald-500 outline-none text-right dir-ltr">
           </div>
 
           <div id="memWifeLineageWrap_${id}" class="hidden">
-            <label class="block text-xs font-semibold text-slate-700 mb-1 lbl-mem-lineage">
-              ${dict.lblMemLineage}<span class="text-red-500 font-bold ml-0.5">*</span>
+            <label class="block text-xs font-semibold text-slate-700 lbl-mem-lineage">
+              ${dict.lblMemLineage} <span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
             <select id="memLineage_${id}" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-emerald-500 outline-none">
               ${Object.entries(dict.lineage).map(([k, v]) => `<option value="${k}">${v}</option>`).join('')}
@@ -1573,8 +1604,8 @@
           </div>
 
           <div>
-            <label class="block text-xs font-semibold text-slate-700 mb-1 lbl-mem-edu">
-              ${dict.lblMemEdu}<span class="text-red-500 font-bold ml-0.5">*</span>
+            <label class="block text-xs font-semibold text-slate-700 lbl-mem-edu">
+              ${dict.lblMemEdu} <span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
             <select id="memEdu_${id}" onchange="toggleManualInput(this, 'memEduOtherWrap_${id}')" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-emerald-500 outline-none">
               ${Object.entries(dict.education).map(([k, v]) => `<option value="${k}">${v}</option>`).join('')}
@@ -1585,8 +1616,8 @@
           </div>
 
           <div>
-            <label class="block text-xs font-semibold text-slate-700 mb-1 lbl-mem-job">
-              ${dict.lblMemJob}<span class="text-red-500 font-bold ml-0.5">*</span>
+            <label class="block text-xs font-semibold text-slate-700 lbl-mem-job">
+              ${dict.lblMemJob} <span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
             <select id="memJob_${id}" onchange="toggleManualInput(this, 'memJobOtherWrap_${id}')" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-emerald-500 outline-none">
               ${Object.entries(dict.jobs).map(([k, v]) => `<option value="${k}">${v}</option>`).join('')}
@@ -1597,8 +1628,8 @@
           </div>
 
           <div class="md:col-span-2">
-            <label class="block text-xs font-semibold text-slate-700 mb-1 lbl-mem-addr">
-              ${dict.lblMemAddrChoice}<span class="text-red-500 font-bold ml-0.5">*</span>
+            <label class="block text-xs font-semibold text-slate-700 lbl-mem-addr">
+              ${dict.lblMemAddrChoice} <span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
             <select id="memAddrChoice_${id}" onchange="toggleMemberAddressMode(${id})" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-emerald-500 outline-none bg-white">
               <option value="same">${dict.optSameAsHead}</option>
@@ -1609,7 +1640,7 @@
           <div id="memOtherAddrWrap_${id}" class="hidden md:col-span-3 bg-emerald-50/70 p-3 rounded-lg border border-emerald-200 grid grid-cols-1 md:grid-cols-3 gap-2">
             <div>
               <label class="block text-[11px] font-semibold text-slate-700 mb-0.5">
-                ${dict.lblMemCountry}<span class="text-red-500 font-bold ml-0.5">*</span>
+                ${dict.lblMemCountry} <span class="text-red-500 font-bold ml-1 mr-1">*</span>
               </label>
               <select id="memCountry_${id}" class="w-full border border-slate-300 rounded px-2 py-1 text-xs bg-white">
                 ${allWorldCountries.map(c => `<option value="${c}">${c}</option>`).join('')}
@@ -1617,13 +1648,13 @@
             </div>
             <div>
               <label class="block text-[11px] font-semibold text-slate-700 mb-0.5">
-                ${dict.lblMemCity}<span class="text-red-500 font-bold ml-0.5">*</span>
+                ${dict.lblMemCity} <span class="text-red-500 font-bold ml-1 mr-1">*</span>
               </label>
               <input type="text" id="memCity_${id}" placeholder="e.g. Lahore, Jodhpur..." class="w-full border border-slate-300 rounded px-2 py-1 text-xs bg-white">
             </div>
             <div>
               <label class="block text-[11px] font-semibold text-slate-700 mb-0.5">
-                ${dict.lblMemAddress}<span class="text-red-500 font-bold ml-0.5">*</span>
+                ${dict.lblMemAddress} <span class="text-red-500 font-bold ml-1 mr-1">*</span>
               </label>
               <input type="text" id="memAddress_${id}" placeholder="Street, Colony, House..." class="w-full border border-slate-300 rounded px-2 py-1 text-xs bg-white">
             </div>
@@ -1708,18 +1739,18 @@
       cards.forEach(card => {
         const id = card.id.split('_')[1];
         card.querySelector('.member-title').textContent = `${dict.memberCardTitle} ${id}`;
-        card.querySelector('.lbl-mem-rel').innerHTML = `${dict.lblMemRel}<span class="text-red-500 font-bold ml-0.5">*</span>`;
-        card.querySelector('.lbl-mem-name').innerHTML = `${dict.lblMemName}<span class="text-red-500 font-bold ml-0.5">*</span>`;
-        card.querySelector('.lbl-mem-dob').innerHTML = `${dict.lblMemDOB}<span class="text-red-500 font-bold ml-0.5">*</span>`;
-        card.querySelector('.lbl-mem-gender').innerHTML = `${dict.lblMemGender}<span class="text-red-500 font-bold ml-0.5">*</span>`;
-        card.querySelector('.lbl-mem-marital').innerHTML = `${dict.lblMemMarital}<span class="text-red-500 font-bold ml-0.5">*</span>`;
-        card.querySelector('.lbl-mem-age').innerHTML = `${dict.lblMemAge}<span class="text-red-500 font-bold ml-0.5">*</span>`;
-        card.querySelector('.lbl-mem-cnic').innerHTML = `${dict.lblMemCNIC}<span class="text-red-500 font-bold ml-0.5">*</span>`;
+        card.querySelector('.lbl-mem-rel').innerHTML = `${dict.lblMemRel} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`;
+        card.querySelector('.lbl-mem-name').innerHTML = `${dict.lblMemName} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`;
+        card.querySelector('.lbl-mem-dob').innerHTML = `${dict.lblMemDOB} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`;
+        card.querySelector('.lbl-mem-gender').innerHTML = `${dict.lblMemGender} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`;
+        card.querySelector('.lbl-mem-marital').innerHTML = `${dict.lblMemMarital} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`;
+        card.querySelector('.lbl-mem-age').innerHTML = `${dict.lblMemAge} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`;
+        card.querySelector('.lbl-mem-cnic').innerHTML = `${dict.lblMemCNIC} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`;
         card.querySelector('.lbl-mem-phone').textContent = dict.lblMemPhoneOpt;
-        card.querySelector('.lbl-mem-edu').innerHTML = `${dict.lblMemEdu}<span class="text-red-500 font-bold ml-0.5">*</span>`;
-        card.querySelector('.lbl-mem-lineage').innerHTML = `${dict.lblMemLineage}<span class="text-red-500 font-bold ml-0.5">*</span>`;
-        card.querySelector('.lbl-mem-job').innerHTML = `${dict.lblMemJob}<span class="text-red-500 font-bold ml-0.5">*</span>`;
-        card.querySelector('.lbl-mem-addr').innerHTML = `${dict.lblMemAddrChoice}<span class="text-red-500 font-bold ml-0.5">*</span>`;
+        card.querySelector('.lbl-mem-edu').innerHTML = `${dict.lblMemEdu} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`;
+        card.querySelector('.lbl-mem-lineage').innerHTML = `${dict.lblMemLineage} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`;
+        card.querySelector('.lbl-mem-job').innerHTML = `${dict.lblMemJob} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`;
+        card.querySelector('.lbl-mem-addr').innerHTML = `${dict.lblMemAddrChoice} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`;
         card.querySelector('button').textContent = dict.btnRemove;
 
         const eduOther = document.getElementById(`memEduOther_${id}`);
