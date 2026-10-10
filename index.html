@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="google" content="notranslate">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>World Chhippa Foundation - Global Census & FRC Portal (v1.11)</title>
+  <title>World Chhippa Foundation - Global Census & FRC Portal (V.2.0 Trial)</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- jsPDF & html2canvas -->
@@ -70,7 +70,7 @@
         <img src="stamp.png" alt="WCF Official Seal" class="w-12 h-12 rounded-full object-contain shrink-0 shadow-sm border border-emerald-500 bg-white hover:opacity-95 transition">
         <div>
           <h1 id="appTitle" class="text-base md:text-xl font-bold leading-relaxed mb-2">Chhippa Family Registration Certificate</h1>
-          <p id="appSub" class="text-[11px] md:text-xs text-emerald-200 leading-normal mt-1">World Chhippa Foundation — Global Census Portal</p>
+          <p id="appSub" class="text-[11px] md:text-xs text-emerald-200 leading-normal mt-1">World Chhippa Foundation — Global Census Portal (V.2.0 Trial)</p>
         </div>
       </div>
 
@@ -593,10 +593,52 @@
   </footer>
 
   <script>
+    const allWorldCountries = [
+      "Pakistan", "India", "Morocco", "United Arab Emirates", "Saudi Arabia",
+      "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan",
+      "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria", "Burkina Faso", "Burundi",
+      "Cabo Verde", "Cambodia", "Cameroon", "Canada", "Central African Republic", "Chad", "Chile", "China", "Colombia", "Comoros", "Congo", "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czechia",
+      "Denmark", "Djibouti", "Dominica", "Dominican Republic",
+      "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Eswatini", "Ethiopia",
+      "Fiji", "Finland", "France", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Greece", "Grenada", "Guatemala", "Guinea",
+      "Haiti", "Honduras", "Hungary", "Iceland", "Indonesia", "Iran", "Iraq", "Ireland", "Italy",
+      "Jamaica", "Japan", "Jordan", "Kazakhstan", "Kenya", "Kuwait", "Kyrgyzstan",
+      "Lebanon", "Libya", "Malaysia", "Maldives", "Mauritania", "Mauritius", "Mexico", "Nepal", "Netherlands", "New Zealand", "Nigeria", "Norway", "Oman",
+      "Palestine State", "Qatar", "Russia", "Singapore", "South Africa", "Spain", "Sri Lanka", "Sudan", "Sweden", "Switzerland", "Syria",
+      "Thailand", "Tunisia", "Turkey", "United Kingdom", "United States", "Yemen", "Other"
+    ];
+
+    const countriesI18n = {
+      ur: {
+        "Pakistan": "پاکستان", "India": "بھارت", "Morocco": "مراکش", "United Arab Emirates": "متحدہ عرب امارات", "Saudi Arabia": "سعودی عرب",
+        "Afghanistan": "افغانستان", "Algeria": "الجزائر", "Australia": "آسٹریلیا", "Bahrain": "بحرین", "Bangladesh": "بنگلہ دیش",
+        "Canada": "کینیڈا", "China": "چین", "Egypt": "مصر", "France": "فرانس", "Germany": "جرمنی", "Indonesia": "انڈونیشیا",
+        "Iran": "ایران", "Iraq": "عراق", "Italy": "اٹلی", "Japan": "جاپان", "Jordan": "اردن", "Kuwait": "کویت", "Malaysia": "ملائیشیا",
+        "Oman": "عمان", "Qatar": "قطر", "South Africa": "جنوبی افریقہ", "Spain": "اسپین", "Turkey": "ترکی", "United Kingdom": "برطانیہ",
+        "United States": "امریکہ", "Other": "دیگر"
+      },
+      hi: {
+        "Pakistan": "पाकिस्तान", "India": "भारत", "Morocco": "मोरक्को", "United Arab Emirates": "संयुक्त अरब अमीरात", "Saudi Arabia": "सऊदी अरब",
+        "Afghanistan": "अफ़ग़ानिस्तान", "Algeria": "अल्जीरिया", "Australia": "ऑस्ट्रेलिया", "Bahrain": "बहरीन", "Bangladesh": "बांग्लादेश",
+        "Canada": "कनाडा", "China": "चीन", "Egypt": "मिस्र", "France": "फ़्रांस", "Germany": "जर्मनी", "Indonesia": "इंडोनेशिया",
+        "Iran": "ईरान", "Iraq": "इराक", "Italy": "इटली", "Japan": "जापान", "Jordan": "जॉर्डन", "Kuwait": "कुवैत", "Malaysia": "मलेशिया",
+        "Oman": "ओमान", "Qatar": "क़तर", "South Africa": "दक्षिण अफ्रीका", "Spain": "स्पेन", "Turkey": "तुर्की", "United Kingdom": "यूनाइटेड किंगडम",
+        "United States": "संयुक्त राज्य अमेरिका", "Other": "अन्य"
+      }
+    };
+
+    function getCountryLocalizedName(countryKey, lang) {
+      if (!countryKey) return '';
+      if (lang && countriesI18n[lang] && countriesI18n[lang][countryKey]) {
+        return countriesI18n[lang][countryKey];
+      }
+      return countryKey;
+    }
+
     const i18n = {
       ur: {
         appTitle: "چھیپا خاندانی رجسٹریشن سرٹیفکیٹ",
-        appSub: "ورلڈ چھیپا فاؤنڈیشن — عالمی مردم شماری پورٹل",
+        appSub: "ورلڈ چھیپا فاؤنڈیشن — عالمی مردم شماری پورٹل (V.2.0 Trial)",
         lblLang: "زبان:",
         lblLiveFamilies: "خاندان (Families):",
         lblLiveMembers: "کل افراد (Unique):",
@@ -717,7 +759,7 @@
       },
       hi: {
         appTitle: "छीपा पारिवारिक पंजीकरण प्रमाण पत्र",
-        appSub: "वर्ल्ड छीपा फाउंडेशन — वैश्विक जनगणना पोर्टल",
+        appSub: "वर्ल्ड छीपा फाउंडेशन — वैश्विक जनगणना पोर्टल (V.2.0 Trial)",
         lblLang: "भाषा:",
         lblLiveFamilies: "परिवार (Families):",
         lblLiveMembers: "कुल सदस्य (Unique):",
@@ -838,7 +880,7 @@
       },
       en: {
         appTitle: "Chhippa Family Registration Certificate",
-        appSub: "World Chhippa Foundation — Global Census Portal",
+        appSub: "World Chhippa Foundation — Global Census Portal (V.2.0 Trial)",
         lblLang: "Language:",
         lblLiveFamilies: "Families:",
         lblLiveMembers: "Unique Individuals:",
@@ -959,21 +1001,6 @@
       }
     };
 
-    const allWorldCountries = [
-      "Pakistan", "India", "Morocco", "United Arab Emirates", "Saudi Arabia",
-      "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan",
-      "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria", "Burkina Faso", "Burundi",
-      "Cabo Verde", "Cambodia", "Cameroon", "Canada", "Central African Republic", "Chad", "Chile", "China", "Colombia", "Comoros", "Congo", "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czechia",
-      "Denmark", "Djibouti", "Dominica", "Dominican Republic",
-      "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Eswatini", "Ethiopia",
-      "Fiji", "Finland", "France", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Greece", "Grenada", "Guatemala", "Guinea",
-      "Haiti", "Honduras", "Hungary", "Iceland", "Indonesia", "Iran", "Iraq", "Ireland", "Italy",
-      "Jamaica", "Japan", "Jordan", "Kazakhstan", "Kenya", "Kuwait", "Kyrgyzstan",
-      "Lebanon", "Libya", "Malaysia", "Maldives", "Mauritania", "Mauritius", "Mexico", "Nepal", "Netherlands", "New Zealand", "Nigeria", "Norway", "Oman",
-      "Palestine State", "Qatar", "Russia", "Singapore", "South Africa", "Spain", "Sri Lanka", "Sudan", "Sweden", "Switzerland", "Syria",
-      "Thailand", "Tunisia", "Turkey", "United Kingdom", "United States", "Yemen", "Other"
-    ];
-
     let currentLang = 'en';
     let memberCount = 0;
     let editingExistingFRCCode = null;
@@ -1002,7 +1029,7 @@
       const cSel = document.getElementById('adminCountryDropdown');
       if (cSel) {
         cSel.innerHTML = '<option value="">-- All Countries (Complete Global) --</option>' + 
-          allWorldCountries.map(c => `<option value="${c}">${c}</option>`).join('');
+          allWorldCountries.map(c => `<option value="${c}">${getCountryLocalizedName(c, currentLang)}</option>`).join('');
       }
 
       const pSel = document.getElementById('popCountrySelect');
@@ -1010,7 +1037,7 @@
         const dict = i18n[currentLang] || i18n.en;
         const defaultText = dict.popCountryDefault || '-- All Countries --';
         pSel.innerHTML = `<option value="">${defaultText}</option>` + 
-          allWorldCountries.map(c => `<option value="${c}">${c}</option>`).join('');
+          allWorldCountries.map(c => `<option value="${c}">${getCountryLocalizedName(c, currentLang)}</option>`).join('');
       }
     }
 
@@ -1129,9 +1156,10 @@
       populateSelectOptions('headEdu', dict.education, 'Matric');
       populateSelectOptions('headJob', dict.jobs, 'Business');
 
+      // V.2.0 Trial: Localized Country Dropdown Sync
       const countrySel = document.getElementById('headCountry');
       const prevCountry = countrySel.value || 'Pakistan';
-      countrySel.innerHTML = allWorldCountries.map(c => `<option value="${c}">${c}</option>`).join('');
+      countrySel.innerHTML = allWorldCountries.map(c => `<option value="${c}">${getCountryLocalizedName(c, currentLang)}</option>`).join('');
       countrySel.value = prevCountry;
 
       populateAdminCountryOptions();
@@ -1309,7 +1337,8 @@
         }
       });
 
-      const areaTitle = (selectedCountry ? document.getElementById('popCountrySelect').value : 'All Countries') + 
+      const selectedCountryName = document.getElementById('popCountrySelect').value;
+      const areaTitle = (selectedCountry ? getCountryLocalizedName(selectedCountryName, currentLang) : 'All Countries') + 
         (inputCity ? ` - ${document.getElementById('popCityInput').value}` : '');
 
       document.getElementById('statResAreaName').textContent = areaTitle;
@@ -1463,7 +1492,7 @@
                 ${dict.lblMemCountry} <span class="text-red-500 font-bold ml-1 mr-1">*</span>
               </label>
               <select id="memCountry_${id}" class="w-full border border-slate-300 rounded px-2 py-1 text-xs bg-white">
-                ${allWorldCountries.map(c => `<option value="${c}">${c}</option>`).join('')}
+                ${allWorldCountries.map(c => `<option value="${c}">${getCountryLocalizedName(c, currentLang)}</option>`).join('')}
               </select>
             </div>
             <div>
@@ -1557,6 +1586,13 @@
 
         const jobOther = document.getElementById(`memJobOther_${id}`);
         if (jobOther) jobOther.placeholder = dict.otherJobPlaceholder;
+
+        const memCountrySel = document.getElementById(`memCountry_${id}`);
+        if (memCountrySel) {
+          const prevVal = memCountrySel.value || 'Pakistan';
+          memCountrySel.innerHTML = allWorldCountries.map(c => `<option value="${c}">${getCountryLocalizedName(c, currentLang)}</option>`).join('');
+          memCountrySel.value = prevVal;
+        }
 
         populateSelectOptions(`memRel_${id}`, dict.relations);
         populateSelectOptions(`memGender_${id}`, dict.genders);
@@ -1761,7 +1797,7 @@
           phone: headPhone,
           country: headCountry,
           city: headCity,
-          location: `${headCity}, ${headCountry}`,
+          location: `${headCity}, ${getCountryLocalizedName(headCountry, currentLang)}`,
           address: headAddress
         },
         members: members
@@ -1828,7 +1864,7 @@
       document.getElementById('frcHeadClan').textContent = record.head.clan;
       document.getElementById('frcHeadEdu').textContent = record.head.edu;
       document.getElementById('frcHeadPhone').textContent = record.head.phone;
-      document.getElementById('frcHeadLocation').textContent = record.head.location;
+      document.getElementById('frcHeadLocation').textContent = `${record.head.city}, ${getCountryLocalizedName(record.head.country, recLang)}`;
       document.getElementById('frcHeadAddress').textContent = record.head.address || '-';
       document.getElementById('frcHeadLineage').textContent = record.head.lineage;
 
@@ -1877,7 +1913,7 @@
         const row = document.createElement('tr');
         const forcedSequentialId = `${record.code}-${idx + 2}`;
         
-        // v1.11 Fix: If member address is "other", show City + Full Address in table cell cleanly
+        // Show City + Full Address for member if address is other
         let locDisplay = record.head.city;
         if (m.addrChoice === 'other') {
           const detailAddr = (m.address && m.address !== m.city) ? `, ${m.address}` : '';
@@ -2048,6 +2084,7 @@
       return key;
     }
 
+    // V.2.0 Trial: Master Directory with dynamic multi-line text wrapping for address
     function exportCountryCityWisePDF() {
       const selectedCountry = document.getElementById('adminCountryDropdown').value.trim();
       const inputCity = document.getElementById('adminCityManualInput').value.trim();
@@ -2106,10 +2143,10 @@
         doc.text("Unique ID", 22, currY);
         doc.text("Full Name & Father/Guardian", 44, currY);
         doc.text("Relation / Clan", 95, currY);
-        doc.text("Phone / WhatsApp", 135, currY);
-        doc.text("Edu / Profession", 170, currY);
-        doc.text("DOB / Age", 215, currY);
-        doc.text("Full Residential Address", 238, currY);
+        doc.text("Phone / WhatsApp", 132, currY);
+        doc.text("Edu / Profession", 165, currY);
+        doc.text("DOB / Age", 205, currY);
+        doc.text("Full Residential Address", 226, currY);
         doc.setFont("helvetica", "normal");
         doc.setTextColor(15, 23, 42);
       };
@@ -2148,26 +2185,29 @@
         }
 
         allPersons.forEach((person) => {
-          if (y > 190) {
+          doc.setFontSize(6.5);
+          const addressLines = doc.splitTextToSize(person.address, 55);
+          const rowHeight = Math.max(addressLines.length * 3.5, 5.5);
+
+          if (y + rowHeight > 195) {
             doc.addPage();
             y = 15;
             drawHeaders(y);
             y += 6;
           }
 
-          doc.setFontSize(6.8);
           doc.text(String(rowCounter), 16, y);
           doc.text(person.uid, 22, y);
           doc.text(person.name.substring(0, 26), 44, y);
           doc.text(person.relClan.substring(0, 20), 95, y);
-          doc.text(person.phone.substring(0, 16), 135, y);
-          doc.text(person.eduJob.substring(0, 22), 170, y);
-          doc.text(person.dobAge.substring(0, 14), 215, y);
-          doc.text(person.address.substring(0, 28), 238, y);
+          doc.text(person.phone.substring(0, 16), 132, y);
+          doc.text(person.eduJob.substring(0, 22), 165, y);
+          doc.text(person.dobAge.substring(0, 14), 205, y);
+          doc.text(addressLines, 226, y);
 
           doc.setDrawColor(226, 232, 240);
-          doc.line(14, y + 2, 284, y + 2);
-          y += 5.5;
+          doc.line(14, y + rowHeight - 1.5, 284, y + rowHeight - 1.5);
+          y += rowHeight + 1;
           rowCounter++;
         });
       });
@@ -2315,6 +2355,7 @@
       doc.save(`WCF_Unmarried_Adults_${new Date().toISOString().slice(0, 10)}.pdf`);
     }
 
+    // V.2.0 Trial: Non-Chhippa Wives with multi-line address wrapping
     function exportNonChhippaWivesPDF() {
       const allRecords = Object.values(storedFRCRecords);
       const nonChhippaList = [];
@@ -2325,12 +2366,12 @@
             const isWife = (m.relationKey === 'Wife' || m.relation.includes('بیوی'));
             const isNonChhippa = m.lineage.includes('غیر') || m.lineage.includes('Non');
             if (isWife && isNonChhippa) {
+              const fullWifeLoc = `${rec.head.phone} (${m.address || rec.head.address || ''}, ${m.city || rec.head.city || ''}, ${m.country || rec.head.country || ''})`;
               nonChhippaList.push({
                 frcCode: rec.code,
                 wifeName: m.name,
                 husbandName: rec.head.name,
-                phone: rec.head.phone,
-                location: rec.head.location
+                contactLocation: fullWifeLoc
               });
             }
           });
@@ -2362,27 +2403,32 @@
       doc.setTextColor(0, 0, 0);
       doc.text("#", 16, y);
       doc.text("FRC Code", 24, y);
-      doc.text("Wife Name", 55, y);
-      doc.text("Husband Name", 95, y);
-      doc.text("Contact / Location", 140, y);
+      doc.text("Wife Name", 52, y);
+      doc.text("Husband Name", 90, y);
+      doc.text("Contact & Residential Address", 130, y);
 
       doc.setFont("helvetica", "normal");
       y += 7;
 
       nonChhippaList.forEach((item, idx) => {
-        if (y > 280) {
+        doc.setFontSize(7.5);
+        const locLines = doc.splitTextToSize(item.contactLocation, 62);
+        const rowHeight = Math.max(locLines.length * 4, 6);
+
+        if (y + rowHeight > 280) {
           doc.addPage();
           y = 20;
         }
+
         doc.text(String(idx + 1), 16, y);
         doc.text(item.frcCode, 24, y);
-        doc.text(item.wifeName.substring(0, 20), 55, y);
-        doc.text(item.husbandName.substring(0, 22), 95, y);
-        doc.text(`${item.phone} (${item.location})`.substring(0, 28), 140, y);
+        doc.text(item.wifeName.substring(0, 20), 52, y);
+        doc.text(item.husbandName.substring(0, 22), 90, y);
+        doc.text(locLines, 130, y);
 
         doc.setDrawColor(226, 232, 240);
-        doc.line(14, y + 2, 196, y + 2);
-        y += 7;
+        doc.line(14, y + rowHeight - 1.5, 196, y + rowHeight - 1.5);
+        y += rowHeight + 1.5;
       });
 
       doc.save(`WCF_Non_Chhippa_Wives_${new Date().toISOString().slice(0, 10)}.pdf`);
