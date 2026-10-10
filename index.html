@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="google" content="notranslate">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>World Chhippa Foundation - Global Census & FRC Portal (v1.10)</title>
+  <title>World Chhippa Foundation - Global Census & FRC Portal (v1.11)</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- jsPDF & html2canvas -->
@@ -389,7 +389,7 @@
                   </div>
                 </div>
 
-                <!-- Head Summary Compact (v1.10: Full Residential Address Display Included) -->
+                <!-- Head Summary Compact -->
                 <div class="bg-slate-50 border border-slate-200 rounded-lg p-2.5 mb-3 text-[11px] grid grid-cols-2 gap-2 relative z-10 leading-snug">
                   <div class="space-y-0.5">
                     <p><span id="frcLblHeadName" class="font-bold text-slate-700">Head of Family:</span> <span id="frcHeadName" class="font-semibold text-slate-900"></span></p>
@@ -405,7 +405,7 @@
                   </div>
                 </div>
 
-                <!-- Table with Sequential IDs -->
+                <!-- Table with Sequential IDs & Integrated Member Address -->
                 <div class="relative z-10 mb-3">
                   <table class="w-full border-collapse border border-slate-300 text-[10px]">
                     <thead>
@@ -1876,7 +1876,13 @@
       record.members.forEach((m, idx) => {
         const row = document.createElement('tr');
         const forcedSequentialId = `${record.code}-${idx + 2}`;
-        const locDisplay = m.addrChoice === 'other' ? `${m.city}` : `${record.head.city}`;
+        
+        // v1.11 Fix: If member address is "other", show City + Full Address in table cell cleanly
+        let locDisplay = record.head.city;
+        if (m.addrChoice === 'other') {
+          const detailAddr = (m.address && m.address !== m.city) ? `, ${m.address}` : '';
+          locDisplay = `${m.city}${detailAddr}`;
+        }
 
         row.innerHTML = `
           <td class="border border-slate-300 p-1">${idx + 2}</td>
@@ -1888,7 +1894,7 @@
           <td class="border border-slate-300 p-1 text-[9px]">${m.maritalStatus ? m.maritalStatus.split(' ')[0] : '-'}</td>
           <td class="border border-slate-300 p-1 text-[9px]">${m.edu}</td>
           <td class="border border-slate-300 p-1 text-[9px]">${m.job}</td>
-          <td class="border border-slate-300 p-1 text-[8.5px]">${locDisplay}</td>
+          <td class="border border-slate-300 p-1 text-[8px] leading-tight max-w-[130px] break-words">${locDisplay}</td>
           <td class="border border-slate-300 p-1 ${m.lineage.includes('غیر') || m.lineage.includes('Non') ? 'text-amber-800 font-semibold' : 'text-emerald-800 font-bold'}">${m.lineage}</td>
         `;
         tableBody.appendChild(row);
