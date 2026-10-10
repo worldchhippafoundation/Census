@@ -14,7 +14,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&family=Noto+Sans+Devanagari:wght@400;600;700&family=Inter:wght@400;600;700;800;900&family=Great+Vibes&display=swap" rel="stylesheet">
   <style>
-    /* Nastaliq text overlap prevention */
     body { 
       font-family: 'Noto Nastaliq Urdu', 'Inter', sans-serif; 
       line-height: 2.1;
@@ -131,11 +130,11 @@
       </div>
       <p id="cityStatsErrorMsg" class="text-xs text-red-600 font-semibold hidden"></p>
 
-      <!-- Active Search Area -->
+      <!-- Active Search Area (100% Language Synced) -->
       <div id="popFilterArea" class="hidden pt-3 border-t border-slate-200 space-y-3">
         <div class="bg-emerald-50 border border-emerald-200 p-3 rounded-lg flex flex-wrap items-center justify-between gap-2 text-xs">
-          <span class="text-emerald-900 font-semibold">✅ رسائی منظور: آپ کسی بھی ملک یا شہر کی مردم شماری کا جائزہ لے سکتے ہیں۔</span>
-          <button type="button" onclick="lockPopulationDashboard()" class="text-slate-500 hover:text-red-600 font-bold underline">لاک کریں</button>
+          <span id="popAccessNoticeText" class="text-emerald-900 font-semibold">✅ رسائی منظور: آپ کسی بھی ملک یا شہر کی مردم شماری کا جائزہ لے سکتے ہیں۔</span>
+          <button type="button" id="btnPopLock" onclick="lockPopulationDashboard()" class="text-slate-500 hover:text-red-600 font-bold underline">لاک کریں</button>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -148,7 +147,7 @@
             <input type="text" id="popCityInput" oninput="runPublicPopulationQuery()" placeholder="شہر کا نام لکھیں (خالی = تمام شہر)" class="w-full border border-slate-300 rounded-lg p-2 text-xs outline-none focus:ring-2 focus:ring-emerald-500">
           </div>
           <div class="flex items-end">
-            <button type="button" onclick="runPublicPopulationQuery()" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-2 rounded-lg text-xs shadow">
+            <button type="button" id="btnPopUpdateStats" onclick="runPublicPopulationQuery()" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-2 rounded-lg text-xs shadow">
               اعداد و شمار اپڈیٹ کریں
             </button>
           </div>
@@ -158,9 +157,9 @@
         <div id="cityStatsResultCard" class="mt-4 p-5 bg-emerald-50/80 border border-emerald-300 rounded-xl space-y-3">
           <div class="flex justify-between items-center border-b border-emerald-200 pb-2">
             <h4 class="font-bold text-sm text-emerald-950">
-              منتخب علاقہ: <span id="statResAreaName" class="text-emerald-800 text-base font-black">All</span>
+              <span id="lblStatResAreaHeading">منتخب علاقہ:</span> <span id="statResAreaName" class="text-emerald-800 text-base font-black">All</span>
             </h4>
-            <span class="text-xs bg-emerald-200 text-emerald-900 px-2.5 py-0.5 rounded-full font-bold">مجموعی شماریات (Aggregate)</span>
+            <span id="badgeAggregateStats" class="text-xs bg-emerald-200 text-emerald-900 px-2.5 py-0.5 rounded-full font-bold">مجموعی شماریات (Aggregate)</span>
           </div>
           <div class="grid grid-cols-2 md:grid-cols-5 gap-3 text-center">
             <div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm">
@@ -220,59 +219,52 @@
         </div>
 
         <div class="p-5 grid grid-cols-1 md:grid-cols-3 gap-4">
-          <!-- National ID -->
           <div>
             <label id="lblHeadCNIC" class="block text-xs font-semibold text-slate-700">
-              شناختی کارڈ / آدھار نمبر (لازمی)<span class="text-red-500 font-bold ml-1">*</span>
+              شناختی کارڈ / آدھار نمبر (لازمی)<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
             <input type="text" id="headCNIC" required oninput="checkHeadExistingID(this.value)" placeholder="e.g. 42101-1234567-1" class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
             <div id="headExistingNotice" class="hidden mt-1 text-xs text-amber-800 bg-amber-50 p-2 rounded border border-amber-200"></div>
           </div>
 
-          <!-- Full Name -->
           <div>
             <label id="lblHeadName" class="block text-xs font-semibold text-slate-700">
-              مکمل نام (سرپرست)<span class="text-red-500 font-bold ml-1">*</span>
+              مکمل نام (سرپرست)<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
             <input type="text" id="headName" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
           </div>
 
-          <!-- Father / Guardian Name -->
           <div>
             <label id="lblHeadFather" class="block text-xs font-semibold text-slate-700">
-              والد / سرپرست کا نام<span class="text-red-500 font-bold ml-1">*</span>
+              والد / سرپرست کا نام<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
             <input type="text" id="headFather" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
           </div>
 
-          <!-- Head Date of Birth -->
           <div>
             <label id="lblHeadDOB" class="block text-xs font-semibold text-slate-700">
-              تاریخِ پیدائش (Date of Birth)<span class="text-red-500 font-bold ml-1">*</span>
+              تاریخِ پیدائش (Date of Birth)<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
             <input type="date" id="headDOB" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
           </div>
 
-          <!-- Gender -->
           <div>
             <label id="lblHeadGender" class="block text-xs font-semibold text-slate-700">
-              جنس<span class="text-red-500 font-bold ml-1">*</span>
+              جنس<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
             <select id="headGender" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"></select>
           </div>
 
-          <!-- Marital Status -->
           <div>
             <label id="lblHeadMarital" class="block text-xs font-semibold text-slate-700">
-              ازدواجی حیثیت (Marital Status)<span class="text-red-500 font-bold ml-1">*</span>
+              ازدواجی حیثیت (Marital Status)<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
             <select id="headMarital" required class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-emerald-500 outline-none"></select>
           </div>
 
-          <!-- Sub-Caste / Atak -->
           <div>
             <label id="lblHeadClan" class="block text-xs font-semibold text-slate-700">
-              اٹک / ذیلی ذات<span class="text-red-500 font-bold ml-1">*</span>
+              اٹک / ذیلی ذات<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
             <select id="headClan" required onchange="toggleManualInput(this, 'headClanOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-emerald-500 outline-none"></select>
             <div id="headClanOtherWrap" class="hidden mt-2">
@@ -280,10 +272,9 @@
             </div>
           </div>
 
-          <!-- Education -->
           <div>
             <label id="lblHeadEdu" class="block text-xs font-semibold text-slate-700">
-              تعلیمی قابلیت<span class="text-red-500 font-bold ml-1">*</span>
+              تعلیمی قابلیت<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
             <select id="headEdu" required onchange="toggleManualInput(this, 'headEduOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-slate-700 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"></select>
             <div id="headEduOtherWrap" class="hidden mt-2">
@@ -291,10 +282,9 @@
             </div>
           </div>
 
-          <!-- Occupation -->
           <div>
             <label id="lblHeadJob" class="block text-xs font-semibold text-slate-700">
-              پیشہ / ملازمت<span class="text-red-500 font-bold ml-1">*</span>
+              پیشہ / ملازمت<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
             <select id="headJob" required onchange="toggleManualInput(this, 'headJobOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-emerald-500 outline-none"></select>
             <div id="headJobOtherWrap" class="hidden mt-2">
@@ -302,18 +292,16 @@
             </div>
           </div>
 
-          <!-- Phone -->
           <div>
             <label id="lblHeadPhone" class="block text-xs font-semibold text-slate-700">
-              رابطہ فون / واٹس ایپ<span class="text-red-500 font-bold ml-1">*</span>
+              رابطہ فون / واٹس ایپ<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
             <input type="tel" id="headPhone" required placeholder="+92..." class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none text-right dir-ltr">
           </div>
 
-          <!-- Country Dropdown -->
           <div>
             <label id="lblHeadCountry" class="block text-xs font-semibold text-slate-700">
-              ملک (Country)<span class="text-red-500 font-bold ml-1">*</span>
+              ملک (Country)<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
             <select id="headCountry" required onchange="toggleManualInput(this, 'headCountryOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"></select>
             <div id="headCountryOtherWrap" class="hidden mt-2">
@@ -321,18 +309,16 @@
             </div>
           </div>
 
-          <!-- City -->
           <div>
             <label id="lblHeadCity" class="block text-xs font-semibold text-slate-700">
-              شہر<span class="text-red-500 font-bold ml-1">*</span>
+              شہر<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
             <input type="text" id="headCity" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
           </div>
 
-          <!-- Address -->
           <div class="md:col-span-3">
             <label id="lblHeadAddress" class="block text-xs font-semibold text-slate-700">
-              مکمل رہائشی پتہ<span class="text-red-500 font-bold ml-1">*</span>
+              مکمل رہائشی پتہ<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
             <input type="text" id="headAddress" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
           </div>
@@ -460,7 +446,6 @@
                 <!-- Row 1: Left = Architect Box | Right = Blue Vector Stamp & Signatures -->
                 <div class="flex justify-between items-end gap-3 pt-1">
                   
-                  <!-- Left: Dedicated Box (Above thanks strip) -->
                   <div class="bg-slate-50 border border-slate-300 rounded p-2.5 font-latin text-left max-w-sm shadow-sm">
                     <span class="text-[8px] text-slate-500 uppercase tracking-wider block font-semibold">
                       Conceived, Architected & Dedicated to Chhippa Community by:
@@ -470,18 +455,15 @@
                     </strong>
                   </div>
 
-                  <!-- Right: Pure Vector Blue Rubber Stamp (Calibrated Arc - No Letter Cut) & Signature -->
+                  <!-- Right: Pure Vector Blue Rubber Stamp & Signature -->
                   <div class="flex items-center gap-3 shrink-0">
                     
-                    <!-- Circular Royal Blue Vector SVG Rubber Stamp (Calibrated in v1.7) -->
                     <div class="w-24 h-24 select-none shrink-0" title="Official Verified Stamp">
                       <svg viewBox="0 0 200 200" class="w-full h-full transform -rotate-6">
-                        <!-- Outer Double Rings -->
                         <circle cx="100" cy="100" r="95" fill="none" stroke="#0d3b66" stroke-width="4.5" />
                         <circle cx="100" cy="100" r="88" fill="none" stroke="#0d3b66" stroke-width="1.8" stroke-dasharray="4,2" />
                         <circle cx="100" cy="100" r="62" fill="none" stroke="#0d3b66" stroke-width="2.5" />
                         
-                        <!-- Calibrated Circular Curved Top Text (No W or N Cut) -->
                         <path id="curveTop" d="M 22,100 A 78,78 0 0,1 178,100" fill="none" />
                         <text fill="#0d3b66" font-family="'Inter', sans-serif" font-weight="900" font-size="10.5" letter-spacing="1">
                           <textPath href="#curveTop" startOffset="50%" text-anchor="middle">
@@ -489,7 +471,6 @@
                           </textPath>
                         </text>
 
-                        <!-- Calibrated Circular Curved Bottom Text -->
                         <path id="curveBottom" d="M 176,100 A 76,76 0 0,1 24,100" fill="none" />
                         <text fill="#0d3b66" font-family="'Inter', sans-serif" font-weight="800" font-size="8.5" letter-spacing="1.5">
                           <textPath href="#curveBottom" startOffset="50%" text-anchor="middle">
@@ -497,7 +478,6 @@
                           </textPath>
                         </text>
 
-                        <!-- Center Stars & Pure VERIFIED Text -->
                         <text x="100" y="86" fill="#0d3b66" font-family="'Inter', sans-serif" font-size="11" text-anchor="middle" font-weight="bold">★ ★ ★</text>
                         <text x="100" y="107" fill="#0d3b66" font-family="'Inter', sans-serif" font-weight="900" font-size="19" text-anchor="middle" letter-spacing="1.5">VERIFIED</text>
                         <line x1="45" y1="114" x2="155" y2="114" stroke="#0d3b66" stroke-width="1.5" />
@@ -505,7 +485,6 @@
                       </svg>
                     </div>
 
-                    <!-- Signature & Registrar -->
                     <div class="text-center">
                       <div class="text-emerald-900 font-signature text-xl font-bold leading-tight select-none">
                         M.Waseem Sadiq Tak
@@ -541,9 +520,9 @@
       </div>
     </div>
 
-    <!-- Hidden Admin Panel Modal (PIN 5492 Protected) -->
+    <!-- Admin Panel Modal (PIN 5492 Protected) -->
     <div id="adminModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 overflow-y-auto p-4 flex items-center justify-center font-latin" dir="ltr">
-      <div class="bg-white w-full max-w-2xl rounded-xl shadow-2xl border border-slate-300 p-6 space-y-5 text-slate-800">
+      <div class="bg-white w-full max-w-2xl rounded-xl shadow-2xl border border-slate-300 p-6 space-y-5 text-slate-800 my-auto">
         <div class="flex justify-between items-center border-b pb-3">
           <div class="flex items-center gap-2">
             <span class="w-3 h-3 rounded-full bg-emerald-600 animate-pulse"></span>
@@ -563,23 +542,25 @@
           </div>
         </div>
 
+        <!-- Master Comprehensive Directory Exporter (All Details) -->
         <div class="bg-emerald-50/70 border border-emerald-200 p-3.5 rounded-xl space-y-2.5 text-left">
           <h4 class="text-xs font-bold text-emerald-950 flex items-center gap-1.5">
-            <span>🏙️</span> <span>Filter & Export PDF by Country & City:</span>
+            <span>📑</span> <span>Master Census Directory PDF (Full Details with Address, Cast, Phone & Job):</span>
           </h4>
+          <p class="text-[11px] text-slate-600">Select country or city to filter, or leave empty to export the <b>Complete Global Directory</b>.</p>
           <div class="grid grid-cols-1 md:grid-cols-12 gap-2">
             <select id="adminCountryDropdown" class="md:col-span-5 border border-slate-300 rounded-lg p-2 text-xs font-semibold bg-white outline-none focus:ring-2 focus:ring-emerald-600">
-              <option value="">-- Select Country --</option>
+              <option value="">-- All Countries (Complete Global) --</option>
             </select>
-            <input type="text" id="adminCityManualInput" placeholder="Enter City (e.g. Karachi, Jodhpur)..." class="md:col-span-4 border border-slate-300 rounded-lg px-2.5 py-2 text-xs bg-white outline-none focus:ring-2 focus:ring-emerald-600">
-            <button type="button" onclick="exportCountryCityWisePDF()" class="md:col-span-3 bg-teal-700 hover:bg-teal-800 text-white text-xs font-bold py-2 px-2.5 rounded-lg shadow transition flex items-center justify-center gap-1">
+            <input type="text" id="adminCityManualInput" placeholder="City (Empty = All Cities)..." class="md:col-span-4 border border-slate-300 rounded-lg px-2.5 py-2 text-xs bg-white outline-none focus:ring-2 focus:ring-emerald-600">
+            <button type="button" onclick="exportCountryCityWisePDF()" class="md:col-span-3 bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-bold py-2 px-2.5 rounded-lg shadow transition flex items-center justify-center gap-1">
               <span>Download PDF</span>
             </button>
           </div>
         </div>
 
         <div class="space-y-2 text-left">
-          <h4 class="text-xs font-bold text-slate-600 uppercase tracking-wider">Instant 1-Click PDF Reports:</h4>
+          <h4 class="text-xs font-bold text-slate-600 uppercase tracking-wider">Additional 1-Click PDF Reports:</h4>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5">
             <button type="button" onclick="exportPhoneDirectoryPDF()" class="bg-blue-700 hover:bg-blue-800 text-white text-xs font-bold p-3 rounded-lg shadow text-center flex flex-col items-center justify-center gap-1 transition">
               <span class="text-base">📱</span>
@@ -655,6 +636,15 @@
         cityStatsSub: "اپنا تصدیق شدہ FRC کوڈ یا رجسٹرڈ موبائل نمبر درج کریں تاکہ رسائی حاصل ہو سکے، اور کسی بھی ملک یا شہر کی آبادی دیکھیں۔",
         popAuthPlaceholder: "FRC کوڈ یا موبائل فون نمبر درج کریں...",
         btnCityStatsVerify: "تصدیق و رسائی",
+        popAccessNoticeText: "✅ رسائی منظور: آپ کسی بھی ملک یا شہر کی مردم شماری کا جائزہ لے سکتے ہیں۔",
+        btnPopLock: "لاک کریں",
+        lblPopCountry: "ملک منتخب کریں:",
+        popCountryDefault: "-- (تمام ممالک) All Countries --",
+        lblPopCity: "شہر (اختیاری یا سب):",
+        popCityPlaceholder: "شہر کا نام لکھیں (خالی = تمام شہر)",
+        btnPopUpdateStats: "اعداد و شمار اپڈیٹ کریں",
+        lblStatResAreaHeading: "منتخب علاقہ:",
+        badgeAggregateStats: "مجموعی شماریات (Aggregate)",
         lblStatFamilies: "کل خاندان:",
         lblStatTotalPop: "کل آبادی (افراد):",
         lblStatMales: "بالغ مرد (18+):",
@@ -812,6 +802,15 @@
         cityStatsSub: "अपना सत्यापित FRC कोड या मोबाइल नंबर दर्ज करके किसी भी देश या शहर की आबादी के आंकड़े देखें।",
         popAuthPlaceholder: "FRC कोड या मोबाइल फोन नंबर दर्ज करें...",
         btnCityStatsVerify: "सत्यापन एवं पहुंच",
+        popAccessNoticeText: "✅ पहुंच स्वीकृत: आप किसी भी देश या शहर की जनगणना का जायजा ले सकते हैं।",
+        btnPopLock: "लॉक करें",
+        lblPopCountry: "देश चुनें:",
+        popCountryDefault: "-- सभी देश (All Countries) --",
+        lblPopCity: "शहर (वैकल्पिक या सभी):",
+        popCityPlaceholder: "शहर का नाम लिखें (खाली = सभी शहर)",
+        btnPopUpdateStats: "आंकड़े अपडेट करें",
+        lblStatResAreaHeading: "चयनित क्षेत्र:",
+        badgeAggregateStats: "समग्र आंकड़े (Aggregate)",
         lblStatFamilies: "कुल परिवार:",
         lblStatTotalPop: "कुल आबादी (व्यक्ति):",
         lblStatMales: "वयस्क पुरुष (18+):",
@@ -969,6 +968,15 @@
         cityStatsSub: "Enter your verified FRC Code or registered Mobile Number to gain access and check population for any country or city.",
         popAuthPlaceholder: "Enter FRC Code or Mobile Number...",
         btnCityStatsVerify: "Verify & Access",
+        popAccessNoticeText: "✅ Access Granted: You can view census records for any country or city.",
+        btnPopLock: "Lock",
+        lblPopCountry: "Select Country:",
+        popCountryDefault: "-- All Countries (Global) --",
+        lblPopCity: "City (Optional or All):",
+        popCityPlaceholder: "Enter city name (Empty = All cities)",
+        btnPopUpdateStats: "Update Statistics",
+        lblStatResAreaHeading: "Selected Area:",
+        badgeAggregateStats: "Aggregate Statistics",
         lblStatFamilies: "Total Families:",
         lblStatTotalPop: "Total Population:",
         lblStatMales: "Adult Males (18+):",
@@ -1141,13 +1149,15 @@
     function populateAdminCountryOptions() {
       const cSel = document.getElementById('adminCountryDropdown');
       if (cSel) {
-        cSel.innerHTML = '<option value="">-- All / Select Country --</option>' + 
+        cSel.innerHTML = '<option value="">-- All Countries (Complete Global) --</option>' + 
           allWorldCountries.map(c => `<option value="${c}">${c}</option>`).join('');
       }
 
       const pSel = document.getElementById('popCountrySelect');
       if (pSel) {
-        pSel.innerHTML = '<option value="">-- All Countries (تمام ممالک) --</option>' + 
+        const dict = i18n[currentLang] || i18n.ur;
+        const defaultText = dict.popCountryDefault || '-- All Countries --';
+        pSel.innerHTML = `<option value="">${defaultText}</option>` + 
           allWorldCountries.map(c => `<option value="${c}">${c}</option>`).join('');
       }
     }
@@ -1197,7 +1207,7 @@
       document.getElementById('appSub').textContent = dict.appSub;
       document.getElementById('lblLang').textContent = dict.lblLang;
 
-      // Live Counter Labels Sync (Fix #2)
+      // Live Counter Labels
       document.getElementById('lblLiveFamilies').textContent = dict.lblLiveFamilies;
       document.getElementById('lblLiveMembers').textContent = dict.lblLiveMembers;
 
@@ -1211,10 +1221,20 @@
       document.getElementById('btnSearchAction').textContent = dict.btnSearchAction;
       document.getElementById('btnSearchAddMember').textContent = dict.btnSearchAddMember;
 
+      // Population Dashboard Full Language Sync (Images 2 & 3 Fix)
       document.getElementById('cityStatsTitle').textContent = dict.cityStatsTitle;
       document.getElementById('cityStatsSub').textContent = dict.cityStatsSub;
       document.getElementById('cityStatAuthInput').placeholder = dict.popAuthPlaceholder;
       document.getElementById('btnCityStatsVerify').textContent = dict.btnCityStatsVerify;
+      document.getElementById('popAccessNoticeText').textContent = dict.popAccessNoticeText;
+      document.getElementById('btnPopLock').textContent = dict.btnPopLock;
+      document.getElementById('lblPopCountry').textContent = dict.lblPopCountry;
+      document.getElementById('lblPopCity').textContent = dict.lblPopCity;
+      document.getElementById('popCityInput').placeholder = dict.popCityPlaceholder;
+      document.getElementById('btnPopUpdateStats').textContent = dict.btnPopUpdateStats;
+      document.getElementById('lblStatResAreaHeading').textContent = dict.lblStatResAreaHeading;
+      document.getElementById('badgeAggregateStats').textContent = dict.badgeAggregateStats;
+      
       document.getElementById('lblStatFamilies').textContent = dict.lblStatFamilies;
       document.getElementById('lblStatTotalPop').textContent = dict.lblStatTotalPop;
       document.getElementById('lblStatMales').textContent = dict.lblStatMales;
@@ -1224,7 +1244,7 @@
       document.getElementById('headCardTitle').textContent = dict.headCardTitle;
       document.getElementById('headBadge').textContent = dict.headBadge;
 
-      // Spaced labels for clear Nastaliq reading (Fix #3)
+      // Labels Spaced for Clean Nastaliq Reading
       document.getElementById('lblHeadCNIC').innerHTML = `${dict.lblHeadCNIC} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`;
       document.getElementById('lblHeadName').innerHTML = `${dict.lblHeadName} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`;
       document.getElementById('lblHeadFather').innerHTML = `${dict.lblHeadFather} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`;
@@ -1266,6 +1286,7 @@
       countrySel.innerHTML = allWorldCountries.map(c => `<option value="${c}">${c}</option>`).join('');
       countrySel.value = prevCountry;
 
+      populateAdminCountryOptions();
       refreshMemberCardsLanguage();
       
       const cnicVal = document.getElementById('headCNIC').value;
@@ -2209,7 +2230,7 @@
       }
     }
 
-    // Admin Panel Trigger & 1-Click PDFs
+    // Admin Panel Trigger & Comprehensive Master Census Directory Export
     let logoTapCount = 0;
     const headerLogoArea = document.getElementById('headerLogoArea');
     if (headerLogoArea) {
@@ -2248,22 +2269,22 @@
       return key;
     }
 
+    // Master Directory: Filtered or Global Export with 100% Comprehensive Details
     function exportCountryCityWisePDF() {
       const selectedCountry = document.getElementById('adminCountryDropdown').value.trim();
       const inputCity = document.getElementById('adminCityManualInput').value.trim();
 
-      if (!selectedCountry && !inputCity) {
-        alert("Please select a Country or enter a City name to filter!");
+      const allRecords = Object.values(storedFRCRecords);
+      if (allRecords.length === 0) {
+        alert("Database mein koi record mojood nahi hai! Pehle FRC register karein.");
         return;
       }
 
-      const allRecords = Object.values(storedFRCRecords);
-
       const matchedRecords = allRecords.filter(rec => {
         if (!rec.head) return false;
-        const loc = (rec.head.location || "").toLowerCase();
         const country = (rec.head.country || "").toLowerCase();
         const city = (rec.head.city || "").toLowerCase();
+        const loc = (rec.head.location || "").toLowerCase();
 
         let matchCountry = true;
         let matchCity = true;
@@ -2279,86 +2300,106 @@
       });
 
       if (matchedRecords.length === 0) {
-        alert(`No records found for ${selectedCountry || ''} ${inputCity || ''}!`);
+        alert(`No records found for ${selectedCountry || 'All'} - ${inputCity || 'All Cities'}!`);
         return;
       }
 
       const { jsPDF } = window.jspdf;
-      const doc = new jsPDF('p', 'mm', 'a4');
+      const doc = new jsPDF('l', 'mm', 'a4'); // Landscape for clean table columns
 
-      doc.setFontSize(15);
+      doc.setFontSize(14);
       doc.setTextColor(6, 78, 59);
-      doc.text("World Chhippa Foundation - Global Census Directory", 14, 15);
+      doc.text("World Chhippa Foundation - Master Comprehensive Census Directory", 14, 12);
 
-      doc.setFontSize(9);
-      doc.setTextColor(51, 65, 85);
-      const todayDate = new Date().toLocaleDateString('en-GB');
-      const filterLabel = `Country: ${selectedCountry || 'All'} | City: ${inputCity || 'All'}`;
-      doc.text(`${filterLabel} | Total Families: ${matchedRecords.length} | Date: ${todayDate}`, 14, 21);
+      doc.setFontSize(8);
+      doc.setTextColor(100, 116, 139);
+      const printDate = new Date().toLocaleDateString('en-GB');
+      const filterLabel = `Scope: Country: [${selectedCountry || 'All'}] | City: [${inputCity || 'All'}] | Families: ${matchedRecords.length} | Date: ${printDate}`;
+      doc.text(filterLabel, 14, 17);
 
-      let y = 30;
-      doc.setFillColor(236, 253, 245);
-      doc.rect(14, y - 5, 182, 8, 'F');
+      let y = 25;
+      const drawHeaders = (currY) => {
+        doc.setFillColor(6, 78, 59);
+        doc.rect(14, currY - 4, 270, 7, 'F');
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(7);
+        doc.setTextColor(255, 255, 255);
+        doc.text("#", 16, currY);
+        doc.text("Unique ID", 22, currY);
+        doc.text("Full Name & Father/Guardian", 44, currY);
+        doc.text("Relation / Clan", 85, currY);
+        doc.text("CNIC / B-Form", 118, currY);
+        doc.text("Phone / WhatsApp", 145, currY);
+        doc.text("Edu / Profession", 175, currY);
+        doc.text("DOB / Age", 215, currY);
+        doc.text("Full Residential Address", 238, currY);
+        doc.setFont("helvetica", "normal");
+        doc.setTextColor(15, 23, 42);
+      };
 
-      doc.setFontSize(8.5);
-      doc.setFont("helvetica", "bold");
-      doc.setTextColor(6, 78, 59);
-      doc.text("#", 16, y);
-      doc.text("FRC Code", 23, y);
-      doc.text("Head & Guardian Name", 48, y);
-      doc.text("Clan (Atak)", 100, y);
-      doc.text("Phone / WhatsApp", 125, y);
-      doc.text("Members", 158, y);
-      doc.text("Location", 173, y);
+      drawHeaders(y);
+      y += 6;
 
-      doc.setFont("helvetica", "normal");
-      doc.setTextColor(15, 23, 42);
-      y += 7;
+      let rowCounter = 1;
 
-      matchedRecords.forEach((rec, idx) => {
-        if (y > 275) {
-          doc.addPage();
-          y = 20;
+      matchedRecords.forEach((rec) => {
+        const h = rec.head;
+        const allPersons = [
+          {
+            uid: `${rec.code}-1`,
+            name: `${h.name} (${h.father ? 's/o ' + h.father : 'Head'})`,
+            relClan: `Head / ${getEnglishValue('clan', h.clanKey) || h.clan || 'Chhippa'}`,
+            cnic: h.cnic || '-',
+            phone: h.phone || '-',
+            eduJob: `${getEnglishValue('education', h.eduKey) || h.edu || '-'} / ${getEnglishValue('job', h.jobKey) || h.job || '-'}`,
+            dobAge: `${h.dob || '-'}`,
+            address: `${h.address || '-'}, ${h.city || '-'}, ${h.country || '-'}`
+          }
+        ];
 
-          doc.setFillColor(236, 253, 245);
-          doc.rect(14, y - 5, 182, 8, 'F');
-          doc.setFont("helvetica", "bold");
-          doc.setTextColor(6, 78, 59);
-          doc.text("#", 16, y);
-          doc.text("FRC Code", 23, y);
-          doc.text("Head & Guardian Name", 48, y);
-          doc.text("Clan (Atak)", 100, y);
-          doc.text("Phone / WhatsApp", 125, y);
-          doc.text("Members", 158, y);
-          doc.text("Location", 173, y);
-          doc.setFont("helvetica", "normal");
-          doc.setTextColor(15, 23, 42);
-          y += 7;
+        if (rec.members && Array.isArray(rec.members)) {
+          rec.members.forEach((m, mIdx) => {
+            allPersons.push({
+              uid: `${rec.code}-${mIdx + 2}`,
+              name: m.name,
+              relClan: `${getEnglishValue('relation', m.relationKey) || m.relation} (${m.lineage || 'Chhippa'})`,
+              cnic: m.cnic || '-',
+              phone: m.phone || h.phone || '-',
+              eduJob: `${getEnglishValue('education', m.eduKey) || m.edu || '-'} / ${getEnglishValue('job', m.jobKey) || m.job || '-'}`,
+              dobAge: `${m.dob || '-'} (${m.age || 0}y)`,
+              address: `${m.address || h.address || '-'}, ${m.city || h.city || '-'}`
+            });
+          });
         }
 
-        const hName = (rec.head && rec.head.name) ? rec.head.name : "N/A";
-        const hFather = (rec.head && rec.head.father) ? `s/o ${rec.head.father}` : "";
-        const headCombined = `${hName} ${hFather}`.trim();
-        const clan = getEnglishValue('clan', rec.head.clanKey) || rec.head.clan || "Chhippa";
-        const phone = (rec.head && rec.head.phone) ? rec.head.phone : "N/A";
-        const totalMems = (rec.members ? rec.members.length : 0) + 1;
-        const locText = rec.head.location || "N/A";
+        allPersons.forEach((person) => {
+          if (y > 190) {
+            doc.addPage();
+            y = 15;
+            drawHeaders(y);
+            y += 6;
+          }
 
-        doc.text(String(idx + 1), 16, y);
-        doc.text(rec.code || "", 23, y);
-        doc.text(headCombined.substring(0, 27), 48, y);
-        doc.text(clan.substring(0, 13), 100, y);
-        doc.text(phone.substring(0, 16), 125, y);
-        doc.text(String(totalMems), 162, y);
-        doc.text(locText.substring(0, 16), 173, y);
+          doc.setFontSize(6.8);
+          doc.text(String(rowCounter), 16, y);
+          doc.text(person.uid, 22, y);
+          doc.text(person.name.substring(0, 24), 44, y);
+          doc.text(person.relClan.substring(0, 18), 85, y);
+          doc.text(person.cnic, 118, y);
+          doc.text(person.phone.substring(0, 16), 145, y);
+          doc.text(person.eduJob.substring(0, 22), 175, y);
+          doc.text(person.dobAge.substring(0, 14), 215, y);
+          doc.text(person.address.substring(0, 28), 238, y);
 
-        doc.setDrawColor(226, 232, 240);
-        doc.line(14, y + 2, 196, y + 2);
-        y += 7;
+          doc.setDrawColor(226, 232, 240);
+          doc.line(14, y + 2, 284, y + 2);
+          y += 5.5;
+          rowCounter++;
+        });
       });
 
-      const cleanFileName = (selectedCountry + '_' + inputCity).replace(/[^a-zA-Z0-9_-]/g, '_');
-      doc.save(`WCF_Census_Directory_${cleanFileName}_${new Date().toISOString().slice(0, 10)}.pdf`);
+      const cleanFileName = ((selectedCountry || 'Global') + '_' + (inputCity || 'AllCities')).replace(/[^a-zA-Z0-9_-]/g, '_');
+      doc.save(`WCF_Master_Census_Directory_${cleanFileName}_${new Date().toISOString().slice(0, 10)}.pdf`);
     }
 
     function exportPhoneDirectoryPDF() {
