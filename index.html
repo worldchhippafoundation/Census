@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="google" content="notranslate">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>World Chhippa Foundation - Global Census & FRC Portal (V.2.1 Trial)</title>
+  <title>World Chhippa Foundation - Global Census & FRC Portal (V.2.5 Trial)</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- jsPDF & html2canvas -->
@@ -63,42 +63,42 @@
       letter-spacing: 4px;
     }
     @media print {
-  @page {
-    size: A4 portrait;
-    margin: 5mm;
-  }
+      @page {
+        size: A4 portrait;
+        margin: 5mm;
+      }
 
-  body * {
-    visibility: hidden;
-  }
+      body * {
+        visibility: hidden;
+      }
 
-  #frcCertificateSheet, #frcCertificateSheet * {
-    visibility: visible;
-  }
+      #frcCertificateSheet, #frcCertificateSheet * {
+        visibility: visible;
+      }
 
-  #frcCertificateSheet {
-    position: absolute !important;
-    left: 0 !important;
-    top: 0 !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 0 !important;
-    box-shadow: none !important;
-    page-break-inside: avoid;
-    break-inside: avoid;
-  }
+      #frcCertificateSheet {
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        box-shadow: none !important;
+        page-break-inside: avoid;
+        break-inside: avoid;
+      }
 
-  #frcModal {
-    background: transparent !important;
-    position: static !important;
-    padding: 0 !important;
-  }
+      #frcModal {
+        background: transparent !important;
+        position: static !important;
+        padding: 0 !important;
+      }
 
-  #frcModal > div > div:first-child,
-  #btnDownloadAction {
-    display: none !important;
-  }
-}
+      #frcModal > div > div:first-child,
+      #btnDownloadAction {
+        display: none !important;
+      }
+    }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-900 min-h-screen font-latin">
@@ -112,7 +112,7 @@
         <img src="stamp.png" alt="WCF Official Seal" class="w-12 h-12 rounded-full object-contain shrink-0 shadow-sm border border-emerald-500 bg-white hover:opacity-95 transition">
         <div>
           <h1 id="appTitle" class="text-base md:text-xl font-bold leading-relaxed mb-2">Chhippa Family Registration Certificate</h1>
-          <p id="appSub" class="text-[11px] md:text-xs text-emerald-200 leading-normal mt-1">World Chhippa Foundation — Global Census Portal (V.2.1 Trial)</p>
+          <p id="appSub" class="text-[11px] md:text-xs text-emerald-200 leading-normal mt-1">World Chhippa Foundation — Global Census Portal (V.2.5 Trial)</p>
         </div>
       </div>
 
@@ -488,9 +488,10 @@
                   </div>
 
                   <div class="flex items-center gap-3 shrink-0">
-                    <div class="w-24 h-24 select-none shrink-0 flex items-center justify-center" title="Official Verified Stamp">
-  <img src="stamp.png" alt="WCF Official Stamp" class="w-full h-full object-contain transform -rotate-6">
-</div>
+                    <!-- Clipped Stamp with Overlay Protection -->
+                    <div class="w-24 h-24 select-none shrink-0 flex items-center justify-center rounded-full overflow-hidden" title="Official Verified Stamp">
+                      <img src="stamp.png" alt="WCF Official Stamp" class="w-full h-full object-contain transform -rotate-6 rounded-full" style="mix-blend-mode: multiply;">
+                    </div>
                     <div class="text-center">
                       <div class="text-emerald-900 font-signature text-xl font-bold leading-tight select-none">
                         M.Waseem Sadiq Tak
@@ -528,7 +529,7 @@
         <div class="flex justify-between items-center border-b pb-3">
           <div class="flex items-center gap-2">
             <span class="w-3 h-3 rounded-full bg-emerald-600 animate-pulse"></span>
-            <h3 class="font-bold text-base text-emerald-900">Admin Census & Directory Manager (V.2.1 Trial)</h3>
+            <h3 class="font-bold text-base text-emerald-900">Admin Census & Directory Manager (V.2.5 Trial)</h3>
           </div>
           <button type="button" onclick="closeAdminModal()" class="text-slate-400 hover:text-slate-700 font-bold text-2xl leading-none">&times;</button>
         </div>
@@ -616,7 +617,7 @@
       </p>
       <div class="pt-2 border-t border-slate-700 max-w-lg mx-auto">
         <span class="text-[11px] text-slate-400 block">Conceived, Architected & Dedicated to Chhippa Community by:</span>
-        <h4 class="text-base md:text-lg font-black text-emerald-400 tracking-wider mt-0.5">
+        <h4 class="text-base md:lg font-black text-emerald-400 tracking-wider mt-0.5">
           M. WASEEM SADIQ TAK (Neemray Walay)
         </h4>
       </div>
@@ -625,7 +626,7 @@
 
   <script>
     /* ==========================================================================
-       1. FIREBASE CONFIGURATION & STANDBY HYBRID ENGINE (V.2.1 TRIAL)
+       1. FIREBASE CONFIGURATION & STANDBY HYBRID ENGINE (V.2.5 TRIAL)
        ========================================================================== */
     const firebaseConfig = {
       apiKey: "",
@@ -854,7 +855,7 @@
     const i18n = {
       ur: {
         appTitle: "چھیپا خاندانی رجسٹریشن سرٹیفکیٹ",
-        appSub: "ورلڈ چھیپا فاؤنڈیشن — عالمی مردم شماری پورٹل (V.2.1 Trial)",
+        appSub: "ورلڈ چھیپا فاؤنڈیشن — عالمی مردم شماری پورٹل (V.2.5 Trial)",
         lblLang: "زبان:",
         lblLiveFamilies: "خاندان (Families):",
         lblLiveMembers: "کل افراد (Unique):",
@@ -975,7 +976,7 @@
       },
       hi: {
         appTitle: "छीपा पारिवारिक पंजीकरण प्रमाण पत्र",
-        appSub: "वर्ल्ड छीपा फाउंडेशन — वैश्विक जनगणना पोर्टल (V.2.1 Trial)",
+        appSub: "वर्ल्ड छीपा फाउंडेशन — वैश्विक जनगणना पोर्टल (V.2.5 Trial)",
         lblLang: "भाषा:",
         lblLiveFamilies: "परिवार (Families):",
         lblLiveMembers: "कुल सदस्य (Unique):",
@@ -1096,7 +1097,7 @@
       },
       en: {
         appTitle: "Chhippa Family Registration Certificate",
-        appSub: "World Chhippa Foundation — Global Census Portal (V.2.1 Trial)",
+        appSub: "World Chhippa Foundation — Global Census Portal (V.2.5 Trial)",
         lblLang: "Language:",
         lblLiveFamilies: "Families:",
         lblLiveMembers: "Unique Individuals:",
@@ -2191,10 +2192,61 @@
       window.open(`https://wa.me/${targetPhone}?text=${msg}`, '_blank');
     }
 
-    function downloadFRCPDFOnly() {
-  window.print();
-}
+    /* ==========================================================================
+       4. MOBILE APP WEBVIEW COMPATIBLE PDF DOWNLOAD ENGINE (BLOB-BASED)
+       ========================================================================== */
+    async function downloadFRCPDFOnly() {
+      const btn = document.getElementById('btnDownloadAction');
+      const originalText = btn ? btn.textContent : 'Download PDF';
+      if (btn) {
+        btn.textContent = 'Generating PDF...';
+        btn.disabled = true;
+      }
 
+      try {
+        const sheet = document.getElementById('frcCertificateSheet');
+        
+        // High quality rendering baghair screen layout hilaye
+        const canvas = await html2canvas(sheet, {
+          scale: 2,
+          useCORS: true,
+          logging: false,
+          backgroundColor: '#ffffff'
+        });
+
+        const imgData = canvas.toDataURL('image/jpeg', 0.95);
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        
+        // Standard A4 Portrait dimensions: 210mm x 297mm
+        pdf.addImage(imgData, 'JPEG', 0, 0, 210, 297);
+
+        const fileName = `Official_FRC_${lastGeneratedFRC ? lastGeneratedFRC.code : 'Certificate'}.pdf`;
+
+        // Direct Mobile Download Hook (Android WebView Support)
+        const blob = pdf.output('blob');
+        const blobUrl = URL.createObjectURL(blob);
+        const downloadLink = document.createElement('a');
+        downloadLink.href = blobUrl;
+        downloadLink.download = fileName;
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        
+        setTimeout(() => {
+          document.body.removeChild(downloadLink);
+          URL.revokeObjectURL(blobUrl);
+        }, 1200);
+
+      } catch (error) {
+        console.error("Blob generation failed, engaging print fallback:", error);
+        window.print();
+      } finally {
+        if (btn) {
+          btn.textContent = originalText;
+          btn.disabled = false;
+        }
+      }
+    }
 
     function searchAndReprintFRC() {
       const inputVal = document.getElementById('searchFRCInput').value.trim();
