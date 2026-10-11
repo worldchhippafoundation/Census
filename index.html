@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="google" content="notranslate">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>World Chhippa Foundation - Global Census & FRC Portal (V.2.0 Trial)</title>
+  <title>World Chhippa Foundation - Global Census & FRC Portal (V.2.1 Trial)</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- jsPDF & html2canvas -->
@@ -12,6 +12,11 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <!-- QRCode.js Library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  
+  <!-- Firebase App & Realtime Database SDKs (Standby Mode) -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+
   <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&family=Noto+Sans+Devanagari:wght@400;600;700&family=Inter:wght@400;600;700;800;900&family=Great+Vibes&display=swap" rel="stylesheet">
   <style>
     body { 
@@ -70,11 +75,11 @@
         <img src="stamp.png" alt="WCF Official Seal" class="w-12 h-12 rounded-full object-contain shrink-0 shadow-sm border border-emerald-500 bg-white hover:opacity-95 transition">
         <div>
           <h1 id="appTitle" class="text-base md:text-xl font-bold leading-relaxed mb-2">Chhippa Family Registration Certificate</h1>
-          <p id="appSub" class="text-[11px] md:text-xs text-emerald-200 leading-normal mt-1">World Chhippa Foundation — Global Census Portal (V.2.0 Trial)</p>
+          <p id="appSub" class="text-[11px] md:text-xs text-emerald-200 leading-normal mt-1">World Chhippa Foundation — Global Census Portal (V.2.1 Trial)</p>
         </div>
       </div>
 
-      <!-- Live Census Counter -->
+      <!-- Live Census Counter & Status -->
       <div class="flex items-center gap-3 flex-wrap">
         <div class="flex items-center gap-3 bg-emerald-950/70 border border-emerald-600/50 px-3 py-1 rounded-lg text-xs font-mono">
           <div>
@@ -85,6 +90,11 @@
           <div>
             <span id="lblLiveMembers" class="text-[10px] text-emerald-300 block">Unique Individuals:</span>
             <span id="liveTotalMembers" class="font-bold text-white text-sm">0</span>
+          </div>
+          <div class="w-px h-6 bg-emerald-700"></div>
+          <div>
+            <span class="text-[9px] text-emerald-300 block">Status:</span>
+            <span id="syncStatusBadge" class="text-[10px] text-amber-300 font-bold">Local Queue</span>
           </div>
         </div>
 
@@ -449,22 +459,8 @@
                         
                         <path id="curveTop" d="M 22,100 A 78,78 0 0,1 178,100" fill="none" />
                         <text fill="#0d3b66" font-family="'Inter', sans-serif" font-weight="900" font-size="10.5" letter-spacing="1">
-                          <textPath href="#curveTop" startOffset="50%" text-anchor="middle">
-                            ★ WORLD CHHIPPA FOUNDATION ★
-                          </textPath>
+                          ★ WORLD CHHIPPA FOUNDATION ★
                         </text>
-
-                        <path id="curveBottom" d="M 176,100 A 76,76 0 0,1 24,100" fill="none" />
-                        <text fill="#0d3b66" font-family="'Inter', sans-serif" font-weight="800" font-size="8.5" letter-spacing="1.5">
-                          <textPath href="#curveBottom" startOffset="50%" text-anchor="middle">
-                            GLOBAL CENSUS DIRECTORY
-                          </textPath>
-                        </text>
-
-                        <text x="100" y="86" fill="#0d3b66" font-family="'Inter', sans-serif" font-size="11" text-anchor="middle" font-weight="bold">★ ★ ★</text>
-                        <text x="100" y="107" fill="#0d3b66" font-family="'Inter', sans-serif" font-weight="900" font-size="19" text-anchor="middle" letter-spacing="1.5">VERIFIED</text>
-                        <line x1="45" y1="114" x2="155" y2="114" stroke="#0d3b66" stroke-width="1.5" />
-                        <text x="100" y="125" fill="#0d3b66" font-family="'Inter', sans-serif" font-size="8" text-anchor="middle" font-weight="bold" letter-spacing="1">AUTHENTIC</text>
                       </svg>
                     </div>
 
@@ -505,7 +501,7 @@
         <div class="flex justify-between items-center border-b pb-3">
           <div class="flex items-center gap-2">
             <span class="w-3 h-3 rounded-full bg-emerald-600 animate-pulse"></span>
-            <h3 class="font-bold text-base text-emerald-900">Admin Census & Directory Manager</h3>
+            <h3 class="font-bold text-base text-emerald-900">Admin Census & Directory Manager (V.2.1 Trial)</h3>
           </div>
           <button type="button" onclick="closeAdminModal()" class="text-slate-400 hover:text-slate-700 font-bold text-2xl leading-none">&times;</button>
         </div>
@@ -521,6 +517,7 @@
           </div>
         </div>
 
+        <!-- Master Directory PDF Filter -->
         <div class="bg-emerald-50/70 border border-emerald-200 p-3.5 rounded-xl space-y-2.5 text-left">
           <h4 class="text-xs font-bold text-emerald-950 flex items-center gap-1.5">
             <span>📑</span> <span>Master Census Directory PDF:</span>
@@ -537,6 +534,7 @@
           </div>
         </div>
 
+        <!-- Additional Reports -->
         <div class="space-y-2 text-left">
           <h4 class="text-xs font-bold text-slate-600 uppercase tracking-wider">Additional 1-Click PDF Reports:</h4>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5">
@@ -555,15 +553,21 @@
           </div>
         </div>
 
+        <!-- Trial Data Purge & Action Bar -->
         <div class="pt-3 border-t border-slate-200 flex flex-wrap gap-2 justify-between items-center text-left">
-          <button type="button" onclick="exportCensusJSON()" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold px-4 py-2.5 rounded-lg shadow transition">
-            💾 Download JSON Backup
-          </button>
           <div class="flex gap-2">
-            <button type="button" onclick="clearAllCensusData()" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-4 py-2.5 rounded-lg shadow transition">
-              ⚠️ Clear All Test Records
+            <button type="button" onclick="exportCensusJSON()" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold px-3 py-2 rounded-lg shadow transition">
+              💾 JSON Backup
             </button>
-            <button type="button" onclick="closeAdminModal()" class="bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs font-bold px-4 py-2.5 rounded-lg transition">
+            <button type="button" onclick="triggerManualFirebaseSync()" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-3 py-2 rounded-lg shadow transition">
+              ☁️ Sync with Firebase
+            </button>
+          </div>
+          <div class="flex gap-2">
+            <button type="button" onclick="clearTrialDatabaseRecords()" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-3 py-2 rounded-lg shadow transition" title="Purge Trial Sandbox Data">
+              🗑️ Purge Trial Data
+            </button>
+            <button type="button" onclick="closeAdminModal()" class="bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs font-bold px-3 py-2 rounded-lg transition">
               Close
             </button>
           </div>
@@ -593,6 +597,191 @@
   </footer>
 
   <script>
+    /* ==========================================================================
+       1. FIREBASE CONFIGURATION & STANDBY HYBRID ENGINE (V.2.1 TRIAL)
+       ========================================================================== */
+    const firebaseConfig = {
+      apiKey: "",
+      authDomain: "",
+      databaseURL: "",
+      projectId: "",
+      storageBucket: "",
+      messagingSenderId: "",
+      appId: ""
+    };
+
+    let isFirebaseReady = false;
+    let dbRef = null;
+    const TRIAL_DB_PATH = "wcf_census_trial_records";
+
+    function initializeFirebaseEngine() {
+      try {
+        if (firebaseConfig.apiKey && firebaseConfig.databaseURL && firebaseConfig.databaseURL !== "") {
+          if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+          }
+          dbRef = firebase.database().ref(TRIAL_DB_PATH);
+          isFirebaseReady = true;
+
+          const badge = document.getElementById('syncStatusBadge');
+          if (badge) {
+            badge.textContent = "Firebase Live";
+            badge.className = "text-[10px] text-emerald-400 font-bold";
+          }
+
+          dbRef.on('value', (snapshot) => {
+            const cloudData = snapshot.val();
+            if (cloudData) {
+              storedFRCRecords = { ...storedFRCRecords, ...cloudData };
+              localStorage.setItem('WCF_CENSUS_RECORDS', JSON.stringify(storedFRCRecords));
+              updateCensusCounters();
+            }
+          });
+
+          triggerSilentBackgroundSync();
+        } else {
+          isFirebaseReady = false;
+          const badge = document.getElementById('syncStatusBadge');
+          if (badge) {
+            badge.textContent = "Local Queue";
+            badge.className = "text-[10px] text-amber-300 font-bold";
+          }
+        }
+      } catch (err) {
+        console.warn("Firebase standby mode active (Local storage engaged):", err);
+        isFirebaseReady = false;
+      }
+    }
+
+    function triggerSilentBackgroundSync() {
+      if (!isFirebaseReady || !dbRef) return;
+      const allRecords = Object.values(storedFRCRecords);
+      if (allRecords.length === 0) return;
+
+      allRecords.forEach(rec => {
+        if (rec.code) {
+          dbRef.child(rec.code).set(rec).catch(err => {
+            console.warn("Silent background sync retry later for:", rec.code, err);
+          });
+        }
+      });
+    }
+
+    function syncRecordToFirebase(record) {
+      if (isFirebaseReady && dbRef && record.code) {
+        dbRef.child(record.code).set(record).catch(err => {
+          console.error("Firebase sync deferred to local queue:", err);
+        });
+      }
+    }
+
+    function triggerManualFirebaseSync() {
+      if (!isFirebaseReady) {
+        alert("Firebase credentials are not configured yet. System is safely running in Local Queue Mode.");
+        return;
+      }
+      const allRecords = Object.values(storedFRCRecords);
+      if (allRecords.length === 0) {
+        alert("No records to sync.");
+        return;
+      }
+      let synced = 0;
+      allRecords.forEach(rec => {
+        dbRef.child(rec.code).set(rec).then(() => {
+          synced++;
+          if (synced === allRecords.length) {
+            alert(`Successfully synced ${synced} trial records to Firebase cloud!`);
+          }
+        });
+      });
+    }
+
+    window.addEventListener('online', () => {
+      console.log("Network online detected. Triggering silent background synchronization...");
+      if (!isFirebaseReady && firebaseConfig.apiKey && firebaseConfig.databaseURL) {
+        initializeFirebaseEngine();
+      }
+      if (isFirebaseReady) {
+        const badge = document.getElementById('syncStatusBadge');
+        if (badge) {
+          badge.textContent = "Firebase Live";
+          badge.className = "text-[10px] text-emerald-400 font-bold";
+        }
+        triggerSilentBackgroundSync();
+      }
+    });
+
+    window.addEventListener('offline', () => {
+      const badge = document.getElementById('syncStatusBadge');
+      if (badge) {
+        badge.textContent = "Offline (Local Queue)";
+        badge.className = "text-[10px] text-amber-300 font-bold";
+      }
+    });
+
+    /* ==========================================================================
+       2. STRONG ADMIN SECURITY (WCF#Tak@9842!Safwan)
+       ========================================================================== */
+    const ADMIN_PASSWORD_PLAIN = "WCF#Tak@9842!Safwan";
+    let adminFailedAttempts = 0;
+    let adminLockoutUntil = 0;
+
+    function openAdminModal() {
+      const now = Date.now();
+      if (now < adminLockoutUntil) {
+        const remainingSec = Math.ceil((adminLockoutUntil - now) / 1000);
+        alert(`Admin Access Locked due to multiple failed attempts. Please wait ${remainingSec} seconds.`);
+        return;
+      }
+
+      const inputPwd = prompt("Enter WCF Authorized Admin Password:");
+      if (inputPwd === null) return;
+
+      if (inputPwd === ADMIN_PASSWORD_PLAIN) {
+        adminFailedAttempts = 0;
+        updateCensusCounters();
+        document.getElementById('adminModal').classList.remove('hidden');
+      } else {
+        adminFailedAttempts++;
+        if (adminFailedAttempts >= 3) {
+          adminLockoutUntil = Date.now() + 60000;
+          alert("3 consecutive incorrect password attempts! Admin access locked for 1 minute.");
+        } else {
+          alert(`Access Denied! Invalid Password. Attempts left: ${3 - adminFailedAttempts}`);
+        }
+      }
+    }
+
+    function closeAdminModal() {
+      document.getElementById('adminModal').classList.add('hidden');
+    }
+
+    function clearTrialDatabaseRecords() {
+      const confirmAuth = prompt("To permanently PURGE all trial records from Database & LocalStorage, re-enter Admin Password:");
+      if (confirmAuth !== ADMIN_PASSWORD_PLAIN) {
+        alert("Authorization Failed! Trial data was not touched.");
+        return;
+      }
+
+      if (confirm("Are you 100% sure you want to PURGE all trial records? This action cannot be undone.")) {
+        storedFRCRecords = {};
+        localStorage.removeItem('WCF_CENSUS_RECORDS');
+
+        if (isFirebaseReady && dbRef) {
+          dbRef.remove().then(() => {
+            console.log("Firebase trial path purged successfully.");
+          }).catch(err => console.error("Firebase trial purge error:", err));
+        }
+
+        updateCensusCounters();
+        closeAdminModal();
+        alert("All Trial Sandbox Records have been completely purged from Local Queue and Cloud Database!");
+      }
+    }
+
+    /* ==========================================================================
+       3. GLOBAL LOCALIZATION & SUPPORTED COUNTRIES
+       ========================================================================== */
     const allWorldCountries = [
       "Pakistan", "India", "Morocco", "United Arab Emirates", "Saudi Arabia",
       "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan",
@@ -621,7 +810,7 @@
         "Pakistan": "पाकिस्तान", "India": "भारत", "Morocco": "मोरक्को", "United Arab Emirates": "संयुक्त अरब अमीरात", "Saudi Arabia": "सऊदी अरब",
         "Afghanistan": "अफ़ग़ानिस्तान", "Algeria": "अल्जीरिया", "Australia": "ऑस्ट्रेलिया", "Bahrain": "बहरीन", "Bangladesh": "बांग्लादेश",
         "Canada": "कनाडा", "China": "चीन", "Egypt": "मिस्र", "France": "फ़्रांस", "Germany": "जर्मनी", "Indonesia": "इंडोनेशिया",
-        "Iran": "ईरान", "Iraq": "इराक", "Italy": "इटली", "Japan": "जापान", "Jordan": "जॉर्डन", "Kuwait": "कुवैत", "Malaysia": "मलेशिया",
+        "Iran": "ईरान", "Iraq": "इराक", "Italy": "इटली", "Japan": "जापान", "Jordan": "जॉर्डन", "कुवैत": "Kuwait", "Malaysia": "मलेशिया",
         "Oman": "ओमान", "Qatar": "क़तर", "South Africa": "दक्षिण अफ्रीका", "Spain": "स्पेन", "Turkey": "तुर्की", "United Kingdom": "यूनाइटेड किंगडम",
         "United States": "संयुक्त राज्य अमेरिका", "Other": "अन्य"
       }
@@ -638,7 +827,7 @@
     const i18n = {
       ur: {
         appTitle: "چھیپا خاندانی رجسٹریشن سرٹیفکیٹ",
-        appSub: "ورلڈ چھیپا فاؤنڈیشن — عالمی مردم شماری پورٹل (V.2.0 Trial)",
+        appSub: "ورلڈ چھیپا فاؤنڈیشن — عالمی مردم شماری پورٹل (V.2.1 Trial)",
         lblLang: "زبان:",
         lblLiveFamilies: "خاندان (Families):",
         lblLiveMembers: "کل افراد (Unique):",
@@ -759,7 +948,7 @@
       },
       hi: {
         appTitle: "छीपा पारिवारिक पंजीकरण प्रमाण पत्र",
-        appSub: "वर्ल्ड छीपा फाउंडेशन — वैश्विक जनगणना पोर्टल (V.2.0 Trial)",
+        appSub: "वर्ल्ड छीपा फाउंडेशन — वैश्विक जनगणना पोर्टल (V.2.1 Trial)",
         lblLang: "भाषा:",
         lblLiveFamilies: "परिवार (Families):",
         lblLiveMembers: "कुल सदस्य (Unique):",
@@ -880,7 +1069,7 @@
       },
       en: {
         appTitle: "Chhippa Family Registration Certificate",
-        appSub: "World Chhippa Foundation — Global Census Portal (V.2.0 Trial)",
+        appSub: "World Chhippa Foundation — Global Census Portal (V.2.1 Trial)",
         lblLang: "Language:",
         lblLiveFamilies: "Families:",
         lblLiveMembers: "Unique Individuals:",
@@ -1084,7 +1273,6 @@
       document.getElementById('appSub').textContent = dict.appSub;
       document.getElementById('lblLang').textContent = dict.lblLang;
 
-      // Live Counter Labels
       document.getElementById('lblLiveFamilies').textContent = dict.lblLiveFamilies;
       document.getElementById('lblLiveMembers').textContent = dict.lblLiveMembers;
 
@@ -1098,7 +1286,6 @@
       document.getElementById('btnSearchAction').textContent = dict.btnSearchAction;
       document.getElementById('btnSearchAddMember').textContent = dict.btnSearchAddMember;
 
-      // Population Dashboard Full Language Sync
       document.getElementById('cityStatsTitle').textContent = dict.cityStatsTitle;
       document.getElementById('cityStatsSub').textContent = dict.cityStatsSub;
       document.getElementById('cityStatAuthInput').placeholder = dict.popAuthPlaceholder;
@@ -1156,7 +1343,6 @@
       populateSelectOptions('headEdu', dict.education, 'Matric');
       populateSelectOptions('headJob', dict.jobs, 'Business');
 
-      // V.2.0 Trial: Localized Country Dropdown Sync
       const countrySel = document.getElementById('headCountry');
       const prevCountry = countrySel.value || 'Pakistan';
       countrySel.innerHTML = allWorldCountries.map(c => `<option value="${c}">${getCountryLocalizedName(c, currentLang)}</option>`).join('');
@@ -1694,7 +1880,6 @@
       const headCity = document.getElementById('headCity').value.trim();
       const headAddress = document.getElementById('headAddress').value.trim();
 
-      // Golden Hash Check (Duplicate Detection Without CNIC)
       const currentHeadHash = generateCleanKey(headName, headFather, headDOB, headClan);
       
       if (!editingExistingFRCCode) {
@@ -1810,6 +1995,8 @@
         console.error("Local storage error:", err);
       }
 
+      syncRecordToFirebase(record);
+
       lastGeneratedFRC = record;
       editingExistingFRCCode = null;
       document.getElementById('updatingFamilyBanner').classList.add('hidden');
@@ -1913,7 +2100,6 @@
         const row = document.createElement('tr');
         const forcedSequentialId = `${record.code}-${idx + 2}`;
         
-        // Show City + Full Address for member if address is other
         let locDisplay = record.head.city;
         if (m.addrChoice === 'other') {
           const detailAddr = (m.address && m.address !== m.city) ? `, ${m.address}` : '';
@@ -2058,20 +2244,6 @@
       });
     }
 
-    function openAdminModal() {
-      const pin = prompt("Enter 4-digit PIN for Admin Panel access:");
-      if (pin === "5492") {
-        updateCensusCounters();
-        document.getElementById('adminModal').classList.remove('hidden');
-      } else if (pin !== null) {
-        alert("Invalid Security PIN!");
-      }
-    }
-
-    function closeAdminModal() {
-      document.getElementById('adminModal').classList.add('hidden');
-    }
-
     function getEnglishValue(type, key) {
       if (!key) return '-';
       const enDict = i18n.en;
@@ -2084,7 +2256,6 @@
       return key;
     }
 
-    // V.2.0 Trial: Master Directory with dynamic multi-line text wrapping for address
     function exportCountryCityWisePDF() {
       const selectedCountry = document.getElementById('adminCountryDropdown').value.trim();
       const inputCity = document.getElementById('adminCityManualInput').value.trim();
@@ -2355,7 +2526,6 @@
       doc.save(`WCF_Unmarried_Adults_${new Date().toISOString().slice(0, 10)}.pdf`);
     }
 
-    // V.2.0 Trial: Non-Chhippa Wives with multi-line address wrapping
     function exportNonChhippaWivesPDF() {
       const allRecords = Object.values(storedFRCRecords);
       const nonChhippaList = [];
@@ -2444,16 +2614,6 @@
       dlAnchor.remove();
     }
 
-    function clearAllCensusData() {
-      if (confirm("Are you sure you want to clear all census records? This action cannot be undone.")) {
-        storedFRCRecords = {};
-        localStorage.removeItem('WCF_CENSUS_RECORDS');
-        updateCensusCounters();
-        closeAdminModal();
-        alert("Database has been successfully cleared.");
-      }
-    }
-
     window.addEventListener('DOMContentLoaded', () => {
       const form = document.getElementById('censusForm');
       if (form) form.reset();
@@ -2467,6 +2627,8 @@
       document.getElementById('langSelect').value = 'en';
       changeLanguage('en');
       updateCensusCounters();
+
+      initializeFirebaseEngine();
     });
   </script>
 </body>
