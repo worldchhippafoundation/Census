@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="google" content="notranslate">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>World Chhippa Foundation - Global Census & FRC Portal (V.6.1 Enhanced)</title>
+  <title>World Chhippa Foundation - Global Census & FRC Portal (V.6.5 Enhanced)</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- jsPDF & html2canvas -->
@@ -12,7 +12,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <!-- QRCode.js Library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-  <!-- Firebase SDKs (v9 Compat - Free Spark Plan Supported) -->
+  <!-- Firebase SDKs (v9 Compat) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -110,16 +110,14 @@
   <header class="bandhani-bg text-white shadow-md sticky top-0 z-40 border-b border-amber-500/40">
     <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-3">
       
-      <!-- Official Header Logo (Secure Admin Trigger) -->
       <div class="flex items-center gap-3 cursor-pointer select-none" id="headerLogoArea" title="Official Seal (5 Clicks Admin Panel)">
         <img src="stamp.png" alt="WCF Official Seal" class="w-12 h-12 rounded-full object-contain shrink-0 shadow-sm border border-amber-400 bg-white hover:opacity-95 transition">
         <div>
           <h1 id="appTitle" class="text-base md:text-xl font-bold leading-relaxed mb-2 drop-shadow">Chhippa Family Registration Certificate</h1>
-          <p id="appSub" class="text-[11px] md:text-xs text-amber-200 leading-normal mt-1">World Chhippa Foundation — Global Census Portal (V.6.1 Enhanced)</p>
+          <p id="appSub" class="text-[11px] md:text-xs text-amber-200 leading-normal mt-1">World Chhippa Foundation — Global Census Portal (V.6.5 Enhanced)</p>
         </div>
       </div>
 
-      <!-- Live Counters & Language Selector -->
       <div class="flex items-center gap-3 flex-wrap">
         <div class="flex items-center gap-3 bg-black/60 border border-amber-400/50 px-3 py-1 rounded-lg text-xs font-mono shadow-inner">
           <div>
@@ -153,7 +151,6 @@
 
   <main class="max-w-5xl mx-auto p-4 md:p-6 space-y-6">
 
-    <!-- Tab Buttons -->
     <div class="flex gap-3 border-b border-slate-200 pb-3">
       <button type="button" id="tabNewReg" onclick="switchMainTab('new')" class="bandhani-bg text-white px-5 py-2.5 rounded-lg font-bold text-xs md:text-sm shadow border border-amber-400/30">
         + New Census Registration
@@ -166,7 +163,7 @@
       </button>
     </div>
 
-    <!-- Registration Mode Selection (Family Unit FRC vs Independent IIC) -->
+    <!-- Registration Mode Selection -->
     <div id="regTypeSelectorCard" class="bg-amber-50/90 border border-amber-300 rounded-xl p-4 flex flex-col md:flex-row justify-between items-center gap-3">
       <div>
         <h3 id="lblRegModeHeading" class="text-sm font-bold text-amber-950">Select Registration Mode:</h3>
@@ -253,7 +250,7 @@
     <!-- Search Section -->
     <div id="searchSection" class="hidden bg-white p-5 md:p-6 rounded-xl border border-slate-200 shadow space-y-4">
       <h3 id="searchTitle" class="font-bold text-base text-slate-800">Search Family Registration Certificate (FRC) or IIC</h3>
-      <p id="searchSub" class="text-xs text-slate-500">Enter your verified Certificate Code (e.g. WCF-123456 / IIC-123456), Member ID, or registered mobile number to view, reprint or update.</p>
+      <p id="searchSub" class="text-xs text-slate-500">Enter your verified Certificate Code, Member ID, or registered mobile number to view, reprint or update.</p>
       <div class="flex flex-col md:flex-row gap-3 max-w-xl">
         <input type="text" id="searchFRCInput" placeholder="Certificate Code / Member ID / Mobile Number..." class="border border-slate-300 rounded-lg p-2.5 text-sm font-mono outline-none focus:ring-2 focus:ring-amber-600 flex-1">
         <button type="button" id="btnSearchAction" onclick="searchAndReprintCertificate()" class="bandhani-bg text-white font-bold px-5 py-2.5 rounded-lg text-sm shadow">
@@ -296,7 +293,7 @@
             <input type="text" id="headFather" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-amber-500 outline-none">
             <div class="flex items-center gap-2 mt-1">
               <input type="checkbox" id="headFatherDeceased" class="rounded text-amber-600">
-              <label for="headFatherDeceased" class="text-[10px] text-slate-500 !mb-0 !leading-none">Deceased / Unavailable</label>
+              <label for="headFatherDeceased" id="lblFatherDeceased" class="text-[10px] text-slate-500 !mb-0 !leading-none">Deceased / Unavailable</label>
             </div>
           </div>
 
@@ -307,7 +304,7 @@
             <input type="text" id="headMother" class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-amber-500 outline-none">
             <div class="flex items-center gap-2 mt-1">
               <input type="checkbox" id="headMotherDeceased" class="rounded text-amber-600">
-              <label for="headMotherDeceased" class="text-[10px] text-slate-500 !mb-0 !leading-none">Deceased / Unavailable</label>
+              <label for="headMotherDeceased" id="lblMotherDeceased" class="text-[10px] text-slate-500 !mb-0 !leading-none">Deceased / Unavailable</label>
             </div>
           </div>
 
@@ -411,8 +408,8 @@
         <div id="membersContainer" class="p-5 space-y-4"></div>
       </div>
 
-      <!-- Free Community Reference Verification Box (No SMS OTP required) -->
-      <div class="bg-white rounded-xl shadow border border-slate-200 p-5 space-y-3">
+      <!-- Free Community Reference Verification Box (Fully Translated) -->
+      <div id="communityRefCard" class="bg-white rounded-xl shadow border border-slate-200 p-5 space-y-3">
         <h3 id="lblRefTitle" class="text-sm font-bold text-slate-800">Community Reference Verification (Zero Cost Free Service)</h3>
         <p id="lblRefSub" class="text-xs text-slate-500">Provide a trusted Foundation Member or elder reference to expedite administrative review without SMS OTP.</p>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -446,6 +443,7 @@
           </div>
           
           <div class="flex items-center gap-1.5 md:gap-2">
+            <!-- Download Button: Visible only when Approved -->
             <button onclick="downloadCertificatePDF()" id="btnDownloadAction" class="bandhani-bg text-white text-[11px] md:text-xs font-bold px-3 md:px-4 py-2 rounded-lg transition shadow flex items-center gap-1">
               Download PDF
             </button>
@@ -456,6 +454,14 @@
               Close
             </button>
           </div>
+        </div>
+
+        <!-- Pending Verification Notice Box (Inside Modal) -->
+        <div id="modalPendingNotice" class="hidden bg-amber-50 border-b border-amber-300 p-4 text-center">
+          <div class="flex items-center justify-center gap-2 text-amber-900 font-bold text-sm">
+            <span>⏳</span> <span id="lblPendingNoticeTitle">Application Under Verification</span>
+          </div>
+          <p id="lblPendingNoticeBody" class="text-xs text-amber-800 mt-1">Your registration application has been submitted successfully with permanent Member ID. The official certificate download and QR verification will become active once administrative or community verification is completed.</p>
         </div>
 
         <!-- Sheet Scroll Container: Strict Fit to 1 Page -->
@@ -541,7 +547,6 @@
                   </div>
 
                   <div class="flex items-center gap-3 shrink-0">
-                    <!-- Vector Rubber Stamp -->
                     <div class="w-24 h-24 select-none shrink-0" title="Official Verified Stamp">
                       <svg viewBox="0 0 200 200" class="w-full h-full transform -rotate-6">
                         <circle cx="100" cy="100" r="95" fill="none" stroke="#082f49" stroke-width="5" />
@@ -666,13 +671,13 @@
       </div>
     </div>
 
-    <!-- Admin Panel Modal (Authenticated Free Firebase & Audit) -->
+    <!-- Admin Panel Modal -->
     <div id="adminModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 overflow-y-auto p-4 flex items-center justify-center font-latin" dir="ltr">
       <div class="bg-white w-full max-w-2xl rounded-xl shadow-2xl border border-slate-300 p-6 space-y-5 text-slate-800 my-auto">
         <div class="flex justify-between items-center border-b pb-3">
           <div class="flex items-center gap-2">
             <span class="w-3 h-3 rounded-full bg-amber-500 animate-pulse"></span>
-            <h3 class="font-bold text-base text-slate-900">Admin Census & Directory Manager (V.6.1 Enhanced)</h3>
+            <h3 class="font-bold text-base text-slate-900">Admin Census & Directory Manager (V.6.5 Enhanced)</h3>
           </div>
           <button type="button" onclick="closeAdminModal()" class="text-slate-400 hover:text-slate-700 font-bold text-2xl leading-none">&times;</button>
         </div>
@@ -692,7 +697,6 @@
           </div>
         </div>
 
-        <!-- Master Directory PDF Filtering -->
         <div class="bg-amber-50/70 border border-amber-200 p-3.5 rounded-xl space-y-2.5 text-left">
           <h4 class="text-xs font-bold text-slate-900 flex items-center gap-1.5">
             <span>📑</span> <span>Master Census Directory PDF:</span>
@@ -709,7 +713,6 @@
           </div>
         </div>
 
-        <!-- The 3 Preserved 1-Click PDF Reports -->
         <div class="space-y-2 text-left">
           <h4 class="text-xs font-bold text-slate-600 uppercase tracking-wider">Additional 1-Click PDF Reports:</h4>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5">
@@ -728,7 +731,6 @@
           </div>
         </div>
 
-        <!-- Pending Applications Verification Desk -->
         <div class="space-y-2 text-left">
           <h4 class="text-xs font-bold text-slate-800 uppercase">Verification & Review Desk (Duplicate & Pending Applications)</h4>
           <div id="adminPendingList" class="max-h-40 overflow-y-auto space-y-2 border border-slate-200 rounded-lg p-2 bg-slate-50 text-xs">
@@ -753,7 +755,6 @@
     </div>
   </main>
 
-  <!-- Portal Footer Strip -->
   <footer class="bg-slate-900 text-white py-6 mt-12 border-t-2 border-amber-500 font-latin text-center">
     <div class="max-w-4xl mx-auto px-4 space-y-2">
       <p class="text-amber-400 font-bold text-xs md:text-sm">
@@ -774,9 +775,6 @@
   </footer>
 
   <script>
-    // ==========================================
-    // 1. Firebase Free Spark Initialization
-    // ==========================================
     const firebaseConfig = {
       apiKey: "AIzaSyDummyKeyReplaceLaterWhenCreated",
       authDomain: "wcf-app.firebaseapp.com",
@@ -847,13 +845,17 @@
     const i18n = {
       ur: {
         appTitle: "چھیپا خاندانی رجسٹریشن سرٹیفکیٹ",
-        appSub: "ورلڈ چھیپا فاؤنڈیشن — عالمی مردم شماری پورٹل (V.6.1 Enhanced)",
+        appSub: "ورلڈ چھیپا فاؤنڈیشن — عالمی مردم شماری پورٹل (V.6.5 Enhanced)",
         lblLang: "زبان:",
         lblLiveFamilies: "خاندان (Families):",
         lblLiveMembers: "کل افراد (Unique):",
         tabNew: "+ نیا اندراج مردم شماری",
         tabSearch: "دوبارہ پرنٹ / سرچ سرٹیفکیٹ",
         tabCityStats: "شہر وار آبادی ڈیش بورڈ",
+        lblRegModeHeading: "رجسٹریشن کا طریقہ منتخب کریں:",
+        lblRegModeDesc: "خاندانی رجسٹریشن سرٹیفکیٹ (FRC) کے لیے 'خاندانی یونٹ' منتخب کریں، یا تنہا بالغ فرد کے لیے 'انفرادی شناختی سرٹیفکیٹ (IIC)' منتخب کریں۔",
+        btnModeFamily: "خاندانی یونٹ (FRC)",
+        btnModeIndividual: "انفرادی فرد (IIC)",
         searchTitle: "خاندانی رجسٹریشن سرٹیفکیٹ (FRC) یا IIC تلاش کریں",
         searchSub: "اپنا تصدیق شدہ FRC / IIC کوڈ یا ممبر آئی ڈی درج کریں تاکہ سرٹیفکیٹ دوبارہ دیکھا یا پرنٹ کیا جا سکے۔",
         searchPlaceholder: "سرٹیفکیٹ کوڈ، ممبر آئی ڈی یا موبائل نمبر درج کریں...",
@@ -878,9 +880,13 @@
         lblStatFemales: "بالغ خواتین (18+):",
         lblStatMinors: "نابالغ بچے (<18):",
         headCardTitle: "سرپرستِ خاندان کی تفصیلات",
+        headCardTitleInd: "انفرادی بالغ درخواست گزار کی تفصیلات",
         headBadge: "سرپرستِ خاندان",
+        headBadgeInd: "درخواست گزار (Individual)",
         lblHeadName: "مکمل نام (سرپرست)",
-        lblHeadFather: "والد / سرپرست کا نام",
+        lblHeadFather: "والد کا مکمل نام",
+        lblHeadMother: "والدہ کا نام (اختیاری / اگر معلوم ہو)",
+        lblDeceased: "فوت شدہ / غیر دستیاب",
         lblHeadDOB: "تاریخِ پیدائش (Date of Birth)",
         lblHeadGender: "جنس",
         lblHeadMarital: "ازدواجی حیثیت (Marital Status)",
@@ -894,6 +900,10 @@
         membersSectionTitle: "دیگر اہل خانہ / اراکین کی تفصیلات",
         membersSectionSub: "بیوی، بچے اور دیگر زیرِ کفالت افراد شامل کریں",
         btnAddMemberBtn: "نیا رکن شامل کریں",
+        lblRefTitle: "کمیونٹی حوالہ جاتی تصدیق (بغیر کسی فیس / مفت سہولت)",
+        lblRefSub: "ایس ایم ایس او ٹی پی کے بغیر فوری تصدیق کے لیے کسی فاؤنڈیشن ممبر یا بزرگ کا حوالہ درج کریں۔",
+        lblRefName: "حوالہ دار کا نام / معزز بزرگ:",
+        lblRefContact: "حوالہ دار کا فون نمبر / ممبر آئی ڈی:",
         btnSubmitForm: "مکمل فارم جمع کریں اور سرٹیفکیٹ جاری کریں",
         memberCardTitle: "رکن #",
         lblMemRel: "سرپرست سے رشتہ",
@@ -918,9 +928,12 @@
         otherJobPlaceholder: "اپنا پیشہ درج کریں...",
         otherCountryPlaceholder: "اپنے ملک کا نام درج کریں...",
         modalTopHeading: "خاندانی رجسٹریشن سرٹیفکیٹ (Official FRC)",
+        modalTopHeadingInd: "انفرادی شناختی سرٹیفکیٹ (Official IIC)",
         btnDownloadPdf: "ڈاؤن لوڈ PDF",
         btnWhatsappShare: "واٹس ایپ شیئر کریں",
         btnCloseModal: "بند کریں",
+        lblPendingNoticeTitle: "درخواست تصدیق کے مراحل میں ہے (Pending Verification)",
+        lblPendingNoticeBody: "آپ کی درخواست مستقل ممبر آئی ڈی کے ساتھ کامیابی سے محفوظ کر لی گئی ہے۔ دفتری توثیق مکمل ہونے تک حتمی سرٹیفکیٹ ڈاؤن لوڈ اور کیو آر تصدیق غیر فعال رہے گی۔",
         frcDocBadge: "Official Family Registration Certificate",
         frcDocOrg: "ورلڈ چھیپا فاؤنڈیشن",
         frcDocTagline: "عالمی مردم شماری ڈائریکٹری و خاندانی شناخت",
@@ -967,13 +980,17 @@
       },
       hi: {
         appTitle: "छीपा पारिवारिक पंजीकरण प्रमाण पत्र",
-        appSub: "वर्ल्ड छीपा फाउंडेशन — वैश्विक जनगणना पोर्टल (V.6.1 Enhanced)",
+        appSub: "वर्ल्ड छीपा फाउंडेशन — वैश्विक जनगणना पोर्टल (V.6.5 Enhanced)",
         lblLang: "भाषा:",
         lblLiveFamilies: "परिवार (Families):",
         lblLiveMembers: "कुल सदस्य (Unique):",
         tabNew: "+ नया पंजीकरण जनगणना",
         tabSearch: "पुनः प्रिंट / खोज प्रमाण पत्र",
         tabCityStats: "शहर वार आबादी डैशबोर्ड",
+        lblRegModeHeading: "पंजीकरण का प्रकार चुनें:",
+        lblRegModeDesc: "पारिवारिक पंजीकरण प्रमाण पत्र (FRC) के लिए 'पारिवारिक इकाई' चुनें, या अकेले वयस्क के लिए 'व्यक्तिगत पहचान प्रमाण पत्र (IIC)' चुनें।",
+        btnModeFamily: "पारिवारिक इकाई (FRC)",
+        btnModeIndividual: "व्यक्तिगत वयस्क (IIC)",
         searchTitle: "परिवार पंजीकरण प्रमाणपत्र (FRC) या IIC खोजें",
         searchSub: "अपना सत्यापित FRC / IIC कोड या सदस्य आईडी दर्ज करके प्रमाण पत्र देखें या पुनः प्रिंट करें।",
         searchPlaceholder: "प्रमाण पत्र कोड, सदस्य आईडी या मोबाइल नंबर दर्ज करें...",
@@ -998,9 +1015,13 @@
         lblStatFemales: "वयस्क महिला (18+):",
         lblStatMinors: "नाबालिग बच्चे (<18):",
         headCardTitle: "परिवार के मुखिया का विवरण",
+        headCardTitleInd: "व्यक्तिगत वयस्क आवेदक का विवरण",
         headBadge: "परिवार के मुखिया",
+        headBadgeInd: "आवेदक (Individual)",
         lblHeadName: "पूरा नाम (मुखिया)",
-        lblHeadFather: "पिता / संरक्षक का नाम",
+        lblHeadFather: "पिता का पूरा नाम",
+        lblHeadMother: "माता का नाम (वैकल्पिक / यदि ज्ञात हो)",
+        lblDeceased: "दिवंगत / अनुपलब्ध",
         lblHeadDOB: "जन्म तिथि (Date of Birth)",
         lblHeadGender: "लिंग",
         lblHeadMarital: "वैवाहिक स्थिति (Marital Status)",
@@ -1014,6 +1035,10 @@
         membersSectionTitle: "परिवार के अन्य सदस्यों का विवरण",
         membersSectionSub: "पत्नी, बच्चे और आश्रित सदस्य जोड़ें",
         btnAddMemberBtn: "नया सदस्य जोड़ें",
+        lblRefTitle: "सामुदायिक संदर्भ सत्यापन (निःशुल्क सुविधा)",
+        lblRefSub: "एसएमएस ओटीपी के बिना त्वरित सत्यापन हेतु किसी फाउंडेशन सदस्य या वरिष्ठ का संदर्भ दर्ज करें।",
+        lblRefName: "संदर्भ व्यक्ति का नाम / वरिष्ठ:",
+        lblRefContact: "संदर्भ फ़ोन / सदस्य आईडी:",
         btnSubmitForm: "पूर्ण फॉर्म जमा करें और प्रमाण पत्र प्राप्त करें",
         memberCardTitle: "सदस्य #",
         lblMemRel: "मुखिया से संबंध",
@@ -1038,9 +1063,12 @@
         otherJobPlaceholder: "अपना व्यवसाय लिखें...",
         otherCountryPlaceholder: "अपने देश का नाम दर्ज करें...",
         modalTopHeading: "पारिवारिक पंजीकरण प्रमाण पत्र (Official FRC)",
+        modalTopHeadingInd: "व्यक्तिगत पहचान प्रमाण पत्र (Official IIC)",
         btnDownloadPdf: "PDF डाउनलोड करें",
         btnWhatsappShare: "व्हाट्सएप शेयर",
         btnCloseModal: "बंद करें",
+        lblPendingNoticeTitle: "आवेदन सत्यापन प्रक्रिया में है (Pending Verification)",
+        lblPendingNoticeBody: "आपका आवेदन स्थायी सदस्य आईडी के साथ सुरक्षित कर लिया गया है। आधिकारिक सत्यापन पूर्ण होने तक अंतिम प्रमाणपत्र डाउनलोड व क्यूआर सत्यापन सक्रिय नहीं होगा।",
         frcDocBadge: "Official Family Registration Certificate",
         frcDocOrg: "वर्ल्ड छीपा फाउंडेशन",
         frcDocTagline: "वैश्विक जनगणना निर्देशिका एवं पारिवारिक पहचान",
@@ -1087,13 +1115,17 @@
       },
       en: {
         appTitle: "Chhippa Family Registration Certificate",
-        appSub: "World Chhippa Foundation — Global Census Portal (V.6.1 Enhanced)",
+        appSub: "World Chhippa Foundation — Global Census Portal (V.6.5 Enhanced)",
         lblLang: "Language:",
         lblLiveFamilies: "Families:",
         lblLiveMembers: "Unique Individuals:",
         tabNew: "+ New Census Registration",
         tabSearch: "Reprint / Search Certificate",
         tabCityStats: "City Population Dashboard",
+        lblRegModeHeading: "Select Registration Mode:",
+        lblRegModeDesc: "Choose 'Family Unit' to issue a Family Registration Certificate (FRC), or 'Individual Adult' for a standalone member to issue an Individual Identity Certificate (IIC).",
+        btnModeFamily: "Family Unit (FRC)",
+        btnModeIndividual: "Individual Adult (IIC)",
         searchTitle: "Search Family Registration Certificate (FRC) or IIC",
         searchSub: "Enter your verified Certificate Code, Member ID, or registered mobile number to view, reprint or update.",
         searchPlaceholder: "Enter Certificate Code, Member ID or Mobile Number...",
@@ -1118,9 +1150,13 @@
         lblStatFemales: "Adult Females (18+):",
         lblStatMinors: "Minors (<18):",
         headCardTitle: "Head of Family Details",
+        headCardTitleInd: "Individual Adult Applicant Details",
         headBadge: "Head of Family",
+        headBadgeInd: "Applicant (Individual)",
         lblHeadName: "Full Name (Head)",
-        lblHeadFather: "Father / Guardian Name",
+        lblHeadFather: "Father's Full Name",
+        lblHeadMother: "Mother's Name (Optional / If Known)",
+        lblDeceased: "Deceased / Unavailable",
         lblHeadDOB: "Date of Birth (DOB)",
         lblHeadGender: "Gender",
         lblHeadMarital: "Marital Status",
@@ -1134,6 +1170,10 @@
         membersSectionTitle: "Family Members Details",
         membersSectionSub: "Add Spouse, Children & Dependents",
         btnAddMemberBtn: "Add New Member",
+        lblRefTitle: "Community Reference Verification (Zero Cost Free Service)",
+        lblRefSub: "Provide a trusted Foundation Member or elder reference to expedite administrative review without SMS OTP.",
+        lblRefName: "Reference Name / Community Elder:",
+        lblRefContact: "Reference Phone / Foundation Member ID:",
         btnSubmitForm: "Submit Form & Issue Certificate",
         memberCardTitle: "Member #",
         lblMemRel: "Relation with Head",
@@ -1158,9 +1198,12 @@
         otherJobPlaceholder: "Enter your occupation...",
         otherCountryPlaceholder: "Enter country name...",
         modalTopHeading: "Family Registration Certificate (Official FRC)",
+        modalTopHeadingInd: "Individual Identity Certificate (Official IIC)",
         btnDownloadPdf: "Download PDF",
         btnWhatsappShare: "WhatsApp Share",
         btnCloseModal: "Close",
+        lblPendingNoticeTitle: "Application Under Verification (Pending Verification)",
+        lblPendingNoticeBody: "Your registration application has been saved with permanent Member ID. The final certificate download and QR verification will become active once official verification is completed.",
         frcDocBadge: "Official Family Registration Certificate",
         frcDocOrg: "World Chhippa Foundation",
         frcDocTagline: "Global Census Directory & Family Identity",
@@ -1208,7 +1251,7 @@
     };
 
     let currentLang = 'en';
-    let currentRegMode = 'family'; // 'family' or 'individual'
+    let currentRegMode = 'family';
     let memberCount = 0;
     let editingExistingFRCCode = null;
     let isPopDashboardUnlocked = false;
@@ -1222,9 +1265,6 @@
       storedFRCRecords = {};
     }
 
-    // ==========================================
-    // 2. Member ID & Biographic Token Generator
-    // ==========================================
     function generatePermanentMemberId() {
       const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
       let id = "WCF-";
@@ -1244,9 +1284,7 @@
 
     function getPhoneticSoundex(s) {
       if (!s) return "";
-      let a = s.toLowerCase().trim()
-        .replace(/^(mohammad|muhammad|mohd|md|mian|syed)\s+/g, '')
-        .replace(/[^a-z]/g, '');
+      let a = s.toLowerCase().trim().replace(/^(mohammad|muhammad|mohd|md|mian|syed)\s+/g, '').replace(/[^a-z]/g, '');
       if (!a) return "";
       const map = { b:1, f:1, p:1, v:1, c:2, g:2, j:2, k:2, q:2, s:2, x:2, z:2, d:3, t:3, l:4, m:5, n:5, r:6 };
       let out = a[0].toUpperCase();
@@ -1290,23 +1328,35 @@
       const btnFam = document.getElementById('btnModeFamily');
       const btnInd = document.getElementById('btnModeIndividual');
       const famCard = document.getElementById('familyMembersCard');
+      const refElderInput = document.getElementById('refElderName');
+      const refContactInput = document.getElementById('refElderContact');
+      const dict = i18n[currentLang];
 
       if (mode === 'family') {
         btnFam.className = "bandhani-bg text-white px-4 py-2 rounded-lg text-xs font-bold shadow";
         btnInd.className = "bg-slate-200 text-slate-800 hover:bg-slate-300 px-4 py-2 rounded-lg text-xs font-bold";
         famCard.classList.remove('hidden');
-        document.getElementById('headCardTitle').textContent = i18n[currentLang].headCardTitle;
+        document.getElementById('headCardTitle').textContent = dict.headCardTitle;
+        document.getElementById('headBadge').textContent = dict.headBadge;
+
+        refElderInput.required = false;
+        refContactInput.required = false;
+        document.getElementById('lblRefName').innerHTML = `${dict.lblRefName}`;
+        document.getElementById('lblRefContact').innerHTML = `${dict.lblRefContact}`;
       } else {
         btnInd.className = "bandhani-bg text-white px-4 py-2 rounded-lg text-xs font-bold shadow";
         btnFam.className = "bg-slate-200 text-slate-800 hover:bg-slate-300 px-4 py-2 rounded-lg text-xs font-bold";
         famCard.classList.add('hidden');
-        document.getElementById('headCardTitle').textContent = "Individual Adult Applicant Details";
+        document.getElementById('headCardTitle').textContent = dict.headCardTitleInd;
+        document.getElementById('headBadge').textContent = dict.headBadgeInd;
+
+        refElderInput.required = true;
+        refContactInput.required = true;
+        document.getElementById('lblRefName').innerHTML = `${dict.lblRefName} <span class="text-red-500 font-bold ml-1">*</span>`;
+        document.getElementById('lblRefContact').innerHTML = `${dict.lblRefContact} <span class="text-red-500 font-bold ml-1">*</span>`;
       }
     }
 
-    // ==========================================
-    // 3. Multi-Layer Deduplication Engine
-    // ==========================================
     function checkGoldenBiographicDuplication(newFather, newDOB, newClan, newMembers = [], currentEditingCode = null) {
       const allRecords = Object.values(storedFRCRecords);
       const headName = document.getElementById('headName').value.trim();
@@ -1324,7 +1374,6 @@
         if (currentEditingCode && rec.code === currentEditingCode) continue;
         if (!rec.head) continue;
 
-        // 1. Phone Hard-Lock
         const recHeadPhone = (rec.head.phone || '').replace(/[^0-9]/g, '');
         if (cleanHeadPhone.length >= 8 && recHeadPhone.length >= 8) {
           if (cleanHeadPhone.endsWith(recHeadPhone.slice(-8)) || recHeadPhone.endsWith(cleanHeadPhone.slice(-8))) {
@@ -1335,7 +1384,6 @@
           }
         }
 
-        // 2. Phonetic Soundex & Biographic Cluster Lock
         const recHNameNorm = normalizeCleanString(rec.head.name);
         const recHFatherNorm = normalizeCleanString(rec.head.father);
         const recHClanNorm = normalizeCleanString(rec.head.clan);
@@ -1358,7 +1406,6 @@
           };
         }
 
-        // 3. Family Tree Cross-Link Match
         if (newMembers.length > 0 && rec.members && Array.isArray(rec.members)) {
           let matchedMembersCount = 0;
           let matchedMemberNames = [];
@@ -1460,6 +1507,11 @@
       document.getElementById('tabNewReg').textContent = dict.tabNew;
       document.getElementById('tabSearchReg').textContent = dict.tabSearch;
       document.getElementById('tabCityStats').textContent = dict.tabCityStats;
+
+      document.getElementById('lblRegModeHeading').textContent = dict.lblRegModeHeading;
+      document.getElementById('lblRegModeDesc').textContent = dict.lblRegModeDesc;
+      document.getElementById('btnModeFamily').textContent = dict.btnModeFamily;
+      document.getElementById('btnModeIndividual').textContent = dict.btnModeIndividual;
       
       document.getElementById('searchTitle').textContent = dict.searchTitle;
       document.getElementById('searchSub').textContent = dict.searchSub;
@@ -1486,11 +1538,15 @@
       document.getElementById('lblStatFemales').textContent = dict.lblStatFemales;
       document.getElementById('lblStatMinors').textContent = dict.lblStatMinors;
       
-      document.getElementById('headCardTitle').textContent = currentRegMode === 'family' ? dict.headCardTitle : "Individual Adult Applicant Details";
-      document.getElementById('headBadge').textContent = dict.headBadge;
+      document.getElementById('headCardTitle').textContent = currentRegMode === 'family' ? dict.headCardTitle : dict.headCardTitleInd;
+      document.getElementById('headBadge').textContent = currentRegMode === 'family' ? dict.headBadge : dict.headBadgeInd;
 
       document.getElementById('lblHeadName').innerHTML = `${dict.lblHeadName} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`;
       document.getElementById('lblHeadFather').innerHTML = `${dict.lblHeadFather} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`;
+      document.getElementById('lblHeadMother').textContent = dict.lblHeadMother;
+      document.getElementById('lblFatherDeceased').textContent = dict.lblDeceased;
+      document.getElementById('lblMotherDeceased').textContent = dict.lblDeceased;
+
       document.getElementById('lblHeadDOB').innerHTML = `${dict.lblHeadDOB} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`;
       document.getElementById('lblHeadGender').innerHTML = `${dict.lblHeadGender} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`;
       document.getElementById('lblHeadMarital').innerHTML = `${dict.lblHeadMarital} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`;
@@ -1505,12 +1561,22 @@
       document.getElementById('membersSectionTitle').textContent = dict.membersSectionTitle;
       document.getElementById('membersSectionSub').textContent = dict.membersSectionSub;
       document.getElementById('btnAddMemberBtn').textContent = dict.btnAddMemberBtn;
+
+      document.getElementById('lblRefTitle').textContent = dict.lblRefTitle;
+      document.getElementById('lblRefSub').textContent = dict.lblRefSub;
+      
+      const isInd = currentRegMode === 'individual';
+      document.getElementById('lblRefName').innerHTML = isInd ? `${dict.lblRefName} <span class="text-red-500 font-bold ml-1">*</span>` : dict.lblRefName;
+      document.getElementById('lblRefContact').innerHTML = isInd ? `${dict.lblRefContact} <span class="text-red-500 font-bold ml-1">*</span>` : dict.lblRefContact;
+
       document.getElementById('btnSubmitForm').textContent = dict.btnSubmitForm;
 
-      document.getElementById('modalTopHeading').textContent = dict.modalTopHeading;
+      document.getElementById('modalTopHeading').textContent = currentRegMode === 'family' ? dict.modalTopHeading : dict.modalTopHeadingInd;
       document.getElementById('btnDownloadAction').textContent = dict.btnDownloadPdf;
       document.getElementById('btnModalWhatsAppShare').textContent = dict.btnWhatsappShare;
       document.getElementById('btnModalClose').textContent = dict.btnCloseModal;
+      document.getElementById('lblPendingNoticeTitle').textContent = dict.lblPendingNoticeTitle;
+      document.getElementById('lblPendingNoticeBody').textContent = dict.lblPendingNoticeBody;
 
       document.getElementById('headClanOther').placeholder = dict.otherClanPlaceholder;
       document.getElementById('headEduOther').placeholder = dict.otherEduPlaceholder;
@@ -1949,7 +2015,7 @@
     }
 
     // ==========================================
-    // 4. Form Submission Pipeline
+    // 4. Form Submission Pipeline (V.6.5 Approval Logic)
     // ==========================================
     async function handleFormSubmit(e) {
       e.preventDefault();
@@ -1965,11 +2031,23 @@
       const headDOB = document.getElementById('headDOB').value;
       const headAge = calculateAge(headDOB);
 
-      // Minor Protection Hard-Lock
+      // Hard-Stop: Minor under 18 cannot register alone
       if (headAge < 18) {
-        alert("Registration Stop: Minors under 18 years of age cannot register as an independent Head of Family. They must be registered within their parent or legal guardian's Family Record.");
+        alert("Registration Stop: Minors under 18 years of age cannot register as an independent Head. They must be registered within their parent/guardian's Family Record.");
         submitBtn.disabled = false;
         submitBtn.textContent = originalBtnText;
+        return;
+      }
+
+      // Mandatory Community Reference Check for Individual Adult
+      const refElder = document.getElementById('refElderName').value.trim();
+      const refContact = document.getElementById('refElderContact').value.trim();
+
+      if (currentRegMode === 'individual' && (!refElder || !refContact)) {
+        alert("Reference Required: For Individual Adult registration without family unit, providing a verified community reference name and contact is mandatory.");
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalBtnText;
+        document.getElementById('refElderName').focus();
         return;
       }
 
@@ -2055,7 +2133,6 @@
         });
       }
 
-      // NADRA-Style Deduplication Check
       const dupCheck = checkGoldenBiographicDuplication(headFather, headDOB, headClan, members, editingExistingFRCCode);
       if (dupCheck.duplicate) {
         alert(dupCheck.reason);
@@ -2064,7 +2141,11 @@
         return;
       }
 
-      const assignedStatus = "Pending Verification";
+      // V.6.5 Approval Rule: Family Unit is approved immediately, Individual is pending verification
+      let assignedStatus = "Approved";
+      if (currentRegMode === 'individual') {
+        assignedStatus = "Pending Verification";
+      }
 
       const record = {
         code: certCode,
@@ -2101,8 +2182,8 @@
         },
         members: members,
         reference: {
-          elder: document.getElementById('refElderName').value.trim(),
-          contact: document.getElementById('refElderContact').value.trim()
+          elder: refElder,
+          contact: refContact
         }
       };
 
@@ -2111,7 +2192,6 @@
         localStorage.setItem('WCF_CENSUS_RECORDS', JSON.stringify(storedFRCRecords));
       } catch (err) {}
 
-      // Write to Firebase Firestore Partition (if live)
       if (isCloudReady && db) {
         try {
           db.collection('census_registrations').doc(certCode).set(record);
@@ -2129,7 +2209,7 @@
     }
 
     // ==========================================
-    // 5. Display Certificates (FRC vs IIC)
+    // 5. Display Certificates with Approval Verification Guard
     // ==========================================
     function displayCertificateModal(record) {
       activeViewingRecord = record;
@@ -2139,11 +2219,25 @@
       const frcSheet = document.getElementById('frcCertificateSheet');
       const iicSheet = document.getElementById('iicCertificateSheet');
       const statusBadge = document.getElementById('modalCertStatusBadge');
+      const downloadBtn = document.getElementById('btnDownloadAction');
+      const pendingNotice = document.getElementById('modalPendingNotice');
 
-      statusBadge.textContent = `Status: ${record.status || 'Verified'}`;
-      statusBadge.className = record.status === 'Approved' ? 
+      const isApproved = record.status === 'Approved';
+
+      // Status Badge Styling
+      statusBadge.textContent = `Status: ${record.status || 'Pending Verification'}`;
+      statusBadge.className = isApproved ? 
         'text-[10px] bg-emerald-500/30 text-emerald-300 border border-emerald-400/40 px-2 py-0.5 rounded font-mono' : 
         'text-[10px] bg-amber-500/30 text-amber-300 border border-amber-400/40 px-2 py-0.5 rounded font-mono';
+
+      // PDF Download Button & Pending Notice Lock
+      if (isApproved) {
+        downloadBtn.classList.remove('hidden');
+        pendingNotice.classList.add('hidden');
+      } else {
+        downloadBtn.classList.add('hidden');
+        pendingNotice.classList.remove('hidden');
+      }
 
       if (record.type === 'family') {
         frcSheet.classList.remove('hidden');
@@ -2190,7 +2284,6 @@
         document.getElementById('frcHeadAddress').textContent = record.head.address || '-';
         document.getElementById('frcHeadLineage').textContent = record.head.lineage;
 
-        // Privacy-Preserving QR Engine
         const qrContainer = document.getElementById('frcQRCode');
         qrContainer.innerHTML = '';
         const secureVerificationUrl = `https://worldchhippafoundation.github.io/verify?doc=${record.code}&status=${record.status || 'Pending'}&id=${record.head.memberId}`;
@@ -2241,10 +2334,9 @@
         });
 
       } else {
-        // Individual Identity Certificate (IIC)
         frcSheet.classList.add('hidden');
         iicSheet.classList.remove('hidden');
-        document.getElementById('modalTopHeading').textContent = "Individual Identity Certificate (Official IIC)";
+        document.getElementById('modalTopHeading').textContent = dict.modalTopHeadingInd;
 
         document.getElementById('iicCodeDisplay').textContent = record.code;
         document.getElementById('iicIssueDate').textContent = `Date: ${record.issueDate}`;
@@ -2265,7 +2357,6 @@
         new QRCode(qrContainer, { text: secureVerificationUrl, width: 68, height: 68, colorDark: "#000000", colorLight: "#ffffff" });
       }
 
-      // WhatsApp Share Link
       const shareMsg = 
         `*WORLD CHHIPPA FOUNDATION - GLOBAL CENSUS*\n` +
         `*Official Document:* ${record.type === 'family' ? 'Family Registration Certificate' : 'Individual Identity Certificate'}\n\n` +
@@ -2275,7 +2366,8 @@
         `🛡️ *Father:* ${record.head.father}\n` +
         `🏛️ *Clan:* ${record.head.clan}\n` +
         `📍 *City:* ${record.head.city}\n` +
-        `📅 *Date:* ${record.issueDate}\n\n` +
+        `📅 *Date:* ${record.issueDate}\n` +
+        `📌 *Status:* ${record.status || 'Pending Verification'}\n\n` +
         `_Dedicated by M. Waseem Sadiq Tak (Neemray Walay)_`;
 
       document.getElementById('btnModalWhatsAppShare').setAttribute('href', `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMsg)}`);
@@ -2307,10 +2399,12 @@
       changeLanguage(currentLang);
     }
 
-    // ==========================================
-    // 6. Direct 1-Page PDF Engine (V.6.0 Fixed Engine)
-    // ==========================================
     async function downloadCertificatePDF() {
+      if (activeViewingRecord && activeViewingRecord.status !== 'Approved') {
+        alert("Download Disabled: This certificate is pending administrative verification. Only approved records can download official PDFs.");
+        return;
+      }
+
       const btn = document.getElementById('btnDownloadAction');
       const originalText = btn.textContent;
       btn.textContent = "Downloading...";
@@ -2389,9 +2483,6 @@
       }
     }
 
-    // ==========================================
-    // 7. Admin 5-Click Trigger & Lockout Security
-    // ==========================================
     let logoTapCount = 0;
     let logoTapTimer = null;
     const MASTER_ADMIN_PIN = "WCF#Tak@9842!Safwan";
@@ -2463,8 +2554,8 @@
             <div class="text-[10px] text-slate-500">Member ID: ${rec.head.memberId} | Clan: ${rec.head.clan}</div>
           </div>
           <div class="flex gap-1">
-            <button onclick="updateStatusByAdmin('${rec.code}', 'Approved')" class="bg-emerald-600 text-white px-2 py-1 rounded text-[10px]">Approve</button>
-            <button onclick="updateStatusByAdmin('${rec.code}', 'Rejected')" class="bg-red-600 text-white px-2 py-1 rounded text-[10px]">Reject</button>
+            <button onclick="updateStatusByAdmin('${rec.code}', 'Approved')" class="bg-emerald-600 text-white px-2 py-1 rounded text-[10px] font-bold">Approve</button>
+            <button onclick="updateStatusByAdmin('${rec.code}', 'Rejected')" class="bg-red-600 text-white px-2 py-1 rounded text-[10px] font-bold">Reject</button>
           </div>
         `;
         list.appendChild(item);
@@ -2492,9 +2583,6 @@
       return key;
     }
 
-    // ==========================================
-    // 8. Admin 1-Click PDF Report Engines (Preserved)
-    // ==========================================
     function exportCountryCityWisePDF() {
       const selectedCountry = document.getElementById('adminCountryDropdown').value.trim();
       const inputCity = document.getElementById('adminCityManualInput').value.trim();
