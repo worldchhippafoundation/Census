@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="google" content="notranslate">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>World Chhippa Foundation - Global Census & FRC Portal (V.5.0)</title>
+  <title>World Chhippa Foundation - Global Census & FRC Portal (V.6.0)</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- jsPDF & html2canvas -->
@@ -45,6 +45,16 @@
       line-height: 1.8 !important;
       padding-top: 0.45rem !important;
       padding-bottom: 0.45rem !important;
+      background-color: #ffffff !important;
+    }
+
+    /* Bandhani Heritage Texture Class (Only replaces green accents) */
+    .bandhani-bg {
+      background-image: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.55)), url('bandhani.jpg') !important;
+      background-size: cover !important;
+      background-position: center !important;
+      background-repeat: no-repeat !important;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
     }
 
     /* Fixed Certificate Text-Rendering Protection */
@@ -79,7 +89,7 @@
       letter-spacing: 4px;
     }
 
-    /* V.5 Top Seal Styling (Border-free circle) */
+    /* Top Seal Styling (Border-free circle) */
     .top-header-seal {
       width: 82px;
       height: 82px;
@@ -101,40 +111,40 @@
 <body class="bg-slate-50 text-slate-900 min-h-screen font-latin">
 
   <!-- Top Navigation Header -->
-  <header class="bg-emerald-800 text-white shadow-md sticky top-0 z-40">
+  <header class="bandhani-bg text-white shadow-md sticky top-0 z-40 border-b border-amber-500/40">
     <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-3">
       
       <!-- Official Header Logo (5-Clicks Admin Trigger) -->
       <div class="flex items-center gap-3 cursor-pointer select-none" id="headerLogoArea" title="Official Seal (5 Clicks Admin Panel)">
-        <img src="stamp.png" alt="WCF Official Seal" class="w-12 h-12 rounded-full object-contain shrink-0 shadow-sm border border-emerald-500 bg-white hover:opacity-95 transition">
+        <img src="stamp.png" alt="WCF Official Seal" class="w-12 h-12 rounded-full object-contain shrink-0 shadow-sm border border-amber-400 bg-white hover:opacity-95 transition">
         <div>
-          <h1 id="appTitle" class="text-base md:text-xl font-bold leading-relaxed mb-2">Chhippa Family Registration Certificate</h1>
-          <p id="appSub" class="text-[11px] md:text-xs text-emerald-200 leading-normal mt-1">World Chhippa Foundation — Global Census Portal (V.5.0)</p>
+          <h1 id="appTitle" class="text-base md:text-xl font-bold leading-relaxed mb-2 drop-shadow">Chhippa Family Registration Certificate</h1>
+          <p id="appSub" class="text-[11px] md:text-xs text-amber-200 leading-normal mt-1">World Chhippa Foundation — Global Census Portal (V.6.0)</p>
         </div>
       </div>
 
       <!-- Live Census Counter & Status -->
       <div class="flex items-center gap-3 flex-wrap">
-        <div class="flex items-center gap-3 bg-emerald-950/70 border border-emerald-600/50 px-3 py-1 rounded-lg text-xs font-mono">
+        <div class="flex items-center gap-3 bg-black/60 border border-amber-400/50 px-3 py-1 rounded-lg text-xs font-mono shadow-inner">
           <div>
-            <span id="lblLiveFamilies" class="text-[10px] text-emerald-300 block">Families:</span>
+            <span id="lblLiveFamilies" class="text-[10px] text-amber-200 block">Families:</span>
             <span id="liveTotalFamilies" class="font-bold text-amber-300 text-sm">0</span>
           </div>
-          <div class="w-px h-6 bg-emerald-700"></div>
+          <div class="w-px h-6 bg-amber-600/50"></div>
           <div>
-            <span id="lblLiveMembers" class="text-[10px] text-emerald-300 block">Unique Individuals:</span>
+            <span id="lblLiveMembers" class="text-[10px] text-amber-200 block">Unique Individuals:</span>
             <span id="liveTotalMembers" class="font-bold text-white text-sm">0</span>
           </div>
-          <div class="w-px h-6 bg-emerald-700"></div>
+          <div class="w-px h-6 bg-amber-600/50"></div>
           <div>
-            <span class="text-[10px] text-emerald-300 block">Sync:</span>
+            <span class="text-[10px] text-amber-200 block">Sync:</span>
             <span id="liveSyncStatus" class="font-bold text-emerald-400 text-xs">Ready</span>
           </div>
         </div>
 
-        <div class="flex items-center gap-2 bg-emerald-900/80 p-1.5 rounded-lg border border-emerald-700">
-          <label id="lblLang" class="text-xs text-emerald-200 !mb-0 !leading-none">Language:</label>
-          <select id="langSelect" onchange="changeLanguage(this.value)" class="bg-emerald-800 text-white text-xs md:text-sm font-semibold rounded px-2 py-1 outline-none cursor-pointer">
+        <div class="flex items-center gap-2 bg-black/60 p-1.5 rounded-lg border border-amber-400/40">
+          <label id="lblLang" class="text-xs text-amber-200 !mb-0 !leading-none font-semibold">Language:</label>
+          <select id="langSelect" onchange="changeLanguage(this.value)" class="bg-slate-900 text-white text-xs md:text-sm font-semibold rounded px-2 py-1 outline-none cursor-pointer border border-slate-700">
             <option value="en" selected>English</option>
             <option value="ur">اردو (Urdu)</option>
             <option value="hi">हिन्दी (Hindi)</option>
@@ -149,7 +159,7 @@
 
     <!-- Tab Buttons -->
     <div class="flex gap-3 border-b border-slate-200 pb-3">
-      <button type="button" id="tabNewReg" onclick="switchMainTab('new')" class="bg-emerald-700 text-white px-5 py-2.5 rounded-lg font-bold text-xs md:text-sm shadow">
+      <button type="button" id="tabNewReg" onclick="switchMainTab('new')" class="bandhani-bg text-white px-5 py-2.5 rounded-lg font-bold text-xs md:text-sm shadow border border-amber-400/30">
         + New Census Registration
       </button>
       <button type="button" id="tabSearchReg" onclick="switchMainTab('search')" class="bg-slate-200 text-slate-700 hover:bg-slate-300 px-5 py-2.5 rounded-lg font-bold text-xs md:text-sm">
@@ -166,41 +176,41 @@
       <p id="cityStatsSub" class="text-xs text-slate-500">Enter your verified FRC Code or registered Mobile Number to gain access and check population for any country or city.</p>
       
       <div id="popAuthBox" class="flex flex-col md:flex-row gap-3 max-w-xl">
-        <input type="text" id="cityStatAuthInput" placeholder="Enter FRC Code or Mobile Number..." class="border border-slate-300 rounded-lg p-2.5 text-sm font-mono outline-none focus:ring-2 focus:ring-emerald-600 flex-1">
-        <button type="button" id="btnCityStatsVerify" onclick="verifyAndOpenPopulationDashboard()" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-5 py-2.5 rounded-lg text-sm shadow">
+        <input type="text" id="cityStatAuthInput" placeholder="Enter FRC Code or Mobile Number..." class="border border-slate-300 rounded-lg p-2.5 text-sm font-mono outline-none focus:ring-2 focus:ring-amber-600 flex-1">
+        <button type="button" id="btnCityStatsVerify" onclick="verifyAndOpenPopulationDashboard()" class="bandhani-bg text-white font-bold px-5 py-2.5 rounded-lg text-sm shadow">
           Verify & Access
         </button>
       </div>
       <p id="cityStatsErrorMsg" class="text-xs text-red-600 font-semibold hidden"></p>
 
       <div id="popFilterArea" class="hidden pt-3 border-t border-slate-200 space-y-3">
-        <div class="bg-emerald-50 border border-emerald-200 p-3 rounded-lg flex flex-wrap items-center justify-between gap-2 text-xs">
-          <span id="popAccessNoticeText" class="text-emerald-900 font-semibold">✅ Access Granted: You can view census records for any country or city.</span>
+        <div class="bg-amber-50 border border-amber-200 p-3 rounded-lg flex flex-wrap items-center justify-between gap-2 text-xs">
+          <span id="popAccessNoticeText" class="text-amber-950 font-semibold">✅ Access Granted: You can view census records for any country or city.</span>
           <button type="button" id="btnPopLock" onclick="lockPopulationDashboard()" class="text-slate-500 hover:text-red-600 font-bold underline">Lock</button>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
           <div>
             <label class="block text-xs font-semibold text-slate-700 mb-1" id="lblPopCountry">Select Country:</label>
-            <select id="popCountrySelect" onchange="runPublicPopulationQuery()" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white outline-none focus:ring-2 focus:ring-emerald-500"></select>
+            <select id="popCountrySelect" onchange="runPublicPopulationQuery()" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white outline-none focus:ring-2 focus:ring-amber-500"></select>
           </div>
           <div>
             <label class="block text-xs font-semibold text-slate-700 mb-1" id="lblPopCity">City (Optional or All):</label>
-            <input type="text" id="popCityInput" oninput="runPublicPopulationQuery()" placeholder="Enter city name (Empty = All cities)" class="w-full border border-slate-300 rounded-lg p-2 text-xs outline-none focus:ring-2 focus:ring-emerald-500">
+            <input type="text" id="popCityInput" oninput="runPublicPopulationQuery()" placeholder="Enter city name (Empty = All cities)" class="w-full border border-slate-300 rounded-lg p-2 text-xs outline-none focus:ring-2 focus:ring-amber-500">
           </div>
           <div class="flex items-end">
-            <button type="button" id="btnPopUpdateStats" onclick="runPublicPopulationQuery()" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-2 rounded-lg text-xs shadow">
+            <button type="button" id="btnPopUpdateStats" onclick="runPublicPopulationQuery()" class="w-full bandhani-bg text-white font-bold py-2 rounded-lg text-xs shadow">
               Update Statistics
             </button>
           </div>
         </div>
 
-        <div id="cityStatsResultCard" class="mt-4 p-5 bg-emerald-50/80 border border-emerald-300 rounded-xl space-y-3">
-          <div class="flex justify-between items-center border-b border-emerald-200 pb-2">
-            <h4 class="font-bold text-sm text-emerald-950">
-              <span id="lblStatResAreaHeading">Selected Area:</span> <span id="statResAreaName" class="text-emerald-800 text-base font-black">All</span>
+        <div id="cityStatsResultCard" class="mt-4 p-5 bg-amber-50/80 border border-amber-300 rounded-xl space-y-3">
+          <div class="flex justify-between items-center border-b border-amber-200 pb-2">
+            <h4 class="font-bold text-sm text-slate-900">
+              <span id="lblStatResAreaHeading">Selected Area:</span> <span id="statResAreaName" class="text-amber-800 text-base font-black">All</span>
             </h4>
-            <span id="badgeAggregateStats" class="text-xs bg-emerald-200 text-emerald-900 px-2.5 py-0.5 rounded-full font-bold">Aggregate Statistics</span>
+            <span id="badgeAggregateStats" class="text-xs bg-amber-200 text-amber-900 px-2.5 py-0.5 rounded-full font-bold">Aggregate Statistics</span>
           </div>
           <div class="grid grid-cols-2 md:grid-cols-5 gap-3 text-center">
             <div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm">
@@ -209,7 +219,7 @@
             </div>
             <div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm">
               <span class="text-[10px] text-slate-500 block" id="lblStatTotalPop">Total Population:</span>
-              <span id="statResTotalPop" class="text-lg font-black text-emerald-800">0</span>
+              <span id="statResTotalPop" class="text-lg font-black text-amber-800">0</span>
             </div>
             <div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm">
               <span class="text-[10px] text-slate-500 block" id="lblStatMales">Adult Males (18+):</span>
@@ -233,8 +243,8 @@
       <h3 id="searchTitle" class="font-bold text-base text-slate-800">Search Family Registration Certificate (FRC)</h3>
       <p id="searchSub" class="text-xs text-slate-500">Enter your verified FRC Code (e.g. WCF-123456) or registered mobile number to view, reprint or update.</p>
       <div class="flex flex-col md:flex-row gap-3 max-w-xl">
-        <input type="text" id="searchFRCInput" placeholder="Enter FRC Code or Mobile Number..." class="border border-slate-300 rounded-lg p-2.5 text-sm font-mono outline-none focus:ring-2 focus:ring-emerald-600 flex-1">
-        <button type="button" id="btnSearchAction" onclick="searchAndReprintFRC()" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-5 py-2.5 rounded-lg text-sm shadow">
+        <input type="text" id="searchFRCInput" placeholder="Enter FRC Code or Mobile Number..." class="border border-slate-300 rounded-lg p-2.5 text-sm font-mono outline-none focus:ring-2 focus:ring-amber-600 flex-1">
+        <button type="button" id="btnSearchAction" onclick="searchAndReprintFRC()" class="bandhani-bg text-white font-bold px-5 py-2.5 rounded-lg text-sm shadow">
           Search & Print FRC
         </button>
         <button type="button" id="btnSearchAddMember" onclick="loadFRCForAddingMember()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2.5 rounded-lg text-sm shadow">
@@ -254,9 +264,9 @@
 
       <!-- Head Details Card -->
       <div class="bg-white rounded-xl shadow border border-slate-200 overflow-hidden">
-        <div class="bg-emerald-700 text-white px-5 py-3 flex justify-between items-center">
+        <div class="bandhani-bg text-white px-5 py-3 flex justify-between items-center border-b border-amber-400/30">
           <h2 id="headCardTitle" class="font-bold text-sm md:text-base">Head of Family Details</h2>
-          <span class="text-xs bg-emerald-800 px-2.5 py-1 rounded-full font-mono text-emerald-200" id="headBadge">Head of Family</span>
+          <span class="text-xs bg-black/60 px-2.5 py-1 rounded-full font-mono text-amber-200 border border-amber-400/40" id="headBadge">Head of Family</span>
         </div>
 
         <div class="p-5 grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -264,44 +274,44 @@
             <label id="lblHeadName" class="block text-xs font-semibold text-slate-700">
               Full Name (Head)<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
-            <input type="text" id="headName" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
+            <input type="text" id="headName" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-amber-500 outline-none">
           </div>
 
           <div>
             <label id="lblHeadFather" class="block text-xs font-semibold text-slate-700">
               Father / Guardian Name<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
-            <input type="text" id="headFather" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
+            <input type="text" id="headFather" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-amber-500 outline-none">
           </div>
 
           <div>
             <label id="lblHeadDOB" class="block text-xs font-semibold text-slate-700">
               Date of Birth (DOB)<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
-            <input type="date" id="headDOB" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
+            <input type="date" id="headDOB" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-amber-500 outline-none">
           </div>
 
           <div>
             <label id="lblHeadGender" class="block text-xs font-semibold text-slate-700">
               Gender<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
-            <select id="headGender" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"></select>
+            <select id="headGender" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-amber-500 outline-none"></select>
           </div>
 
           <div>
             <label id="lblHeadMarital" class="block text-xs font-semibold text-slate-700">
               Marital Status<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
-            <select id="headMarital" required class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-emerald-500 outline-none"></select>
+            <select id="headMarital" required class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none"></select>
           </div>
 
           <div>
             <label id="lblHeadClan" class="block text-xs font-semibold text-slate-700">
               Clan / Sub-Caste<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
-            <select id="headClan" required onchange="toggleManualInput(this, 'headClanOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-emerald-500 outline-none"></select>
+            <select id="headClan" required onchange="toggleManualInput(this, 'headClanOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none"></select>
             <div id="headClanOtherWrap" class="hidden mt-2">
-              <input type="text" id="headClanOther" class="w-full border border-emerald-400 rounded-lg px-3 text-xs bg-emerald-50 outline-none">
+              <input type="text" id="headClanOther" class="w-full border border-amber-400 rounded-lg px-3 text-xs bg-amber-50 outline-none">
             </div>
           </div>
 
@@ -309,9 +319,9 @@
             <label id="lblHeadEdu" class="block text-xs font-semibold text-slate-700">
               Education Level<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
-            <select id="headEdu" required onchange="toggleManualInput(this, 'headEduOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-slate-700 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"></select>
+            <select id="headEdu" required onchange="toggleManualInput(this, 'headEduOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-slate-700 text-sm focus:ring-2 focus:ring-amber-500 outline-none"></select>
             <div id="headEduOtherWrap" class="hidden mt-2">
-              <input type="text" id="headEduOther" class="w-full border border-emerald-400 rounded-lg px-3 text-xs bg-emerald-50 outline-none">
+              <input type="text" id="headEduOther" class="w-full border border-amber-400 rounded-lg px-3 text-xs bg-amber-50 outline-none">
             </div>
           </div>
 
@@ -319,9 +329,9 @@
             <label id="lblHeadJob" class="block text-xs font-semibold text-slate-700">
               Occupation / Job<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
-            <select id="headJob" required onchange="toggleManualInput(this, 'headJobOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-emerald-500 outline-none"></select>
+            <select id="headJob" required onchange="toggleManualInput(this, 'headJobOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none"></select>
             <div id="headJobOtherWrap" class="hidden mt-2">
-              <input type="text" id="headJobOther" class="w-full border border-emerald-400 rounded-lg px-3 text-xs bg-emerald-50 outline-none">
+              <input type="text" id="headJobOther" class="w-full border border-amber-400 rounded-lg px-3 text-xs bg-amber-50 outline-none">
             </div>
           </div>
 
@@ -329,16 +339,16 @@
             <label id="lblHeadPhone" class="block text-xs font-semibold text-slate-700">
               Contact Phone / WhatsApp<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
-            <input type="tel" id="headPhone" required placeholder="+92..." class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none text-left">
+            <input type="tel" id="headPhone" required placeholder="+92..." class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-amber-500 outline-none text-left">
           </div>
 
           <div>
             <label id="lblHeadCountry" class="block text-xs font-semibold text-slate-700">
               Country<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
-            <select id="headCountry" required onchange="toggleManualInput(this, 'headCountryOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"></select>
+            <select id="headCountry" required onchange="toggleManualInput(this, 'headCountryOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-amber-500 outline-none"></select>
             <div id="headCountryOtherWrap" class="hidden mt-2">
-              <input type="text" id="headCountryOther" class="w-full border border-emerald-400 rounded-lg px-3 text-xs bg-emerald-50 outline-none">
+              <input type="text" id="headCountryOther" class="w-full border border-amber-400 rounded-lg px-3 text-xs bg-amber-50 outline-none">
             </div>
           </div>
 
@@ -346,14 +356,14 @@
             <label id="lblHeadCity" class="block text-xs font-semibold text-slate-700">
               City<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
-            <input type="text" id="headCity" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
+            <input type="text" id="headCity" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-amber-500 outline-none">
           </div>
 
           <div class="md:col-span-3">
             <label id="lblHeadAddress" class="block text-xs font-semibold text-slate-700">
               Full Residential Address<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
-            <input type="text" id="headAddress" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
+            <input type="text" id="headAddress" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-amber-500 outline-none">
           </div>
         </div>
       </div>
@@ -365,7 +375,7 @@
             <h2 id="membersSectionTitle" class="font-bold text-sm md:text-base">Family Members Details</h2>
             <p id="membersSectionSub" class="text-xs text-slate-300">Add Spouse, Children & Dependents</p>
           </div>
-          <button type="button" onclick="addMemberCard()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs md:text-sm px-3.5 py-1.5 rounded-lg flex items-center gap-1.5 transition">
+          <button type="button" onclick="addMemberCard()" class="bandhani-bg text-white font-semibold text-xs md:text-sm px-3.5 py-1.5 rounded-lg flex items-center gap-1.5 transition shadow">
             <span class="text-base leading-none">+</span> <span id="btnAddMemberBtn">Add New Member</span>
           </button>
         </div>
@@ -375,7 +385,7 @@
 
       <!-- Submit Action Bar -->
       <div class="flex justify-end p-2">
-        <button type="submit" id="btnSubmitForm" class="w-full md:w-auto bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-8 py-3 rounded-xl shadow-lg transition text-base">
+        <button type="submit" id="btnSubmitForm" class="w-full md:w-auto bandhani-bg text-white font-bold px-8 py-3 rounded-xl shadow-lg transition text-base border border-amber-400/40">
           Submit Form & Issue Official FRC
         </button>
       </div>
@@ -392,7 +402,7 @@
           </div>
           
           <div class="flex items-center gap-1.5 md:gap-2">
-            <button onclick="downloadFRCPDFOnly()" id="btnDownloadAction" class="bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] md:text-xs font-bold px-3 md:px-4 py-2 rounded-lg transition shadow flex items-center gap-1">
+            <button onclick="downloadFRCPDFOnly()" id="btnDownloadAction" class="bandhani-bg text-white text-[11px] md:text-xs font-bold px-3 md:px-4 py-2 rounded-lg transition shadow flex items-center gap-1">
               Download PDF
             </button>
             <a id="btnModalWhatsAppShare" href="#" target="_blank" class="bg-green-600 hover:bg-green-500 text-white text-[11px] md:text-xs font-bold px-3 md:px-4 py-2 rounded-lg transition shadow flex items-center gap-1">
@@ -415,19 +425,19 @@
 
               <!-- Top Section -->
               <div class="w-full">
-                <!-- V.5 Standard FRC Header: Left QR/Reg, Center Text, Right Stamp.png -->
-                <div id="frcDocHeader" class="border-b-2 border-emerald-800 pb-2 mb-3 grid grid-cols-12 items-center relative z-10">
+                <!-- Header: Left QR/Reg, Center Text, Right Stamp.png -->
+                <div id="frcDocHeader" class="border-b-2 border-slate-900 pb-2 mb-3 grid grid-cols-12 items-center relative z-10">
                   <div class="col-span-3 flex items-center gap-2">
-                    <div id="frcQRCode" class="bg-white p-1 border border-emerald-800 rounded shadow-sm shrink-0"></div>
-                    <div class="text-left border border-emerald-800 rounded-lg p-1.5 bg-emerald-50/60 leading-tight">
+                    <div id="frcQRCode" class="bg-white p-1 border border-slate-800 rounded shadow-sm shrink-0"></div>
+                    <div class="text-left border border-slate-800 rounded-lg p-1.5 bg-slate-50 leading-tight">
                       <p id="frcRegLabel" class="text-[8px] text-slate-500 font-semibold uppercase">FRC Registration No</p>
-                      <p id="frcCodeDisplay" class="text-xs font-black text-emerald-900 tracking-wider">WCF-000000</p>
+                      <p id="frcCodeDisplay" class="text-xs font-black text-slate-900 tracking-wider">WCF-000000</p>
                       <p id="frcIssueDate" class="text-[8.5px] text-slate-500 mt-0.5"></p>
                     </div>
                   </div>
 
                   <div id="frcTitleSection" class="col-span-6 text-center">
-                    <span id="frcDocBadge" class="text-[9px] font-bold text-emerald-800 tracking-wider uppercase block">Official Family Registration Certificate</span>
+                    <span id="frcDocBadge" class="text-[9px] font-bold text-slate-800 tracking-wider uppercase block">Official Family Registration Certificate</span>
                     <h2 id="frcDocOrg" class="text-lg md:text-xl font-black text-slate-900 mt-0.5">World Chhippa Foundation</h2>
                     <p id="frcDocTagline" class="text-[10px] md:text-[11px] text-slate-500">Global Census Directory & Family Identity</p>
                   </div>
@@ -449,7 +459,7 @@
                     <p><span id="frcLblHeadPhone" class="font-bold text-slate-700">Contact Phone:</span> <span id="frcHeadPhone" class="text-slate-800 font-mono"></span></p>
                     <p><span id="frcLblHeadLoc" class="font-bold text-slate-700">Country & City:</span> <span id="frcHeadLocation" class="text-slate-800"></span></p>
                     <p><span id="frcLblHeadAddress" class="font-bold text-slate-700">Residential Address:</span> <span id="frcHeadAddress" class="text-slate-800 text-[10.5px]"></span></p>
-                    <p><span id="frcLblHeadLineage" class="font-bold text-slate-700">Community Lineage:</span> <span id="frcHeadLineage" class="text-emerald-800 font-bold">Chhippa</span></p>
+                    <p><span id="frcLblHeadLineage" class="font-bold text-slate-700">Community Lineage:</span> <span id="frcHeadLineage" class="text-slate-900 font-bold">Chhippa</span></p>
                   </div>
                 </div>
 
@@ -457,7 +467,7 @@
                 <div class="relative z-10 mb-3 w-full">
                   <table class="w-full border-collapse border border-slate-300 text-[10px]">
                     <thead>
-                      <tr class="bg-emerald-800 text-white text-center font-bold">
+                      <tr class="bg-slate-800 text-white text-center font-bold">
                         <th class="border border-slate-300 p-1 w-5">#</th>
                         <th id="thUID" class="border border-slate-300 p-1">Unique ID</th>
                         <th id="thName" class="border border-slate-300 p-1">Full Name</th>
@@ -483,13 +493,13 @@
                     <span class="text-[8px] text-slate-500 uppercase tracking-wider block font-semibold">
                       Conceived, Architected & Dedicated to Chhippa Community by:
                     </span>
-                    <strong class="text-[12px] font-black text-emerald-800 tracking-wide block mt-0.5">
+                    <strong class="text-[12px] font-black text-slate-900 tracking-wide block mt-0.5">
                       M. WASEEM SADIQ TAK (Neemray Walay)
                     </strong>
                   </div>
 
                   <div class="flex items-center gap-3 shrink-0">
-                    <!-- V.5 High-Definition Bold Vector Rubber Stamp -->
+                    <!-- Vector Rubber Stamp -->
                     <div class="w-24 h-24 select-none shrink-0" title="Official Verified Stamp">
                       <svg viewBox="0 0 200 200" class="w-full h-full transform -rotate-6">
                         <circle cx="100" cy="100" r="95" fill="none" stroke="#082f49" stroke-width="5" />
@@ -518,7 +528,7 @@
                     </div>
 
                     <div class="text-center">
-                      <div class="text-emerald-900 font-signature text-xl font-bold leading-tight select-none">
+                      <div class="text-slate-900 font-signature text-xl font-bold leading-tight select-none">
                         M.Waseem Sadiq Tak
                       </div>
                       <div class="w-40 border-b border-slate-700 pb-0.5 mb-0.5 text-[9.5px] font-semibold text-slate-800">
@@ -548,13 +558,13 @@
       </div>
     </div>
 
-    <!-- Admin Panel Modal (V.5 Fortified) -->
+    <!-- Admin Panel Modal -->
     <div id="adminModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 overflow-y-auto p-4 flex items-center justify-center font-latin" dir="ltr">
       <div class="bg-white w-full max-w-2xl rounded-xl shadow-2xl border border-slate-300 p-6 space-y-5 text-slate-800 my-auto">
         <div class="flex justify-between items-center border-b pb-3">
           <div class="flex items-center gap-2">
-            <span class="w-3 h-3 rounded-full bg-emerald-600 animate-pulse"></span>
-            <h3 class="font-bold text-base text-emerald-900">Admin Census & Directory Manager (V.5)</h3>
+            <span class="w-3 h-3 rounded-full bg-amber-500 animate-pulse"></span>
+            <h3 class="font-bold text-base text-slate-900">Admin Census & Directory Manager (V.6.0)</h3>
           </div>
           <button type="button" onclick="closeAdminModal()" class="text-slate-400 hover:text-slate-700 font-bold text-2xl leading-none">&times;</button>
         </div>
@@ -562,11 +572,11 @@
         <div class="grid grid-cols-3 gap-3 bg-slate-50 p-3 rounded-lg border border-slate-200 text-center font-mono">
           <div>
             <span class="text-xs text-slate-500 block">Total Families:</span>
-            <span id="adminTotalFam" class="text-lg font-bold text-emerald-800">0</span>
+            <span id="adminTotalFam" class="text-lg font-bold text-amber-800">0</span>
           </div>
           <div>
             <span class="text-xs text-slate-500 block">Unique Individuals:</span>
-            <span id="adminTotalMem" class="text-lg font-bold text-emerald-800">0</span>
+            <span id="adminTotalMem" class="text-lg font-bold text-amber-800">0</span>
           </div>
           <div>
             <span class="text-xs text-slate-500 block">Offline Queue:</span>
@@ -578,7 +588,7 @@
         <div class="bg-slate-100 p-3 rounded-xl border border-slate-300 flex items-center justify-between text-xs">
           <div class="flex items-center gap-2">
             <strong>Cloud Sync:</strong>
-            <button type="button" id="btnAdminCloudToggle" onclick="toggleFirebaseCloudSync()" class="bg-emerald-700 text-white px-3 py-1 rounded font-bold">
+            <button type="button" id="btnAdminCloudToggle" onclick="toggleFirebaseCloudSync()" class="bandhani-bg text-white px-3 py-1 rounded font-bold shadow">
               Connected (ON)
             </button>
           </div>
@@ -587,17 +597,17 @@
           </button>
         </div>
 
-        <div class="bg-emerald-50/70 border border-emerald-200 p-3.5 rounded-xl space-y-2.5 text-left">
-          <h4 class="text-xs font-bold text-emerald-950 flex items-center gap-1.5">
+        <div class="bg-amber-50/70 border border-amber-200 p-3.5 rounded-xl space-y-2.5 text-left">
+          <h4 class="text-xs font-bold text-slate-900 flex items-center gap-1.5">
             <span>📑</span> <span>Master Census Directory PDF:</span>
           </h4>
           <p class="text-[11px] text-slate-600">Select country or city to filter, or leave empty to export the <b>Complete Global Directory</b>.</p>
           <div class="grid grid-cols-1 md:grid-cols-12 gap-2">
-            <select id="adminCountryDropdown" class="md:col-span-5 border border-slate-300 rounded-lg p-2 text-xs font-semibold bg-white outline-none focus:ring-2 focus:ring-emerald-600">
+            <select id="adminCountryDropdown" class="md:col-span-5 border border-slate-300 rounded-lg p-2 text-xs font-semibold bg-white outline-none focus:ring-2 focus:ring-amber-600">
               <option value="">-- All Countries (Complete Global) --</option>
             </select>
-            <input type="text" id="adminCityManualInput" placeholder="City (Empty = All Cities)..." class="md:col-span-4 border border-slate-300 rounded-lg px-2.5 py-2 text-xs bg-white outline-none focus:ring-2 focus:ring-emerald-600">
-            <button type="button" onclick="exportCountryCityWisePDF()" class="md:col-span-3 bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-bold py-2 px-2.5 rounded-lg shadow transition flex items-center justify-center gap-1">
+            <input type="text" id="adminCityManualInput" placeholder="City (Empty = All Cities)..." class="md:col-span-4 border border-slate-300 rounded-lg px-2.5 py-2 text-xs bg-white outline-none focus:ring-2 focus:ring-amber-600">
+            <button type="button" onclick="exportCountryCityWisePDF()" class="md:col-span-3 bandhani-bg text-white text-xs font-bold py-2 px-2.5 rounded-lg shadow transition flex items-center justify-center gap-1">
               <span>Download PDF</span>
             </button>
           </div>
@@ -622,7 +632,7 @@
         </div>
 
         <div class="pt-3 border-t border-slate-200 flex flex-wrap gap-2 justify-between items-center text-left">
-          <button type="button" onclick="exportCensusJSON()" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold px-4 py-2.5 rounded-lg shadow transition">
+          <button type="button" onclick="exportCensusJSON()" class="bandhani-bg text-white text-xs font-bold px-4 py-2.5 rounded-lg shadow transition">
             💾 Download JSON Backup
           </button>
           <div class="flex gap-2">
@@ -639,7 +649,7 @@
   </main>
 
   <!-- Portal Footer Strip -->
-  <footer class="bg-slate-900 text-white py-6 mt-12 border-t-2 border-emerald-600 font-latin text-center">
+  <footer class="bg-slate-900 text-white py-6 mt-12 border-t-2 border-amber-500 font-latin text-center">
     <div class="max-w-4xl mx-auto px-4 space-y-2">
       <p class="text-amber-400 font-bold text-xs md:text-sm">
         Thank you to all those who laid the foundation of the World Chhippa Foundation:
@@ -651,7 +661,7 @@
       </p>
       <div class="pt-2 border-t border-slate-700 max-w-lg mx-auto">
         <span class="text-[11px] text-slate-400 block">Conceived, Architected & Dedicated to Chhippa Community by:</span>
-        <h4 class="text-base md:text-lg font-black text-emerald-400 tracking-wider mt-0.5">
+        <h4 class="text-base md:text-lg font-black text-amber-400 tracking-wider mt-0.5">
           M. WASEEM SADIQ TAK (Neemray Walay)
         </h4>
       </div>
@@ -660,7 +670,7 @@
 
   <script>
     // ==========================================
-    // 1. Firebase Realtime Database Config (V.5)
+    // 1. Firebase Realtime Database Config
     // ==========================================
     const firebaseConfig = {
       apiKey: "AIzaSyDummyKeyReplaceLaterWhenCreated",
@@ -731,7 +741,7 @@
     const i18n = {
       ur: {
         appTitle: "چھیپا خاندانی رجسٹریشن سرٹیفکیٹ",
-        appSub: "ورلڈ چھیپا فاؤنڈیشن — عالمی مردم شماری پورٹل (V.5.0)",
+        appSub: "ورلڈ چھیپا فاؤنڈیشن — عالمی مردم شماری پورٹل (V.6.0)",
         lblLang: "زبان:",
         lblLiveFamilies: "خاندان (Families):",
         lblLiveMembers: "کل افراد (Unique):",
@@ -852,7 +862,7 @@
       },
       hi: {
         appTitle: "छीपा पारिवारिक पंजीकरण प्रमाण पत्र",
-        appSub: "वर्ल्ड छीपा फाउंडेशन — वैश्विक जनगणना पोर्टल (V.5.0)",
+        appSub: "वर्ल्ड छीपा फाउंडेशन — वैश्विक जनगणना पोर्टल (V.6.0)",
         lblLang: "भाषा:",
         lblLiveFamilies: "परिवार (Families):",
         lblLiveMembers: "कुल सदस्य (Unique):",
@@ -973,7 +983,7 @@
       },
       en: {
         appTitle: "Chhippa Family Registration Certificate",
-        appSub: "World Chhippa Foundation — Global Census Portal (V.5.0)",
+        appSub: "World Chhippa Foundation — Global Census Portal (V.6.0)",
         lblLang: "Language:",
         lblLiveFamilies: "Families:",
         lblLiveMembers: "Unique Individuals:",
@@ -1136,7 +1146,6 @@
       const targetHash = generateGoldenBiographicHash(newFather, newDOB, newClan);
       const allRecords = Object.values(storedFRCRecords);
 
-      // Check 1: Core Biographic Lock (Father + DOB + Clan)
       for (const rec of allRecords) {
         if (currentEditingCode && rec.code === currentEditingCode) continue;
         if (!rec.head) continue;
@@ -1150,7 +1159,6 @@
         }
       }
 
-      // Check 2: Family Members Biographic Cross-Matching (Anti-swap protection)
       if (newMembers && newMembers.length > 0) {
         for (const rec of allRecords) {
           if (currentEditingCode && rec.code === currentEditingCode) continue;
@@ -1279,7 +1287,7 @@
       const btn = document.getElementById('btnAdminCloudToggle');
       if (isCloudSyncActive) {
         btn.textContent = "Connected (ON)";
-        btn.className = "bg-emerald-700 text-white px-3 py-1 rounded font-bold";
+        btn.className = "bandhani-bg text-white px-3 py-1 rounded font-bold shadow";
         syncOfflineQueueToCloud(false);
       } else {
         btn.textContent = "Disconnected (OFF)";
@@ -1437,7 +1445,7 @@
       const tabSearchBtn = document.getElementById('tabSearchReg');
       const tabCityBtn = document.getElementById('tabCityStats');
 
-      const activeCls = "bg-emerald-700 text-white px-5 py-2.5 rounded-lg font-bold text-xs md:text-sm shadow";
+      const activeCls = "bandhani-bg text-white px-5 py-2.5 rounded-lg font-bold text-xs md:text-sm shadow border border-amber-400/30";
       const inactiveCls = "bg-slate-200 text-slate-700 hover:bg-slate-300 px-5 py-2.5 rounded-lg font-bold text-xs md:text-sm";
 
       if (tab === 'new') {
@@ -1634,7 +1642,7 @@
             <label class="block text-xs font-semibold text-slate-700 lbl-mem-rel">
               ${dict.lblMemRel} <span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
-            <select id="memRel_${id}" onchange="handleRelationChange(${id})" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-emerald-500 outline-none">
+            <select id="memRel_${id}" onchange="handleRelationChange(${id})" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none">
               ${Object.entries(dict.relations).map(([k, v]) => `<option value="${k}">${v}</option>`).join('')}
             </select>
           </div>
@@ -1643,21 +1651,21 @@
             <label class="block text-xs font-semibold text-slate-700 lbl-mem-name">
               ${dict.lblMemName} <span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
-            <input type="text" id="memName_${id}" required class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-emerald-500 outline-none">
+            <input type="text" id="memName_${id}" required class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none">
           </div>
 
           <div>
             <label class="block text-xs font-semibold text-slate-700 lbl-mem-dob">
               ${dict.lblMemDOB} <span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
-            <input type="date" id="memDOB_${id}" onchange="handleDOBChange(${id})" required class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-emerald-500 outline-none">
+            <input type="date" id="memDOB_${id}" onchange="handleDOBChange(${id})" required class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none">
           </div>
 
           <div>
             <label class="block text-xs font-semibold text-slate-700 lbl-mem-gender">
               ${dict.lblMemGender} <span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
-            <select id="memGender_${id}" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-emerald-500 outline-none">
+            <select id="memGender_${id}" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none">
               ${Object.entries(dict.genders).map(([k, v]) => `<option value="${k}">${v}</option>`).join('')}
             </select>
           </div>
@@ -1666,7 +1674,7 @@
             <label class="block text-xs font-semibold text-slate-700 lbl-mem-marital">
               ${dict.lblMemMarital} <span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
-            <select id="memMarital_${id}" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-emerald-500 outline-none">
+            <select id="memMarital_${id}" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none">
               ${Object.entries(dict.maritalStatuses).map(([k, v]) => `<option value="${k}">${v}</option>`).join('')}
             </select>
           </div>
@@ -1675,21 +1683,21 @@
             <label class="block text-xs font-semibold text-slate-700 lbl-mem-age">
               ${dict.lblMemAge} <span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
-            <input type="number" id="memAge_${id}" min="0" max="120" value="20" required class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-emerald-500 outline-none">
+            <input type="number" id="memAge_${id}" min="0" max="120" value="20" required class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none">
           </div>
 
           <div>
             <label class="block text-xs font-semibold text-slate-700 lbl-mem-phone">
               ${dict.lblMemPhoneOpt}
             </label>
-            <input type="tel" id="memPhone_${id}" placeholder="+92..." class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-emerald-500 outline-none text-left">
+            <input type="tel" id="memPhone_${id}" placeholder="+92..." class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none text-left">
           </div>
 
           <div id="memWifeLineageWrap_${id}" class="hidden">
             <label class="block text-xs font-semibold text-slate-700 lbl-mem-lineage">
               ${dict.lblMemLineage} <span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
-            <select id="memLineage_${id}" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-emerald-500 outline-none">
+            <select id="memLineage_${id}" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none">
               ${Object.entries(dict.lineage).map(([k, v]) => `<option value="${k}">${v}</option>`).join('')}
             </select>
           </div>
@@ -1698,11 +1706,11 @@
             <label class="block text-xs font-semibold text-slate-700 lbl-mem-edu">
               ${dict.lblMemEdu} <span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
-            <select id="memEdu_${id}" onchange="toggleManualInput(this, 'memEduOtherWrap_${id}')" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-emerald-500 outline-none">
+            <select id="memEdu_${id}" onchange="toggleManualInput(this, 'memEduOtherWrap_${id}')" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none">
               ${Object.entries(dict.education).map(([k, v]) => `<option value="${k}">${v}</option>`).join('')}
             </select>
             <div id="memEduOtherWrap_${id}" class="hidden mt-2">
-              <input type="text" id="memEduOther_${id}" class="w-full border border-emerald-400 rounded-lg px-3 text-xs bg-emerald-50 outline-none">
+              <input type="text" id="memEduOther_${id}" class="w-full border border-amber-400 rounded-lg px-3 text-xs bg-amber-50 outline-none">
             </div>
           </div>
 
@@ -1710,11 +1718,11 @@
             <label class="block text-xs font-semibold text-slate-700 lbl-mem-job">
               ${dict.lblMemJob} <span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
-            <select id="memJob_${id}" onchange="toggleManualInput(this, 'memJobOtherWrap_${id}')" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-emerald-500 outline-none">
+            <select id="memJob_${id}" onchange="toggleManualInput(this, 'memJobOtherWrap_${id}')" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none">
               ${Object.entries(dict.jobs).map(([k, v]) => `<option value="${k}">${v}</option>`).join('')}
             </select>
             <div id="memJobOtherWrap_${id}" class="hidden mt-2">
-              <input type="text" id="memJobOther_${id}" class="w-full border border-emerald-400 rounded-lg px-3 text-xs bg-emerald-50 outline-none">
+              <input type="text" id="memJobOther_${id}" class="w-full border border-amber-400 rounded-lg px-3 text-xs bg-amber-50 outline-none">
             </div>
           </div>
 
@@ -1722,13 +1730,13 @@
             <label class="block text-xs font-semibold text-slate-700 lbl-mem-addr">
               ${dict.lblMemAddrChoice} <span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
-            <select id="memAddrChoice_${id}" onchange="toggleMemberAddressMode(${id})" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-emerald-500 outline-none bg-white">
+            <select id="memAddrChoice_${id}" onchange="toggleMemberAddressMode(${id})" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white">
               <option value="same">${dict.optSameAsHead}</option>
               <option value="other">${dict.optOtherAddr}</option>
             </select>
           </div>
 
-          <div id="memOtherAddrWrap_${id}" class="hidden md:col-span-3 bg-emerald-50/70 p-3 rounded-lg border border-emerald-200 grid grid-cols-1 md:grid-cols-3 gap-2">
+          <div id="memOtherAddrWrap_${id}" class="hidden md:col-span-3 bg-amber-50/70 p-3 rounded-lg border border-amber-200 grid grid-cols-1 md:grid-cols-3 gap-2">
             <div>
               <label class="block text-[11px] font-semibold text-slate-700 mb-0.5">
                 ${dict.lblMemCountry} <span class="text-red-500 font-bold ml-1 mr-1">*</span>
@@ -1966,7 +1974,7 @@
         }
 
         const mEduKey = document.getElementById(`memEdu_${id}`).value;
-        const mEdu = mEduKey === 'Other' ? (document.getElementById(`memEduOther_${id}`).value.trim() || dict.education.Other) : dict.education[mEduKey];
+        const mEdu = mEduKey === 'Other' ? (document.getElementById(`memEduOther_${id}`).value.trim() || dict.education.Other) : dict.education[headEduKey];
 
         const mJobKey = document.getElementById(`memJob_${id}`).value;
         const mJob = mJobKey === 'Other' ? (document.getElementById(`memJobOther_${id}`).value.trim() || dict.jobs.Other) : dict.jobs[mJobKey];
@@ -2006,7 +2014,6 @@
         });
       });
 
-      // Strict Duplicate Prevention via Golden Biographic Lock
       const dupCheck = checkGoldenBiographicDuplication(headFather, headDOB, headClan, members, editingExistingFRCCode);
       if (dupCheck.duplicate) {
         alert(dupCheck.reason);
@@ -2044,13 +2051,11 @@
         members: members
       };
 
-      // 1. Local Storage Safe Save
       storedFRCRecords[frcCode] = record;
       try {
         localStorage.setItem('WCF_CENSUS_RECORDS', JSON.stringify(storedFRCRecords));
       } catch (err) {}
 
-      // 2. Queue for Offline/Online Sync
       queueRecordForOfflineSync(record);
 
       lastGeneratedFRC = record;
@@ -2126,7 +2131,7 @@
         text: qrPayload,
         width: 68,
         height: 68,
-        colorDark: "#064e3b",
+        colorDark: "#000000",
         colorLight: "#ffffff",
         correctLevel: QRCode.CorrectLevel.M
       });
@@ -2135,10 +2140,10 @@
       tableBody.innerHTML = '';
 
       const headRow = document.createElement('tr');
-      headRow.className = "bg-emerald-50/50 font-bold";
+      headRow.className = "bg-slate-100 font-bold";
       headRow.innerHTML = `
         <td class="border border-slate-300 p-1">1</td>
-        <td class="border border-slate-300 p-1 font-mono text-[9px] text-emerald-900">${record.code}-1</td>
+        <td class="border border-slate-300 p-1 font-mono text-[9px] text-slate-900">${record.code}-1</td>
         <td class="border border-slate-300 p-1 text-[9.5px]">${record.head.name}</td>
         <td class="border border-slate-300 p-1">${dict.headBadge}</td>
         <td class="border border-slate-300 p-1">${record.head.gender}</td>
@@ -2147,7 +2152,7 @@
         <td class="border border-slate-300 p-1 text-[9px]">${record.head.edu}</td>
         <td class="border border-slate-300 p-1 text-[9px]">${record.head.job}</td>
         <td class="border border-slate-300 p-1 text-[8.5px]">${record.head.city}</td>
-        <td class="border border-slate-300 p-1 text-emerald-800 font-bold">${record.head.lineage}</td>
+        <td class="border border-slate-300 p-1 text-slate-900 font-bold">${record.head.lineage}</td>
       `;
       tableBody.appendChild(headRow);
 
@@ -2172,12 +2177,11 @@
           <td class="border border-slate-300 p-1 text-[9px]">${m.edu}</td>
           <td class="border border-slate-300 p-1 text-[9px]">${m.job}</td>
           <td class="border border-slate-300 p-1 text-[8px] leading-tight max-w-[130px] break-words">${locDisplay}</td>
-          <td class="border border-slate-300 p-1 ${m.lineage.includes('غیر') || m.lineage.includes('Non') ? 'text-amber-800 font-semibold' : 'text-emerald-800 font-bold'}">${m.lineage}</td>
+          <td class="border border-slate-300 p-1 text-slate-900 font-bold">${m.lineage}</td>
         `;
         tableBody.appendChild(row);
       });
 
-      // WhatsApp Share URL Format setup
       const shareMsg = 
         `*WORLD CHHIPPA FOUNDATION - GLOBAL CENSUS*\n` +
         `*Official Family Registration Certificate*\n\n` +
@@ -2224,7 +2228,7 @@
     }
 
     // ==========================================
-    // 6. Direct 1-Page PDF Engine (100% Crisp Scaling)
+    // 6. Direct 1-Page PDF Engine (V.6.0 Fixed Engine)
     // ==========================================
     async function downloadFRCPDFOnly() {
       const btn = document.getElementById('btnDownloadAction');
@@ -2233,22 +2237,34 @@
       btn.disabled = true;
 
       const wrapper = document.getElementById('frcScaleWrapper');
+      const sheet = document.getElementById('frcCertificateSheet');
+
+      // 1. Reset dynamic responsive scaling
       const prevTransform = wrapper.style.transform;
       const prevMargin = wrapper.style.marginBottom;
       wrapper.style.transform = 'none';
       wrapper.style.marginBottom = '0px';
 
-      const sheet = document.getElementById('frcCertificateSheet');
+      // 2. Strict English font & letter spacing override for flawless canvas capture
+      const prevFont = sheet.style.fontFamily;
+      const prevLetterSpacing = sheet.style.letterSpacing;
+      sheet.style.fontFamily = "Arial, Helvetica, sans-serif";
+      sheet.style.letterSpacing = "0px";
+
       const { jsPDF } = window.jspdf;
 
+      // 3. Crisp capture with letterRendering disabled to prevent character collapse
       const canvas = await html2canvas(sheet, {
-        scale: 3,
+        scale: 2.5,
         useCORS: true,
         logging: false,
-        letterRendering: true,
+        letterRendering: false,
         windowWidth: 794
       });
 
+      // 4. Restore original styles immediately
+      sheet.style.fontFamily = prevFont;
+      sheet.style.letterSpacing = prevLetterSpacing;
       wrapper.style.transform = prevTransform;
       wrapper.style.marginBottom = prevMargin;
 
@@ -2258,7 +2274,7 @@
       const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
       pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight > 297 ? 297 : pdfHeight);
-      pdf.save(`Official_FRC_${lastGeneratedFRC.code}.pdf`);
+      pdf.save(`Official_FRC_${lastGeneratedFRC ? lastGeneratedFRC.code : 'Certificate'}.pdf`);
 
       btn.textContent = originalText;
       btn.disabled = false;
@@ -2362,7 +2378,7 @@
     }
 
     // ==========================================
-    // 8. Admin 1-Click PDF Report Engines (Preserved)
+    // 8. Admin 1-Click PDF Report Engines
     // ==========================================
     function exportCountryCityWisePDF() {
       const selectedCountry = document.getElementById('adminCountryDropdown').value.trim();
@@ -2402,7 +2418,7 @@
       const doc = new jsPDF('l', 'mm', 'a4');
 
       doc.setFontSize(14);
-      doc.setTextColor(6, 78, 59);
+      doc.setTextColor(15, 23, 42);
       doc.text("World Chhippa Foundation - Master Comprehensive Census Directory", 14, 12);
 
       doc.setFontSize(8);
@@ -2413,7 +2429,7 @@
 
       let y = 25;
       const drawHeaders = (currY) => {
-        doc.setFillColor(6, 78, 59);
+        doc.setFillColor(30, 41, 59);
         doc.rect(14, currY - 4, 270, 7, 'F');
         doc.setFont("helvetica", "bold");
         doc.setFontSize(7);
@@ -2506,7 +2522,7 @@
       const doc = new jsPDF('p', 'mm', 'a4');
 
       doc.setFontSize(15);
-      doc.setTextColor(6, 78, 59);
+      doc.setTextColor(15, 23, 42);
       doc.text("World Chhippa Foundation - Global Phone Directory", 14, 15);
 
       doc.setFontSize(9);
@@ -2744,7 +2760,6 @@
       const adminModal = document.getElementById('adminModal');
       if (adminModal) adminModal.classList.add('hidden');
 
-      // Set English Default for Landing Page
       document.getElementById('langSelect').value = 'en';
       changeLanguage('en');
       updateCensusCounters();
