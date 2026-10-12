@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <meta name="google" content="notranslate">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>World Chhippa Foundation - Global Census & FRC Portal (V.3 Locked)</title>
+  <title>World Chhippa Foundation - Global Census & FRC Portal (V.4)</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- jsPDF & html2canvas (Admin Reports & Fallback Download Engine ke liye barkaraar) -->
+  <!-- jsPDF & html2canvas -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <!-- QRCode.js Library -->
@@ -127,7 +127,7 @@
         </div>
         <div>
           <h1 id="appTitle" class="text-base md:text-xl font-bold leading-relaxed mb-2">Chhippa Family Registration Certificate</h1>
-          <p id="appSub" class="text-[11px] md:text-xs text-emerald-200 leading-normal mt-1">World Chhippa Foundation — Global Census Portal (V.3 Locked)</p>
+          <p id="appSub" class="text-[11px] md:text-xs text-emerald-200 leading-normal mt-1">World Chhippa Foundation — Global Census Portal (V.4)</p>
         </div>
       </div>
 
@@ -410,11 +410,13 @@
           </div>
           
           <div class="flex items-center gap-1.5 md:gap-2">
-            <button onclick="downloadFRCPDFOnly()" id="btnDownloadAction" class="bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] md:text-xs font-bold px-3 md:px-4 py-2 rounded-lg transition shadow flex items-center gap-1">
-              Save as PDF
+            <!-- 1. Open in Chrome to Print / Save PDF -->
+            <button onclick="openInBrowserToPrint()" id="btnDownloadAction" class="bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] md:text-xs font-bold px-3 md:px-4 py-2 rounded-lg transition shadow flex items-center gap-1">
+              <span>🌐</span> <span>Open in Chrome to Print</span>
             </button>
-            <button onclick="openDirectWhatsAppHelpline()" id="btnModalWhatsApp" class="bg-green-600 hover:bg-green-500 text-white text-[11px] md:text-xs font-bold px-3 md:px-4 py-2 rounded-lg transition shadow flex items-center gap-1">
-              WhatsApp Helpline
+            <!-- 2. Direct WhatsApp Share -->
+            <button onclick="shareDirectOnWhatsApp()" id="btnModalWhatsApp" class="bg-green-600 hover:bg-green-500 text-white text-[11px] md:text-xs font-bold px-3 md:px-4 py-2 rounded-lg transition shadow flex items-center gap-1">
+              <span>📲</span> <span>Share on WhatsApp</span>
             </button>
             <button onclick="closeFRCModal()" id="btnModalClose" class="bg-slate-700 hover:bg-slate-600 text-white text-[11px] md:text-xs px-2.5 py-2 rounded-lg">
               Close
@@ -539,13 +541,13 @@
       </div>
     </div>
 
-    <!-- Admin Panel Modal (Tamam PDF Reports & Master Directory Ba-dastoor Mehfooz) -->
+    <!-- Admin Panel Modal -->
     <div id="adminModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 overflow-y-auto p-4 flex items-center justify-center font-latin" dir="ltr">
       <div class="bg-white w-full max-w-2xl rounded-xl shadow-2xl border border-slate-300 p-6 space-y-5 text-slate-800 my-auto">
         <div class="flex justify-between items-center border-b pb-3">
           <div class="flex items-center gap-2">
             <span class="w-3 h-3 rounded-full bg-emerald-600 animate-pulse"></span>
-            <h3 class="font-bold text-base text-emerald-900">Admin Census & Directory Manager (V.3 Locked)</h3>
+            <h3 class="font-bold text-base text-emerald-900">Admin Census & Directory Manager (V.4)</h3>
           </div>
           <button type="button" onclick="closeAdminModal()" class="text-slate-400 hover:text-slate-700 font-bold text-2xl leading-none">&times;</button>
         </div>
@@ -878,7 +880,7 @@
     const i18n = {
       ur: {
         appTitle: "چھیپا خاندانی رجسٹریشن سرٹیفکیٹ",
-        appSub: "ورلڈ چھیپا فاؤنڈیشن — عالمی مردم شماری پورٹل (V.3 Locked)",
+        appSub: "ورلڈ چھیپا فاؤنڈیشن — عالمی مردم شماری پورٹل (V.4)",
         lblLang: "زبان:",
         lblLiveFamilies: "خاندان (Families):",
         lblLiveMembers: "کل افراد (Unique):",
@@ -944,14 +946,14 @@
         lblMemCity: "شہر",
         lblMemAddress: "رہائشی پتہ",
         btnRemove: "ختم کریں",
-        otherClanPlaceholder: "अपनी اٹک / شاخ لکھیں...",
+        otherClanPlaceholder: "اپنی اٹک / شاخ لکھیں...",
         otherEduPlaceholder: "اپنی تعلیم درج کریں...",
         otherJobPlaceholder: "اپنا پیشہ درج کریں...",
         otherCountryPlaceholder: "اپنے ملک کا نام درج کریں...",
         modalTopHeading: "خاندانی رجسٹریشن سرٹیفکیٹ (Official FRC)",
         modalTopSub: "تصدیق شدہ برقی دستاویز",
-        btnDownloadPdf: "Save as PDF",
-        btnWhatsappHelp: "واٹس ایپ ہیلپ لائن",
+        btnDownloadPdf: "🌐 Open in Chrome to Print",
+        btnWhatsappHelp: "📲 Share on WhatsApp",
         btnCloseModal: "بند کریں",
         frcDocBadge: "Official Family Registration Certificate",
         frcDocOrg: "ورلڈ چھیپا فاؤنڈیشن",
@@ -999,7 +1001,7 @@
       },
       hi: {
         appTitle: "छीपा पारिवारिक पंजीकरण प्रमाण पत्र",
-        appSub: "वर्ल्ड छीपा फाउंडेशन — वैश्विक जनगणना पोर्टल (V.3 Locked)",
+        appSub: "वर्ल्ड छीपा फाउंडेशन — वैश्विक जनगणना पोर्टल (V.4)",
         lblLang: "भाषा:",
         lblLiveFamilies: "परिवार (Families):",
         lblLiveMembers: "कुल सदस्य (Unique):",
@@ -1071,8 +1073,8 @@
         otherCountryPlaceholder: "अपने देश का नाम दर्ज करें...",
         modalTopHeading: "पारिवारिक पंजीकरण प्रमाण पत्र (Official FRC)",
         modalTopSub: "प्रमाणित डिजिटल दस्तावेज़",
-        btnDownloadPdf: "Save as PDF",
-        btnWhatsappHelp: "व्हाट्सएप हेल्पलाइन",
+        btnDownloadPdf: "🌐 Open in Chrome to Print",
+        btnWhatsappHelp: "📲 Share on WhatsApp",
         btnCloseModal: "बंद करें",
         frcDocBadge: "Official Family Registration Certificate",
         frcDocOrg: "वर्ल्ड छीपा फाउंडेशन",
@@ -1120,7 +1122,7 @@
       },
       en: {
         appTitle: "Chhippa Family Registration Certificate",
-        appSub: "World Chhippa Foundation — Global Census Portal (V.3 Locked)",
+        appSub: "World Chhippa Foundation — Global Census Portal (V.4)",
         lblLang: "Language:",
         lblLiveFamilies: "Families:",
         lblLiveMembers: "Unique Individuals:",
@@ -1192,8 +1194,8 @@
         otherCountryPlaceholder: "Enter country name...",
         modalTopHeading: "Family Registration Certificate (Official FRC)",
         modalTopSub: "Certified Digital Document",
-        btnDownloadPdf: "Save as PDF",
-        btnWhatsappHelp: "WhatsApp Helpline",
+        btnDownloadPdf: "🌐 Open in Chrome to Print",
+        btnWhatsappHelp: "📲 Share on WhatsApp",
         btnCloseModal: "Close",
         frcDocBadge: "Official Family Registration Certificate",
         frcDocOrg: "World Chhippa Foundation",
@@ -1379,8 +1381,8 @@
 
       document.getElementById('modalTopHeading').textContent = dict.modalTopHeading;
       document.getElementById('modalTopSub').textContent = dict.modalTopSub;
-      document.getElementById('btnDownloadAction').textContent = dict.btnDownloadPdf;
-      document.getElementById('btnModalWhatsApp').textContent = dict.btnWhatsappHelp;
+      document.getElementById('btnDownloadAction').innerHTML = `<span>🌐</span> <span>${dict.btnDownloadPdf}</span>`;
+      document.getElementById('btnModalWhatsApp').innerHTML = `<span>📲</span> <span>${dict.btnWhatsappHelp}</span>`;
       document.getElementById('btnModalClose').textContent = dict.btnCloseModal;
 
       document.getElementById('headClanOther').placeholder = dict.otherClanPlaceholder;
@@ -2200,74 +2202,52 @@
       changeLanguage(currentLang);
     }
 
-    function openDirectWhatsAppHelpline() {
-      if (!lastGeneratedFRC) return;
-      const targetPhone = "212708273330"; 
-      const msg = encodeURIComponent(
-        `*World Chhippa Foundation - FRC Verification*\n` +
-        `FRC Code: ${lastGeneratedFRC.code}\n` +
-        `Head: ${lastGeneratedFRC.head.name}\n` +
-        `Father: ${lastGeneratedFRC.head.father}\n` +
-        `Phone: ${lastGeneratedFRC.head.phone}\n` +
-        `Location: ${lastGeneratedFRC.head.location}\n` +
-        `Total Members: ${lastGeneratedFRC.members.length + 1}`
-      );
-      window.open(`https://wa.me/${targetPhone}?text=${msg}`, '_blank');
-    }
-
     /* ==========================================================================
-       4. DUAL DOWNLOAD & PRINT ENGINE (Web Browser + Android WebView App)
+       4. NEW: DUAL ENGINE (OPEN IN CHROME TO PRINT & DIRECT WHATSAPP SHARE)
        ========================================================================== */
-    async function downloadFRCPDFOnly() {
-      const btn = document.getElementById('btnDownloadAction');
-      const originalText = btn.textContent;
+    function openInBrowserToPrint() {
+      if (!lastGeneratedFRC) return;
 
-      // 1. Agar desktop ya normal browser hai jahan print chalta hai
-      const isMobileApp = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
-      if (!isMobileApp) {
+      // Desktop ya laptop par direct system print dialog
+      if (!isMobileDevice) {
         window.print();
         return;
       }
 
-      // 2. Android App (WebView) ke liye: Direct Image Download Fallback
-      btn.textContent = "Saving...";
-      btn.disabled = true;
+      // Android Web App ke liye: poora record URL parameter ke zariye Chrome mein bhejna
+      const currentUrl = window.location.href.split('?')[0].split('#')[0];
+      const encodedPayload = encodeURIComponent(JSON.stringify(lastGeneratedFRC));
+      const printUrl = `${currentUrl}?wcf_payload=${encodedPayload}&autoPrint=true`;
 
-      const wrapper = document.getElementById('frcScaleWrapper');
-      const prevTransform = wrapper.style.transform;
-      const prevMargin = wrapper.style.marginBottom;
-      wrapper.style.transform = 'none';
-      wrapper.style.marginBottom = '0px';
+      // Naya window ya tab trigger karna taake device ka default Chrome browser khule
+      const a = document.createElement('a');
+      a.href = printUrl;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
 
-      const sheet = document.getElementById('frcCertificateSheet');
-
-      try {
-        const canvas = await html2canvas(sheet, {
-          scale: 2,
-          useCORS: true,
-          logging: false
-        });
-
-        wrapper.style.transform = prevTransform;
-        wrapper.style.marginBottom = prevMargin;
-
-        const imgData = canvas.toDataURL('image/png');
-        const link = document.createElement('a');
-        link.download = `Official_FRC_${lastGeneratedFRC ? lastGeneratedFRC.code : 'Certificate'}.png`;
-        link.href = imgData;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-
-      } catch (err) {
-        wrapper.style.transform = prevTransform;
-        wrapper.style.marginBottom = prevMargin;
-        window.print();
-      }
-
-      btn.textContent = originalText;
-      btn.disabled = false;
+    function shareDirectOnWhatsApp() {
+      if (!lastGeneratedFRC) return;
+      const rec = lastGeneratedFRC;
+      const totalMembersCount = rec.members ? rec.members.length + 1 : 1;
+      
+      const msgText = encodeURIComponent(
+        `*WORLD CHHIPPA FOUNDATION - GLOBAL CENSUS*\n` +
+        `📄 *FRC Registration No:* ${rec.code}\n` +
+        `👤 *Head of Family:* ${rec.head.name}\n` +
+        `👨‍👦 *Father / Guardian:* ${rec.head.father}\n` +
+        `🏛️ *Clan / Sub-Caste:* ${rec.head.clan}\n` +
+        `👥 *Total Family Members:* ${totalMembersCount}\n` +
+        `📍 *Location:* ${rec.head.city}, ${rec.head.country}\n` +
+        `📅 *Issue Date:* ${rec.issueDate}\n\n` +
+        `✅ *Status:* Certified & Authenticated Family Registration Certificate.`
+      );
+      window.open(`https://api.whatsapp.com/send?text=${msgText}`, '_blank');
     }
 
     function searchAndReprintFRC() {
@@ -2700,6 +2680,7 @@
       }
     }
 
+    // Auto-load and Print detection for Chrome external redirect
     window.addEventListener('DOMContentLoaded', () => {
       const form = document.getElementById('censusForm');
       if (form) form.reset();
@@ -2715,6 +2696,30 @@
       updateCensusCounters();
 
       initializeFirebaseEngine();
+
+      // Check URL parameters if redirected from mobile WebView to Chrome
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const payloadStr = urlParams.get('wcf_payload');
+        const autoPrint = urlParams.get('autoPrint');
+
+        if (payloadStr) {
+          const rec = JSON.parse(decodeURIComponent(payloadStr));
+          if (rec && rec.code) {
+            storedFRCRecords[rec.code] = rec;
+            lastGeneratedFRC = rec;
+            displayFRCModal(rec);
+
+            if (autoPrint === 'true') {
+              setTimeout(() => {
+                window.print();
+              }, 800);
+            }
+          }
+        }
+      } catch (err) {
+        console.warn("URL payload parse bypass:", err);
+      }
     });
   </script>
 </body>
