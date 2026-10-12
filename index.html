@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="google" content="notranslate">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>World Chhippa Foundation - Global Census & FRC Portal (V.6.0)</title>
+  <title>World Chhippa Foundation - Global Census & FRC Portal (V.6.1 Enhanced)</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- jsPDF & html2canvas -->
@@ -12,9 +12,10 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <!-- QRCode.js Library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-  <!-- Firebase App & Realtime Database SDKs (Compat - V.5 Standard) -->
+  <!-- Firebase SDKs (v9 Compat - Free Spark Plan Supported) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   
   <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&family=Noto+Sans+Devanagari:wght@400;600;700&family=Inter:wght@400;600;700;800;900&family=Great+Vibes&display=swap" rel="stylesheet">
   <style>
@@ -45,10 +46,11 @@
       line-height: 1.8 !important;
       padding-top: 0.45rem !important;
       padding-bottom: 0.45rem !important;
+    }
+    form input, form select, form textarea {
       background-color: #ffffff !important;
     }
 
-    /* Bandhani Heritage Texture Class (Only replaces green accents) */
     .bandhani-bg {
       background-image: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.55)), url('bandhani.jpg') !important;
       background-size: cover !important;
@@ -57,19 +59,15 @@
       text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
     }
 
-    /* Fixed Certificate Text-Rendering Protection */
-    #frcCertificateSheet {
+    #frcCertificateSheet, #iicCertificateSheet {
       line-height: 1.25 !important;
       word-spacing: normal !important;
       letter-spacing: normal !important;
       box-sizing: border-box !important;
     }
 
-    #frcCertificateSheet p, 
-    #frcCertificateSheet span, 
-    #frcCertificateSheet td, 
-    #frcCertificateSheet th, 
-    #frcCertificateSheet strong {
+    #frcCertificateSheet p, #frcCertificateSheet span, #frcCertificateSheet td, #frcCertificateSheet th, #frcCertificateSheet strong,
+    #iicCertificateSheet p, #iicCertificateSheet span, #iicCertificateSheet td, #iicCertificateSheet th, #iicCertificateSheet strong {
       word-spacing: normal !important;
       letter-spacing: normal !important;
     }
@@ -89,7 +87,6 @@
       letter-spacing: 4px;
     }
 
-    /* Top Seal Styling (Border-free circle) */
     .top-header-seal {
       width: 82px;
       height: 82px;
@@ -98,7 +95,6 @@
       clip-path: circle(50% at 50% 50%);
     }
 
-    /* Hide tiiny banner */
     [class*="tiiny"], div[id*="tiiny"], div[style*="z-index: 2147483647"], iframe[src*="tiiny"] {
       display: none !important;
       opacity: 0 !important;
@@ -114,16 +110,16 @@
   <header class="bandhani-bg text-white shadow-md sticky top-0 z-40 border-b border-amber-500/40">
     <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-3">
       
-      <!-- Official Header Logo (5-Clicks Admin Trigger) -->
+      <!-- Official Header Logo (Secure Admin Trigger) -->
       <div class="flex items-center gap-3 cursor-pointer select-none" id="headerLogoArea" title="Official Seal (5 Clicks Admin Panel)">
         <img src="stamp.png" alt="WCF Official Seal" class="w-12 h-12 rounded-full object-contain shrink-0 shadow-sm border border-amber-400 bg-white hover:opacity-95 transition">
         <div>
           <h1 id="appTitle" class="text-base md:text-xl font-bold leading-relaxed mb-2 drop-shadow">Chhippa Family Registration Certificate</h1>
-          <p id="appSub" class="text-[11px] md:text-xs text-amber-200 leading-normal mt-1">World Chhippa Foundation — Global Census Portal (V.6.0)</p>
+          <p id="appSub" class="text-[11px] md:text-xs text-amber-200 leading-normal mt-1">World Chhippa Foundation — Global Census Portal (V.6.1 Enhanced)</p>
         </div>
       </div>
 
-      <!-- Live Census Counter & Status -->
+      <!-- Live Counters & Language Selector -->
       <div class="flex items-center gap-3 flex-wrap">
         <div class="flex items-center gap-3 bg-black/60 border border-amber-400/50 px-3 py-1 rounded-lg text-xs font-mono shadow-inner">
           <div>
@@ -132,22 +128,22 @@
           </div>
           <div class="w-px h-6 bg-amber-600/50"></div>
           <div>
-            <span id="lblLiveMembers" class="text-[10px] text-amber-200 block">Unique Individuals:</span>
+            <span id="lblLiveMembers" class="text-[10px] text-amber-200 block">Individuals:</span>
             <span id="liveTotalMembers" class="font-bold text-white text-sm">0</span>
           </div>
           <div class="w-px h-6 bg-amber-600/50"></div>
           <div>
-            <span class="text-[10px] text-amber-200 block">Sync:</span>
-            <span id="liveSyncStatus" class="font-bold text-emerald-400 text-xs">Ready</span>
+            <span class="text-[10px] text-amber-200 block">Mode:</span>
+            <span id="liveSyncStatus" class="font-bold text-emerald-400 text-xs">Spark Ready</span>
           </div>
         </div>
 
         <div class="flex items-center gap-2 bg-black/60 p-1.5 rounded-lg border border-amber-400/40">
           <label id="lblLang" class="text-xs text-amber-200 !mb-0 !leading-none font-semibold">Language:</label>
-          <select id="langSelect" onchange="changeLanguage(this.value)" class="bg-slate-900 text-white text-xs md:text-sm font-semibold rounded px-2 py-1 outline-none cursor-pointer border border-slate-700">
-            <option value="en" selected>English</option>
-            <option value="ur">اردو (Urdu)</option>
-            <option value="hi">हिन्दी (Hindi)</option>
+          <select id="langSelect" onchange="changeLanguage(this.value)" class="!bg-black/80 !text-amber-200 text-xs md:text-sm font-semibold rounded px-2.5 py-1 outline-none cursor-pointer border border-amber-400/50">
+            <option value="en" selected class="bg-slate-900 text-white">English</option>
+            <option value="ur" class="bg-slate-900 text-white">اردو (Urdu)</option>
+            <option value="hi" class="bg-slate-900 text-white">हिन्दी (Hindi)</option>
           </select>
         </div>
       </div>
@@ -163,20 +159,36 @@
         + New Census Registration
       </button>
       <button type="button" id="tabSearchReg" onclick="switchMainTab('search')" class="bg-slate-200 text-slate-700 hover:bg-slate-300 px-5 py-2.5 rounded-lg font-bold text-xs md:text-sm">
-        Reprint / Search FRC
+        Reprint / Search Certificate
       </button>
       <button type="button" id="tabCityStats" onclick="switchMainTab('city')" class="bg-slate-200 text-slate-700 hover:bg-slate-300 px-5 py-2.5 rounded-lg font-bold text-xs md:text-sm">
         City Population Dashboard
       </button>
     </div>
 
+    <!-- Registration Mode Selection (Family Unit FRC vs Independent IIC) -->
+    <div id="regTypeSelectorCard" class="bg-amber-50/90 border border-amber-300 rounded-xl p-4 flex flex-col md:flex-row justify-between items-center gap-3">
+      <div>
+        <h3 id="lblRegModeHeading" class="text-sm font-bold text-amber-950">Select Registration Mode:</h3>
+        <p id="lblRegModeDesc" class="text-xs text-slate-600">Choose "Family Unit" to issue a Family Registration Certificate (FRC), or "Individual Adult" for a standalone member to issue an Individual Identity Certificate (IIC).</p>
+      </div>
+      <div class="flex gap-2">
+        <button type="button" id="btnModeFamily" onclick="setRegistrationMode('family')" class="bandhani-bg text-white px-4 py-2 rounded-lg text-xs font-bold shadow">
+          Family Unit (FRC)
+        </button>
+        <button type="button" id="btnModeIndividual" onclick="setRegistrationMode('individual')" class="bg-slate-200 text-slate-800 hover:bg-slate-300 px-4 py-2 rounded-lg text-xs font-bold">
+          Individual Adult (IIC)
+        </button>
+      </div>
+    </div>
+
     <!-- Population Dashboard Section -->
     <div id="cityStatsSection" class="hidden bg-white p-5 md:p-6 rounded-xl border border-slate-200 shadow space-y-4">
       <h3 id="cityStatsTitle" class="font-bold text-base text-slate-800">Community Population Dashboard (Global Search)</h3>
-      <p id="cityStatsSub" class="text-xs text-slate-500">Enter your verified FRC Code or registered Mobile Number to gain access and check population for any country or city.</p>
+      <p id="cityStatsSub" class="text-xs text-slate-500">Enter your verified Certificate Code or registered Mobile Number to gain access and check population for any country or city.</p>
       
       <div id="popAuthBox" class="flex flex-col md:flex-row gap-3 max-w-xl">
-        <input type="text" id="cityStatAuthInput" placeholder="Enter FRC Code or Mobile Number..." class="border border-slate-300 rounded-lg p-2.5 text-sm font-mono outline-none focus:ring-2 focus:ring-amber-600 flex-1">
+        <input type="text" id="cityStatAuthInput" placeholder="Enter FRC/IIC Code or Mobile Number..." class="border border-slate-300 rounded-lg p-2.5 text-sm font-mono outline-none focus:ring-2 focus:ring-amber-600 flex-1">
         <button type="button" id="btnCityStatsVerify" onclick="verifyAndOpenPopulationDashboard()" class="bandhani-bg text-white font-bold px-5 py-2.5 rounded-lg text-sm shadow">
           Verify & Access
         </button>
@@ -240,12 +252,12 @@
 
     <!-- Search Section -->
     <div id="searchSection" class="hidden bg-white p-5 md:p-6 rounded-xl border border-slate-200 shadow space-y-4">
-      <h3 id="searchTitle" class="font-bold text-base text-slate-800">Search Family Registration Certificate (FRC)</h3>
-      <p id="searchSub" class="text-xs text-slate-500">Enter your verified FRC Code (e.g. WCF-123456) or registered mobile number to view, reprint or update.</p>
+      <h3 id="searchTitle" class="font-bold text-base text-slate-800">Search Family Registration Certificate (FRC) or IIC</h3>
+      <p id="searchSub" class="text-xs text-slate-500">Enter your verified Certificate Code (e.g. WCF-123456 / IIC-123456), Member ID, or registered mobile number to view, reprint or update.</p>
       <div class="flex flex-col md:flex-row gap-3 max-w-xl">
-        <input type="text" id="searchFRCInput" placeholder="Enter FRC Code or Mobile Number..." class="border border-slate-300 rounded-lg p-2.5 text-sm font-mono outline-none focus:ring-2 focus:ring-amber-600 flex-1">
-        <button type="button" id="btnSearchAction" onclick="searchAndReprintFRC()" class="bandhani-bg text-white font-bold px-5 py-2.5 rounded-lg text-sm shadow">
-          Search & Print FRC
+        <input type="text" id="searchFRCInput" placeholder="Certificate Code / Member ID / Mobile Number..." class="border border-slate-300 rounded-lg p-2.5 text-sm font-mono outline-none focus:ring-2 focus:ring-amber-600 flex-1">
+        <button type="button" id="btnSearchAction" onclick="searchAndReprintCertificate()" class="bandhani-bg text-white font-bold px-5 py-2.5 rounded-lg text-sm shadow">
+          Search & Print
         </button>
         <button type="button" id="btnSearchAddMember" onclick="loadFRCForAddingMember()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2.5 rounded-lg text-sm shadow">
           + Add New Member
@@ -258,11 +270,11 @@
     <form id="censusForm" onsubmit="handleFormSubmit(event)" class="space-y-6">
       
       <div id="updatingFamilyBanner" class="hidden bg-blue-50 border border-blue-300 p-3 rounded-xl flex justify-between items-center text-xs text-blue-900 font-bold">
-        <span>🔄 Updating Existing Record (FRC: <span id="updatingFRCCode"></span>)</span>
+        <span>🔄 Updating Existing Record (<span id="updatingFRCCode"></span>)</span>
         <button type="button" onclick="cancelUpdatingFamily()" class="text-red-600 hover:underline">Cancel</button>
       </div>
 
-      <!-- Head Details Card -->
+      <!-- Head / Primary Applicant Details Card -->
       <div class="bg-white rounded-xl shadow border border-slate-200 overflow-hidden">
         <div class="bandhani-bg text-white px-5 py-3 flex justify-between items-center border-b border-amber-400/30">
           <h2 id="headCardTitle" class="font-bold text-sm md:text-base">Head of Family Details</h2>
@@ -272,23 +284,39 @@
         <div class="p-5 grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <label id="lblHeadName" class="block text-xs font-semibold text-slate-700">
-              Full Name (Head)<span class="text-red-500 font-bold ml-1 mr-1">*</span>
+              Full Name<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
             <input type="text" id="headName" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-amber-500 outline-none">
           </div>
 
           <div>
             <label id="lblHeadFather" class="block text-xs font-semibold text-slate-700">
-              Father / Guardian Name<span class="text-red-500 font-bold ml-1 mr-1">*</span>
+              Father's Full Name<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
             <input type="text" id="headFather" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-amber-500 outline-none">
+            <div class="flex items-center gap-2 mt-1">
+              <input type="checkbox" id="headFatherDeceased" class="rounded text-amber-600">
+              <label for="headFatherDeceased" class="text-[10px] text-slate-500 !mb-0 !leading-none">Deceased / Unavailable</label>
+            </div>
+          </div>
+
+          <div>
+            <label id="lblHeadMother" class="block text-xs font-semibold text-slate-700">
+              Mother's Name (Optional / If Known)
+            </label>
+            <input type="text" id="headMother" class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-amber-500 outline-none">
+            <div class="flex items-center gap-2 mt-1">
+              <input type="checkbox" id="headMotherDeceased" class="rounded text-amber-600">
+              <label for="headMotherDeceased" class="text-[10px] text-slate-500 !mb-0 !leading-none">Deceased / Unavailable</label>
+            </div>
           </div>
 
           <div>
             <label id="lblHeadDOB" class="block text-xs font-semibold text-slate-700">
               Date of Birth (DOB)<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
-            <input type="date" id="headDOB" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-amber-500 outline-none">
+            <input type="date" id="headDOB" required onchange="handleHeadDOBValidation()" class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-amber-500 outline-none">
+            <span id="headAgeCalculatedBadge" class="text-[10px] font-semibold text-slate-500 mt-0.5 block">Age: -</span>
           </div>
 
           <div>
@@ -339,7 +367,7 @@
             <label id="lblHeadPhone" class="block text-xs font-semibold text-slate-700">
               Contact Phone / WhatsApp<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
-            <input type="tel" id="headPhone" required placeholder="+92..." class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-amber-500 outline-none text-left">
+            <input type="tel" id="headPhone" required placeholder="+923001234567" class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-amber-500 outline-none text-left">
           </div>
 
           <div>
@@ -368,8 +396,8 @@
         </div>
       </div>
 
-      <!-- Family Members Card -->
-      <div class="bg-white rounded-xl shadow border border-slate-200 overflow-hidden">
+      <!-- Family Members Card (Active only in Family Mode) -->
+      <div id="familyMembersCard" class="bg-white rounded-xl shadow border border-slate-200 overflow-hidden">
         <div class="bg-slate-800 text-white px-5 py-3 flex justify-between items-center">
           <div>
             <h2 id="membersSectionTitle" class="font-bold text-sm md:text-base">Family Members Details</h2>
@@ -383,26 +411,42 @@
         <div id="membersContainer" class="p-5 space-y-4"></div>
       </div>
 
+      <!-- Free Community Reference Verification Box (No SMS OTP required) -->
+      <div class="bg-white rounded-xl shadow border border-slate-200 p-5 space-y-3">
+        <h3 id="lblRefTitle" class="text-sm font-bold text-slate-800">Community Reference Verification (Zero Cost Free Service)</h3>
+        <p id="lblRefSub" class="text-xs text-slate-500">Provide a trusted Foundation Member or elder reference to expedite administrative review without SMS OTP.</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div>
+            <label id="lblRefName" class="block text-xs font-semibold text-slate-700">Reference Name / Community Elder:</label>
+            <input type="text" id="refElderName" placeholder="Name of elder or relative..." class="w-full border border-slate-300 rounded-lg px-3 py-1.5 text-xs outline-none">
+          </div>
+          <div>
+            <label id="lblRefContact" class="block text-xs font-semibold text-slate-700">Reference Phone / Foundation Member ID:</label>
+            <input type="text" id="refElderContact" placeholder="Phone or WCF Member ID..." class="w-full border border-slate-300 rounded-lg px-3 py-1.5 text-xs outline-none">
+          </div>
+        </div>
+      </div>
+
       <!-- Submit Action Bar -->
       <div class="flex justify-end p-2">
         <button type="submit" id="btnSubmitForm" class="w-full md:w-auto bandhani-bg text-white font-bold px-8 py-3 rounded-xl shadow-lg transition text-base border border-amber-400/40">
-          Submit Form & Issue Official FRC
+          Submit Form & Issue Official Certificate
         </button>
       </div>
     </form>
 
-    <!-- FRC Certificate Modal -->
+    <!-- Certificate Modal (FRC & IIC Support) -->
     <div id="frcModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 overflow-y-auto p-2 md:p-4 flex flex-col items-center">
       <div class="bg-white w-full max-w-4xl rounded-xl shadow-2xl overflow-hidden border border-slate-300 my-auto">
         
         <div class="bg-slate-900 text-white p-3 md:p-4 sticky top-0 z-50 flex flex-wrap justify-between items-center gap-2 border-b border-slate-700">
           <div>
             <h3 id="modalTopHeading" class="font-bold text-xs md:text-sm">Family Registration Certificate (Official FRC)</h3>
-            <p id="modalTopSub" class="text-[10px] text-slate-400">Certified Digital Document</p>
+            <span id="modalCertStatusBadge" class="text-[10px] bg-amber-500/30 text-amber-300 border border-amber-400/40 px-2 py-0.5 rounded font-mono">Status: Pending Verification</span>
           </div>
           
           <div class="flex items-center gap-1.5 md:gap-2">
-            <button onclick="downloadFRCPDFOnly()" id="btnDownloadAction" class="bandhani-bg text-white text-[11px] md:text-xs font-bold px-3 md:px-4 py-2 rounded-lg transition shadow flex items-center gap-1">
+            <button onclick="downloadCertificatePDF()" id="btnDownloadAction" class="bandhani-bg text-white text-[11px] md:text-xs font-bold px-3 md:px-4 py-2 rounded-lg transition shadow flex items-center gap-1">
               Download PDF
             </button>
             <a id="btnModalWhatsAppShare" href="#" target="_blank" class="bg-green-600 hover:bg-green-500 text-white text-[11px] md:text-xs font-bold px-3 md:px-4 py-2 rounded-lg transition shadow flex items-center gap-1">
@@ -414,23 +458,20 @@
           </div>
         </div>
 
-        <!-- Sheet Scroll Container: Fit to 1 Page -->
+        <!-- Sheet Scroll Container: Strict Fit to 1 Page -->
         <div class="p-2 md:p-4 overflow-x-auto bg-slate-200 flex justify-center w-full">
           <div id="frcScaleWrapper" class="origin-top transition-transform duration-200 flex justify-center">
+            
+            <!-- Type A: Family Registration Certificate (FRC) -->
             <div id="frcCertificateSheet" class="relative bg-white w-[794px] min-h-[1050px] p-6 border border-slate-300 shadow text-slate-900 overflow-hidden shrink-0 flex flex-col justify-between font-latin">
-              
-              <div class="watermark-container">
-                World Chhippa Foundation
-              </div>
+              <div class="watermark-container">World Chhippa Foundation</div>
 
-              <!-- Top Section -->
               <div class="w-full">
-                <!-- Header: Left QR/Reg, Center Text, Right Stamp.png -->
                 <div id="frcDocHeader" class="border-b-2 border-slate-900 pb-2 mb-3 grid grid-cols-12 items-center relative z-10">
                   <div class="col-span-3 flex items-center gap-2">
                     <div id="frcQRCode" class="bg-white p-1 border border-slate-800 rounded shadow-sm shrink-0"></div>
                     <div class="text-left border border-slate-800 rounded-lg p-1.5 bg-slate-50 leading-tight">
-                      <p id="frcRegLabel" class="text-[8px] text-slate-500 font-semibold uppercase">FRC Registration No</p>
+                      <p id="frcRegLabel" class="text-[8px] text-slate-500 font-semibold uppercase">Certificate Reference</p>
                       <p id="frcCodeDisplay" class="text-xs font-black text-slate-900 tracking-wider">WCF-000000</p>
                       <p id="frcIssueDate" class="text-[8.5px] text-slate-500 mt-0.5"></p>
                     </div>
@@ -451,6 +492,7 @@
                 <div class="bg-slate-50 border border-slate-200 rounded-lg p-2.5 mb-3 text-[11px] grid grid-cols-2 gap-2 relative z-10 leading-snug">
                   <div class="space-y-0.5">
                     <p><span id="frcLblHeadName" class="font-bold text-slate-700">Head of Family:</span> <span id="frcHeadName" class="font-semibold text-slate-900"></span></p>
+                    <p><span class="font-bold text-slate-700">Member ID:</span> <span id="frcHeadMemberId" class="font-mono text-amber-900 font-bold"></span></p>
                     <p><span id="frcLblHeadFather" class="font-bold text-slate-700">Father / Guardian:</span> <span id="frcHeadFather" class="text-slate-800"></span></p>
                     <p><span id="frcLblHeadClan" class="font-bold text-slate-700">Clan / Sub-Caste:</span> <span id="frcHeadClan" class="text-slate-800"></span></p>
                     <p><span id="frcLblHeadEdu" class="font-bold text-slate-700">Education Level:</span> <span id="frcHeadEdu" class="text-slate-800"></span></p>
@@ -469,7 +511,7 @@
                     <thead>
                       <tr class="bg-slate-800 text-white text-center font-bold">
                         <th class="border border-slate-300 p-1 w-5">#</th>
-                        <th id="thUID" class="border border-slate-300 p-1">Unique ID</th>
+                        <th id="thUID" class="border border-slate-300 p-1">Member ID</th>
                         <th id="thName" class="border border-slate-300 p-1">Full Name</th>
                         <th id="thRel" class="border border-slate-300 p-1">Relation</th>
                         <th id="thGen" class="border border-slate-300 p-1">Gender</th>
@@ -551,20 +593,86 @@
                   </p>
                 </div>
               </div>
-
             </div>
+
+            <!-- Type B: Individual Identity Certificate (IIC) -->
+            <div id="iicCertificateSheet" class="hidden relative bg-white w-[794px] min-h-[1050px] p-8 border border-slate-300 shadow text-slate-900 overflow-hidden shrink-0 flex flex-col justify-between font-latin">
+              <div class="watermark-container">COMMUNITY IDENTITY RECORD</div>
+
+              <div class="w-full">
+                <div class="border-b-2 border-amber-900 pb-3 mb-6 grid grid-cols-12 items-center relative z-10">
+                  <div class="col-span-3 flex items-center gap-2">
+                    <div id="iicQRCode" class="bg-white p-1 border border-slate-800 rounded shadow-sm shrink-0"></div>
+                    <div class="text-left border border-slate-800 rounded-lg p-1.5 bg-slate-50 leading-tight">
+                      <p class="text-[8px] text-slate-500 font-semibold uppercase">Certificate Reference</p>
+                      <p id="iicCodeDisplay" class="text-xs font-black text-slate-900">IIC-000000</p>
+                      <p id="iicIssueDate" class="text-[8.5px] text-slate-500 mt-0.5"></p>
+                    </div>
+                  </div>
+                  <div class="col-span-6 text-center">
+                    <span class="text-[10px] font-bold text-amber-900 tracking-wider uppercase block">WORLD CHHIPPA FOUNDATION</span>
+                    <h2 class="text-xl font-black text-slate-900 mt-0.5">INDIVIDUAL IDENTITY CERTIFICATE</h2>
+                    <p class="text-[10px] text-slate-500">Official Non-Governmental Community Registry Document</p>
+                  </div>
+                  <div class="col-span-3 flex justify-end items-center">
+                    <img src="stamp.png" alt="Official Seal" class="top-header-seal" onerror="this.src='https://via.placeholder.com/82?text=WCF+SEAL'">
+                  </div>
+                </div>
+
+                <div class="bg-amber-50/60 border border-amber-200 rounded-xl p-6 space-y-4 text-xs relative z-10">
+                  <div class="grid grid-cols-2 gap-4 pb-3 border-b border-amber-200">
+                    <div>
+                      <span class="text-[10px] text-slate-500 uppercase font-semibold block">Full Certified Name</span>
+                      <span id="iicPersonName" class="text-base font-black text-slate-900"></span>
+                    </div>
+                    <div>
+                      <span class="text-[10px] text-slate-500 uppercase font-semibold block">Permanent Member ID</span>
+                      <span id="iicMemberId" class="text-base font-mono font-black text-amber-900"></span>
+                    </div>
+                  </div>
+
+                  <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                    <div><span class="text-slate-500 block">Father's Name:</span><strong id="iicFatherName" class="text-slate-800"></strong></div>
+                    <div><span class="text-slate-500 block">Mother's Name:</span><strong id="iicMotherName" class="text-slate-800"></strong></div>
+                    <div><span class="text-slate-500 block">Clan / Sub-Caste:</span><strong id="iicClan" class="text-slate-800"></strong></div>
+                    <div><span class="text-slate-500 block">Date of Birth:</span><strong id="iicDOB" class="text-slate-800 font-mono"></strong></div>
+                    <div><span class="text-slate-500 block">Gender & Status:</span><strong id="iicGenderMarital" class="text-slate-800"></strong></div>
+                    <div><span class="text-slate-500 block">Occupation:</span><strong id="iicJob" class="text-slate-800"></strong></div>
+                    <div class="col-span-2 md:col-span-3"><span class="text-slate-500 block">Contact Mobile:</span><strong id="iicPhone" class="text-slate-800 font-mono"></strong></div>
+                    <div class="col-span-2 md:col-span-3"><span class="text-slate-500 block">Permanent Residence:</span><strong id="iicAddress" class="text-slate-800"></strong></div>
+                  </div>
+                </div>
+
+                <div class="mt-6 p-4 bg-slate-50 border border-slate-200 rounded-lg text-[10.5px] text-slate-600 relative z-10 leading-relaxed">
+                  <strong>Notice:</strong> This certificate recognizes the individual's registered identity within the World Chhippa Foundation Census. It is issued for independent adults not represented under a joint household FRC. It does not replace statutory state-issued identification.
+                </div>
+              </div>
+
+              <div class="w-full relative z-10 pt-4 border-t border-slate-300 flex justify-between items-end">
+                <div class="text-left text-[9px] text-slate-500 max-w-sm">
+                  Dedicated by <strong>M. Waseem Sadiq Tak (Neemray Walay)</strong><br>
+                  World Chhippa Foundation Global Census Registry
+                </div>
+                <div class="text-center">
+                  <div class="text-slate-900 font-signature text-xl font-bold leading-tight select-none">M.Waseem Sadiq Tak</div>
+                  <div class="w-36 border-b border-slate-700 pb-0.5 mb-0.5 text-[9px] font-semibold text-slate-800">Registrar WCF</div>
+                  <p class="text-[7.5px] text-slate-400">Certified Community Identity</p>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Admin Panel Modal -->
+    <!-- Admin Panel Modal (Authenticated Free Firebase & Audit) -->
     <div id="adminModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 overflow-y-auto p-4 flex items-center justify-center font-latin" dir="ltr">
       <div class="bg-white w-full max-w-2xl rounded-xl shadow-2xl border border-slate-300 p-6 space-y-5 text-slate-800 my-auto">
         <div class="flex justify-between items-center border-b pb-3">
           <div class="flex items-center gap-2">
             <span class="w-3 h-3 rounded-full bg-amber-500 animate-pulse"></span>
-            <h3 class="font-bold text-base text-slate-900">Admin Census & Directory Manager (V.6.0)</h3>
+            <h3 class="font-bold text-base text-slate-900">Admin Census & Directory Manager (V.6.1 Enhanced)</h3>
           </div>
           <button type="button" onclick="closeAdminModal()" class="text-slate-400 hover:text-slate-700 font-bold text-2xl leading-none">&times;</button>
         </div>
@@ -579,24 +687,12 @@
             <span id="adminTotalMem" class="text-lg font-bold text-amber-800">0</span>
           </div>
           <div>
-            <span class="text-xs text-slate-500 block">Offline Queue:</span>
+            <span class="text-xs text-slate-500 block">Pending Review:</span>
             <span id="adminQueueCount" class="text-lg font-bold text-amber-600">0</span>
           </div>
         </div>
 
-        <!-- Firebase Toggle & Queue Management -->
-        <div class="bg-slate-100 p-3 rounded-xl border border-slate-300 flex items-center justify-between text-xs">
-          <div class="flex items-center gap-2">
-            <strong>Cloud Sync:</strong>
-            <button type="button" id="btnAdminCloudToggle" onclick="toggleFirebaseCloudSync()" class="bandhani-bg text-white px-3 py-1 rounded font-bold shadow">
-              Connected (ON)
-            </button>
-          </div>
-          <button type="button" onclick="syncOfflineQueueToCloud(true)" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded font-bold shadow">
-            Sync Pending Queue
-          </button>
-        </div>
-
+        <!-- Master Directory PDF Filtering -->
         <div class="bg-amber-50/70 border border-amber-200 p-3.5 rounded-xl space-y-2.5 text-left">
           <h4 class="text-xs font-bold text-slate-900 flex items-center gap-1.5">
             <span>📑</span> <span>Master Census Directory PDF:</span>
@@ -613,6 +709,7 @@
           </div>
         </div>
 
+        <!-- The 3 Preserved 1-Click PDF Reports -->
         <div class="space-y-2 text-left">
           <h4 class="text-xs font-bold text-slate-600 uppercase tracking-wider">Additional 1-Click PDF Reports:</h4>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5">
@@ -628,6 +725,14 @@
               <span class="text-base">🌸</span>
               <span>Non-Chhippa Wives PDF</span>
             </button>
+          </div>
+        </div>
+
+        <!-- Pending Applications Verification Desk -->
+        <div class="space-y-2 text-left">
+          <h4 class="text-xs font-bold text-slate-800 uppercase">Verification & Review Desk (Duplicate & Pending Applications)</h4>
+          <div id="adminPendingList" class="max-h-40 overflow-y-auto space-y-2 border border-slate-200 rounded-lg p-2 bg-slate-50 text-xs">
+            <p class="text-slate-400 italic">No applications currently pending verification.</p>
           </div>
         </div>
 
@@ -670,7 +775,7 @@
 
   <script>
     // ==========================================
-    // 1. Firebase Realtime Database Config
+    // 1. Firebase Free Spark Initialization
     // ==========================================
     const firebaseConfig = {
       apiKey: "AIzaSyDummyKeyReplaceLaterWhenCreated",
@@ -682,15 +787,16 @@
       appId: "1:1234567890:web:abcdef"
     };
 
-    let rtdb = null;
-    let isFirebaseReady = false;
-    let isCloudSyncActive = true;
+    let auth = null;
+    let db = null;
+    let isCloudReady = false;
 
     try {
       if (typeof firebase !== 'undefined' && firebaseConfig.apiKey !== "AIzaSyDummyKeyReplaceLaterWhenCreated") {
         firebase.initializeApp(firebaseConfig);
-        rtdb = firebase.database();
-        isFirebaseReady = true;
+        auth = firebase.auth();
+        db = firebase.firestore();
+        isCloudReady = true;
       }
     } catch (e) {
       console.warn("Firebase offline local fallback active:", e);
@@ -741,21 +847,21 @@
     const i18n = {
       ur: {
         appTitle: "چھیپا خاندانی رجسٹریشن سرٹیفکیٹ",
-        appSub: "ورلڈ چھیپا فاؤنڈیشن — عالمی مردم شماری پورٹل (V.6.0)",
+        appSub: "ورلڈ چھیپا فاؤنڈیشن — عالمی مردم شماری پورٹل (V.6.1 Enhanced)",
         lblLang: "زبان:",
         lblLiveFamilies: "خاندان (Families):",
         lblLiveMembers: "کل افراد (Unique):",
         tabNew: "+ نیا اندراج مردم شماری",
-        tabSearch: "دوبارہ پرنٹ / سرچ FRC",
+        tabSearch: "دوبارہ پرنٹ / سرچ سرٹیفکیٹ",
         tabCityStats: "شہر وار آبادی ڈیش بورڈ",
-        searchTitle: "خاندانی رجسٹریشن سرٹیفکیٹ (FRC) تلاش کریں",
-        searchSub: "اپنا تصدیق شدہ FRC کوڈ (مثلاً WCF-123456) یا رجسٹرڈ موبائل نمبر درج کریں تاکہ سرٹیفکیٹ دوبارہ دیکھا، پرنٹ یا اپڈیٹ کیا جا سکے۔",
-        searchPlaceholder: "FRC کوڈ یا موبائل فون نمبر درج کریں...",
+        searchTitle: "خاندانی رجسٹریشن سرٹیفکیٹ (FRC) یا IIC تلاش کریں",
+        searchSub: "اپنا تصدیق شدہ FRC / IIC کوڈ یا ممبر آئی ڈی درج کریں تاکہ سرٹیفکیٹ دوبارہ دیکھا یا پرنٹ کیا جا سکے۔",
+        searchPlaceholder: "سرٹیفکیٹ کوڈ، ممبر آئی ڈی یا موبائل نمبر درج کریں...",
         btnSearchAction: "تلاش و پرنٹ کریں",
         btnSearchAddMember: "+ نیا رکن شامل کریں",
         cityStatsTitle: "کمیونٹی آبادی ڈیش بورڈ (گلوبل سرچ)",
-        cityStatsSub: "اپنا تصدیق شدہ FRC کوڈ یا رجسٹرڈ موبائل نمبر درج کریں تاکہ رسائی حاصل ہو سکے، اور کسی بھی ملک یا شہر کی آبادی دیکھیں۔",
-        popAuthPlaceholder: "FRC کوڈ یا موبائل فون نمبر درج کریں...",
+        cityStatsSub: "اپنا تصدیق شدہ FRC / IIC کوڈ یا موبائل نمبر درج کریں تاکہ رسائی حاصل ہو سکے، اور کسی بھی ملک یا شہر کی آبادی دیکھیں۔",
+        popAuthPlaceholder: "سرٹیفکیٹ کوڈ یا موبائل فون نمبر درج کریں...",
         btnCityStatsVerify: "تصدیق و رسائی",
         popAccessNoticeText: "✅ رسائی منظور: آپ کسی بھی ملک یا شہر کی مردم شماری کا جائزہ لے سکتے ہیں۔",
         btnPopLock: "لاک کریں",
@@ -788,7 +894,7 @@
         membersSectionTitle: "دیگر اہل خانہ / اراکین کی تفصیلات",
         membersSectionSub: "بیوی، بچے اور دیگر زیرِ کفالت افراد شامل کریں",
         btnAddMemberBtn: "نیا رکن شامل کریں",
-        btnSubmitForm: "مکمل فارم جمع کریں اور FRC جاری کریں",
+        btnSubmitForm: "مکمل فارم جمع کریں اور سرٹیفکیٹ جاری کریں",
         memberCardTitle: "رکن #",
         lblMemRel: "سرپرست سے رشتہ",
         lblMemName: "مکمل نام",
@@ -812,7 +918,6 @@
         otherJobPlaceholder: "اپنا پیشہ درج کریں...",
         otherCountryPlaceholder: "اپنے ملک کا نام درج کریں...",
         modalTopHeading: "خاندانی رجسٹریشن سرٹیفکیٹ (Official FRC)",
-        modalTopSub: "تصدیق شدہ برقی دستاویز",
         btnDownloadPdf: "ڈاؤن لوڈ PDF",
         btnWhatsappShare: "واٹس ایپ شیئر کریں",
         btnCloseModal: "بند کریں",
@@ -827,7 +932,7 @@
         frcLblHeadLoc: "ملک و شہر:",
         frcLblHeadAddress: "رہائشی پتہ:",
         frcLblHeadLineage: "کمیونٹی نسب:",
-        thUID: "شناختی کوڈ",
+        thUID: "ممبر آئی ڈی",
         thName: "مکمل نام",
         thRel: "رشتہ",
         thGen: "جنس",
@@ -862,21 +967,21 @@
       },
       hi: {
         appTitle: "छीपा पारिवारिक पंजीकरण प्रमाण पत्र",
-        appSub: "वर्ल्ड छीपा फाउंडेशन — वैश्विक जनगणना पोर्टल (V.6.0)",
+        appSub: "वर्ल्ड छीपा फाउंडेशन — वैश्विक जनगणना पोर्टल (V.6.1 Enhanced)",
         lblLang: "भाषा:",
         lblLiveFamilies: "परिवार (Families):",
         lblLiveMembers: "कुल सदस्य (Unique):",
         tabNew: "+ नया पंजीकरण जनगणना",
-        tabSearch: "पुनः प्रिंट / खोज FRC",
+        tabSearch: "पुनः प्रिंट / खोज प्रमाण पत्र",
         tabCityStats: "शहर वार आबादी डैशबोर्ड",
-        searchTitle: "परिवार पंजीकरण प्रमाणपत्र (FRC) खोजें",
-        searchSub: "अपना सत्यापित FRC कोड (उदा. WCF-123456) या मोबाइल नंबर दर्ज करें ताकि प्रमाणपत्र पुनः देखा, प्रिंट या अपडेट किया जा सके।",
-        searchPlaceholder: "FRC कोड या मोबाइल फोन नंबर दर्ज करें...",
+        searchTitle: "परिवार पंजीकरण प्रमाणपत्र (FRC) या IIC खोजें",
+        searchSub: "अपना सत्यापित FRC / IIC कोड या सदस्य आईडी दर्ज करके प्रमाण पत्र देखें या पुनः प्रिंट करें।",
+        searchPlaceholder: "प्रमाण पत्र कोड, सदस्य आईडी या मोबाइल नंबर दर्ज करें...",
         btnSearchAction: "खोजें और प्रिंट करें",
         btnSearchAddMember: "+ नया सदस्य जोड़ें",
         cityStatsTitle: "समुदाय आबादी डैशबोर्ड (वैश्विक खोज)",
-        cityStatsSub: "अपना सत्यापित FRC कोड या मोबाइल नंबर दर्ज करके किसी भी देश या शहर की आबादी के आंकड़े देखें।",
-        popAuthPlaceholder: "FRC कोड या मोबाइल फोन नंबर दर्ज करें...",
+        cityStatsSub: "अपना सत्यापित कोड या मोबाइल नंबर दर्ज करके किसी भी देश या शहर की आबादी के आंकड़े देखें।",
+        popAuthPlaceholder: "प्रमाण पत्र कोड या मोबाइल नंबर दर्ज करें...",
         btnCityStatsVerify: "सत्यापन एवं पहुंच",
         popAccessNoticeText: "✅ पहुंच स्वीकृत: आप किसी भी देश या शहर की जनगणना का जायजा ले सकते हैं।",
         btnPopLock: "लॉक करें",
@@ -909,7 +1014,7 @@
         membersSectionTitle: "परिवार के अन्य सदस्यों का विवरण",
         membersSectionSub: "पत्नी, बच्चे और आश्रित सदस्य जोड़ें",
         btnAddMemberBtn: "नया सदस्य जोड़ें",
-        btnSubmitForm: "पूर्ण फॉर्म जमा करें और FRC प्राप्त करें",
+        btnSubmitForm: "पूर्ण फॉर्म जमा करें और प्रमाण पत्र प्राप्त करें",
         memberCardTitle: "सदस्य #",
         lblMemRel: "मुखिया से संबंध",
         lblMemName: "पूरा नाम",
@@ -933,7 +1038,6 @@
         otherJobPlaceholder: "अपना व्यवसाय लिखें...",
         otherCountryPlaceholder: "अपने देश का नाम दर्ज करें...",
         modalTopHeading: "पारिवारिक पंजीकरण प्रमाण पत्र (Official FRC)",
-        modalTopSub: "प्रमाणित डिजिटल दस्तावेज़",
         btnDownloadPdf: "PDF डाउनलोड करें",
         btnWhatsappShare: "व्हाट्सएप शेयर",
         btnCloseModal: "बंद करें",
@@ -948,7 +1052,7 @@
         frcLblHeadLoc: "देश एवं शहर:",
         frcLblHeadAddress: "आवासीय पता:",
         frcLblHeadLineage: "सामुदायिक वंश:",
-        thUID: "पहचान कोड",
+        thUID: "सदस्य आईडी",
         thName: "पूरा नाम",
         thRel: "संबंध",
         thGen: "लिंग",
@@ -983,21 +1087,21 @@
       },
       en: {
         appTitle: "Chhippa Family Registration Certificate",
-        appSub: "World Chhippa Foundation — Global Census Portal (V.6.0)",
+        appSub: "World Chhippa Foundation — Global Census Portal (V.6.1 Enhanced)",
         lblLang: "Language:",
         lblLiveFamilies: "Families:",
         lblLiveMembers: "Unique Individuals:",
         tabNew: "+ New Census Registration",
-        tabSearch: "Reprint / Search FRC",
+        tabSearch: "Reprint / Search Certificate",
         tabCityStats: "City Population Dashboard",
-        searchTitle: "Search Family Registration Certificate (FRC)",
-        searchSub: "Enter your verified FRC Code (e.g. WCF-123456) or registered mobile number to view, reprint or update.",
-        searchPlaceholder: "Enter FRC Code or Mobile Number...",
-        btnSearchAction: "Search & Print FRC",
+        searchTitle: "Search Family Registration Certificate (FRC) or IIC",
+        searchSub: "Enter your verified Certificate Code, Member ID, or registered mobile number to view, reprint or update.",
+        searchPlaceholder: "Enter Certificate Code, Member ID or Mobile Number...",
+        btnSearchAction: "Search & Print",
         btnSearchAddMember: "+ Add New Member",
         cityStatsTitle: "Community Population Dashboard (Global Search)",
-        cityStatsSub: "Enter your verified FRC Code or registered Mobile Number to gain access and check population for any country or city.",
-        popAuthPlaceholder: "Enter FRC Code or Mobile Number...",
+        cityStatsSub: "Enter your verified Certificate Code or registered Mobile Number to gain access and check population for any country or city.",
+        popAuthPlaceholder: "Enter Certificate Code or Mobile Number...",
         btnCityStatsVerify: "Verify & Access",
         popAccessNoticeText: "✅ Access Granted: You can view census records for any country or city.",
         btnPopLock: "Lock",
@@ -1030,7 +1134,7 @@
         membersSectionTitle: "Family Members Details",
         membersSectionSub: "Add Spouse, Children & Dependents",
         btnAddMemberBtn: "Add New Member",
-        btnSubmitForm: "Submit Form & Issue Official FRC",
+        btnSubmitForm: "Submit Form & Issue Certificate",
         memberCardTitle: "Member #",
         lblMemRel: "Relation with Head",
         lblMemName: "Full Name",
@@ -1054,7 +1158,6 @@
         otherJobPlaceholder: "Enter your occupation...",
         otherCountryPlaceholder: "Enter country name...",
         modalTopHeading: "Family Registration Certificate (Official FRC)",
-        modalTopSub: "Certified Digital Document",
         btnDownloadPdf: "Download PDF",
         btnWhatsappShare: "WhatsApp Share",
         btnCloseModal: "Close",
@@ -1069,7 +1172,7 @@
         frcLblHeadLoc: "Country & City:",
         frcLblHeadAddress: "Residential Address:",
         frcLblHeadLineage: "Community Lineage:",
-        thUID: "Unique ID",
+        thUID: "Member ID",
         thName: "Full Name",
         thRel: "Relation",
         thGen: "Gender",
@@ -1105,9 +1208,11 @@
     };
 
     let currentLang = 'en';
+    let currentRegMode = 'family'; // 'family' or 'individual'
     let memberCount = 0;
     let editingExistingFRCCode = null;
     let isPopDashboardUnlocked = false;
+    let activeViewingRecord = null;
     
     let storedFRCRecords = {}; 
     try {
@@ -1117,66 +1222,173 @@
       storedFRCRecords = {};
     }
 
-    let offlineQueue = [];
-    try {
-      const savedQueue = localStorage.getItem('WCF_PENDING_QUEUE');
-      if (savedQueue) offlineQueue = JSON.parse(savedQueue);
-    } catch (e) {
-      offlineQueue = [];
+    // ==========================================
+    // 2. Member ID & Biographic Token Generator
+    // ==========================================
+    function generatePermanentMemberId() {
+      const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+      let id = "WCF-";
+      for (let i = 0; i < 6; i++) {
+        id += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return id;
     }
 
-    let lastGeneratedFRC = null;
-
-    // ==========================================
-    // 2. Golden Biographic Lock Engine (Composite Hash)
-    // ==========================================
     function normalizeCleanString(str) {
       return (str || '')
         .toLowerCase()
         .replace(/^(mohammad|muhammad|mohd|md|mian|syed)\s+/g, '')
-        .replace(/[\s\.\-_\/\\,]/g, '')
+        .replace(/[^a-z0-9]/g, '')
         .trim();
     }
 
-    function generateGoldenBiographicHash(fatherName, headDOB, clanName) {
-      return `${normalizeCleanString(fatherName)}_${(headDOB || '').trim()}_${normalizeCleanString(clanName)}`;
+    function getPhoneticSoundex(s) {
+      if (!s) return "";
+      let a = s.toLowerCase().trim()
+        .replace(/^(mohammad|muhammad|mohd|md|mian|syed)\s+/g, '')
+        .replace(/[^a-z]/g, '');
+      if (!a) return "";
+      const map = { b:1, f:1, p:1, v:1, c:2, g:2, j:2, k:2, q:2, s:2, x:2, z:2, d:3, t:3, l:4, m:5, n:5, r:6 };
+      let out = a[0].toUpperCase();
+      let prev = map[a[0]] || 0;
+      for (let i = 1; i < a.length; i++) {
+        let cur = map[a[i]] || 0;
+        if (cur && cur !== prev) {
+          out += cur;
+          prev = cur;
+        } else if (!cur) {
+          prev = 0;
+        }
+        if (out.length === 4) break;
+      }
+      return out.padEnd(4, '0');
     }
 
+    function calculateAge(dobString) {
+      if (!dobString) return 0;
+      const bDate = new Date(dobString);
+      const diff = Date.now() - bDate.getTime();
+      return Math.abs(new Date(diff).getUTCFullYear() - 1970);
+    }
+
+    function handleHeadDOBValidation() {
+      const dobVal = document.getElementById('headDOB').value;
+      const age = calculateAge(dobVal);
+      const badge = document.getElementById('headAgeCalculatedBadge');
+      badge.textContent = `Calculated Age: ${age} years`;
+
+      if (age < 18) {
+        badge.className = "text-[10px] font-bold text-red-600 mt-0.5 block";
+        badge.textContent = `Calculated Age: ${age} yrs (Minors under 18 must be registered within a parent's Family Record, not as an independent Head)`;
+      } else {
+        badge.className = "text-[10px] font-semibold text-emerald-600 mt-0.5 block";
+      }
+    }
+
+    function setRegistrationMode(mode) {
+      currentRegMode = mode;
+      const btnFam = document.getElementById('btnModeFamily');
+      const btnInd = document.getElementById('btnModeIndividual');
+      const famCard = document.getElementById('familyMembersCard');
+
+      if (mode === 'family') {
+        btnFam.className = "bandhani-bg text-white px-4 py-2 rounded-lg text-xs font-bold shadow";
+        btnInd.className = "bg-slate-200 text-slate-800 hover:bg-slate-300 px-4 py-2 rounded-lg text-xs font-bold";
+        famCard.classList.remove('hidden');
+        document.getElementById('headCardTitle').textContent = i18n[currentLang].headCardTitle;
+      } else {
+        btnInd.className = "bandhani-bg text-white px-4 py-2 rounded-lg text-xs font-bold shadow";
+        btnFam.className = "bg-slate-200 text-slate-800 hover:bg-slate-300 px-4 py-2 rounded-lg text-xs font-bold";
+        famCard.classList.add('hidden');
+        document.getElementById('headCardTitle').textContent = "Individual Adult Applicant Details";
+      }
+    }
+
+    // ==========================================
+    // 3. Multi-Layer Deduplication Engine
+    // ==========================================
     function checkGoldenBiographicDuplication(newFather, newDOB, newClan, newMembers = [], currentEditingCode = null) {
-      const targetHash = generateGoldenBiographicHash(newFather, newDOB, newClan);
       const allRecords = Object.values(storedFRCRecords);
+      const headName = document.getElementById('headName').value.trim();
+      const rawHeadPhone = document.getElementById('headPhone').value.trim();
+      const cleanHeadPhone = rawHeadPhone.replace(/[^0-9]/g, '');
+
+      const hNameNorm = normalizeCleanString(headName);
+      const hFatherNorm = normalizeCleanString(newFather);
+      const hClanNorm = normalizeCleanString(newClan);
+      const hNameSndx = getPhoneticSoundex(headName);
+      const hFatherSndx = getPhoneticSoundex(newFather);
+      const hYear = (newDOB || '').split('-')[0];
 
       for (const rec of allRecords) {
         if (currentEditingCode && rec.code === currentEditingCode) continue;
         if (!rec.head) continue;
 
-        const existingHash = generateGoldenBiographicHash(rec.head.father, rec.head.dob, rec.head.clan);
-        if (existingHash === targetHash) {
+        // 1. Phone Hard-Lock
+        const recHeadPhone = (rec.head.phone || '').replace(/[^0-9]/g, '');
+        if (cleanHeadPhone.length >= 8 && recHeadPhone.length >= 8) {
+          if (cleanHeadPhone.endsWith(recHeadPhone.slice(-8)) || recHeadPhone.endsWith(cleanHeadPhone.slice(-8))) {
+            return {
+              duplicate: true,
+              reason: `سیکیورٹی الرٹ (موبائل نمبر مماثلت)!\nیہ رابطہ فون پہلے سے سرٹیفکیٹ [${rec.code}] میں درج ہے۔ درخواست تصدیق کے لیے روکی گئی ہے۔`
+            };
+          }
+        }
+
+        // 2. Phonetic Soundex & Biographic Cluster Lock
+        const recHNameNorm = normalizeCleanString(rec.head.name);
+        const recHFatherNorm = normalizeCleanString(rec.head.father);
+        const recHClanNorm = normalizeCleanString(rec.head.clan);
+        const recHNameSndx = getPhoneticSoundex(rec.head.name);
+        const recHFatherSndx = getPhoneticSoundex(rec.head.father);
+        const recHYear = (rec.head.dob || '').split('-')[0];
+
+        const exactBioMatch = (recHFatherNorm === hFatherNorm && rec.head.dob === newDOB && recHClanNorm === hClanNorm);
+        const phoneticBioMatch = (
+          (hNameSndx === recHNameSndx || hNameNorm === recHNameNorm) &&
+          (hFatherSndx === recHFatherSndx || hFatherNorm === recHFatherNorm) &&
+          (hYear && recHYear && hYear === recHYear) &&
+          (recHClanNorm === hClanNorm)
+        );
+
+        if (exactBioMatch || phoneticBioMatch) {
           return {
             duplicate: true,
-            reason: `یہ سربراہ یا خاندان پہلے سے رجسٹرڈ ہے!\n(سابقہ FRC رجسٹریشن نمبر: ${rec.code})\nشناختی تفصیلات: تاریخِ پیدائش (${rec.head.dob})، والد کا نام اور گوت پہلے سے سسٹم میں محفوظ ہیں۔`
+            reason: `سیکیورٹی لاک: یہ شناخت پہلے سے سسٹم میں موجود ہے!\nسابقہ سرٹیفکیٹ: [${rec.code}]\nسربراہ: ${rec.head.name} ولد ${rec.head.father}\nنئے کوڈ کے بجائے سرچ کر کے ری پرنٹ کریں۔`
           };
         }
-      }
 
-      if (newMembers && newMembers.length > 0) {
-        for (const rec of allRecords) {
-          if (currentEditingCode && rec.code === currentEditingCode) continue;
-          if (rec.members && Array.isArray(rec.members)) {
-            for (const newM of newMembers) {
-              for (const oldM of rec.members) {
-                if (
-                  normalizeCleanString(newM.name) === normalizeCleanString(oldM.name) &&
-                  newM.dob === oldM.dob &&
-                  normalizeCleanString(newM.relationKey) === normalizeCleanString(oldM.relationKey)
-                ) {
-                  return {
-                    duplicate: true,
-                    reason: `خاندان کا رکن (${newM.name}) تاریخِ پیدائش (${newM.dob}) کے ساتھ پہلے سے FRC رجسٹریشن نمبر ${rec.code} میں درج ہے۔`
-                  };
-                }
+        // 3. Family Tree Cross-Link Match
+        if (newMembers.length > 0 && rec.members && Array.isArray(rec.members)) {
+          let matchedMembersCount = 0;
+          let matchedMemberNames = [];
+
+          for (const nM of newMembers) {
+            const nMNameNorm = normalizeCleanString(nM.name);
+            const nMNameSndx = getPhoneticSoundex(nM.name);
+            const nMYear = (nM.dob || '').split('-')[0];
+
+            for (const oM of rec.members) {
+              const oMNameNorm = normalizeCleanString(oM.name);
+              const oMNameSndx = getPhoneticSoundex(oM.name);
+              const oMYear = (oM.dob || '').split('-')[0];
+
+              const isNameMatch = (nMNameNorm === oMNameNorm || nMNameSndx === oMNameSndx);
+              const isDobMatch = (nM.dob === oM.dob || (nMYear && oMYear && nMYear === oMYear));
+              const isRelMatch = (nM.relationKey === oM.relationKey);
+
+              if (isNameMatch && isDobMatch && isRelMatch) {
+                matchedMembersCount++;
+                matchedMemberNames.push(nM.name);
               }
             }
+          }
+
+          if (matchedMembersCount >= 1) {
+            return {
+              duplicate: true,
+              reason: `خاندانی شجرہ الرٹ!\nاس فیملی کا فرد (${matchedMemberNames.join(', ')}) پہلے سے سرٹیفکیٹ [${rec.code}] میں درج ہے۔`
+            };
           }
         }
       }
@@ -1202,127 +1414,32 @@
 
     function updateCensusCounters() {
       const allRecords = Object.values(storedFRCRecords);
-      const totalFamilies = allRecords.length;
-      const uniqueFingerprintSet = new Set();
+      const totalFamilies = allRecords.filter(r => r.type === 'family').length;
+      let totalIndividuals = 0;
 
       allRecords.forEach(rec => {
-        if (rec.head) {
-          const hKey = generateGoldenBiographicHash(rec.head.father, rec.head.dob, rec.head.clan);
-          if (hKey) uniqueFingerprintSet.add(hKey);
-        }
+        totalIndividuals++;
         if (rec.members && Array.isArray(rec.members)) {
-          rec.members.forEach(m => {
-            const mKey = generateGoldenBiographicHash((m.father || rec.head.name), m.dob, rec.head.clan);
-            if (mKey) uniqueFingerprintSet.add(mKey);
-          });
+          totalIndividuals += rec.members.length;
         }
       });
 
       const famEl = document.getElementById('liveTotalFamilies');
       const memEl = document.getElementById('liveTotalMembers');
       if (famEl) famEl.textContent = totalFamilies;
-      if (memEl) memEl.textContent = uniqueFingerprintSet.size;
+      if (memEl) memEl.textContent = totalIndividuals;
 
       const adminFamEl = document.getElementById('adminTotalFam');
       const adminMemEl = document.getElementById('adminTotalMem');
       const adminQueueEl = document.getElementById('adminQueueCount');
       if (adminFamEl) adminFamEl.textContent = totalFamilies;
-      if (adminMemEl) adminMemEl.textContent = uniqueFingerprintSet.size;
-      if (adminQueueEl) adminQueueEl.textContent = offlineQueue.length;
+      if (adminMemEl) adminMemEl.textContent = totalIndividuals;
+      
+      const pendingCount = allRecords.filter(r => r.status === 'Possible Duplicate' || r.status === 'Pending Verification').length;
+      if (adminQueueEl) adminQueueEl.textContent = pendingCount;
 
       populateAdminCountryOptions();
-    }
-
-    // ==========================================
-    // 3. Offline Queue & Realtime Database Sync Engine
-    // ==========================================
-    function queueRecordForOfflineSync(record) {
-      offlineQueue.push(record);
-      try {
-        localStorage.setItem('WCF_PENDING_QUEUE', JSON.stringify(offlineQueue));
-      } catch(e) {}
-      updateCensusCounters();
-      syncOfflineQueueToCloud(false);
-    }
-
-    async function syncOfflineQueueToCloud(isManual = false) {
-      const syncStatusEl = document.getElementById('liveSyncStatus');
-      if (!isCloudSyncActive || !isFirebaseReady || !rtdb || !navigator.onLine) {
-        if (syncStatusEl) syncStatusEl.textContent = "Offline/Local";
-        if (isManual) alert("Firebase offline or disconnected from Admin Panel.");
-        return;
-      }
-
-      if (offlineQueue.length === 0) {
-        if (syncStatusEl) syncStatusEl.textContent = "Synced";
-        if (isManual) alert("Queue is already empty. All records are synced with Cloud.");
-        return;
-      }
-
-      if (syncStatusEl) syncStatusEl.textContent = "Syncing...";
-      const failed = [];
-
-      for (const rec of offlineQueue) {
-        try {
-          await rtdb.ref(`wcf_census_records/${rec.code}`).set(rec);
-        } catch (err) {
-          failed.push(rec);
-        }
-      }
-
-      offlineQueue = failed;
-      try {
-        localStorage.setItem('WCF_PENDING_QUEUE', JSON.stringify(offlineQueue));
-      } catch (e) {}
-
-      updateCensusCounters();
-      if (syncStatusEl) syncStatusEl.textContent = offlineQueue.length === 0 ? "Synced" : "Pending";
-      if (isManual) {
-        alert(offlineQueue.length === 0 ? "All offline records pushed successfully!" : `Synced partially. Remaining: ${offlineQueue.length}`);
-      }
-    }
-
-    function toggleFirebaseCloudSync() {
-      isCloudSyncActive = !isCloudSyncActive;
-      const btn = document.getElementById('btnAdminCloudToggle');
-      if (isCloudSyncActive) {
-        btn.textContent = "Connected (ON)";
-        btn.className = "bandhani-bg text-white px-3 py-1 rounded font-bold shadow";
-        syncOfflineQueueToCloud(false);
-      } else {
-        btn.textContent = "Disconnected (OFF)";
-        btn.className = "bg-red-600 text-white px-3 py-1 rounded font-bold";
-        const syncStatusEl = document.getElementById('liveSyncStatus');
-        if (syncStatusEl) syncStatusEl.textContent = "Standby";
-      }
-    }
-
-    window.addEventListener('online', () => {
-      const syncStatusEl = document.getElementById('liveSyncStatus');
-      if (syncStatusEl) syncStatusEl.textContent = "Online";
-      syncOfflineQueueToCloud(false);
-    });
-
-    window.addEventListener('offline', () => {
-      const syncStatusEl = document.getElementById('liveSyncStatus');
-      if (syncStatusEl) syncStatusEl.textContent = "Offline";
-    });
-
-    function initFirebaseSync() {
-      if (!isFirebaseReady || !rtdb) return;
-
-      rtdb.ref("wcf_census_records").on('value', (snapshot) => {
-        const val = snapshot.val();
-        if (val) {
-          storedFRCRecords = { ...storedFRCRecords, ...val };
-          try {
-            localStorage.setItem('WCF_CENSUS_RECORDS', JSON.stringify(storedFRCRecords));
-          } catch(e) {}
-          updateCensusCounters();
-        }
-      }, (err) => {
-        console.warn("RTDB Sync standby:", err);
-      });
+      loadAdminPendingQueue();
     }
 
     function changeLanguage(lang) {
@@ -1369,7 +1486,7 @@
       document.getElementById('lblStatFemales').textContent = dict.lblStatFemales;
       document.getElementById('lblStatMinors').textContent = dict.lblStatMinors;
       
-      document.getElementById('headCardTitle').textContent = dict.headCardTitle;
+      document.getElementById('headCardTitle').textContent = currentRegMode === 'family' ? dict.headCardTitle : "Individual Adult Applicant Details";
       document.getElementById('headBadge').textContent = dict.headBadge;
 
       document.getElementById('lblHeadName').innerHTML = `${dict.lblHeadName} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`;
@@ -1391,7 +1508,6 @@
       document.getElementById('btnSubmitForm').textContent = dict.btnSubmitForm;
 
       document.getElementById('modalTopHeading').textContent = dict.modalTopHeading;
-      document.getElementById('modalTopSub').textContent = dict.modalTopSub;
       document.getElementById('btnDownloadAction').textContent = dict.btnDownloadPdf;
       document.getElementById('btnModalWhatsAppShare').textContent = dict.btnWhatsappShare;
       document.getElementById('btnModalClose').textContent = dict.btnCloseModal;
@@ -1439,6 +1555,7 @@
 
     function switchMainTab(tab) {
       const formEl = document.getElementById('censusForm');
+      const selectorCard = document.getElementById('regTypeSelectorCard');
       const searchEl = document.getElementById('searchSection');
       const cityEl = document.getElementById('cityStatsSection');
       const tabNewBtn = document.getElementById('tabNewReg');
@@ -1450,6 +1567,7 @@
 
       if (tab === 'new') {
         formEl.classList.remove('hidden');
+        selectorCard.classList.remove('hidden');
         searchEl.classList.add('hidden');
         cityEl.classList.add('hidden');
         tabNewBtn.className = activeCls;
@@ -1457,6 +1575,7 @@
         tabCityBtn.className = inactiveCls;
       } else if (tab === 'search') {
         formEl.classList.add('hidden');
+        selectorCard.classList.add('hidden');
         searchEl.classList.remove('hidden');
         cityEl.classList.add('hidden');
         tabSearchBtn.className = activeCls;
@@ -1465,6 +1584,7 @@
         document.getElementById('searchFRCInput').focus();
       } else if (tab === 'city') {
         formEl.classList.add('hidden');
+        selectorCard.classList.add('hidden');
         searchEl.classList.add('hidden');
         cityEl.classList.remove('hidden');
         tabCityBtn.className = activeCls;
@@ -1483,7 +1603,7 @@
       const filterArea = document.getElementById('popFilterArea');
 
       if (!inputVal) {
-        errEl.textContent = "Please enter FRC Code or Mobile Number.";
+        errEl.textContent = "Please enter Certificate Code or Mobile Number.";
         errEl.classList.remove('hidden');
         return;
       }
@@ -1494,24 +1614,16 @@
       const allRecords = Object.values(storedFRCRecords);
       const isMatched = allRecords.some(rec => {
         if (rec.code && rec.code.toUpperCase() === cleanUpper) return true;
+        if (rec.head && rec.head.memberId && rec.head.memberId.toUpperCase() === cleanUpper) return true;
         if (rec.head && rec.head.phone) {
           const recPhone = rec.head.phone.replace(/[^0-9]/g, '');
           if (cleanPhoneInput && (recPhone.endsWith(cleanPhoneInput) || cleanPhoneInput.endsWith(recPhone))) return true;
-        }
-        if (rec.members && Array.isArray(rec.members)) {
-          return rec.members.some(m => {
-            if (m.phone) {
-              const mPhone = m.phone.replace(/[^0-9]/g, '');
-              if (cleanPhoneInput && (mPhone.endsWith(cleanPhoneInput) || cleanPhoneInput.endsWith(mPhone))) return true;
-            }
-            return false;
-          });
         }
         return false;
       });
 
       if (!isMatched) {
-        errEl.textContent = `Identity (${inputVal}) not found. Please enter valid FRC Code or Mobile Number.`;
+        errEl.textContent = `Identity (${inputVal}) not found. Please enter valid Certificate Code or Mobile Number.`;
         errEl.classList.remove('hidden');
         return;
       }
@@ -1533,14 +1645,9 @@
     function runPublicPopulationQuery() {
       const selectedCountry = document.getElementById('popCountrySelect').value.trim().toLowerCase();
       const inputCity = document.getElementById('popCityInput').value.trim().toLowerCase();
-
       const allRecords = Object.values(storedFRCRecords);
 
-      let famCount = 0;
-      let totalPop = 0;
-      let males = 0;
-      let females = 0;
-      let minors = 0;
+      let famCount = 0, totalPop = 0, males = 0, females = 0, minors = 0;
 
       allRecords.forEach(rec => {
         const headCountry = (rec.head && rec.head.country) ? rec.head.country.trim().toLowerCase() : '';
@@ -1551,16 +1658,12 @@
         if (inputCity && !headCity.includes(inputCity)) matchHead = false;
 
         if (matchHead) {
-          famCount++;
+          if (rec.type === 'family') famCount++;
           totalPop++;
-          const hAge = parseInt(rec.head.age) || 35;
-          if (hAge < 18) {
-            minors++;
-          } else if (rec.head.genderKey === 'Male' || rec.head.gender === 'مرد' || rec.head.gender === 'Male') {
-            males++;
-          } else {
-            females++;
-          }
+          const hAge = parseInt(rec.head.age) || calculateAge(rec.head.dob);
+          if (hAge < 18) minors++;
+          else if (rec.head.genderKey === 'Male' || rec.head.gender === 'مرد' || rec.head.gender === 'Male') males++;
+          else females++;
         }
 
         if (rec.members && Array.isArray(rec.members)) {
@@ -1574,14 +1677,10 @@
 
             if (matchMem) {
               totalPop++;
-              const mAge = parseInt(m.age) || 0;
-              if (mAge < 18) {
-                minors++;
-              } else if (m.genderKey === 'Male' || m.gender === 'مرد' || m.gender === 'Male') {
-                males++;
-              } else {
-                females++;
-              }
+              const mAge = parseInt(m.age) || calculateAge(m.dob);
+              if (mAge < 18) minors++;
+              else if (m.genderKey === 'Male' || m.gender === 'مرد' || m.gender === 'Male') males++;
+              else females++;
             }
           });
         }
@@ -1602,24 +1701,15 @@
     function handleDOBChange(id) {
       const dobVal = document.getElementById(`memDOB_${id}`).value;
       if (!dobVal) return;
-
-      const birthDate = new Date(dobVal);
-      const diff = Date.now() - birthDate.getTime();
-      const ageDate = new Date(diff);
-      const calculatedAge = Math.abs(ageDate.getUTCFullYear() - 1970);
-
-      const ageInput = document.getElementById(`memAge_${id}`);
-      ageInput.value = isNaN(calculatedAge) ? 0 : calculatedAge;
+      const calculatedAge = calculateAge(dobVal);
+      document.getElementById(`memAge_${id}`).value = isNaN(calculatedAge) ? 0 : calculatedAge;
     }
 
     function toggleMemberAddressMode(id) {
       const choice = document.getElementById(`memAddrChoice_${id}`).value;
       const wrap = document.getElementById(`memOtherAddrWrap_${id}`);
-      if (choice === 'other') {
-        wrap.classList.remove('hidden');
-      } else {
-        wrap.classList.add('hidden');
-      }
+      if (choice === 'other') wrap.classList.remove('hidden');
+      else wrap.classList.add('hidden');
     }
 
     function addMemberCard(existingData = null) {
@@ -1637,75 +1727,48 @@
           <button type="button" onclick="removeMemberCard(${id})" class="text-xs text-red-600 hover:text-red-700 font-semibold">${dict.btnRemove}</button>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-          
           <div>
-            <label class="block text-xs font-semibold text-slate-700 lbl-mem-rel">
-              ${dict.lblMemRel} <span class="text-red-500 font-bold ml-1 mr-1">*</span>
-            </label>
+            <label class="block text-xs font-semibold text-slate-700 lbl-mem-rel">${dict.lblMemRel} *</label>
             <select id="memRel_${id}" onchange="handleRelationChange(${id})" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none">
               ${Object.entries(dict.relations).map(([k, v]) => `<option value="${k}">${v}</option>`).join('')}
             </select>
           </div>
-
           <div>
-            <label class="block text-xs font-semibold text-slate-700 lbl-mem-name">
-              ${dict.lblMemName} <span class="text-red-500 font-bold ml-1 mr-1">*</span>
-            </label>
+            <label class="block text-xs font-semibold text-slate-700 lbl-mem-name">${dict.lblMemName} *</label>
             <input type="text" id="memName_${id}" required class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none">
           </div>
-
           <div>
-            <label class="block text-xs font-semibold text-slate-700 lbl-mem-dob">
-              ${dict.lblMemDOB} <span class="text-red-500 font-bold ml-1 mr-1">*</span>
-            </label>
+            <label class="block text-xs font-semibold text-slate-700 lbl-mem-dob">${dict.lblMemDOB} *</label>
             <input type="date" id="memDOB_${id}" onchange="handleDOBChange(${id})" required class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none">
           </div>
-
           <div>
-            <label class="block text-xs font-semibold text-slate-700 lbl-mem-gender">
-              ${dict.lblMemGender} <span class="text-red-500 font-bold ml-1 mr-1">*</span>
-            </label>
+            <label class="block text-xs font-semibold text-slate-700 lbl-mem-gender">${dict.lblMemGender} *</label>
             <select id="memGender_${id}" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none">
               ${Object.entries(dict.genders).map(([k, v]) => `<option value="${k}">${v}</option>`).join('')}
             </select>
           </div>
-
           <div>
-            <label class="block text-xs font-semibold text-slate-700 lbl-mem-marital">
-              ${dict.lblMemMarital} <span class="text-red-500 font-bold ml-1 mr-1">*</span>
-            </label>
+            <label class="block text-xs font-semibold text-slate-700 lbl-mem-marital">${dict.lblMemMarital} *</label>
             <select id="memMarital_${id}" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none">
               ${Object.entries(dict.maritalStatuses).map(([k, v]) => `<option value="${k}">${v}</option>`).join('')}
             </select>
           </div>
-
           <div>
-            <label class="block text-xs font-semibold text-slate-700 lbl-mem-age">
-              ${dict.lblMemAge} <span class="text-red-500 font-bold ml-1 mr-1">*</span>
-            </label>
+            <label class="block text-xs font-semibold text-slate-700 lbl-mem-age">${dict.lblMemAge} *</label>
             <input type="number" id="memAge_${id}" min="0" max="120" value="20" required class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none">
           </div>
-
           <div>
-            <label class="block text-xs font-semibold text-slate-700 lbl-mem-phone">
-              ${dict.lblMemPhoneOpt}
-            </label>
+            <label class="block text-xs font-semibold text-slate-700 lbl-mem-phone">${dict.lblMemPhoneOpt}</label>
             <input type="tel" id="memPhone_${id}" placeholder="+92..." class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none text-left">
           </div>
-
           <div id="memWifeLineageWrap_${id}" class="hidden">
-            <label class="block text-xs font-semibold text-slate-700 lbl-mem-lineage">
-              ${dict.lblMemLineage} <span class="text-red-500 font-bold ml-1 mr-1">*</span>
-            </label>
+            <label class="block text-xs font-semibold text-slate-700 lbl-mem-lineage">${dict.lblMemLineage} *</label>
             <select id="memLineage_${id}" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none">
               ${Object.entries(dict.lineage).map(([k, v]) => `<option value="${k}">${v}</option>`).join('')}
             </select>
           </div>
-
           <div>
-            <label class="block text-xs font-semibold text-slate-700 lbl-mem-edu">
-              ${dict.lblMemEdu} <span class="text-red-500 font-bold ml-1 mr-1">*</span>
-            </label>
+            <label class="block text-xs font-semibold text-slate-700 lbl-mem-edu">${dict.lblMemEdu} *</label>
             <select id="memEdu_${id}" onchange="toggleManualInput(this, 'memEduOtherWrap_${id}')" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none">
               ${Object.entries(dict.education).map(([k, v]) => `<option value="${k}">${v}</option>`).join('')}
             </select>
@@ -1713,11 +1776,8 @@
               <input type="text" id="memEduOther_${id}" class="w-full border border-amber-400 rounded-lg px-3 text-xs bg-amber-50 outline-none">
             </div>
           </div>
-
           <div>
-            <label class="block text-xs font-semibold text-slate-700 lbl-mem-job">
-              ${dict.lblMemJob} <span class="text-red-500 font-bold ml-1 mr-1">*</span>
-            </label>
+            <label class="block text-xs font-semibold text-slate-700 lbl-mem-job">${dict.lblMemJob} *</label>
             <select id="memJob_${id}" onchange="toggleManualInput(this, 'memJobOtherWrap_${id}')" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none">
               ${Object.entries(dict.jobs).map(([k, v]) => `<option value="${k}">${v}</option>`).join('')}
             </select>
@@ -1725,40 +1785,29 @@
               <input type="text" id="memJobOther_${id}" class="w-full border border-amber-400 rounded-lg px-3 text-xs bg-amber-50 outline-none">
             </div>
           </div>
-
           <div class="md:col-span-2">
-            <label class="block text-xs font-semibold text-slate-700 lbl-mem-addr">
-              ${dict.lblMemAddrChoice} <span class="text-red-500 font-bold ml-1 mr-1">*</span>
-            </label>
+            <label class="block text-xs font-semibold text-slate-700 lbl-mem-addr">${dict.lblMemAddrChoice} *</label>
             <select id="memAddrChoice_${id}" onchange="toggleMemberAddressMode(${id})" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white">
               <option value="same">${dict.optSameAsHead}</option>
               <option value="other">${dict.optOtherAddr}</option>
             </select>
           </div>
-
           <div id="memOtherAddrWrap_${id}" class="hidden md:col-span-3 bg-amber-50/70 p-3 rounded-lg border border-amber-200 grid grid-cols-1 md:grid-cols-3 gap-2">
             <div>
-              <label class="block text-[11px] font-semibold text-slate-700 mb-0.5">
-                ${dict.lblMemCountry} <span class="text-red-500 font-bold ml-1 mr-1">*</span>
-              </label>
+              <label class="block text-[11px] font-semibold text-slate-700 mb-0.5">${dict.lblMemCountry} *</label>
               <select id="memCountry_${id}" class="w-full border border-slate-300 rounded px-2 py-1 text-xs bg-white">
                 ${allWorldCountries.map(c => `<option value="${c}">${getCountryLocalizedName(c, currentLang)}</option>`).join('')}
               </select>
             </div>
             <div>
-              <label class="block text-[11px] font-semibold text-slate-700 mb-0.5">
-                ${dict.lblMemCity} <span class="text-red-500 font-bold ml-1 mr-1">*</span>
-              </label>
+              <label class="block text-[11px] font-semibold text-slate-700 mb-0.5">${dict.lblMemCity} *</label>
               <input type="text" id="memCity_${id}" placeholder="e.g. Lahore, Jodhpur..." class="w-full border border-slate-300 rounded px-2 py-1 text-xs bg-white">
             </div>
             <div>
-              <label class="block text-[11px] font-semibold text-slate-700 mb-0.5">
-                ${dict.lblMemAddress} <span class="text-red-500 font-bold ml-1 mr-1">*</span>
-              </label>
+              <label class="block text-[11px] font-semibold text-slate-700 mb-0.5">${dict.lblMemAddress} *</label>
               <input type="text" id="memAddress_${id}" placeholder="Street, Colony, House..." class="w-full border border-slate-300 rounded px-2 py-1 text-xs bg-white">
             </div>
           </div>
-
         </div>
       `;
 
@@ -1772,7 +1821,6 @@
         if (existingData.dob) document.getElementById(`memDOB_${id}`).value = existingData.dob;
         if (existingData.maritalStatusKey) document.getElementById(`memMarital_${id}`).value = existingData.maritalStatusKey;
         if (existingData.relationKey) document.getElementById(`memRel_${id}`).value = existingData.relationKey;
-        
         if (existingData.addrChoice === 'other') {
           document.getElementById(`memAddrChoice_${id}`).value = 'other';
           document.getElementById(`memOtherAddrWrap_${id}`).classList.remove('hidden');
@@ -1795,11 +1843,8 @@
       const maritalSelect = document.getElementById(`memMarital_${id}`);
       const wifeLineageWrap = document.getElementById(`memWifeLineageWrap_${id}`);
 
-      if (['Wife', 'Daughter', 'Mother', 'Sister'].includes(rel)) {
-        genderSelect.value = 'Female';
-      } else if (['Husband', 'Son', 'Father', 'Brother'].includes(rel)) {
-        genderSelect.value = 'Male';
-      }
+      if (['Wife', 'Daughter', 'Mother', 'Sister'].includes(rel)) genderSelect.value = 'Female';
+      else if (['Husband', 'Son', 'Father', 'Brother'].includes(rel)) genderSelect.value = 'Male';
 
       if (rel === 'Wife') {
         wifeLineageWrap.classList.remove('hidden');
@@ -1818,31 +1863,18 @@
       cards.forEach(card => {
         const id = card.id.split('_')[1];
         card.querySelector('.member-title').textContent = `${dict.memberCardTitle} ${id}`;
-        card.querySelector('.lbl-mem-rel').innerHTML = `${dict.lblMemRel} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`;
-        card.querySelector('.lbl-mem-name').innerHTML = `${dict.lblMemName} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`;
-        card.querySelector('.lbl-mem-dob').innerHTML = `${dict.lblMemDOB} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`;
-        card.querySelector('.lbl-mem-gender').innerHTML = `${dict.lblMemGender} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`;
-        card.querySelector('.lbl-mem-marital').innerHTML = `${dict.lblMemMarital} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`;
-        card.querySelector('.lbl-mem-age').innerHTML = `${dict.lblMemAge} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`;
+        card.querySelector('.lbl-mem-rel').textContent = `${dict.lblMemRel} *`;
+        card.querySelector('.lbl-mem-name').textContent = `${dict.lblMemName} *`;
+        card.querySelector('.lbl-mem-dob').textContent = `${dict.lblMemDOB} *`;
+        card.querySelector('.lbl-mem-gender').textContent = `${dict.lblMemGender} *`;
+        card.querySelector('.lbl-mem-marital').textContent = `${dict.lblMemMarital} *`;
+        card.querySelector('.lbl-mem-age').textContent = `${dict.lblMemAge} *`;
         card.querySelector('.lbl-mem-phone').textContent = dict.lblMemPhoneOpt;
-        card.querySelector('.lbl-mem-edu').innerHTML = `${dict.lblMemEdu} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`;
-        card.querySelector('.lbl-mem-lineage').innerHTML = `${dict.lblMemLineage} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`;
-        card.querySelector('.lbl-mem-job').innerHTML = `${dict.lblMemJob} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`;
-        card.querySelector('.lbl-mem-addr').innerHTML = `${dict.lblMemAddrChoice} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`;
+        card.querySelector('.lbl-mem-edu').textContent = `${dict.lblMemEdu} *`;
+        card.querySelector('.lbl-mem-lineage').textContent = `${dict.lblMemLineage} *`;
+        card.querySelector('.lbl-mem-job').textContent = `${dict.lblMemJob} *`;
+        card.querySelector('.lbl-mem-addr').textContent = `${dict.lblMemAddrChoice} *`;
         card.querySelector('button').textContent = dict.btnRemove;
-
-        const eduOther = document.getElementById(`memEduOther_${id}`);
-        if (eduOther) eduOther.placeholder = dict.otherEduPlaceholder;
-
-        const jobOther = document.getElementById(`memJobOther_${id}`);
-        if (jobOther) jobOther.placeholder = dict.otherJobPlaceholder;
-
-        const memCountrySel = document.getElementById(`memCountry_${id}`);
-        if (memCountrySel) {
-          const prevVal = memCountrySel.value || 'Pakistan';
-          memCountrySel.innerHTML = allWorldCountries.map(c => `<option value="${c}">${getCountryLocalizedName(c, currentLang)}</option>`).join('');
-          memCountrySel.value = prevVal;
-        }
 
         populateSelectOptions(`memRel_${id}`, dict.relations);
         populateSelectOptions(`memGender_${id}`, dict.genders);
@@ -1850,7 +1882,6 @@
         populateSelectOptions(`memLineage_${id}`, dict.lineage, 'Chhippa');
         populateSelectOptions(`memEdu_${id}`, dict.education, 'Matric');
         populateSelectOptions(`memJob_${id}`, dict.jobs, 'Student');
-        
         handleRelationChange(id);
       });
     }
@@ -1861,7 +1892,7 @@
       const errEl = document.getElementById('searchErrorMsg');
 
       if (!inputVal) {
-        errEl.textContent = "Please enter FRC Code or Mobile Number.";
+        errEl.textContent = "Please enter Certificate Code or Mobile Number.";
         errEl.classList.remove('hidden');
         return;
       }
@@ -1886,6 +1917,7 @@
       editingExistingFRCCode = foundRecord.code;
 
       switchMainTab('new');
+      setRegistrationMode('family');
       document.getElementById('updatingFamilyBanner').classList.remove('hidden');
       document.getElementById('updatingFRCCode').textContent = foundRecord.code;
       document.getElementById('btnSubmitForm').textContent = `Update Family (${foundRecord.code})`;
@@ -1897,9 +1929,6 @@
       document.getElementById('headPhone').value = foundRecord.head.phone;
       document.getElementById('headAddress').value = foundRecord.head.address;
 
-      const locParts = (foundRecord.head.location || "").split(',');
-      if (locParts[0]) document.getElementById('headCity').value = locParts[0].trim();
-
       const container = document.getElementById('membersContainer');
       container.innerHTML = '';
       memberCount = 0;
@@ -1907,7 +1936,6 @@
       if (foundRecord.members && Array.isArray(foundRecord.members)) {
         foundRecord.members.forEach(m => addMemberCard(m));
       }
-
       addMemberCard();
     }
 
@@ -1921,7 +1949,7 @@
     }
 
     // ==========================================
-    // 4. Form Submission with Golden Lock Protection
+    // 4. Form Submission Pipeline
     // ==========================================
     async function handleFormSubmit(e) {
       e.preventDefault();
@@ -1929,12 +1957,22 @@
       const submitBtn = document.getElementById('btnSubmitForm');
       const originalBtnText = submitBtn.textContent;
       submitBtn.disabled = true;
-      submitBtn.textContent = "Processing...";
+      submitBtn.textContent = "Processing & Securing...";
 
       const dict = i18n[currentLang];
       const headName = document.getElementById('headName').value.trim();
       const headFather = document.getElementById('headFather').value.trim();
       const headDOB = document.getElementById('headDOB').value;
+      const headAge = calculateAge(headDOB);
+
+      // Minor Protection Hard-Lock
+      if (headAge < 18) {
+        alert("Registration Stop: Minors under 18 years of age cannot register as an independent Head of Family. They must be registered within their parent or legal guardian's Family Record.");
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalBtnText;
+        return;
+      }
+
       const headGenderKey = document.getElementById('headGender').value;
       const headMaritalKey = document.getElementById('headMarital').value;
       const headClanKey = document.getElementById('headClan').value;
@@ -1952,68 +1990,72 @@
       const headCity = document.getElementById('headCity').value.trim();
       const headAddress = document.getElementById('headAddress').value.trim();
 
-      const frcCode = editingExistingFRCCode || `WCF-${Math.floor(100000 + Math.random() * 900000)}`;
+      const certCode = editingExistingFRCCode || (currentRegMode === 'family' ? `WCF-${Math.floor(100000 + Math.random() * 900000)}` : `IIC-${Math.floor(100000 + Math.random() * 900000)}`);
+      const headMemberId = generatePermanentMemberId();
 
       const members = [];
-      const cards = document.querySelectorAll('[id^="memberCard_"]');
+      if (currentRegMode === 'family') {
+        const cards = document.querySelectorAll('[id^="memberCard_"]');
+        cards.forEach((card, idx) => {
+          const id = card.id.split('_')[1];
+          const mRelKey = document.getElementById(`memRel_${id}`).value;
+          const mName = document.getElementById(`memName_${id}`).value.trim();
+          const mDOB = document.getElementById(`memDOB_${id}`).value;
+          const mGenderKey = document.getElementById(`memGender_${id}`).value;
+          const mMaritalKey = document.getElementById(`memMarital_${id}`).value;
+          const mAgeVal = document.getElementById(`memAge_${id}`).value;
+          const mPhone = document.getElementById(`memPhone_${id}`) ? document.getElementById(`memPhone_${id}`).value.trim() : '';
 
-      cards.forEach((card, idx) => {
-        const id = card.id.split('_')[1];
-        const mRelKey = document.getElementById(`memRel_${id}`).value;
-        const mName = document.getElementById(`memName_${id}`).value.trim();
-        const mDOB = document.getElementById(`memDOB_${id}`).value;
-        const mGenderKey = document.getElementById(`memGender_${id}`).value;
-        const mMaritalKey = document.getElementById(`memMarital_${id}`).value;
-        const mAgeVal = document.getElementById(`memAge_${id}`).value;
-        const mPhone = document.getElementById(`memPhone_${id}`) ? document.getElementById(`memPhone_${id}`).value.trim() : '';
+          let mLineage = dict.lineage.Chhippa;
+          if (mRelKey === 'Wife') {
+            const mLineageKey = document.getElementById(`memLineage_${id}`).value;
+            mLineage = dict.lineage[mLineageKey];
+          }
 
-        let mLineage = dict.lineage.Chhippa;
-        if (mRelKey === 'Wife') {
-          const mLineageKey = document.getElementById(`memLineage_${id}`).value;
-          mLineage = dict.lineage[mLineageKey];
-        }
+          const mEduKey = document.getElementById(`memEdu_${id}`).value;
+          const mEdu = mEduKey === 'Other' ? (document.getElementById(`memEduOther_${id}`).value.trim() || dict.education.Other) : dict.education[headEduKey];
 
-        const mEduKey = document.getElementById(`memEdu_${id}`).value;
-        const mEdu = mEduKey === 'Other' ? (document.getElementById(`memEduOther_${id}`).value.trim() || dict.education.Other) : dict.education[headEduKey];
+          const mJobKey = document.getElementById(`memJob_${id}`).value;
+          const mJob = mJobKey === 'Other' ? (document.getElementById(`memJobOther_${id}`).value.trim() || dict.jobs.Other) : dict.jobs[mJobKey];
 
-        const mJobKey = document.getElementById(`memJob_${id}`).value;
-        const mJob = mJobKey === 'Other' ? (document.getElementById(`memJobOther_${id}`).value.trim() || dict.jobs.Other) : dict.jobs[mJobKey];
+          const mAddrChoice = document.getElementById(`memAddrChoice_${id}`).value;
+          let mCountry = headCountry;
+          let mCity = headCity;
+          let mAddress = headAddress;
 
-        const mAddrChoice = document.getElementById(`memAddrChoice_${id}`).value;
-        let mCountry = headCountry;
-        let mCity = headCity;
-        let mAddress = headAddress;
+          if (mAddrChoice === 'other') {
+            mCountry = document.getElementById(`memCountry_${id}`).value;
+            mCity = document.getElementById(`memCity_${id}`).value.trim() || headCity;
+            mAddress = document.getElementById(`memAddress_${id}`).value.trim() || headAddress;
+          }
 
-        if (mAddrChoice === 'other') {
-          mCountry = document.getElementById(`memCountry_${id}`).value;
-          mCity = document.getElementById(`memCity_${id}`).value.trim() || headCity;
-          mAddress = document.getElementById(`memAddress_${id}`).value.trim() || headAddress;
-        }
-
-        members.push({
-          uniqueId: `${frcCode}-${idx + 2}`,
-          name: mName,
-          relation: dict.relations[mRelKey],
-          relationKey: mRelKey,
-          gender: dict.genders[mGenderKey],
-          genderKey: mGenderKey,
-          dob: mDOB,
-          maritalStatus: dict.maritalStatuses[mMaritalKey],
-          maritalStatusKey: mMaritalKey,
-          age: parseInt(mAgeVal) || 0,
-          phone: mPhone,
-          edu: mEdu,
-          eduKey: mEduKey,
-          job: mJob,
-          jobKey: mJobKey,
-          addrChoice: mAddrChoice,
-          country: mCountry,
-          city: mCity,
-          address: mAddress,
-          lineage: mLineage
+          members.push({
+            memberId: generatePermanentMemberId(),
+            uniqueId: `${certCode}-${idx + 2}`,
+            name: mName,
+            relation: dict.relations[mRelKey],
+            relationKey: mRelKey,
+            gender: dict.genders[mGenderKey],
+            genderKey: mGenderKey,
+            dob: mDOB,
+            maritalStatus: dict.maritalStatuses[mMaritalKey],
+            maritalStatusKey: mMaritalKey,
+            age: parseInt(mAgeVal) || calculateAge(mDOB),
+            phone: mPhone,
+            edu: mEdu,
+            eduKey: mEduKey,
+            job: mJob,
+            jobKey: mJobKey,
+            addrChoice: mAddrChoice,
+            country: mCountry,
+            city: mCity,
+            address: mAddress,
+            lineage: mLineage
+          });
         });
-      });
+      }
 
+      // NADRA-Style Deduplication Check
       const dupCheck = checkGoldenBiographicDuplication(headFather, headDOB, headClan, members, editingExistingFRCCode);
       if (dupCheck.duplicate) {
         alert(dupCheck.reason);
@@ -2022,15 +2064,24 @@
         return;
       }
 
+      const assignedStatus = "Pending Verification";
+
       const record = {
-        code: frcCode,
+        code: certCode,
+        type: currentRegMode,
+        status: assignedStatus,
         lang: currentLang,
         issueDate: new Date().toLocaleDateString('en-GB'),
         head: {
-          uniqueId: `${frcCode}-1`,
+          memberId: headMemberId,
+          uniqueId: `${certCode}-1`,
           name: headName,
           father: headFather,
+          fatherDeceased: document.getElementById('headFatherDeceased').checked,
+          mother: document.getElementById('headMother').value.trim() || 'Not Specified',
+          motherDeceased: document.getElementById('headMotherDeceased').checked,
           dob: headDOB,
+          age: headAge,
           gender: dict.genders[headGenderKey],
           genderKey: headGenderKey,
           maritalStatus: dict.maritalStatuses[headMaritalKey],
@@ -2048,157 +2099,186 @@
           location: `${headCity}, ${getCountryLocalizedName(headCountry, currentLang)}`,
           address: headAddress
         },
-        members: members
+        members: members,
+        reference: {
+          elder: document.getElementById('refElderName').value.trim(),
+          contact: document.getElementById('refElderContact').value.trim()
+        }
       };
 
-      storedFRCRecords[frcCode] = record;
+      storedFRCRecords[certCode] = record;
       try {
         localStorage.setItem('WCF_CENSUS_RECORDS', JSON.stringify(storedFRCRecords));
       } catch (err) {}
 
-      queueRecordForOfflineSync(record);
+      // Write to Firebase Firestore Partition (if live)
+      if (isCloudReady && db) {
+        try {
+          db.collection('census_registrations').doc(certCode).set(record);
+        } catch(e) {}
+      }
 
-      lastGeneratedFRC = record;
+      activeViewingRecord = record;
       editingExistingFRCCode = null;
       document.getElementById('updatingFamilyBanner').classList.add('hidden');
       submitBtn.textContent = dict.btnSubmitForm;
       submitBtn.disabled = false;
 
       updateCensusCounters();
-      displayFRCModal(record);
+      displayCertificateModal(record);
     }
 
     // ==========================================
-    // 5. Display FRC Certificate & WhatsApp Sharing
+    // 5. Display Certificates (FRC vs IIC)
     // ==========================================
-    function displayFRCModal(record) {
+    function displayCertificateModal(record) {
+      activeViewingRecord = record;
       const recLang = record.lang || currentLang;
       const dict = i18n[recLang];
 
-      const sheet = document.getElementById('frcCertificateSheet');
-      const isRTL = recLang === 'ur';
-      sheet.setAttribute('dir', isRTL ? 'rtl' : 'ltr');
-      sheet.className = `relative bg-white w-[794px] min-h-[1050px] p-6 border border-slate-300 shadow text-slate-900 overflow-hidden shrink-0 flex flex-col justify-between ${recLang === 'hi' ? 'font-devanagari' : (recLang === 'en' ? 'font-latin' : '')}`;
+      const frcSheet = document.getElementById('frcCertificateSheet');
+      const iicSheet = document.getElementById('iicCertificateSheet');
+      const statusBadge = document.getElementById('modalCertStatusBadge');
 
-      document.getElementById('frcDocBadge').textContent = dict.frcDocBadge;
-      document.getElementById('frcDocOrg').textContent = dict.frcDocOrg;
-      document.getElementById('frcDocTagline').textContent = dict.frcDocTagline;
-      document.getElementById('frcLblHeadName').textContent = dict.frcLblHeadName;
-      document.getElementById('frcLblHeadFather').textContent = dict.frcLblHeadFather;
-      document.getElementById('frcLblHeadClan').textContent = dict.frcLblHeadClan;
-      document.getElementById('frcLblHeadEdu').textContent = dict.frcLblHeadEdu;
-      document.getElementById('frcLblHeadPhone').textContent = dict.frcLblHeadPhone;
-      document.getElementById('frcLblHeadLoc').textContent = dict.frcLblHeadLoc;
-      document.getElementById('frcLblHeadAddress').textContent = dict.frcLblHeadAddress;
-      document.getElementById('frcLblHeadLineage').textContent = dict.frcLblHeadLineage;
+      statusBadge.textContent = `Status: ${record.status || 'Verified'}`;
+      statusBadge.className = record.status === 'Approved' ? 
+        'text-[10px] bg-emerald-500/30 text-emerald-300 border border-emerald-400/40 px-2 py-0.5 rounded font-mono' : 
+        'text-[10px] bg-amber-500/30 text-amber-300 border border-amber-400/40 px-2 py-0.5 rounded font-mono';
 
-      document.getElementById('thUID').textContent = dict.thUID;
-      document.getElementById('thName').textContent = dict.thName;
-      document.getElementById('thRel').textContent = dict.thRel;
-      document.getElementById('thGen').textContent = dict.thGen;
-      document.getElementById('thDOB').textContent = dict.thDOB;
-      document.getElementById('thMarital').textContent = dict.thMarital;
-      document.getElementById('thEdu').textContent = dict.thEdu;
-      document.getElementById('thJob').textContent = dict.thJob;
-      document.getElementById('thLoc').textContent = dict.thLoc;
-      document.getElementById('thLineage').textContent = dict.thLineage;
-      document.getElementById('frcDocSig').textContent = dict.frcDocSig;
+      if (record.type === 'family') {
+        frcSheet.classList.remove('hidden');
+        iicSheet.classList.add('hidden');
+        document.getElementById('modalTopHeading').textContent = dict.modalTopHeading;
 
-      document.getElementById('frcCodeDisplay').textContent = record.code;
-      document.getElementById('frcIssueDate').textContent = `Date: ${record.issueDate}`;
-      document.getElementById('frcHeadName').textContent = record.head.name;
-      document.getElementById('frcHeadFather').textContent = record.head.father;
-      document.getElementById('frcHeadClan').textContent = record.head.clan;
-      document.getElementById('frcHeadEdu').textContent = record.head.edu;
-      document.getElementById('frcHeadPhone').textContent = record.head.phone;
-      document.getElementById('frcHeadLocation').textContent = `${record.head.city}, ${getCountryLocalizedName(record.head.country, recLang)}`;
-      document.getElementById('frcHeadAddress').textContent = record.head.address || '-';
-      document.getElementById('frcHeadLineage').textContent = record.head.lineage;
+        const isRTL = recLang === 'ur';
+        frcSheet.setAttribute('dir', isRTL ? 'rtl' : 'ltr');
+        frcSheet.className = `relative bg-white w-[794px] min-h-[1050px] p-6 border border-slate-300 shadow text-slate-900 overflow-hidden shrink-0 flex flex-col justify-between ${recLang === 'hi' ? 'font-devanagari' : (recLang === 'en' ? 'font-latin' : '')}`;
 
-      const qrContainer = document.getElementById('frcQRCode');
-      qrContainer.innerHTML = '';
-      const totalMembersCount = record.members.length + 1;
-      const qrPayload = 
-        `WORLD CHHIPPA FOUNDATION - OFFICIAL VERIFICATION\n` +
-        `FRC Code: ${record.code}\n` +
-        `Head: ${record.head.name}\n` +
-        `Father: ${record.head.father}\n` +
-        `Total Members: ${totalMembersCount}\n` +
-        `Status: REGISTERED & VERIFIED\n` +
-        `Issued: ${record.issueDate}`;
+        document.getElementById('frcDocBadge').textContent = dict.frcDocBadge;
+        document.getElementById('frcDocOrg').textContent = dict.frcDocOrg;
+        document.getElementById('frcDocTagline').textContent = dict.frcDocTagline;
+        document.getElementById('frcLblHeadName').textContent = dict.frcLblHeadName;
+        document.getElementById('frcLblHeadFather').textContent = dict.frcLblHeadFather;
+        document.getElementById('frcLblHeadClan').textContent = dict.frcLblHeadClan;
+        document.getElementById('frcLblHeadEdu').textContent = dict.frcLblHeadEdu;
+        document.getElementById('frcLblHeadPhone').textContent = dict.frcLblHeadPhone;
+        document.getElementById('frcLblHeadLoc').textContent = dict.frcLblHeadLoc;
+        document.getElementById('frcLblHeadAddress').textContent = dict.frcLblHeadAddress;
+        document.getElementById('frcLblHeadLineage').textContent = dict.frcLblHeadLineage;
 
-      new QRCode(qrContainer, {
-        text: qrPayload,
-        width: 68,
-        height: 68,
-        colorDark: "#000000",
-        colorLight: "#ffffff",
-        correctLevel: QRCode.CorrectLevel.M
-      });
+        document.getElementById('thUID').textContent = dict.thUID;
+        document.getElementById('thName').textContent = dict.thName;
+        document.getElementById('thRel').textContent = dict.thRel;
+        document.getElementById('thGen').textContent = dict.thGen;
+        document.getElementById('thDOB').textContent = dict.thDOB;
+        document.getElementById('thMarital').textContent = dict.thMarital;
+        document.getElementById('thEdu').textContent = dict.thEdu;
+        document.getElementById('thJob').textContent = dict.thJob;
+        document.getElementById('thLoc').textContent = dict.thLoc;
+        document.getElementById('thLineage').textContent = dict.thLineage;
+        document.getElementById('frcDocSig').textContent = dict.frcDocSig;
 
-      const tableBody = document.getElementById('frcTableBody');
-      tableBody.innerHTML = '';
+        document.getElementById('frcCodeDisplay').textContent = record.code;
+        document.getElementById('frcIssueDate').textContent = `Date: ${record.issueDate}`;
+        document.getElementById('frcHeadName').textContent = record.head.name;
+        document.getElementById('frcHeadMemberId').textContent = record.head.memberId;
+        document.getElementById('frcHeadFather').textContent = record.head.father;
+        document.getElementById('frcHeadClan').textContent = record.head.clan;
+        document.getElementById('frcHeadEdu').textContent = record.head.edu;
+        document.getElementById('frcHeadPhone').textContent = record.head.phone;
+        document.getElementById('frcHeadLocation').textContent = `${record.head.city}, ${getCountryLocalizedName(record.head.country, recLang)}`;
+        document.getElementById('frcHeadAddress').textContent = record.head.address || '-';
+        document.getElementById('frcHeadLineage').textContent = record.head.lineage;
 
-      const headRow = document.createElement('tr');
-      headRow.className = "bg-slate-100 font-bold";
-      headRow.innerHTML = `
-        <td class="border border-slate-300 p-1">1</td>
-        <td class="border border-slate-300 p-1 font-mono text-[9px] text-slate-900">${record.code}-1</td>
-        <td class="border border-slate-300 p-1 text-[9.5px]">${record.head.name}</td>
-        <td class="border border-slate-300 p-1">${dict.headBadge}</td>
-        <td class="border border-slate-300 p-1">${record.head.gender}</td>
-        <td class="border border-slate-300 p-1 text-[8.5px] font-mono">${record.head.dob || '-'}</td>
-        <td class="border border-slate-300 p-1 text-[9px]">${(record.head.maritalStatus || 'Married').split(' ')[0]}</td>
-        <td class="border border-slate-300 p-1 text-[9px]">${record.head.edu}</td>
-        <td class="border border-slate-300 p-1 text-[9px]">${record.head.job}</td>
-        <td class="border border-slate-300 p-1 text-[8.5px]">${record.head.city}</td>
-        <td class="border border-slate-300 p-1 text-slate-900 font-bold">${record.head.lineage}</td>
-      `;
-      tableBody.appendChild(headRow);
+        // Privacy-Preserving QR Engine
+        const qrContainer = document.getElementById('frcQRCode');
+        qrContainer.innerHTML = '';
+        const secureVerificationUrl = `https://worldchhippafoundation.github.io/verify?doc=${record.code}&status=${record.status || 'Pending'}&id=${record.head.memberId}`;
+        new QRCode(qrContainer, { text: secureVerificationUrl, width: 68, height: 68, colorDark: "#000000", colorLight: "#ffffff" });
 
-      record.members.forEach((m, idx) => {
-        const row = document.createElement('tr');
-        const forcedSequentialId = `${record.code}-${idx + 2}`;
-        
-        let locDisplay = record.head.city;
-        if (m.addrChoice === 'other') {
-          const detailAddr = (m.address && m.address !== m.city) ? `, ${m.address}` : '';
-          locDisplay = `${m.city}${detailAddr}`;
-        }
+        const tableBody = document.getElementById('frcTableBody');
+        tableBody.innerHTML = '';
 
-        row.innerHTML = `
-          <td class="border border-slate-300 p-1">${idx + 2}</td>
-          <td class="border border-slate-300 p-1 font-mono text-[9px] text-slate-600">${forcedSequentialId}</td>
-          <td class="border border-slate-300 p-1 font-medium text-[9.5px]">${m.name}</td>
-          <td class="border border-slate-300 p-1">${m.relation}</td>
-          <td class="border border-slate-300 p-1">${m.gender}</td>
-          <td class="border border-slate-300 p-1 text-[8.5px] font-mono">${m.dob || '-'}</td>
-          <td class="border border-slate-300 p-1 text-[9px]">${m.maritalStatus ? m.maritalStatus.split(' ')[0] : '-'}</td>
-          <td class="border border-slate-300 p-1 text-[9px]">${m.edu}</td>
-          <td class="border border-slate-300 p-1 text-[9px]">${m.job}</td>
-          <td class="border border-slate-300 p-1 text-[8px] leading-tight max-w-[130px] break-words">${locDisplay}</td>
-          <td class="border border-slate-300 p-1 text-slate-900 font-bold">${m.lineage}</td>
+        const headRow = document.createElement('tr');
+        headRow.className = "bg-slate-100 font-bold";
+        headRow.innerHTML = `
+          <td class="border border-slate-300 p-1">1</td>
+          <td class="border border-slate-300 p-1 font-mono text-[9px] text-amber-900">${record.head.memberId}</td>
+          <td class="border border-slate-300 p-1 text-[9.5px]">${record.head.name}</td>
+          <td class="border border-slate-300 p-1">${dict.headBadge}</td>
+          <td class="border border-slate-300 p-1">${record.head.gender}</td>
+          <td class="border border-slate-300 p-1 text-[8.5px] font-mono">${record.head.dob || '-'}</td>
+          <td class="border border-slate-300 p-1 text-[9px]">${(record.head.maritalStatus || 'Married').split(' ')[0]}</td>
+          <td class="border border-slate-300 p-1 text-[9px]">${record.head.edu}</td>
+          <td class="border border-slate-300 p-1 text-[9px]">${record.head.job}</td>
+          <td class="border border-slate-300 p-1 text-[8.5px]">${record.head.city}</td>
+          <td class="border border-slate-300 p-1 text-slate-900 font-bold">${record.head.lineage}</td>
         `;
-        tableBody.appendChild(row);
-      });
+        tableBody.appendChild(headRow);
 
+        record.members.forEach((m, idx) => {
+          const row = document.createElement('tr');
+          let locDisplay = record.head.city;
+          if (m.addrChoice === 'other') {
+            const detailAddr = (m.address && m.address !== m.city) ? `, ${m.address}` : '';
+            locDisplay = `${m.city}${detailAddr}`;
+          }
+
+          row.innerHTML = `
+            <td class="border border-slate-300 p-1">${idx + 2}</td>
+            <td class="border border-slate-300 p-1 font-mono text-[9px] text-slate-700">${m.memberId || `${record.code}-${idx+2}`}</td>
+            <td class="border border-slate-300 p-1 font-medium text-[9.5px]">${m.name}</td>
+            <td class="border border-slate-300 p-1">${m.relation}</td>
+            <td class="border border-slate-300 p-1">${m.gender}</td>
+            <td class="border border-slate-300 p-1 text-[8.5px] font-mono">${m.dob || '-'}</td>
+            <td class="border border-slate-300 p-1 text-[9px]">${m.maritalStatus ? m.maritalStatus.split(' ')[0] : '-'}</td>
+            <td class="border border-slate-300 p-1 text-[9px]">${m.edu}</td>
+            <td class="border border-slate-300 p-1 text-[9px]">${m.job}</td>
+            <td class="border border-slate-300 p-1 text-[8px] leading-tight max-w-[130px] break-words">${locDisplay}</td>
+            <td class="border border-slate-300 p-1 text-slate-900 font-bold">${m.lineage}</td>
+          `;
+          tableBody.appendChild(row);
+        });
+
+      } else {
+        // Individual Identity Certificate (IIC)
+        frcSheet.classList.add('hidden');
+        iicSheet.classList.remove('hidden');
+        document.getElementById('modalTopHeading').textContent = "Individual Identity Certificate (Official IIC)";
+
+        document.getElementById('iicCodeDisplay').textContent = record.code;
+        document.getElementById('iicIssueDate').textContent = `Date: ${record.issueDate}`;
+        document.getElementById('iicPersonName').textContent = record.head.name;
+        document.getElementById('iicMemberId').textContent = record.head.memberId;
+        document.getElementById('iicFatherName').textContent = `${record.head.father}${record.head.fatherDeceased ? ' (Deceased)' : ''}`;
+        document.getElementById('iicMotherName').textContent = `${record.head.mother}${record.head.motherDeceased ? ' (Deceased)' : ''}`;
+        document.getElementById('iicClan').textContent = record.head.clan;
+        document.getElementById('iicDOB').textContent = record.head.dob;
+        document.getElementById('iicGenderMarital').textContent = `${record.head.gender} / ${record.head.maritalStatus}`;
+        document.getElementById('iicJob').textContent = record.head.job;
+        document.getElementById('iicPhone').textContent = record.head.phone;
+        document.getElementById('iicAddress').textContent = `${record.head.address}, ${record.head.city}, ${record.head.country}`;
+
+        const qrContainer = document.getElementById('iicQRCode');
+        qrContainer.innerHTML = '';
+        const secureVerificationUrl = `https://worldchhippafoundation.github.io/verify?doc=${record.code}&status=${record.status || 'Pending'}&id=${record.head.memberId}`;
+        new QRCode(qrContainer, { text: secureVerificationUrl, width: 68, height: 68, colorDark: "#000000", colorLight: "#ffffff" });
+      }
+
+      // WhatsApp Share Link
       const shareMsg = 
         `*WORLD CHHIPPA FOUNDATION - GLOBAL CENSUS*\n` +
-        `*Official Family Registration Certificate*\n\n` +
-        `📋 *Registration No:* ${record.code}\n` +
-        `👤 *Head of Family:* ${record.head.name}\n` +
-        `🛡️ *Father / Guardian:* ${record.head.father}\n` +
-        `🏛️ *Clan / Sub-Caste:* ${record.head.clan}\n` +
-        `👨‍👩‍👧‍👦 *Total Family Members:* ${totalMembersCount}\n` +
-        `📍 *Location:* ${record.head.city}\n` +
-        `📅 *Date of Issue:* ${record.issueDate}\n` +
-        `✅ *Status:* Certified & Digitally Locked\n\n` +
-        `_Conceived & Dedicated by M. Waseem Sadiq Tak (Neemray Walay)_`;
+        `*Official Document:* ${record.type === 'family' ? 'Family Registration Certificate' : 'Individual Identity Certificate'}\n\n` +
+        `📋 *Reference No:* ${record.code}\n` +
+        `👤 *Name:* ${record.head.name}\n` +
+        `🆔 *Member ID:* ${record.head.memberId}\n` +
+        `🛡️ *Father:* ${record.head.father}\n` +
+        `🏛️ *Clan:* ${record.head.clan}\n` +
+        `📍 *City:* ${record.head.city}\n` +
+        `📅 *Date:* ${record.issueDate}\n\n` +
+        `_Dedicated by M. Waseem Sadiq Tak (Neemray Walay)_`;
 
-      const shareBtn = document.getElementById('btnModalWhatsAppShare');
-      if (shareBtn) {
-        shareBtn.setAttribute('href', `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMsg)}`);
-      }
+      document.getElementById('btnModalWhatsAppShare').setAttribute('href', `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMsg)}`);
 
       const wrapper = document.getElementById('frcScaleWrapper');
       if (wrapper) {
@@ -2230,22 +2310,20 @@
     // ==========================================
     // 6. Direct 1-Page PDF Engine (V.6.0 Fixed Engine)
     // ==========================================
-    async function downloadFRCPDFOnly() {
+    async function downloadCertificatePDF() {
       const btn = document.getElementById('btnDownloadAction');
       const originalText = btn.textContent;
       btn.textContent = "Downloading...";
       btn.disabled = true;
 
       const wrapper = document.getElementById('frcScaleWrapper');
-      const sheet = document.getElementById('frcCertificateSheet');
+      const sheet = activeViewingRecord.type === 'family' ? document.getElementById('frcCertificateSheet') : document.getElementById('iicCertificateSheet');
 
-      // 1. Reset dynamic responsive scaling
       const prevTransform = wrapper.style.transform;
       const prevMargin = wrapper.style.marginBottom;
       wrapper.style.transform = 'none';
       wrapper.style.marginBottom = '0px';
 
-      // 2. Strict English font & letter spacing override for flawless canvas capture
       const prevFont = sheet.style.fontFamily;
       const prevLetterSpacing = sheet.style.letterSpacing;
       sheet.style.fontFamily = "Arial, Helvetica, sans-serif";
@@ -2253,7 +2331,6 @@
 
       const { jsPDF } = window.jspdf;
 
-      // 3. Crisp capture with letterRendering disabled to prevent character collapse
       const canvas = await html2canvas(sheet, {
         scale: 2.5,
         useCORS: true,
@@ -2262,7 +2339,6 @@
         windowWidth: 794
       });
 
-      // 4. Restore original styles immediately
       sheet.style.fontFamily = prevFont;
       sheet.style.letterSpacing = prevLetterSpacing;
       wrapper.style.transform = prevTransform;
@@ -2274,19 +2350,19 @@
       const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
       pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight > 297 ? 297 : pdfHeight);
-      pdf.save(`Official_FRC_${lastGeneratedFRC ? lastGeneratedFRC.code : 'Certificate'}.pdf`);
+      pdf.save(`Official_Certificate_${activeViewingRecord ? activeViewingRecord.code : 'Doc'}.pdf`);
 
       btn.textContent = originalText;
       btn.disabled = false;
     }
 
-    function searchAndReprintFRC() {
+    function searchAndReprintCertificate() {
       const inputVal = document.getElementById('searchFRCInput').value.trim();
       const cleanUpper = inputVal.toUpperCase();
       const errEl = document.getElementById('searchErrorMsg');
 
       if (!inputVal) {
-        errEl.textContent = "Please enter FRC Code or Mobile Number.";
+        errEl.textContent = "Please enter Certificate Code, Member ID or Mobile Number.";
         errEl.classList.remove('hidden');
         return;
       }
@@ -2296,6 +2372,7 @@
       if (!foundRecord) {
         const cleanPhoneInput = inputVal.replace(/[^0-9]/g, '');
         foundRecord = Object.values(storedFRCRecords).find(rec => {
+          if (rec.head && rec.head.memberId && rec.head.memberId.toUpperCase() === cleanUpper) return true;
           if (!rec.head || !rec.head.phone) return false;
           const recPhone = rec.head.phone.replace(/[^0-9]/g, '');
           return recPhone.endsWith(cleanPhoneInput) || cleanPhoneInput.endsWith(recPhone);
@@ -2304,8 +2381,8 @@
 
       if (foundRecord) {
         errEl.classList.add('hidden');
-        lastGeneratedFRC = foundRecord;
-        displayFRCModal(foundRecord);
+        activeViewingRecord = foundRecord;
+        displayCertificateModal(foundRecord);
       } else {
         errEl.textContent = `Record (${inputVal}) not found. Please verify details.`;
         errEl.classList.remove('hidden');
@@ -2365,6 +2442,44 @@
       document.getElementById('adminModal').classList.add('hidden');
     }
 
+    function loadAdminPendingQueue() {
+      const list = document.getElementById('adminPendingList');
+      if (!list) return;
+      list.innerHTML = '';
+      const localList = Object.values(storedFRCRecords);
+      const pending = localList.filter(r => r.status === 'Possible Duplicate' || r.status === 'Pending Verification');
+
+      if (pending.length === 0) {
+        list.innerHTML = '<p class="text-slate-400 italic">No applications currently pending verification.</p>';
+        return;
+      }
+
+      pending.forEach(rec => {
+        const item = document.createElement('div');
+        item.className = "p-2 bg-white border rounded flex justify-between items-center";
+        item.innerHTML = `
+          <div>
+            <strong>${rec.head.name}</strong> (${rec.code}) - <span class="text-amber-700 font-bold">${rec.status}</span>
+            <div class="text-[10px] text-slate-500">Member ID: ${rec.head.memberId} | Clan: ${rec.head.clan}</div>
+          </div>
+          <div class="flex gap-1">
+            <button onclick="updateStatusByAdmin('${rec.code}', 'Approved')" class="bg-emerald-600 text-white px-2 py-1 rounded text-[10px]">Approve</button>
+            <button onclick="updateStatusByAdmin('${rec.code}', 'Rejected')" class="bg-red-600 text-white px-2 py-1 rounded text-[10px]">Reject</button>
+          </div>
+        `;
+        list.appendChild(item);
+      });
+    }
+
+    function updateStatusByAdmin(code, newStatus) {
+      if (storedFRCRecords[code]) {
+        storedFRCRecords[code].status = newStatus;
+        try { localStorage.setItem('WCF_CENSUS_RECORDS', JSON.stringify(storedFRCRecords)); } catch(e){}
+        updateCensusCounters();
+        alert(`Record [${code}] status set to ${newStatus}.`);
+      }
+    }
+
     function getEnglishValue(type, key) {
       if (!key) return '-';
       const enDict = i18n.en;
@@ -2378,7 +2493,7 @@
     }
 
     // ==========================================
-    // 8. Admin 1-Click PDF Report Engines
+    // 8. Admin 1-Click PDF Report Engines (Preserved)
     // ==========================================
     function exportCountryCityWisePDF() {
       const selectedCountry = document.getElementById('adminCountryDropdown').value.trim();
@@ -2424,7 +2539,7 @@
       doc.setFontSize(8);
       doc.setTextColor(100, 116, 139);
       const printDate = new Date().toLocaleDateString('en-GB');
-      const filterLabel = `Scope: Country: [${selectedCountry || 'All'}] | City: [${inputCity || 'All'}] | Families: ${matchedRecords.length} | Date: ${printDate}`;
+      const filterLabel = `Scope: Country: [${selectedCountry || 'All'}] | City: [${inputCity || 'All'}] | Records: ${matchedRecords.length} | Date: ${printDate}`;
       doc.text(filterLabel, 14, 17);
 
       let y = 25;
@@ -2435,7 +2550,7 @@
         doc.setFontSize(7);
         doc.setTextColor(255, 255, 255);
         doc.text("#", 16, currY);
-        doc.text("Unique ID", 22, currY);
+        doc.text("Member ID", 22, currY);
         doc.text("Full Name & Father/Guardian", 44, currY);
         doc.text("Relation / Clan", 95, currY);
         doc.text("Phone / WhatsApp", 132, currY);
@@ -2455,9 +2570,9 @@
         const h = rec.head;
         const allPersons = [
           {
-            uid: `${rec.code}-1`,
+            uid: h.memberId || `${rec.code}-1`,
             name: `${h.name} (${h.father ? 's/o ' + h.father : 'Head'})`,
-            relClan: `Head / ${getEnglishValue('clan', h.clanKey) || h.clan || 'Chhippa'}`,
+            relClan: `${rec.type === 'family' ? 'Head' : 'Individual'} / ${getEnglishValue('clan', h.clanKey) || h.clan || 'Chhippa'}`,
             phone: h.phone || '-',
             eduJob: `${getEnglishValue('education', h.eduKey) || h.edu || '-'} / ${getEnglishValue('job', h.jobKey) || h.job || '-'}`,
             dobAge: `${h.dob || '-'}`,
@@ -2466,9 +2581,9 @@
         ];
 
         if (rec.members && Array.isArray(rec.members)) {
-          rec.members.forEach((m, mIdx) => {
+          rec.members.forEach((m) => {
             allPersons.push({
-              uid: `${rec.code}-${mIdx + 2}`,
+              uid: m.memberId || `${rec.code}-M`,
               name: m.name,
               relClan: `${getEnglishValue('relation', m.relationKey) || m.relation} (${m.lineage || 'Chhippa'})`,
               phone: m.phone || h.phone || '-',
@@ -2527,7 +2642,7 @@
 
       doc.setFontSize(9);
       doc.setTextColor(100, 116, 139);
-      doc.text(`Generated: ${new Date().toLocaleDateString('en-GB')} | Total Families: ${allRecords.length}`, 14, 21);
+      doc.text(`Generated: ${new Date().toLocaleDateString('en-GB')} | Total Records: ${allRecords.length}`, 14, 21);
 
       let y = 30;
       doc.setFillColor(241, 245, 249);
@@ -2537,7 +2652,7 @@
       doc.setFont("helvetica", "bold");
       doc.setTextColor(0, 0, 0);
       doc.text("#", 16, y);
-      doc.text("FRC Code", 25, y);
+      doc.text("Member ID", 25, y);
       doc.text("Full Name (Head)", 60, y);
       doc.text("Phone / WhatsApp", 120, y);
       doc.text("City / Country", 160, y);
@@ -2553,9 +2668,10 @@
         const name = (rec.head && rec.head.name) ? rec.head.name : "N/A";
         const phone = (rec.head && rec.head.phone) ? rec.head.phone : "N/A";
         const loc = (rec.head && rec.head.location) ? rec.head.location : "N/A";
+        const mId = (rec.head && rec.head.memberId) ? rec.head.memberId : rec.code;
 
         doc.text(String(idx + 1), 16, y);
-        doc.text(rec.code || "", 25, y);
+        doc.text(mId || "", 25, y);
         doc.text(name.substring(0, 25), 60, y);
         doc.text(phone, 120, y);
         doc.text(loc.substring(0, 20), 160, y);
@@ -2576,7 +2692,7 @@
         if (rec.members && Array.isArray(rec.members)) {
           rec.members.forEach(m => {
             const isChild = (m.relationKey === 'Son' || m.relationKey === 'Daughter' || m.relation.includes('بیٹا') || m.relation.includes('بیٹی'));
-            const ageNum = parseInt(m.age) || 0;
+            const ageNum = parseInt(m.age) || calculateAge(m.dob);
             const isUnmarried = (m.maritalStatusKey === 'Unmarried' || !m.maritalStatusKey);
 
             if (isChild && ageNum >= 18 && isUnmarried) {
@@ -2741,9 +2857,7 @@
     function clearAllCensusData() {
       if (confirm("Are you sure you want to clear all census records? This action cannot be undone.")) {
         storedFRCRecords = {};
-        offlineQueue = [];
         localStorage.removeItem('WCF_CENSUS_RECORDS');
-        localStorage.removeItem('WCF_PENDING_QUEUE');
         updateCensusCounters();
         closeAdminModal();
         alert("Database has been successfully cleared.");
@@ -2763,7 +2877,6 @@
       document.getElementById('langSelect').value = 'en';
       changeLanguage('en');
       updateCensusCounters();
-      initFirebaseSync();
     });
   </script>
 </body>
