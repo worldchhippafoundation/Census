@@ -47,6 +47,23 @@
       padding-bottom: 0.45rem !important;
     }
 
+    /* Fixed Certificate Text-Rendering Protection */
+    #frcCertificateSheet {
+      line-height: 1.25 !important;
+      word-spacing: normal !important;
+      letter-spacing: normal !important;
+      box-sizing: border-box !important;
+    }
+
+    #frcCertificateSheet p, 
+    #frcCertificateSheet span, 
+    #frcCertificateSheet td, 
+    #frcCertificateSheet th, 
+    #frcCertificateSheet strong {
+      word-spacing: normal !important;
+      letter-spacing: normal !important;
+    }
+
     .watermark-container {
       position: absolute;
       top: 50%;
@@ -118,8 +135,8 @@
         <div class="flex items-center gap-2 bg-emerald-900/80 p-1.5 rounded-lg border border-emerald-700">
           <label id="lblLang" class="text-xs text-emerald-200 !mb-0 !leading-none">Language:</label>
           <select id="langSelect" onchange="changeLanguage(this.value)" class="bg-emerald-800 text-white text-xs md:text-sm font-semibold rounded px-2 py-1 outline-none cursor-pointer">
-            <option value="en">English</option>
-            <option value="ur" selected>اردو (Urdu)</option>
+            <option value="en" selected>English</option>
+            <option value="ur">اردو (Urdu)</option>
             <option value="hi">हिन्दी (Hindi)</option>
           </select>
         </div>
@@ -397,7 +414,7 @@
               </div>
 
               <!-- Top Section -->
-              <div>
+              <div class="w-full">
                 <!-- V.5 Standard FRC Header: Left QR/Reg, Center Text, Right Stamp.png -->
                 <div id="frcDocHeader" class="border-b-2 border-emerald-800 pb-2 mb-3 grid grid-cols-12 items-center relative z-10">
                   <div class="col-span-3 flex items-center gap-2">
@@ -437,7 +454,7 @@
                 </div>
 
                 <!-- Table with Sequential IDs & Integrated Member Address -->
-                <div class="relative z-10 mb-3">
+                <div class="relative z-10 mb-3 w-full">
                   <table class="w-full border-collapse border border-slate-300 text-[10px]">
                     <thead>
                       <tr class="bg-emerald-800 text-white text-center font-bold">
@@ -460,7 +477,7 @@
               </div>
 
               <!-- Bottom Order -->
-              <div class="mt-auto relative z-10 pt-2 border-t border-slate-300 space-y-2">
+              <div class="w-full relative z-10 pt-2 border-t border-slate-300 space-y-2">
                 <div class="flex justify-between items-end gap-3 pt-1">
                   <div class="bg-slate-50 border border-slate-300 rounded p-2.5 font-latin text-left max-w-sm shadow-sm">
                     <span class="text-[8px] text-slate-500 uppercase tracking-wider block font-semibold">
@@ -1077,7 +1094,7 @@
       }
     };
 
-    let currentLang = 'ur';
+    let currentLang = 'en';
     let memberCount = 0;
     let editingExistingFRCCode = null;
     let isPopDashboardUnlocked = false;
@@ -2207,7 +2224,7 @@
     }
 
     // ==========================================
-    // 6. Direct 1-Page PDF Engine (100% Intact V.2.0)
+    // 6. Direct 1-Page PDF Engine (100% Crisp Scaling)
     // ==========================================
     async function downloadFRCPDFOnly() {
       const btn = document.getElementById('btnDownloadAction');
@@ -2225,15 +2242,17 @@
       const { jsPDF } = window.jspdf;
 
       const canvas = await html2canvas(sheet, {
-        scale: 2.5,
+        scale: 3,
         useCORS: true,
-        logging: false
+        logging: false,
+        letterRendering: true,
+        windowWidth: 794
       });
 
       wrapper.style.transform = prevTransform;
       wrapper.style.marginBottom = prevMargin;
 
-      const imgData = canvas.toDataURL('image/jpeg', 0.96);
+      const imgData = canvas.toDataURL('image/jpeg', 0.98);
       const pdf = new jsPDF('p', 'mm', 'a4');
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
@@ -2725,8 +2744,9 @@
       const adminModal = document.getElementById('adminModal');
       if (adminModal) adminModal.classList.add('hidden');
 
-      document.getElementById('langSelect').value = 'ur';
-      changeLanguage('ur');
+      // Set English Default for Landing Page
+      document.getElementById('langSelect').value = 'en';
+      changeLanguage('en');
       updateCensusCounters();
       initFirebaseSync();
     });
