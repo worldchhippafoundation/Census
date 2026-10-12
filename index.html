@@ -1949,10 +1949,10 @@
         }
 
         const mEduKey = document.getElementById(`memEdu_${id}`).value;
-        const mEdu = mEduKey === 'Other' ? (document.getElementById('memEduOther_${id}`).value.trim() || dict.education.Other) : dict.education[mEduKey];
+        const mEdu = mEduKey === 'Other' ? (document.getElementById(`memEduOther_${id}`).value.trim() || dict.education.Other) : dict.education[mEduKey];
 
         const mJobKey = document.getElementById(`memJob_${id}`).value;
-        const mJob = mJobKey === 'Other' ? (document.getElementById('memJobOther_${id}`).value.trim() || dict.jobs.Other) : dict.jobs[mJobKey];
+        const mJob = mJobKey === 'Other' ? (document.getElementById(`memJobOther_${id}`).value.trim() || dict.jobs.Other) : dict.jobs[mJobKey];
 
         const mAddrChoice = document.getElementById(`memAddrChoice_${id}`).value;
         let mCountry = headCountry;
@@ -2207,7 +2207,7 @@
     }
 
     // ==========================================
-    // 6. Direct 1-Page PDF Engine + Android App Bridge
+    // 6. Direct 1-Page PDF Engine (100% Intact V.2.0)
     // ==========================================
     async function downloadFRCPDFOnly() {
       const btn = document.getElementById('btnDownloadAction');
@@ -2239,23 +2239,7 @@
       const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
       pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight > 297 ? 297 : pdfHeight);
-      
-      const fileName = `Official_FRC_${lastGeneratedFRC.code}.pdf`;
-
-      // Android Bridge Check: اگر ویب سائٹ اینڈرائیڈ ایپ میں کھلی ہو تو سیدھا جاوا برج کو ڈیٹا بھیجے
-      if (window.AndroidBlobBridge && typeof window.AndroidBlobBridge.saveBase64 === 'function') {
-        try {
-          const pdfDataUri = pdf.output('datauristring');
-          const base64Data = pdfDataUri.split(',')[1];
-          window.AndroidBlobBridge.saveBase64(base64Data, fileName, 'application/pdf');
-        } catch (bridgeErr) {
-          console.warn("Android bridge fallback to normal save:", bridgeErr);
-          pdf.save(fileName);
-        }
-      } else {
-        // عام موبائل یا کمپیوٹر براؤزر میں براہ راست ڈاؤن لوڈ
-        pdf.save(fileName);
-      }
+      pdf.save(`Official_FRC_${lastGeneratedFRC.code}.pdf`);
 
       btn.textContent = originalText;
       btn.disabled = false;
@@ -2489,14 +2473,7 @@
       });
 
       const cleanFileName = ((selectedCountry || 'Global') + '_' + (inputCity || 'AllCities')).replace(/[^a-zA-Z0-9_-]/g, '_');
-      const outputName = `WCF_Master_Census_Directory_${cleanFileName}_${new Date().toISOString().slice(0, 10)}.pdf`;
-
-      if (window.AndroidBlobBridge && typeof window.AndroidBlobBridge.saveBase64 === 'function') {
-        const base64Data = doc.output('datauristring').split(',')[1];
-        window.AndroidBlobBridge.saveBase64(base64Data, outputName, 'application/pdf');
-      } else {
-        doc.save(outputName);
-      }
+      doc.save(`WCF_Master_Census_Directory_${cleanFileName}_${new Date().toISOString().slice(0, 10)}.pdf`);
     }
 
     function exportPhoneDirectoryPDF() {
@@ -2553,13 +2530,7 @@
         y += 7;
       });
 
-      const outputName = `WCF_Phone_Directory_${new Date().toISOString().slice(0, 10)}.pdf`;
-      if (window.AndroidBlobBridge && typeof window.AndroidBlobBridge.saveBase64 === 'function') {
-        const base64Data = doc.output('datauristring').split(',')[1];
-        window.AndroidBlobBridge.saveBase64(base64Data, outputName, 'application/pdf');
-      } else {
-        doc.save(outputName);
-      }
+      doc.save(`WCF_Phone_Directory_${new Date().toISOString().slice(0, 10)}.pdf`);
     }
 
     function exportAdultUnmarriedPDF() {
@@ -2641,13 +2612,7 @@
         y += 7;
       });
 
-      const outputName = `WCF_Unmarried_Adults_${new Date().toISOString().slice(0, 10)}.pdf`;
-      if (window.AndroidBlobBridge && typeof window.AndroidBlobBridge.saveBase64 === 'function') {
-        const base64Data = doc.output('datauristring').split(',')[1];
-        window.AndroidBlobBridge.saveBase64(base64Data, outputName, 'application/pdf');
-      } else {
-        doc.save(outputName);
-      }
+      doc.save(`WCF_Unmarried_Adults_${new Date().toISOString().slice(0, 10)}.pdf`);
     }
 
     function exportNonChhippaWivesPDF() {
@@ -2725,13 +2690,7 @@
         y += rowHeight + 1.5;
       });
 
-      const outputName = `WCF_Non_Chhippa_Wives_${new Date().toISOString().slice(0, 10)}.pdf`;
-      if (window.AndroidBlobBridge && typeof window.AndroidBlobBridge.saveBase64 === 'function') {
-        const base64Data = doc.output('datauristring').split(',')[1];
-        window.AndroidBlobBridge.saveBase64(base64Data, outputName, 'application/pdf');
-      } else {
-        doc.save(outputName);
-      }
+      doc.save(`WCF_Non_Chhippa_Wives_${new Date().toISOString().slice(0, 10)}.pdf`);
     }
 
     function exportCensusJSON() {
