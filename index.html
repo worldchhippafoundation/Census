@@ -102,7 +102,7 @@
       pointer-events: none !important;
       height: 0 !important;
     }
-     select {
+    select {
       -webkit-appearance: menulist !important;
       -moz-appearance: menulist !important;
       appearance: menulist !important;
@@ -142,11 +142,11 @@
           <div class="w-px h-6 bg-amber-600/50"></div>
           <div>
             <span class="text-[10px] text-amber-200 block">Mode:</span>
-            <span id="liveSyncStatus" class="font-bold text-emerald-400 text-xs">Spark Ready</span>
+            <span id="liveSyncStatus" class="font-bold text-amber-400 text-xs">Local Trial</span>
           </div>
         </div>
 
-        <div class="flex items-center gap-2 bg-black/60 p-1.5 rounded-lg border border-amber-400/40">
+        <div class="flex items-center gap-2 bg-black/60 p-1.5 rounded-lg border border-amber-400/40 relative z-50">
           <label id="lblLang" class="text-xs text-amber-200 !mb-0 !leading-none font-semibold">Language:</label>
           <select id="langSelect" onchange="changeLanguage(this.value)" class="!bg-black/80 !text-amber-200 text-xs md:text-sm font-semibold rounded px-2.5 py-1 outline-none cursor-pointer border border-amber-400/50">
             <option value="en" selected class="bg-slate-900 text-white">English</option>
@@ -326,7 +326,7 @@
             <span id="headAgeCalculatedBadge" class="text-[10px] font-semibold text-slate-500 mt-0.5 block">Age: -</span>
           </div>
 
-          <!-- Gender Dropdown With Single Language Fallback -->
+          <!-- Gender Dropdown -->
           <div>
             <label id="lblHeadGender" class="block text-xs font-semibold text-slate-700">
               Gender<span class="text-red-500 font-bold ml-1 mr-1">*</span>
@@ -338,7 +338,7 @@
             </select>
           </div>
 
-          <!-- Marital Status Dropdown With Single Language Fallback -->
+          <!-- Marital Status Dropdown -->
           <div>
             <label id="lblHeadMarital" class="block text-xs font-semibold text-slate-700">
               Marital Status<span class="text-red-500 font-bold ml-1 mr-1">*</span>
@@ -351,7 +351,7 @@
             </select>
           </div>
 
-          <!-- Clan Dropdown With Single Language Fallback -->
+          <!-- Clan Dropdown -->
           <div>
             <label id="lblHeadClan" class="block text-xs font-semibold text-slate-700">
               Clan / Sub-Caste<span class="text-red-500 font-bold ml-1 mr-1">*</span>
@@ -370,7 +370,7 @@
             </div>
           </div>
 
-          <!-- Education Dropdown With Single Language Fallback -->
+          <!-- Education Dropdown -->
           <div>
             <label id="lblHeadEdu" class="block text-xs font-semibold text-slate-700">
               Education Level<span class="text-red-500 font-bold ml-1 mr-1">*</span>
@@ -390,7 +390,7 @@
             </div>
           </div>
 
-          <!-- Occupation Dropdown With Single Language Fallback -->
+          <!-- Occupation Dropdown -->
           <div>
             <label id="lblHeadJob" class="block text-xs font-semibold text-slate-700">
               Occupation / Job<span class="text-red-500 font-bold ml-1 mr-1">*</span>
@@ -423,7 +423,7 @@
             <input type="tel" id="headPhone" required placeholder="+923001234567" class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-amber-500 outline-none text-left">
           </div>
 
-          <!-- Country Dropdown With Single Language Fallback -->
+          <!-- Country Dropdown -->
           <div>
             <label id="lblHeadCountry" class="block text-xs font-semibold text-slate-700">
               Country<span class="text-red-500 font-bold ml-1 mr-1">*</span>
@@ -474,7 +474,7 @@
         <div id="membersContainer" class="p-5 space-y-4"></div>
       </div>
 
-      <!-- Free Community Reference Verification Box -->
+      <!-- Community Reference Verification Box -->
       <div id="communityRefCard" class="bg-white rounded-xl shadow border border-slate-200 p-5 space-y-3">
         <h3 id="lblRefTitle" class="text-sm font-bold text-slate-800">Community Reference Verification (Zero Cost Free Service)</h3>
         <p id="lblRefSub" class="text-xs text-slate-500">Provide a trusted Foundation Member or elder reference to expedite administrative review without SMS OTP.</p>
@@ -597,7 +597,7 @@
                   </table>
                 </div>
 
-                <!-- Self-Declaration Below Table (Without Box) -->
+                <!-- Self-Declaration Below Table -->
                 <p class="text-center text-[8.5px] text-slate-500 italic mt-3 mb-1 px-4 leading-normal" id="frcDeclarationText">
                   Notice & Declaration: This certificate is issued based on applicant's self-declaration. The WCF Board reserves the right to revoke/cancel it in case of false information or ineligible lineage.
                 </p>
@@ -640,7 +640,8 @@
                         <text x="100" y="85" fill="#082f49" font-family="'Inter', sans-serif" font-size="12" text-anchor="middle" font-weight="900">★ ★ ★</text>
                         <text x="100" y="108" fill="#082f49" font-family="'Inter', sans-serif" font-weight="900" font-size="19" text-anchor="middle" letter-spacing="2">VERIFIED</text>
                         <line x1="38" y1="115" x2="162" y2="115" stroke="#082f49" stroke-width="2.5" />
-                        <text x="100" y="127" fill="#082f49" font-family="'Inter', sans-serif" font-size="9.5" text-anchor="middle" font-weight="900 letter-spacing="1.5">AUTHENTIC</text>
+                        <!-- Fixed SVG syntax error here -->
+                        <text x="100" y="127" fill="#082f49" font-family="'Inter', sans-serif" font-size="9.5" text-anchor="middle" font-weight="900" letter-spacing="1.5">AUTHENTIC</text>
                       </svg>
                     </div>
 
@@ -770,15 +771,15 @@
         <!-- Firebase Connection Toggle Bar -->
         <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 flex flex-wrap items-center justify-between gap-3 text-xs">
           <div class="flex items-center gap-2">
-            <span class="w-3 h-3 rounded-full bg-emerald-500" id="adminDbStatusDot"></span>
+            <span class="w-3 h-3 rounded-full bg-amber-500" id="adminDbStatusDot"></span>
             <div>
-              <span class="font-bold text-slate-800" id="adminDbStatusText">Firebase Cloud: CONNECTED</span>
-              <p class="text-[10px] text-slate-500">Spark Plan (No-Cost Offline / Online Sync Active)</p>
+              <span class="font-bold text-slate-800" id="adminDbStatusText">Firebase Cloud: Local Offline</span>
+              <p class="text-[10px] text-slate-500">Spark Plan (Add real keys in firebaseConfig to connect Cloud)</p>
             </div>
           </div>
           <div class="flex items-center gap-2">
-            <button type="button" onclick="toggleFirebaseSync()" id="btnFirebaseToggle" class="px-3 py-1.5 bg-red-900 text-white font-bold rounded-lg text-xs hover:bg-red-800">
-              Cloud Sync: ON
+            <button type="button" onclick="toggleFirebaseSync()" id="btnFirebaseToggle" class="px-3 py-1.5 bg-slate-600 text-white font-bold rounded-lg text-xs hover:bg-slate-700">
+              Cloud Sync: OFF
             </button>
             <button type="button" onclick="syncPendingRecordsToFirebase()" class="px-3 py-1.5 bg-slate-200 text-slate-800 font-bold rounded-lg text-xs hover:bg-slate-300">
               🔄 Sync Now (<span id="pendingRecordsBadge">0</span>)
@@ -862,20 +863,28 @@
       </div>
     </div>
   </footer>
+
   <!-- ========================================== -->
-  <!-- MEMORIAL TRIBUTE POPUP: V.6.6.1 Amendment -->
+  <!-- MEMORIAL TRIBUTE POPUP: V.6.6.1 Fixed -->
   <!-- ========================================== -->
-  <div id="memorialModal" class="fixed inset-0 z-[99999] flex items-center justify-center bg-black/75 backdrop-blur-sm p-4 transition-opacity duration-300">
-    <div class="relative w-full max-w-xl bg-white rounded-2xl shadow-2xl border-2 border-amber-500/50 overflow-hidden text-center p-6 sm:p-8">
+  <div id="memorialModal" class="hidden fixed inset-0 z-[99999] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 transition-opacity duration-300" onclick="handleMemorialBackdropClick(event)">
+    <div class="relative w-full max-w-xl bg-white rounded-2xl shadow-2xl border-2 border-amber-500/50 overflow-hidden text-center p-6 sm:p-8" onclick="event.stopPropagation()">
       
-      <!-- Close (Cross) Button: Initially Hidden -->
-      <button type="button" id="memCloseCross" onclick="closeMemorialModal()" class="hidden absolute top-4 right-4 text-slate-400 hover:text-slate-700 text-2xl font-black leading-none w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 items-center justify-center transition">
-        &times;
-      </button>
+      <!-- Top Bar: Languages Left, Close X Right -->
+      <div class="flex justify-between items-center mb-3">
+        <div class="flex items-center gap-1.5">
+          <button type="button" onclick="switchMemorialLang('en')" id="btnMemLangEn" class="px-2.5 py-1 text-xs font-bold rounded bg-amber-800 text-white shadow-sm transition">English</button>
+          <button type="button" onclick="switchMemorialLang('ur')" id="btnMemLangUr" class="px-2.5 py-1 text-xs font-bold rounded bg-slate-100 text-slate-700 hover:bg-slate-200 transition">اردو</button>
+          <button type="button" onclick="switchMemorialLang('hi')" id="btnMemLangHi" class="px-2.5 py-1 text-xs font-bold rounded bg-slate-100 text-slate-700 hover:bg-slate-200 transition">हिन्दी</button>
+        </div>
+        <button type="button" id="memCloseCross" onclick="closeMemorialModal()" class="text-slate-400 hover:text-slate-800 text-2xl font-black leading-none w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center transition cursor-pointer" title="Close Tribute">
+          &times;
+        </button>
+      </div>
 
       <!-- Decorative Emblem -->
-      <div class="mx-auto mb-3 w-14 h-14 rounded-full bg-amber-50 border border-amber-300 flex items-center justify-center text-amber-700 shadow-inner">
-        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div class="mx-auto mb-2 w-12 h-12 rounded-full bg-amber-50 border border-amber-300 flex items-center justify-center text-amber-700 shadow-inner">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
         </svg>
       </div>
@@ -894,7 +903,7 @@
 
       <!-- Text Container: Urdu -->
       <div id="memTextUr" class="hidden text-slate-800 text-base leading-loose space-y-2 font-urdu" dir="rtl">
-        <p>"چھینپا برادری کے لیے بے لوث خدمت، محبت اور لازوال قربانیوں کی یاد میں۔ یہ مردم شماری پورٹل ان کے نیک مقاصد اور برادری کو ایک لڑی میں پرونے کے خواب کو خراجِ عقیدت ہے۔"</p>
+        <p>"چھیپا برادری کے لیے بے لوث خدمت، محبت اور لازوال قربانیوں کی یاد میں۔ یہ مردم شماری پورٹل ان کے نیک مقاصد اور برادری کو ایک لڑی میں پرونے کے خواب کو خراجِ عقیدت ہے۔"</p>
         <p class="text-xs font-bold text-slate-600">اللہ تعالیٰ انہیں جنت الفردوس میں اعلیٰ مقام عطا فرمائے۔ آمین۔</p>
         <p class="text-xs font-bold text-amber-900 pt-1">پیش کش: ٹاک فیملی (نیمڑے والے)</p>
       </div>
@@ -906,16 +915,19 @@
         <p class="text-xs font-bold text-amber-900 pt-1">समर्पित: टाक परिवार (नीमड़े वाले)</p>
       </div>
 
-      <!-- Bottom Enter/Action Button: Initially Hidden -->
-      <div id="memActionWrap" class="mt-6 pt-4 border-t border-slate-100 hidden">
-        <button type="button" id="btnMemEnter" onclick="closeMemorialModal()" class="w-full sm:w-auto px-8 py-2.5 bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white text-sm font-bold rounded-xl shadow-md transition transform active:scale-95">
+      <!-- Bottom Enter/Action Button -->
+      <div class="mt-6 pt-4 border-t border-slate-100 flex flex-col items-center gap-1">
+        <button type="button" id="btnMemEnter" onclick="closeMemorialModal()" class="w-full sm:w-auto px-8 py-2.5 bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white text-sm font-bold rounded-xl shadow-md transition transform active:scale-95 cursor-pointer">
           Enter Portal / آمین
         </button>
+        <p class="text-[10px] text-slate-400">Closes automatically in 5 seconds or click Enter</p>
       </div>
 
     </div>
   </div>
+
   <script>
+    // Replace with real Firebase config keys whenever available
     const firebaseConfig = {
       apiKey: "AIzaSyDummyKeyReplaceLaterWhenCreated",
       authDomain: "wcf-app.firebaseapp.com",
@@ -929,26 +941,23 @@
     let auth = null;
     let db = null;
     let isCloudReady = false;
-    let isSyncEnabled = true;
+    let isSyncEnabled = false;
 
     try {
-      if (typeof firebase !== 'undefined' && firebaseConfig.apiKey !== "AIzaSyDummyKeyReplaceLaterWhenCreated") {
+      if (typeof firebase !== 'undefined' && firebaseConfig.apiKey && !firebaseConfig.apiKey.includes("DummyKey")) {
         firebase.initializeApp(firebaseConfig);
         auth = firebase.auth();
         db = firebase.firestore();
         
         db.enablePersistence({ synchronizeTabs: true }).catch(err => {
-          if (err.code === 'failed-precondition') {
-            console.warn("Multiple tabs open, persistence active in first tab.");
-          } else if (err.code === 'unimplemented') {
-            console.warn("Current browser does not support offline persistence.");
-          }
+          console.warn("Firestore offline persistence state:", err.code);
         });
 
         isCloudReady = true;
+        isSyncEnabled = true;
       }
     } catch (e) {
-      console.warn("Firebase offline local fallback active:", e);
+      console.warn("Firebase local offline mode:", e);
     }
 
     const allWorldCountries = [
@@ -993,6 +1002,16 @@
       return countryKey;
     }
 
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
     const i18n = {
       ur: {
         appTitle: "چھیپا خاندانی رجسٹریشن سرٹیفکیٹ",
@@ -1008,12 +1027,12 @@
         btnModeFamily: "خاندانی یونٹ (FRC)",
         btnModeIndividual: "انفرادی فرد (IIC)",
         searchTitle: "خاندانی رجسٹریشن سرٹیفکیٹ (FRC) یا IIC تلاش کریں",
-        searchSub: "اپنا تصدیق شدہ FRC / IIC کوڈ یا ممبر آئی ڈی درج کریں تاکہ سرٹیفکیٹ دوبارہ دیکھا یا پرنٹ کیا جا سکے۔",
+        searchSub: "اپنا تصدیق شدہ FRC / IIC کوڈ، ممبر آئی ڈی یا رجسٹرڈ موبائل نمبر درج کریں۔",
         searchPlaceholder: "سرٹیفکیٹ کوڈ، ممبر آئی ڈی یا موبائل نمبر درج کریں...",
         btnSearchAction: "تلاش و پرنٹ کریں",
         btnSearchAddMember: "+ نیا رکن شامل کریں",
         cityStatsTitle: "کمیونٹی آبادی ڈیش بورڈ (گلوبل سرچ)",
-        cityStatsSub: "اپنا تصدیق شدہ FRC / IIC کوڈ یا موبائل نمبر درج کریں تاکہ رسائی حاصل ہو سکے، اور کسی بھی ملک یا شہر کی آبادی دیکھیں۔",
+        cityStatsSub: "اپنا تصدیق شدہ FRC / IIC کوڈ یا موبائل نمبر درج کریں تاکہ رسائی حاصل ہو سکے۔",
         popAuthPlaceholder: "سرٹیفکیٹ کوڈ یا موبائل فون نمبر درج کریں...",
         btnCityStatsVerify: "تصدیق و رسائی",
         popAccessNoticeText: "✅ رسائی منظور: آپ کسی بھی ملک یا شہر کی مردم شماری کا جائزہ لے سکتے ہیں۔",
@@ -1083,7 +1102,7 @@
         btnDownloadPdf: "ڈاؤن لوڈ PDF",
         btnCloseModal: "بند کریں",
         lblPendingNoticeTitle: "درخواست تصدیق کے مراحل میں ہے (Pending Verification)",
-        lblPendingNoticeBody: "آپ کی درخواست مستقل ممبر آئی ڈی کے ساتھ کامیابی سے محفوظ کر لی گئی ہے۔ دفتری توثیق مکمل ہونے تک حتمی سرٹیفکیٹ ڈاؤن لوڈ اور کیو آر تصدیق غیر فعال رہے گی۔",
+        lblPendingNoticeBody: "آپ کی درخواست مستقل ممبر آئی ڈی کے ساتھ کامیابی سے محفوظ کر لی گئی ہے۔",
         frcDeclaration: "حلفیہ بیان: یہ سند درخواست گزار کے ذاتی بیان پر جاری کی گئی ہے۔ کسی بھی غلط بیانی یا غیر برادری ثابت ہونے پر WCF بورڈ اسے منسوخ کرنے کا مجاز ہے۔",
         refElderPlaceholder: "بزرگ یا عزیز کا نام...",
         refContactPlaceholder: "فون نمبر یا ممبر آئی ڈی...",
@@ -1149,12 +1168,12 @@
         btnModeFamily: "पारिवारिक इकाई (FRC)",
         btnModeIndividual: "व्यक्तिगत वयस्क (IIC)",
         searchTitle: "परिवार पंजीकरण प्रमाणपत्र (FRC) या IIC खोजें",
-        searchSub: "अपना सत्यापित FRC / IIC कोड या सदस्य आईडी दर्ज करके प्रमाण पत्र देखें या पुनः प्रिंट करें।",
+        searchSub: "अपना सत्यापित FRC / IIC कोड, सदस्य आईडी या मोबाइल नंबर दर्ज करें।",
         searchPlaceholder: "प्रमाण पत्र कोड, सदस्य आईडी या मोबाइल नंबर दर्ज करें...",
         btnSearchAction: "खोजें और प्रिंट करें",
         btnSearchAddMember: "+ नया सदस्य जोड़ें",
         cityStatsTitle: "समुदाय आबादी डैशबोर्ड (वैश्विक खोज)",
-        cityStatsSub: "अपना सत्यापित कोड या मोबाइल नंबर दर्ज करके किसी भी देश या शहर की आबादी के आंकड़े देखें।",
+        cityStatsSub: "अपना सत्यापित कोड या मोबाइल नंबर दर्ज करके आंकड़े देखें।",
         popAuthPlaceholder: "प्रमाण पत्र कोड या मोबाइल नंबर दर्ज करें...",
         btnCityStatsVerify: "सत्यापन एवं पहुंच",
         popAccessNoticeText: "✅ पहुंच स्वीकृत: आप किसी भी देश या शहर की जनगणना का जायजा ले सकते हैं।",
@@ -1193,7 +1212,7 @@
         membersSectionSub: "पत्नी, बच्चे और आश्रित सदस्य जोड़ें",
         btnAddMemberBtn: "नया सदस्य जोड़ें",
         lblRefTitle: "सामुदायिक संदर्भ सत्यापन (निःशुल्क सुविधा)",
-        lblRefSub: "एसएमएस ओटीपी के बिना त्वरित सत्यापन हेतु किसी फाउंडेशन सदस्य या वरिष्ठ का संदर्भ दर्ज करें।",
+        lblRefSub: "एसएमएस ओटीपी के बिना त्वरित सत्यापन हेतु संदर्भ दर्ज करें।",
         lblRefName: "संदर्भ व्यक्ति का नाम / वरिष्ठ:",
         lblRefContact: "संदर्भ फ़ोन / सदस्य आईडी:",
         btnSubmitForm: "पूर्ण फॉर्म जमा करें और प्रमाण पत्र प्राप्त करें",
@@ -1224,17 +1243,17 @@
         btnDownloadPdf: "PDF डाउनलोड करें",
         btnCloseModal: "बंद करें",
         lblPendingNoticeTitle: "आवेदन सत्यापन प्रक्रिया में है (Pending Verification)",
-        lblPendingNoticeBody: "आपका आवेदन स्थायी सदस्य आईडी के साथ सुरक्षित कर लिया गया है। आधिकारिक सत्यापन पूर्ण होने तक अंतिम प्रमाणपत्र डाउनलोड व क्यूआर सत्यापन सक्रिय नहीं होगा।",
-        frcDeclaration: "घोषणा: यह प्रमाण पत्र आवेदक के व्यक्तिगत विवरण पर जारी किया गया है। किसी भी असत्य जानकारी या गैर-बिरादरी पाए जाने पर WCF बोर्ड इसे रद्द करने का अधिकार रखता है।",
-        refElderPlaceholder: "वरिष्ठ या रिश्तेदार का नाम दर्ज करें...",
-        refContactPlaceholder: "फ़ोन नंबर या सदस्य आईडी दर्ज करें...",
-        headNamePlaceholder: "नाम दर्ज करें...",
-        headFatherPlaceholder: "पिता का नाम दर्ज करें...",
-        headCityPlaceholder: "शहर का नाम...",
-        headAddressPlaceholder: "मकान नं, गली, मोहल्ला...",
+        lblPendingNoticeBody: "आपका आवेदन सुरक्षित कर लिया गया है।",
+        frcDeclaration: "घोषणा: यह प्रमाण पत्र आवेदक کے ذاتی بیان پر جاری کیا گیا ہے۔ کسی بھی غلط بیانی پر WCF بورڈ اسے منسوخ کر سکتا ہے۔",
+        refElderPlaceholder: "वरिष्ठ یا رشتہ دار کا نام...",
+        refContactPlaceholder: "फ़ोन نمبر یا ممبر آئی ڈی...",
+        headNamePlaceholder: "نام درج کریں...",
+        headFatherPlaceholder: "والد کا نام...",
+        headCityPlaceholder: "شہر...",
+        headAddressPlaceholder: "پتہ...",
         frcDocBadge: "Official Family Registration Certificate",
-        frcDocOrg: "वर्ल्ड छीपा फाउंडेशन",
-        frcDocTagline: "वैश्विक जनगणना निर्देशिका एवं पारिवारिक पहचान",
+        frcDocOrg: "ورلڈ چھیپا فاؤنڈیشن",
+        frcDocTagline: "عالمی مردم شماری ڈائریکٹری",
         frcLblHeadName: "परिवार के मुखिया:",
         frcLblHeadFather: "पिता / संरक्षक:",
         frcLblHeadClan: "गोत्र / उप-जाति:",
@@ -1365,7 +1384,7 @@
         btnDownloadPdf: "Download PDF",
         btnCloseModal: "Close",
         lblPendingNoticeTitle: "Application Under Verification (Pending Verification)",
-        lblPendingNoticeBody: "Your registration application has been saved with permanent Member ID. The final certificate download and QR verification will become active once official verification is completed.",
+        lblPendingNoticeBody: "Your registration application has been saved with permanent Member ID.",
         frcDeclaration: "Notice & Declaration: This certificate is issued based on applicant's self-declaration. The WCF Board reserves the right to revoke/cancel it in case of false information or ineligible lineage.",
         refElderPlaceholder: "Name of elder or relative...",
         refContactPlaceholder: "Phone or WCF Member ID...",
@@ -1424,8 +1443,11 @@
     let currentRegMode = 'family';
     let memberCount = 0;
     let editingExistingFRCCode = null;
+    let editingExistingHeadMemberId = null;
     let isPopDashboardUnlocked = false;
     let activeViewingRecord = null;
+    let memorialHasBeenClosed = false;
+    let memorialTimer = null;
     
     let storedFRCRecords = {}; 
     try {
@@ -1444,11 +1466,13 @@
       return id;
     }
 
+    // Unicode-aware normalization for Latin, Arabic/Urdu, and Devanagari scripts
     function normalizeCleanString(str) {
-      return (str || '')
+      if (!str) return '';
+      return String(str)
         .toLowerCase()
-        .replace(/^(mohammad|muhammad|mohd|md|mian|syed)\s+/g, '')
-        .replace(/[^a-z0-9]/g, '')
+        .replace(/^(mohammad|muhammad|mohd|md|mian|syed|محمد|سید|میان)\s+/g, '')
+        .replace(/[^\p{L}\p{N}]/gu, '')
         .trim();
     }
 
@@ -1527,7 +1551,8 @@
       }
     }
 
-    function checkGoldenBiographicDuplication(newFather, newDOB, newClan, newMembers = [], currentEditingCode = null) {
+    // Accurate duplicate checking that avoids false positives in Urdu/Hindi
+    function checkGoldenBiographicDuplication(newFather, newDOB, newClanKey, newMembers = [], currentEditingCode = null) {
       const allRecords = Object.values(storedFRCRecords);
       const headName = document.getElementById('headName').value.trim();
       const rawHeadPhone = document.getElementById('headPhone').value.trim();
@@ -1535,7 +1560,6 @@
 
       const hNameNorm = normalizeCleanString(headName);
       const hFatherNorm = normalizeCleanString(newFather);
-      const hClanNorm = normalizeCleanString(newClan);
       const hNameSndx = getPhoneticSoundex(headName);
       const hFatherSndx = getPhoneticSoundex(newFather);
       const hYear = (newDOB || '').split('-')[0];
@@ -1544,69 +1568,43 @@
         if (currentEditingCode && rec.code === currentEditingCode) continue;
         if (!rec.head) continue;
 
+        // Mobile match rule (at least 8 clean digits required)
         const recHeadPhone = (rec.head.phone || '').replace(/[^0-9]/g, '');
         if (cleanHeadPhone.length >= 8 && recHeadPhone.length >= 8) {
           if (cleanHeadPhone.endsWith(recHeadPhone.slice(-8)) || recHeadPhone.endsWith(cleanHeadPhone.slice(-8))) {
             return {
               duplicate: true,
-              reason: `سیکیورٹی الرٹ (موبائل نمبر مماثلت)!\nیہ رابطہ فون پہلے سے سرٹیفکیٹ [${rec.code}] میں درج ہے۔ درخواست تصدیق کے لیے روکی گئی ہے۔`
+              reason: `سیکیورٹی الرٹ (موبائل نمبر مماثلت)!\nیہ رابطہ فون پہلے سے سرٹیفکیٹ [${rec.code}] میں درج ہے۔`
             };
           }
         }
 
         const recHNameNorm = normalizeCleanString(rec.head.name);
         const recHFatherNorm = normalizeCleanString(rec.head.father);
-        const recHClanNorm = normalizeCleanString(rec.head.clan);
+        const recClanKey = rec.head.clanKey || rec.head.clan;
         const recHNameSndx = getPhoneticSoundex(rec.head.name);
         const recHFatherSndx = getPhoneticSoundex(rec.head.father);
         const recHYear = (rec.head.dob || '').split('-')[0];
 
-        const exactBioMatch = (recHFatherNorm === hFatherNorm && rec.head.dob === newDOB && recHClanNorm === hClanNorm);
+        // Biographic validation compares standard keys & normalized non-empty strings
+        const clanMatches = (newClanKey === recClanKey);
+        const namesNotEmpty = (hNameNorm.length > 0 && recHNameNorm.length > 0);
+        const fathersNotEmpty = (hFatherNorm.length > 0 && recHFatherNorm.length > 0);
+
+        const exactBioMatch = namesNotEmpty && fathersNotEmpty && (recHFatherNorm === hFatherNorm) && (rec.head.dob === newDOB) && clanMatches;
         const phoneticBioMatch = (
-          (hNameSndx === recHNameSndx || hNameNorm === recHNameNorm) &&
-          (hFatherSndx === recHFatherSndx || hFatherNorm === recHFatherNorm) &&
+          namesNotEmpty && fathersNotEmpty &&
+          ((hNameSndx && recHNameSndx && hNameSndx === recHNameSndx) || hNameNorm === recHNameNorm) &&
+          ((hFatherSndx && recHFatherSndx && hFatherSndx === recHFatherSndx) || hFatherNorm === recHFatherNorm) &&
           (hYear && recHYear && hYear === recHYear) &&
-          (recHClanNorm === hClanNorm)
+          clanMatches
         );
 
         if (exactBioMatch || phoneticBioMatch) {
           return {
             duplicate: true,
-            reason: `سیکیورٹی لاک: یہ شناخت پہلے سے سسٹم میں موجود ہے!\nسابقہ سرٹیفکیٹ: [${rec.code}]\nسربراہ: ${rec.head.name} ولد ${rec.head.father}\nنئے کوڈ کے بجائے سرچ کر کے ری پرنٹ کریں۔`
+            reason: `سیکیورٹی لاک: یہ شناخت پہلے سے سسٹم میں موجود ہے!\nسابقہ سرٹیفکیٹ: [${rec.code}]\nسربراہ: ${rec.head.name} ولد ${rec.head.father}`
           };
-        }
-
-        if (newMembers.length > 0 && rec.members && Array.isArray(rec.members)) {
-          let matchedMembersCount = 0;
-          let matchedMemberNames = [];
-
-          for (const nM of newMembers) {
-            const nMNameNorm = normalizeCleanString(nM.name);
-            const nMNameSndx = getPhoneticSoundex(nM.name);
-            const nMYear = (nM.dob || '').split('-')[0];
-
-            for (const oM of rec.members) {
-              const oMNameNorm = normalizeCleanString(oM.name);
-              const oMNameSndx = getPhoneticSoundex(oM.name);
-              const oMYear = (oM.dob || '').split('-')[0];
-
-              const isNameMatch = (nMNameNorm === oMNameNorm || nMNameSndx === oMNameSndx);
-              const isDobMatch = (nM.dob === oM.dob || (nMYear && oMYear && nMYear === oMYear));
-              const isRelMatch = (nM.relationKey === oM.relationKey);
-
-              if (isNameMatch && isDobMatch && isRelMatch) {
-                matchedMembersCount++;
-                matchedMemberNames.push(nM.name);
-              }
-            }
-          }
-
-          if (matchedMembersCount >= 1) {
-            return {
-              duplicate: true,
-              reason: `خاندانی شجرہ الرٹ!\nاس فیملی کا فرد (${matchedMemberNames.join(', ')}) پہلے سے سرٹیفکیٹ [${rec.code}] میں درج ہے۔`
-            };
-          }
         }
       }
 
@@ -1617,15 +1615,15 @@
       const cSel = document.getElementById('adminCountryDropdown');
       if (cSel) {
         cSel.innerHTML = '<option value="">-- All Countries (Complete Global) --</option>' + 
-          allWorldCountries.map(c => `<option value="${c}">${getCountryLocalizedName(c, currentLang)}</option>`).join('');
+          allWorldCountries.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(getCountryLocalizedName(c, currentLang))}</option>`).join('');
       }
 
       const pSel = document.getElementById('popCountrySelect');
       if (pSel) {
         const dict = i18n[currentLang] || i18n.en;
         const defaultText = dict.popCountryDefault || '-- All Countries --';
-        pSel.innerHTML = `<option value="">${defaultText}</option>` + 
-          allWorldCountries.map(c => `<option value="${c}">${getCountryLocalizedName(c, currentLang)}</option>`).join('');
+        pSel.innerHTML = `<option value="">${escapeHtml(defaultText)}</option>` + 
+          allWorldCountries.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(getCountryLocalizedName(c, currentLang))}</option>`).join('');
       }
     }
 
@@ -1750,7 +1748,6 @@
       document.getElementById('lblPendingNoticeTitle').textContent = dict.lblPendingNoticeTitle;
       document.getElementById('lblPendingNoticeBody').textContent = dict.lblPendingNoticeBody;
 
-      // Update Placeholders Dynamically
       if (dict.refElderPlaceholder) document.getElementById('refElderName').placeholder = dict.refElderPlaceholder;
       if (dict.refContactPlaceholder) document.getElementById('refElderContact').placeholder = dict.refContactPlaceholder;
       if (dict.headNamePlaceholder) document.getElementById('headName').placeholder = dict.headNamePlaceholder;
@@ -1763,18 +1760,15 @@
       document.getElementById('headJobOther').placeholder = dict.otherJobPlaceholder;
       document.getElementById('headCountryOther').placeholder = dict.otherCountryPlaceholder;
 
-      // Update Self-Declaration on Certificate
       const decEl = document.getElementById('frcDeclarationText');
       if (decEl) decEl.textContent = dict.frcDeclaration;
 
-      // Strict Single-Language Dropdowns
       populateSelectOptions('headGender', dict.genders, 'Male');
       populateSelectOptions('headMarital', dict.maritalStatuses, 'Married');
       populateSelectOptions('headClan', dict.clans, 'Tak');
       populateSelectOptions('headEdu', dict.education, 'Matric');
       populateSelectOptions('headJob', dict.jobs, 'Business');
 
-      // Populate Country Single Language
       const countrySel = document.getElementById('headCountry');
       if (countrySel) {
         const prevCountry = countrySel.value || 'Pakistan';
@@ -1788,7 +1782,6 @@
         });
       }
 
-      // Sync "Other" input wrap visibility
       toggleManualInput(document.getElementById('headClan'), 'headClanOtherWrap');
       toggleManualInput(document.getElementById('headEdu'), 'headEduOtherWrap');
       toggleManualInput(document.getElementById('headJob'), 'headJobOtherWrap');
@@ -1796,10 +1789,14 @@
 
       populateAdminCountryOptions();
       refreshMemberCardsLanguage();
-      updateMemorialPopupLanguage(lang);
+
+      // Only update tribute text if memorial is actively open
+      const memorial = document.getElementById('memorialModal');
+      if (memorial && !memorial.classList.contains('hidden')) {
+        updateMemorialPopupLanguage(lang);
+      }
     }
 
-    // Clean & Strict Single-Language Options Generator
     function populateSelectOptions(selectId, optionsObj, defaultValue) {
       const select = document.getElementById(selectId);
       if (!select || !optionsObj) return;
@@ -1810,7 +1807,7 @@
       Object.entries(optionsObj).forEach(([k, v]) => {
         const opt = document.createElement('option');
         opt.value = k;
-        opt.textContent = v; // Single pure language string
+        opt.textContent = v;
         if (k === previousValue) {
           opt.selected = true;
         }
@@ -1818,7 +1815,6 @@
       });
     }
 
-    // Open/Close Manual Input Box When "Other" Is Chosen
     function toggleManualInput(selectElem, wrapId) {
       const wrap = document.getElementById(wrapId);
       if (!wrap || !selectElem) return;
@@ -1891,9 +1887,9 @@
       const isMatched = allRecords.some(rec => {
         if (rec.code && rec.code.toUpperCase() === cleanUpper) return true;
         if (rec.head && rec.head.memberId && rec.head.memberId.toUpperCase() === cleanUpper) return true;
-        if (rec.head && rec.head.phone) {
+        if (cleanPhoneInput.length >= 8 && rec.head && rec.head.phone) {
           const recPhone = rec.head.phone.replace(/[^0-9]/g, '');
-          if (cleanPhoneInput && (recPhone.endsWith(cleanPhoneInput) || cleanPhoneInput.endsWith(recPhone))) return true;
+          if (recPhone.endsWith(cleanPhoneInput.slice(-8))) return true;
         }
         return false;
       });
@@ -1997,7 +1993,11 @@
       card.id = `memberCard_${id}`;
       card.className = "p-4 bg-slate-50 border border-slate-200 rounded-xl relative space-y-3 transition";
 
+      // Store existing permanent member id if updating
+      const savedMemberId = existingData && existingData.memberId ? existingData.memberId : '';
+
       card.innerHTML = `
+        <input type="hidden" id="memSavedId_${id}" value="${escapeHtml(savedMemberId)}">
         <div class="flex justify-between items-center border-b border-slate-200 pb-2">
           <span class="text-xs font-bold text-slate-700 member-title">${dict.memberCardTitle} ${id}</span>
           <button type="button" onclick="removeMemberCard(${id})" class="text-xs text-red-600 hover:text-red-700 font-semibold">${dict.btnRemove}</button>
@@ -2136,16 +2136,15 @@
         });
       }
 
-      handleRelationChange(id);
-
       if (existingData) {
         document.getElementById(`memName_${id}`).value = existingData.name || '';
         document.getElementById(`memAge_${id}`).value = existingData.age || 20;
         if (existingData.phone) document.getElementById(`memPhone_${id}`).value = existingData.phone;
         if (existingData.dob) document.getElementById(`memDOB_${id}`).value = existingData.dob;
-        if (existingData.maritalStatusKey) document.getElementById(`memMarital_${id}`).value = existingData.maritalStatusKey;
         if (existingData.relationKey) document.getElementById(`memRel_${id}`).value = existingData.relationKey;
         if (existingData.genderKey) document.getElementById(`memGender_${id}`).value = existingData.genderKey;
+        if (existingData.maritalStatusKey) document.getElementById(`memMarital_${id}`).value = existingData.maritalStatusKey;
+        if (existingData.lineageKey) document.getElementById(`memLineage_${id}`).value = existingData.lineageKey;
         if (existingData.eduKey) document.getElementById(`memEdu_${id}`).value = existingData.eduKey;
         if (existingData.jobKey) document.getElementById(`memJob_${id}`).value = existingData.jobKey;
         if (existingData.addrChoice === 'other') {
@@ -2155,8 +2154,9 @@
           if (existingData.city) document.getElementById(`memCity_${id}`).value = existingData.city;
           if (existingData.address) document.getElementById(`memAddress_${id}`).value = existingData.address;
         }
-        handleRelationChange(id);
       }
+
+      handleRelationChange(id, false);
     }
 
     function removeMemberCard(id) {
@@ -2164,7 +2164,7 @@
       if (card) card.remove();
     }
 
-    function handleRelationChange(id) {
+    function handleRelationChange(id, resetMarital = true) {
       const rel = document.getElementById(`memRel_${id}`).value;
       const genderSelect = document.getElementById(`memGender_${id}`);
       const maritalSelect = document.getElementById(`memMarital_${id}`);
@@ -2175,15 +2175,16 @@
 
       if (rel === 'Wife') {
         wifeLineageWrap.classList.remove('hidden');
-        maritalSelect.value = 'Married';
+        if (resetMarital) maritalSelect.value = 'Married';
       } else if (rel === 'Husband') {
         wifeLineageWrap.classList.add('hidden');
-        maritalSelect.value = 'Married';
+        if (resetMarital) maritalSelect.value = 'Married';
       } else {
         wifeLineageWrap.classList.add('hidden');
       }
     }
 
+    // Language switch preserves user-selected options without overriding marital status
     function refreshMemberCardsLanguage() {
       const dict = i18n[currentLang];
       const cards = document.querySelectorAll('[id^="memberCard_"]');
@@ -2203,12 +2204,19 @@
         card.querySelector('.lbl-mem-addr').textContent = `${dict.lblMemAddrChoice} *`;
         card.querySelector('button').textContent = dict.btnRemove;
 
-        populateSelectOptions(`memRel_${id}`, dict.relations, 'Wife');
-        populateSelectOptions(`memGender_${id}`, dict.genders, 'Female');
-        populateSelectOptions(`memMarital_${id}`, dict.maritalStatuses, 'Married');
-        populateSelectOptions(`memLineage_${id}`, dict.lineage, 'Chhippa');
-        populateSelectOptions(`memEdu_${id}`, dict.education, 'Matric');
-        populateSelectOptions(`memJob_${id}`, dict.jobs, 'Homemaker');
+        const prevRel = document.getElementById(`memRel_${id}`).value;
+        const prevGen = document.getElementById(`memGender_${id}`).value;
+        const prevMar = document.getElementById(`memMarital_${id}`).value;
+        const prevLin = document.getElementById(`memLineage_${id}`).value;
+        const prevEdu = document.getElementById(`memEdu_${id}`).value;
+        const prevJob = document.getElementById(`memJob_${id}`).value;
+
+        populateSelectOptions(`memRel_${id}`, dict.relations, prevRel);
+        populateSelectOptions(`memGender_${id}`, dict.genders, prevGen);
+        populateSelectOptions(`memMarital_${id}`, dict.maritalStatuses, prevMar);
+        populateSelectOptions(`memLineage_${id}`, dict.lineage, prevLin);
+        populateSelectOptions(`memEdu_${id}`, dict.education, prevEdu);
+        populateSelectOptions(`memJob_${id}`, dict.jobs, prevJob);
 
         const memCountry = document.getElementById(`memCountry_${id}`);
         if (memCountry) {
@@ -2225,28 +2233,56 @@
 
         toggleManualInput(document.getElementById(`memEdu_${id}`), `memEduOtherWrap_${id}`);
         toggleManualInput(document.getElementById(`memJob_${id}`), `memJobOtherWrap_${id}`);
-        handleRelationChange(id);
+        handleRelationChange(id, false); // do not force override of marital status
       });
     }
 
+    // Completely restores all Head & Member values without resetting to defaults
     function loadFRCForAddingMember() {
       const inputVal = document.getElementById('searchFRCInput').value.trim();
       const cleanUpper = inputVal.toUpperCase();
+      const cleanPhoneInput = inputVal.replace(/[^0-9]/g, '');
       const errEl = document.getElementById('searchErrorMsg');
 
       if (!inputVal) {
-        errEl.textContent = "Please enter Certificate Code or Mobile Number.";
+        errEl.textContent = "Please enter Certificate Code, Member ID, or Phone Number.";
         errEl.classList.remove('hidden');
         return;
       }
 
-      let foundRecord = storedFRCRecords[cleanUpper];
+      let foundRecord = null;
+      const allRecords = Object.values(storedFRCRecords);
+
+      // Search Certificate Reference Code
+      if (storedFRCRecords[cleanUpper]) {
+        foundRecord = storedFRCRecords[cleanUpper];
+      }
+
+      // Search Head or Member IDs
       if (!foundRecord) {
-        const cleanPhoneInput = inputVal.replace(/[^0-9]/g, '');
-        foundRecord = Object.values(storedFRCRecords).find(rec => {
-          if (!rec.head || !rec.head.phone) return false;
-          const recPhone = rec.head.phone.replace(/[^0-9]/g, '');
-          return recPhone.endsWith(cleanPhoneInput) || cleanPhoneInput.endsWith(recPhone);
+        foundRecord = allRecords.find(rec => {
+          if (rec.head && rec.head.memberId && rec.head.memberId.toUpperCase() === cleanUpper) return true;
+          if (rec.members && Array.isArray(rec.members)) {
+            return rec.members.some(m => m.memberId && m.memberId.toUpperCase() === cleanUpper);
+          }
+          return false;
+        });
+      }
+
+      // Strict Phone Matching (Requires at least 8 digits)
+      if (!foundRecord && cleanPhoneInput.length >= 8) {
+        foundRecord = allRecords.find(rec => {
+          if (rec.head && rec.head.phone) {
+            const recPhone = rec.head.phone.replace(/[^0-9]/g, '');
+            if (recPhone.endsWith(cleanPhoneInput.slice(-8))) return true;
+          }
+          if (rec.members && Array.isArray(rec.members)) {
+            return rec.members.some(m => {
+              const mPhone = (m.phone || '').replace(/[^0-9]/g, '');
+              return mPhone.length >= 8 && mPhone.endsWith(cleanPhoneInput.slice(-8));
+            });
+          }
+          return false;
         });
       }
 
@@ -2256,8 +2292,14 @@
         return;
       }
 
+      if (foundRecord.type === 'individual') {
+        alert("This is an Individual Adult Certificate (IIC). To add family members, convert or submit a new Family Unit (FRC).");
+        return;
+      }
+
       errEl.classList.add('hidden');
       editingExistingFRCCode = foundRecord.code;
+      editingExistingHeadMemberId = foundRecord.head.memberId;
 
       switchMainTab('new');
       setRegistrationMode('family');
@@ -2265,13 +2307,50 @@
       document.getElementById('updatingFRCCode').textContent = foundRecord.code;
       document.getElementById('btnSubmitForm').textContent = `Update Family (${foundRecord.code})`;
 
-      document.getElementById('headName').value = foundRecord.head.name;
-      document.getElementById('headFather').value = foundRecord.head.father;
-      if (foundRecord.head.dob) document.getElementById('headDOB').value = foundRecord.head.dob;
-      if (foundRecord.head.maritalStatusKey) document.getElementById('headMarital').value = foundRecord.head.maritalStatusKey;
-      document.getElementById('headPhone').value = foundRecord.head.phone;
-      document.getElementById('headAddress').value = foundRecord.head.address;
+      // Full Head data restoration
+      const h = foundRecord.head;
+      document.getElementById('headName').value = h.name || '';
+      document.getElementById('headFather').value = h.father || '';
+      document.getElementById('headFatherDeceased').checked = !!h.fatherDeceased;
+      document.getElementById('headMother').value = h.mother === 'Not Specified' ? '' : (h.mother || '');
+      document.getElementById('headMotherDeceased').checked = !!h.motherDeceased;
+      if (h.dob) document.getElementById('headDOB').value = h.dob;
+      if (h.genderKey) document.getElementById('headGender').value = h.genderKey;
+      if (h.maritalStatusKey) document.getElementById('headMarital').value = h.maritalStatusKey;
+      if (h.clanKey) {
+        document.getElementById('headClan').value = h.clanKey;
+        if (h.clanKey === 'Other') {
+          document.getElementById('headClanOtherWrap').classList.remove('hidden');
+          document.getElementById('headClanOther').value = h.clan || '';
+        }
+      }
+      if (h.eduKey) {
+        document.getElementById('headEdu').value = h.eduKey;
+        if (h.eduKey === 'Other') {
+          document.getElementById('headEduOtherWrap').classList.remove('hidden');
+          document.getElementById('headEduOther').value = h.edu || '';
+        }
+      }
+      if (h.jobKey) {
+        document.getElementById('headJob').value = h.jobKey;
+        if (h.jobKey === 'Other') {
+          document.getElementById('headJobOtherWrap').classList.remove('hidden');
+          document.getElementById('headJobOther').value = h.job || '';
+        }
+      }
+      document.getElementById('headPhone').value = h.phone || '';
+      if (h.country) document.getElementById('headCountry').value = h.country;
+      document.getElementById('headCity').value = h.city || '';
+      document.getElementById('headAddress').value = h.address || '';
 
+      if (foundRecord.reference) {
+        document.getElementById('refElderName').value = foundRecord.reference.elder || '';
+        document.getElementById('refElderContact').value = foundRecord.reference.contact || '';
+      }
+
+      handleHeadDOBValidation();
+
+      // Restore all existing family members
       const container = document.getElementById('membersContainer');
       container.innerHTML = '';
       memberCount = 0;
@@ -2279,11 +2358,12 @@
       if (foundRecord.members && Array.isArray(foundRecord.members)) {
         foundRecord.members.forEach(m => addMemberCard(m));
       }
-      addMemberCard();
+      addMemberCard(); // add blank card for the new member
     }
 
     function cancelUpdatingFamily() {
       editingExistingFRCCode = null;
+      editingExistingHeadMemberId = null;
       document.getElementById('updatingFamilyBanner').classList.add('hidden');
       document.getElementById('censusForm').reset();
       document.getElementById('membersContainer').innerHTML = '';
@@ -2291,9 +2371,6 @@
       document.getElementById('btnSubmitForm').textContent = i18n[currentLang].btnSubmitForm;
     }
 
-    // ==========================================
-    // 4. Form Submission Pipeline
-    // ==========================================
     async function handleFormSubmit(e) {
       e.preventDefault();
 
@@ -2309,7 +2386,7 @@
       const headAge = calculateAge(headDOB);
 
       if (headAge < 18) {
-        alert("Registration Stop: Minors under 18 years of age cannot register as an independent Head. They must be registered within their parent/guardian's Family Record.");
+        alert("Registration Stop: Minors under 18 years of age cannot register as an independent Head. They must be registered within a Family Record.");
         submitBtn.disabled = false;
         submitBtn.textContent = originalBtnText;
         return;
@@ -2344,7 +2421,8 @@
       const headAddress = document.getElementById('headAddress').value.trim();
 
       const certCode = editingExistingFRCCode || (currentRegMode === 'family' ? `WCF-${Math.floor(100000 + Math.random() * 900000)}` : `IIC-${Math.floor(100000 + Math.random() * 900000)}`);
-      const headMemberId = generatePermanentMemberId();
+      // Keep existing head member ID if updating, else generate new
+      const headMemberId = editingExistingHeadMemberId || generatePermanentMemberId();
 
       const members = [];
       if (currentRegMode === 'family') {
@@ -2360,13 +2438,15 @@
           const mPhone = document.getElementById(`memPhone_${id}`) ? document.getElementById(`memPhone_${id}`).value.trim() : '';
 
           let mLineage = dict.lineage.Chhippa;
+          let mLineageKey = 'Chhippa';
           if (mRelKey === 'Wife') {
-            const mLineageKey = document.getElementById(`memLineage_${id}`).value;
+            mLineageKey = document.getElementById(`memLineage_${id}`).value;
             mLineage = dict.lineage[mLineageKey];
           }
 
+          // Fixed education bug: save member's own education, not head's
           const mEduKey = document.getElementById(`memEdu_${id}`).value;
-          const mEdu = mEduKey === 'Other' ? (document.getElementById(`memEduOther_${id}`).value.trim() || dict.education.Other) : dict.education[headEduKey];
+          const mEdu = mEduKey === 'Other' ? (document.getElementById(`memEduOther_${id}`).value.trim() || dict.education.Other) : dict.education[mEduKey];
 
           const mJobKey = document.getElementById(`memJob_${id}`).value;
           const mJob = mJobKey === 'Other' ? (document.getElementById(`memJobOther_${id}`).value.trim() || dict.jobs.Other) : dict.jobs[mJobKey];
@@ -2382,8 +2462,11 @@
             mAddress = document.getElementById(`memAddress_${id}`).value.trim() || headAddress;
           }
 
+          const existingMemberIdVal = document.getElementById(`memSavedId_${id}`) ? document.getElementById(`memSavedId_${id}`).value : '';
+          const finalMemberId = existingMemberIdVal || generatePermanentMemberId();
+
           members.push({
-            memberId: generatePermanentMemberId(),
+            memberId: finalMemberId,
             uniqueId: `${certCode}-${idx + 2}`,
             name: mName,
             relation: dict.relations[mRelKey],
@@ -2403,12 +2486,13 @@
             country: mCountry,
             city: mCity,
             address: mAddress,
-            lineage: mLineage
+            lineage: mLineage,
+            lineageKey: mLineageKey
           });
         });
       }
 
-      const dupCheck = checkGoldenBiographicDuplication(headFather, headDOB, headClan, members, editingExistingFRCCode);
+      const dupCheck = checkGoldenBiographicDuplication(headFather, headDOB, headClanKey, members, editingExistingFRCCode);
       if (dupCheck.duplicate) {
         alert(dupCheck.reason);
         submitBtn.disabled = false;
@@ -2476,6 +2560,7 @@
 
       activeViewingRecord = record;
       editingExistingFRCCode = null;
+      editingExistingHeadMemberId = null;
       document.getElementById('updatingFamilyBanner').classList.add('hidden');
       submitBtn.textContent = dict.btnSubmitForm;
       submitBtn.disabled = false;
@@ -2484,9 +2569,6 @@
       displayCertificateModal(record);
     }
 
-    // ==========================================
-    // 5. Display Certificates
-    // ==========================================
     function displayCertificateModal(record) {
       activeViewingRecord = record;
       const recLang = record.lang || currentLang;
@@ -2568,20 +2650,21 @@
         const tableBody = document.getElementById('frcTableBody');
         tableBody.innerHTML = '';
 
+        // Safely escaped names and data injection
         const headRow = document.createElement('tr');
         headRow.className = "bg-slate-100 font-bold";
         headRow.innerHTML = `
           <td class="border border-slate-300 p-1">1</td>
-          <td class="border border-slate-300 p-1 font-mono text-[9px] text-amber-900">${record.head.memberId}</td>
-          <td class="border border-slate-300 p-1 text-[9.5px]">${record.head.name}</td>
-          <td class="border border-slate-300 p-1">${dict.headBadge}</td>
-          <td class="border border-slate-300 p-1">${record.head.gender}</td>
-          <td class="border border-slate-300 p-1 text-[8.5px] font-mono">${record.head.dob || '-'}</td>
-          <td class="border border-slate-300 p-1 text-[9px]">${(record.head.maritalStatus || 'Married').split(' ')[0]}</td>
-          <td class="border border-slate-300 p-1 text-[9px]">${record.head.edu}</td>
-          <td class="border border-slate-300 p-1 text-[9px]">${record.head.job}</td>
-          <td class="border border-slate-300 p-1 text-[8.5px]">${record.head.city}</td>
-          <td class="border border-slate-300 p-1 text-slate-900 font-bold">${record.head.lineage}</td>
+          <td class="border border-slate-300 p-1 font-mono text-[9px] text-amber-900">${escapeHtml(record.head.memberId)}</td>
+          <td class="border border-slate-300 p-1 text-[9.5px]">${escapeHtml(record.head.name)}</td>
+          <td class="border border-slate-300 p-1">${escapeHtml(dict.headBadge)}</td>
+          <td class="border border-slate-300 p-1">${escapeHtml(record.head.gender)}</td>
+          <td class="border border-slate-300 p-1 text-[8.5px] font-mono">${escapeHtml(record.head.dob || '-')}</td>
+          <td class="border border-slate-300 p-1 text-[9px]">${escapeHtml((record.head.maritalStatus || 'Married').split(' ')[0])}</td>
+          <td class="border border-slate-300 p-1 text-[9px]">${escapeHtml(record.head.edu)}</td>
+          <td class="border border-slate-300 p-1 text-[9px]">${escapeHtml(record.head.job)}</td>
+          <td class="border border-slate-300 p-1 text-[8.5px]">${escapeHtml(record.head.city)}</td>
+          <td class="border border-slate-300 p-1 text-slate-900 font-bold">${escapeHtml(record.head.lineage)}</td>
         `;
         tableBody.appendChild(headRow);
 
@@ -2595,16 +2678,16 @@
 
           row.innerHTML = `
             <td class="border border-slate-300 p-1">${idx + 2}</td>
-            <td class="border border-slate-300 p-1 font-mono text-[9px] text-slate-700">${m.memberId || `${record.code}-${idx+2}`}</td>
-            <td class="border border-slate-300 p-1 font-medium text-[9.5px]">${m.name}</td>
-            <td class="border border-slate-300 p-1">${m.relation}</td>
-            <td class="border border-slate-300 p-1">${m.gender}</td>
-            <td class="border border-slate-300 p-1 text-[8.5px] font-mono">${m.dob || '-'}</td>
-            <td class="border border-slate-300 p-1 text-[9px]">${m.maritalStatus ? m.maritalStatus.split(' ')[0] : '-'}</td>
-            <td class="border border-slate-300 p-1 text-[9px]">${m.edu}</td>
-            <td class="border border-slate-300 p-1 text-[9px]">${m.job}</td>
-            <td class="border border-slate-300 p-1 text-[8px] leading-tight max-w-[130px] break-words">${locDisplay}</td>
-            <td class="border border-slate-300 p-1 text-slate-900 font-bold">${m.lineage}</td>
+            <td class="border border-slate-300 p-1 font-mono text-[9px] text-slate-700">${escapeHtml(m.memberId || `${record.code}-${idx+2}`)}</td>
+            <td class="border border-slate-300 p-1 font-medium text-[9.5px]">${escapeHtml(m.name)}</td>
+            <td class="border border-slate-300 p-1">${escapeHtml(m.relation)}</td>
+            <td class="border border-slate-300 p-1">${escapeHtml(m.gender)}</td>
+            <td class="border border-slate-300 p-1 text-[8.5px] font-mono">${escapeHtml(m.dob || '-')}</td>
+            <td class="border border-slate-300 p-1 text-[9px]">${escapeHtml(m.maritalStatus ? m.maritalStatus.split(' ')[0] : '-')}</td>
+            <td class="border border-slate-300 p-1 text-[9px]">${escapeHtml(m.edu)}</td>
+            <td class="border border-slate-300 p-1 text-[9px]">${escapeHtml(m.job)}</td>
+            <td class="border border-slate-300 p-1 text-[8px] leading-tight max-w-[130px] break-words">${escapeHtml(locDisplay)}</td>
+            <td class="border border-slate-300 p-1 text-slate-900 font-bold">${escapeHtml(m.lineage)}</td>
           `;
           tableBody.appendChild(row);
         });
@@ -2649,7 +2732,6 @@
       document.getElementById('frcModal').classList.remove('hidden');
     }
 
-    // Direct WhatsApp Function with Official WCF Number (+212708273330)
     function shareDirectToWCF() {
       if (!activeViewingRecord) return;
       const record = activeViewingRecord;
@@ -2685,12 +2767,13 @@ _Dedicated by M. Waseem Sadiq Tak (Neemray Walay)_`;
       document.getElementById('searchFRCInput').value = '';
       document.getElementById('updatingFamilyBanner').classList.add('hidden');
       editingExistingFRCCode = null;
+      editingExistingHeadMemberId = null;
       changeLanguage(currentLang);
     }
 
     async function downloadCertificatePDF() {
       if (activeViewingRecord && activeViewingRecord.status !== 'Approved') {
-        alert("Download Disabled: This certificate is pending administrative verification. Only approved records can download official PDFs.");
+        alert("Download Disabled: This certificate is pending administrative verification.");
         return;
       }
 
@@ -2739,9 +2822,11 @@ _Dedicated by M. Waseem Sadiq Tak (Neemray Walay)_`;
       btn.disabled = false;
     }
 
+    // Comprehensive search across Certificate Codes, Head/Member IDs, and exact Phone matching
     function searchAndReprintCertificate() {
       const inputVal = document.getElementById('searchFRCInput').value.trim();
       const cleanUpper = inputVal.toUpperCase();
+      const cleanPhoneInput = inputVal.replace(/[^0-9]/g, '');
       const errEl = document.getElementById('searchErrorMsg');
 
       if (!inputVal) {
@@ -2750,15 +2835,39 @@ _Dedicated by M. Waseem Sadiq Tak (Neemray Walay)_`;
         return;
       }
 
-      let foundRecord = storedFRCRecords[cleanUpper];
+      let foundRecord = null;
+      const allRecords = Object.values(storedFRCRecords);
 
+      // Search Certificate Reference Code
+      if (storedFRCRecords[cleanUpper]) {
+        foundRecord = storedFRCRecords[cleanUpper];
+      }
+
+      // Search Head or Member IDs
       if (!foundRecord) {
-        const cleanPhoneInput = inputVal.replace(/[^0-9]/g, '');
-        foundRecord = Object.values(storedFRCRecords).find(rec => {
+        foundRecord = allRecords.find(rec => {
           if (rec.head && rec.head.memberId && rec.head.memberId.toUpperCase() === cleanUpper) return true;
-          if (!rec.head || !rec.head.phone) return false;
-          const recPhone = rec.head.phone.replace(/[^0-9]/g, '');
-          return recPhone.endsWith(cleanPhoneInput) || cleanPhoneInput.endsWith(recPhone);
+          if (rec.members && Array.isArray(rec.members)) {
+            return rec.members.some(m => m.memberId && m.memberId.toUpperCase() === cleanUpper);
+          }
+          return false;
+        });
+      }
+
+      // Strict Phone Matching (Requires at least 8 clean digits)
+      if (!foundRecord && cleanPhoneInput.length >= 8) {
+        foundRecord = allRecords.find(rec => {
+          if (rec.head && rec.head.phone) {
+            const recPhone = rec.head.phone.replace(/[^0-9]/g, '');
+            if (recPhone.endsWith(cleanPhoneInput.slice(-8))) return true;
+          }
+          if (rec.members && Array.isArray(rec.members)) {
+            return rec.members.some(m => {
+              const mPhone = (m.phone || '').replace(/[^0-9]/g, '');
+              return mPhone.length >= 8 && mPhone.endsWith(cleanPhoneInput.slice(-8));
+            });
+          }
+          return false;
         });
       }
 
@@ -2823,6 +2932,10 @@ _Dedicated by M. Waseem Sadiq Tak (Neemray Walay)_`;
     }
 
     function toggleFirebaseSync() {
+      if (!isCloudReady) {
+        alert("Firebase keys are currently placeholders. Please replace firebaseConfig keys at the top of the script with live project keys to activate cloud sync.");
+        return;
+      }
       isSyncEnabled = !isSyncEnabled;
       const dot = document.getElementById('adminDbStatusDot');
       const text = document.getElementById('adminDbStatusText');
@@ -2841,7 +2954,7 @@ _Dedicated by M. Waseem Sadiq Tak (Neemray Walay)_`;
         text.textContent = "Firebase Cloud: OFFLINE (Local Buffer Active)";
         btn.textContent = "Cloud Sync: OFF";
         btn.className = "px-3 py-1.5 bg-slate-600 text-white font-bold rounded-lg text-xs hover:bg-slate-700";
-        badge.textContent = "Local Offline";
+        badge.textContent = "Local Trial";
         badge.className = "font-bold text-amber-400 text-xs";
       }
     }
@@ -2853,16 +2966,16 @@ _Dedicated by M. Waseem Sadiq Tak (Neemray Walay)_`;
         return;
       }
       if (!isCloudReady || !db) {
-        alert("Firebase is operating in local persistence mode. Records are safely stored in browser storage and IndexedDB.");
+        alert("Firebase keys are currently placeholders. Records are safely stored in your browser's local database.");
         return;
       }
       try {
         allRecords.forEach(rec => {
           db.collection('census_registrations').doc(rec.code).set(rec, { merge: true });
         });
-        alert(`Success: ${allRecords.length} records pushed and synced with Firebase Spark Cloud.`);
+        alert(`Success: ${allRecords.length} records pushed and synced with Firebase.`);
       } catch (err) {
-        alert("Sync encountered local buffer state: " + err.message);
+        alert("Sync encountered buffer state: " + err.message);
       }
     }
 
@@ -2883,12 +2996,12 @@ _Dedicated by M. Waseem Sadiq Tak (Neemray Walay)_`;
         item.className = "p-2 bg-white border rounded flex justify-between items-center";
         item.innerHTML = `
           <div>
-            <strong>${rec.head.name}</strong> (${rec.code}) - <span class="text-amber-700 font-bold">${rec.status}</span>
-            <div class="text-[10px] text-slate-500">Member ID: ${rec.head.memberId} | Clan: ${rec.head.clan}</div>
+            <strong>${escapeHtml(rec.head.name)}</strong> (${escapeHtml(rec.code)}) - <span class="text-amber-700 font-bold">${escapeHtml(rec.status)}</span>
+            <div class="text-[10px] text-slate-500">Member ID: ${escapeHtml(rec.head.memberId)} | Clan: ${escapeHtml(rec.head.clan)}</div>
           </div>
           <div class="flex gap-1">
-            <button onclick="updateStatusByAdmin('${rec.code}', 'Approved')" class="bg-emerald-600 text-white px-2 py-1 rounded text-[10px] font-bold">Approve</button>
-            <button onclick="updateStatusByAdmin('${rec.code}', 'Rejected')" class="bg-red-600 text-white px-2 py-1 rounded text-[10px] font-bold">Reject</button>
+            <button onclick="updateStatusByAdmin('${escapeHtml(rec.code)}', 'Approved')" class="bg-emerald-600 text-white px-2 py-1 rounded text-[10px] font-bold">Approve</button>
+            <button onclick="updateStatusByAdmin('${escapeHtml(rec.code)}', 'Rejected')" class="bg-red-600 text-white px-2 py-1 rounded text-[10px] font-bold">Reject</button>
           </div>
         `;
         list.appendChild(item);
@@ -3198,7 +3311,7 @@ _Dedicated by M. Waseem Sadiq Tak (Neemray Walay)_`;
         if (rec.members && Array.isArray(rec.members)) {
           rec.members.forEach(m => {
             const isWife = (m.relationKey === 'Wife' || m.relation.includes('بیوی') || m.relation.includes('पत्नी'));
-            const isNonChhippa = m.lineage.includes('غیر') || m.lineage.includes('Non') || m.lineage.includes('गैर');
+            const isNonChhippa = (m.lineageKey === 'NonChhippa' || m.lineage.includes('غیر') || m.lineage.includes('Non') || m.lineage.includes('गैर'));
             if (isWife && isNonChhippa) {
               const fullWifeLoc = `${rec.head.phone} (${m.address || rec.head.address || ''}, ${m.city || rec.head.city || ''}, ${m.country || rec.head.country || ''})`;
               nonChhippaList.push({
@@ -3287,25 +3400,31 @@ _Dedicated by M. Waseem Sadiq Tak (Neemray Walay)_`;
         alert("Database has been successfully cleared.");
       }
     }
-        // ==========================================
-    // MEMORIAL POPUP LOGIC: V.6.6.1 Amendment
-    // ==========================================
-    let memorialTimer = null;
 
+    // ==========================================
+    // MEMORIAL POPUP LOGIC: V.6.6.1 Fixed
+    // ==========================================
     function initMemorialPopup() {
+      if (memorialHasBeenClosed) return;
       const modal = document.getElementById('memorialModal');
       if (!modal) return;
       modal.classList.remove('hidden');
+
+      // Closes automatically after 5 seconds
+      resetMemorialTimer();
+    }
+
+    function resetMemorialTimer() {
+      if (memorialTimer) clearTimeout(memorialTimer);
+      memorialTimer = setTimeout(() => {
+        closeMemorialModal();
+      }, 5000);
     }
 
     function switchMemorialLang(lang) {
-      if (typeof changeLanguage === 'function') {
-        const langSel = document.getElementById('langSelect');
-        if (langSel) langSel.value = lang;
-        changeLanguage(lang);
-      } else {
-        updateMemorialPopupLanguage(lang);
-      }
+      updateMemorialPopupLanguage(lang);
+      // Give another 5 seconds to read in the newly chosen language
+      resetMemorialTimer();
     }
 
     function updateMemorialPopupLanguage(lang) {
@@ -3326,8 +3445,8 @@ _Dedicated by M. Waseem Sadiq Tak (Neemray Walay)_`;
       tUr.classList.add('hidden');
       tHi.classList.add('hidden');
 
-      const activeBtnCls = "px-2.5 py-1 text-xs font-bold rounded-md bg-amber-800 text-white shadow-sm transition";
-      const inactiveBtnCls = "px-2.5 py-1 text-xs font-bold rounded-md bg-slate-100 text-slate-700 hover:bg-slate-200 transition";
+      const activeBtnCls = "px-2.5 py-1 text-xs font-bold rounded bg-amber-800 text-white shadow-sm transition";
+      const inactiveBtnCls = "px-2.5 py-1 text-xs font-bold rounded bg-slate-100 text-slate-700 hover:bg-slate-200 transition";
 
       if (bEn) bEn.className = inactiveBtnCls;
       if (bUr) bUr.className = inactiveBtnCls;
@@ -3363,9 +3482,10 @@ _Dedicated by M. Waseem Sadiq Tak (Neemray Walay)_`;
     function closeMemorialModal() {
       const modal = document.getElementById('memorialModal');
       if (modal) modal.classList.add('hidden');
+      if (memorialTimer) clearTimeout(memorialTimer);
+      memorialHasBeenClosed = true;
     }
 
-    // Safe Init Guarantee
     function initApp() {
       const form = document.getElementById('censusForm');
       if (form) form.reset();
@@ -3390,4 +3510,3 @@ _Dedicated by M. Waseem Sadiq Tak (Neemray Walay)_`;
   </script>
 </body>
 </html>
-
