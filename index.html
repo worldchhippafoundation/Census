@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="google" content="notranslate">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>World Chhippa Foundation - Global Census & FRC Portal (V.6.6 New)</title>
+  <title>World Chhippa Foundation - Global Census & FRC Portal (V.6.6.1)</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- jsPDF & html2canvas -->
@@ -114,7 +114,7 @@
         <img src="stamp.png" alt="WCF Official Seal" class="w-12 h-12 rounded-full object-contain shrink-0 shadow-sm border border-amber-400 bg-white hover:opacity-95 transition">
         <div>
           <h1 id="appTitle" class="text-base md:text-xl font-bold leading-relaxed mb-1 drop-shadow">Chhippa Family Registration Certificate</h1>
-          <p id="appSub" class="text-[11px] md:text-xs text-amber-200 leading-normal mt-0.5">World Chhippa Foundation — Global Census Portal (V.6.6 New)</p>
+          <p id="appSub" class="text-[11px] md:text-xs text-amber-200 leading-normal mt-0.5">World Chhippa Foundation — Global Census Portal (V.6.6.1)</p>
         </div>
       </div>
 
@@ -316,45 +316,91 @@
             <span id="headAgeCalculatedBadge" class="text-[10px] font-semibold text-slate-500 mt-0.5 block">Age: -</span>
           </div>
 
+          <!-- Gender Dropdown With Single Language Fallback -->
           <div>
             <label id="lblHeadGender" class="block text-xs font-semibold text-slate-700">
               Gender<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
-            <select id="headGender" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-amber-500 outline-none bg-white"></select>
+            <select id="headGender" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-amber-500 outline-none bg-white">
+              <option value="Male" selected>Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
           </div>
 
+          <!-- Marital Status Dropdown With Single Language Fallback -->
           <div>
             <label id="lblHeadMarital" class="block text-xs font-semibold text-slate-700">
               Marital Status<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
-            <select id="headMarital" required class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white"></select>
+            <select id="headMarital" required class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white">
+              <option value="Married" selected>Married</option>
+              <option value="Unmarried">Unmarried</option>
+              <option value="Widowed">Widowed</option>
+              <option value="Divorced">Divorced</option>
+            </select>
           </div>
 
+          <!-- Clan Dropdown With Single Language Fallback -->
           <div>
             <label id="lblHeadClan" class="block text-xs font-semibold text-slate-700">
               Clan / Sub-Caste<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
-            <select id="headClan" required onchange="toggleManualInput(this, 'headClanOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white"></select>
+            <select id="headClan" required onchange="toggleManualInput(this, 'headClanOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white">
+              <option value="Tak" selected>Tak</option>
+              <option value="Bhati">Bhati</option>
+              <option value="Rao">Rao</option>
+              <option value="Molani">Molani</option>
+              <option value="Lodha">Lodha</option>
+              <option value="Deora">Deora</option>
+              <option value="Other">Other</option>
+            </select>
             <div id="headClanOtherWrap" class="hidden mt-2">
               <input type="text" id="headClanOther" class="w-full border border-amber-400 rounded-lg px-3 text-xs bg-amber-50 outline-none">
             </div>
           </div>
 
+          <!-- Education Dropdown With Single Language Fallback -->
           <div>
             <label id="lblHeadEdu" class="block text-xs font-semibold text-slate-700">
               Education Level<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
-            <select id="headEdu" required onchange="toggleManualInput(this, 'headEduOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-slate-700 text-sm focus:ring-2 focus:ring-amber-500 outline-none bg-white"></select>
+            <select id="headEdu" required onchange="toggleManualInput(this, 'headEduOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-slate-700 text-sm focus:ring-2 focus:ring-amber-500 outline-none bg-white">
+              <option value="Matric" selected>Matriculation (10th)</option>
+              <option value="Intermediate">Intermediate (12th)</option>
+              <option value="Graduate">Graduate (Bachelors)</option>
+              <option value="Masters">Post Graduate (Masters)</option>
+              <option value="Primary">Primary School</option>
+              <option value="Religious">Islamic / Religious Scholar</option>
+              <option value="Uneducated">Uneducated</option>
+              <option value="Other">Other</option>
+            </select>
             <div id="headEduOtherWrap" class="hidden mt-2">
               <input type="text" id="headEduOther" class="w-full border border-amber-400 rounded-lg px-3 text-xs bg-amber-50 outline-none">
             </div>
           </div>
 
+          <!-- Occupation Dropdown With Single Language Fallback -->
           <div>
             <label id="lblHeadJob" class="block text-xs font-semibold text-slate-700">
               Occupation / Job<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
-            <select id="headJob" required onchange="toggleManualInput(this, 'headJobOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white"></select>
+            <select id="headJob" required onchange="toggleManualInput(this, 'headJobOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white">
+              <option value="Business" selected>Business / Self-Employed</option>
+              <option value="Textile">Cloth Merchant / Textile</option>
+              <option value="Tailor">Tailor / Embroidery</option>
+              <option value="PrivateJob">Private Job</option>
+              <option value="GovtJob">Government Job</option>
+              <option value="Teacher">Teacher / Education</option>
+              <option value="Healthcare">Doctor / Healthcare</option>
+              <option value="EngineerIT">Engineer / IT Software</option>
+              <option value="Driver">Driver / Transport</option>
+              <option value="DailyWage">Artisan / Daily Wage</option>
+              <option value="Student">Student</option>
+              <option value="Homemaker">Homemaker / Housewife</option>
+              <option value="Retired">Retired</option>
+              <option value="Other">Other</option>
+            </select>
             <div id="headJobOtherWrap" class="hidden mt-2">
               <input type="text" id="headJobOther" class="w-full border border-amber-400 rounded-lg px-3 text-xs bg-amber-50 outline-none">
             </div>
@@ -367,11 +413,21 @@
             <input type="tel" id="headPhone" required placeholder="+923001234567" class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-amber-500 outline-none text-left">
           </div>
 
+          <!-- Country Dropdown With Single Language Fallback -->
           <div>
             <label id="lblHeadCountry" class="block text-xs font-semibold text-slate-700">
               Country<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
-            <select id="headCountry" required onchange="toggleManualInput(this, 'headCountryOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-amber-500 outline-none bg-white"></select>
+            <select id="headCountry" required onchange="toggleManualInput(this, 'headCountryOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-amber-500 outline-none bg-white">
+              <option value="Pakistan" selected>Pakistan</option>
+              <option value="India">India</option>
+              <option value="Morocco">Morocco</option>
+              <option value="Saudi Arabia">Saudi Arabia</option>
+              <option value="United Arab Emirates">United Arab Emirates</option>
+              <option value="United Kingdom">United Kingdom</option>
+              <option value="United States">United States</option>
+              <option value="Other">Other</option>
+            </select>
             <div id="headCountryOtherWrap" class="hidden mt-2">
               <input type="text" id="headCountryOther" class="w-full border border-amber-400 rounded-lg px-3 text-xs bg-amber-50 outline-none">
             </div>
@@ -574,7 +630,7 @@
                         <text x="100" y="85" fill="#082f49" font-family="'Inter', sans-serif" font-size="12" text-anchor="middle" font-weight="900">★ ★ ★</text>
                         <text x="100" y="108" fill="#082f49" font-family="'Inter', sans-serif" font-weight="900" font-size="19" text-anchor="middle" letter-spacing="2">VERIFIED</text>
                         <line x1="38" y1="115" x2="162" y2="115" stroke="#082f49" stroke-width="2.5" />
-                        <text x="100" y="127" fill="#082f49" font-family="'Inter', sans-serif" font-size="9.5" text-anchor="middle" font-weight="900" letter-spacing="1.5">AUTHENTIC</text>
+                        <text x="100" y="127" fill="#082f49" font-family="'Inter', sans-serif" font-size="9.5" text-anchor="middle" font-weight="900 letter-spacing="1.5">AUTHENTIC</text>
                       </svg>
                     </div>
 
@@ -681,7 +737,7 @@
         <div class="flex justify-between items-center border-b pb-3">
           <div class="flex items-center gap-2">
             <span class="w-3 h-3 rounded-full bg-amber-500 animate-pulse"></span>
-            <h3 class="font-bold text-base text-slate-900">Admin Census & Directory Manager (V.6.6 New)</h3>
+            <h3 class="font-bold text-base text-slate-900">Admin Census & Directory Manager (V.6.6.1)</h3>
           </div>
           <button type="button" onclick="closeAdminModal()" class="text-slate-400 hover:text-slate-700 font-bold text-2xl leading-none">&times;</button>
         </div>
@@ -878,7 +934,7 @@
     const i18n = {
       ur: {
         appTitle: "چھیپا خاندانی رجسٹریشن سرٹیفکیٹ",
-        appSub: "ورلڈ چھیپا فاؤنڈیشن — عالمی مردم شماری پورٹل (V.6.6 New)",
+        appSub: "ورلڈ چھیپا فاؤنڈیشن — عالمی مردم شماری پورٹل (V.6.6.1)",
         lblLang: "زبان:",
         lblLiveFamilies: "خاندان (Families):",
         lblLiveMembers: "کل افراد (Unique):",
@@ -1019,7 +1075,7 @@
       },
       hi: {
         appTitle: "छीपा पारिवारिक पंजीकरण प्रमाण पत्र",
-        appSub: "वर्ल्ड छीपा फाउंडेशन — वैश्विक जनगणना पोर्टल (V.6.6 New)",
+        appSub: "वर्ल्ड छीपा फाउंडेशन — वैश्विक जनगणना पोर्टल (V.6.6.1)",
         lblLang: "भाषा:",
         lblLiveFamilies: "परिवार (Families):",
         lblLiveMembers: "कुल सदस्य (Unique):",
@@ -1160,7 +1216,7 @@
       },
       en: {
         appTitle: "Chhippa Family Registration Certificate",
-        appSub: "World Chhippa Foundation — Global Census Portal (V.6.6 New)",
+        appSub: "World Chhippa Foundation — Global Census Portal (V.6.6.1)",
         lblLang: "Language:",
         lblLiveFamilies: "Families:",
         lblLiveMembers: "Unique Individuals:",
@@ -1649,7 +1705,7 @@
       const decEl = document.getElementById('frcDeclarationText');
       if (decEl) decEl.textContent = dict.frcDeclaration;
 
-      // Strict Single Language Dropdown Population (No Mixed Slashing)
+      // Strict Single-Language Dropdowns
       populateSelectOptions('headGender', dict.genders, 'Male');
       populateSelectOptions('headMarital', dict.maritalStatuses, 'Married');
       populateSelectOptions('headClan', dict.clans, 'Tak');
@@ -1670,7 +1726,7 @@
         });
       }
 
-      // Check if "Other" input needs to be toggled
+      // Sync "Other" input wrap visibility
       toggleManualInput(document.getElementById('headClan'), 'headClanOtherWrap');
       toggleManualInput(document.getElementById('headEdu'), 'headEduOtherWrap');
       toggleManualInput(document.getElementById('headJob'), 'headJobOtherWrap');
@@ -1886,7 +1942,17 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
           <div>
             <label class="block text-xs font-semibold text-slate-700 lbl-mem-rel">${dict.lblMemRel} *</label>
-            <select id="memRel_${id}" onchange="handleRelationChange(${id})" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white"></select>
+            <select id="memRel_${id}" onchange="handleRelationChange(${id})" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white">
+              <option value="Wife" selected>Wife</option>
+              <option value="Son">Son</option>
+              <option value="Daughter">Daughter</option>
+              <option value="Mother">Mother</option>
+              <option value="Father">Father</option>
+              <option value="Brother">Brother</option>
+              <option value="Sister">Sister</option>
+              <option value="Husband">Husband</option>
+              <option value="Other">Other</option>
+            </select>
           </div>
           <div>
             <label class="block text-xs font-semibold text-slate-700 lbl-mem-name">${dict.lblMemName} *</label>
@@ -1898,11 +1964,20 @@
           </div>
           <div>
             <label class="block text-xs font-semibold text-slate-700 lbl-mem-gender">${dict.lblMemGender} *</label>
-            <select id="memGender_${id}" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white"></select>
+            <select id="memGender_${id}" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white">
+              <option value="Female" selected>Female</option>
+              <option value="Male">Male</option>
+              <option value="Other">Other</option>
+            </select>
           </div>
           <div>
             <label class="block text-xs font-semibold text-slate-700 lbl-mem-marital">${dict.lblMemMarital} *</label>
-            <select id="memMarital_${id}" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white"></select>
+            <select id="memMarital_${id}" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white">
+              <option value="Married" selected>Married</option>
+              <option value="Unmarried">Unmarried</option>
+              <option value="Widowed">Widowed</option>
+              <option value="Divorced">Divorced</option>
+            </select>
           </div>
           <div>
             <label class="block text-xs font-semibold text-slate-700 lbl-mem-age">${dict.lblMemAge} *</label>
@@ -1914,18 +1989,42 @@
           </div>
           <div id="memWifeLineageWrap_${id}" class="hidden">
             <label class="block text-xs font-semibold text-slate-700 lbl-mem-lineage">${dict.lblMemLineage} *</label>
-            <select id="memLineage_${id}" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white"></select>
+            <select id="memLineage_${id}" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white">
+              <option value="Chhippa" selected>Chhippa</option>
+              <option value="NonChhippa">Non-Chhippa</option>
+            </select>
           </div>
           <div>
             <label class="block text-xs font-semibold text-slate-700 lbl-mem-edu">${dict.lblMemEdu} *</label>
-            <select id="memEdu_${id}" onchange="toggleManualInput(this, 'memEduOtherWrap_${id}')" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white"></select>
+            <select id="memEdu_${id}" onchange="toggleManualInput(this, 'memEduOtherWrap_${id}')" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white">
+              <option value="Matric" selected>Matriculation</option>
+              <option value="Intermediate">Intermediate</option>
+              <option value="Graduate">Graduate</option>
+              <option value="Masters">Masters</option>
+              <option value="Primary">Primary</option>
+              <option value="Religious">Religious</option>
+              <option value="Uneducated">Uneducated</option>
+              <option value="Other">Other</option>
+            </select>
             <div id="memEduOtherWrap_${id}" class="hidden mt-2">
               <input type="text" id="memEduOther_${id}" class="w-full border border-amber-400 rounded-lg px-3 text-xs bg-amber-50 outline-none">
             </div>
           </div>
           <div>
             <label class="block text-xs font-semibold text-slate-700 lbl-mem-job">${dict.lblMemJob} *</label>
-            <select id="memJob_${id}" onchange="toggleManualInput(this, 'memJobOtherWrap_${id}')" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white"></select>
+            <select id="memJob_${id}" onchange="toggleManualInput(this, 'memJobOtherWrap_${id}')" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white">
+              <option value="Homemaker" selected>Homemaker</option>
+              <option value="Business">Business</option>
+              <option value="Textile">Textile</option>
+              <option value="Tailor">Tailor</option>
+              <option value="PrivateJob">Private Job</option>
+              <option value="GovtJob">Govt Job</option>
+              <option value="Teacher">Teacher</option>
+              <option value="Healthcare">Healthcare</option>
+              <option value="Student">Student</option>
+              <option value="Retired">Retired</option>
+              <option value="Other">Other</option>
+            </select>
             <div id="memJobOtherWrap_${id}" class="hidden mt-2">
               <input type="text" id="memJobOther_${id}" class="w-full border border-amber-400 rounded-lg px-3 text-xs bg-amber-50 outline-none">
             </div>
@@ -3126,7 +3225,8 @@ _Dedicated by M. Waseem Sadiq Tak (Neemray Walay)_`;
       }
     }
 
-    window.addEventListener('DOMContentLoaded', () => {
+    // Safe Init Guarantee
+    function initApp() {
       const form = document.getElementById('censusForm');
       if (form) form.reset();
 
@@ -3139,7 +3239,13 @@ _Dedicated by M. Waseem Sadiq Tak (Neemray Walay)_`;
       document.getElementById('langSelect').value = 'en';
       changeLanguage('en');
       updateCensusCounters();
-    });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initApp);
+    } else {
+      initApp();
+    }
   </script>
 </body>
 </html>
