@@ -862,7 +862,59 @@
       </div>
     </div>
   </footer>
+  <!-- ========================================== -->
+  <!-- MEMORIAL TRIBUTE POPUP: V.6.6.1 Amendment -->
+  <!-- ========================================== -->
+  <div id="memorialModal" class="fixed inset-0 z-[99999] flex items-center justify-center bg-black/75 backdrop-blur-sm p-4 transition-opacity duration-300">
+    <div class="relative w-full max-w-xl bg-white rounded-2xl shadow-2xl border-2 border-amber-500/50 overflow-hidden text-center p-6 sm:p-8">
+      
+      <!-- Close (Cross) Button: Initially Hidden -->
+      <button type="button" id="memCloseCross" onclick="closeMemorialModal()" class="hidden absolute top-4 right-4 text-slate-400 hover:text-slate-700 text-2xl font-black leading-none w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 items-center justify-center transition">
+        &times;
+      </button>
 
+      <!-- Decorative Emblem -->
+      <div class="mx-auto mb-3 w-14 h-14 rounded-full bg-amber-50 border border-amber-300 flex items-center justify-center text-amber-700 shadow-inner">
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+        </svg>
+      </div>
+
+      <!-- Main Headings -->
+      <h2 id="memCardSubtitle" class="text-xs sm:text-sm font-semibold tracking-widest text-amber-800 uppercase mb-1">In Eternal Remembrance</h2>
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight" id="memPersonName">Muhammad Sadiq Tak</h1>
+      <p class="text-sm font-semibold text-amber-700 mb-4">(Neemray Walay) • 1931 – 2022</p>
+
+      <!-- Text Container: English -->
+      <div id="memTextEn" class="text-slate-700 text-sm leading-relaxed space-y-3">
+        <p class="italic">"Honoring a lifetime of selfless dedication, love, and tireless service to the Chhippa Community. This portal stands as a living tribute to his noble values and vision for a united community."</p>
+        <p class="text-xs font-semibold text-slate-500">May Allah grant him the highest ranks in Jannat-ul-Firdous. Aameen.</p>
+        <p class="text-xs font-bold text-amber-900 pt-1">Dedicated with Love by: Tak Family (Neemray Walay)</p>
+      </div>
+
+      <!-- Text Container: Urdu -->
+      <div id="memTextUr" class="hidden text-slate-800 text-base leading-loose space-y-2 font-urdu" dir="rtl">
+        <p>"چھینپا برادری کے لیے بے لوث خدمت، محبت اور لازوال قربانیوں کی یاد میں۔ یہ مردم شماری پورٹل ان کے نیک مقاصد اور برادری کو ایک لڑی میں پرونے کے خواب کو خراجِ عقیدت ہے۔"</p>
+        <p class="text-xs font-bold text-slate-600">اللہ تعالیٰ انہیں جنت الفردوس میں اعلیٰ مقام عطا فرمائے۔ آمین۔</p>
+        <p class="text-xs font-bold text-amber-900 pt-1">پیش کش: ٹاک فیملی (نیمڑے والے)</p>
+      </div>
+
+      <!-- Text Container: Hindi -->
+      <div id="memTextHi" class="hidden text-slate-700 text-sm leading-relaxed space-y-3 font-devanagari">
+        <p>"छीपा बिरादरी के लिए निस्वार्थ सेवा, समर्पण और अटूट प्रेम को समर्पित। यह पोर्टल उनके नेक विचारों और बिरादरी की एकता के विज़न को एक विनम्र श्रद्धांजलि है।"</p>
+        <p class="text-xs font-semibold text-slate-500">अल्लाह उन्हें जन्नत-उल-फ़िरदौस में आला मक़ाम अता फरमाए। आमीन।</p>
+        <p class="text-xs font-bold text-amber-900 pt-1">समर्पित: टाक परिवार (नीमड़े वाले)</p>
+      </div>
+
+      <!-- Bottom Enter/Action Button: Initially Hidden -->
+      <div id="memActionWrap" class="mt-6 pt-4 border-t border-slate-100 hidden">
+        <button type="button" id="btnMemEnter" onclick="closeMemorialModal()" class="w-full sm:w-auto px-8 py-2.5 bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white text-sm font-bold rounded-xl shadow-md transition transform active:scale-95">
+          Enter Portal / آمین
+        </button>
+      </div>
+
+    </div>
+  </div>
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyDummyKeyReplaceLaterWhenCreated",
@@ -1744,6 +1796,7 @@
 
       populateAdminCountryOptions();
       refreshMemberCardsLanguage();
+      updateMemorialPopupLanguage(lang);
     }
 
     // Clean & Strict Single-Language Options Generator
@@ -3234,6 +3287,70 @@ _Dedicated by M. Waseem Sadiq Tak (Neemray Walay)_`;
         alert("Database has been successfully cleared.");
       }
     }
+    // ==========================================
+    // MEMORIAL POPUP LOGIC: V.6.6.1 Amendment
+    // ==========================================
+    let memorialTimer = null;
+
+    function initMemorialPopup() {
+      const modal = document.getElementById('memorialModal');
+      const crossBtn = document.getElementById('memCloseCross');
+      const actionWrap = document.getElementById('memActionWrap');
+
+      if (!modal) return;
+      modal.classList.remove('hidden');
+
+      // 4-Second Delay Rule for English Landing
+      memorialTimer = setTimeout(() => {
+      
+        if (crossBtn) crossBtn.classList.remove('hidden');
+        if (actionWrap) actionWrap.classList.remove('hidden');
+      }, 4000);
+    }
+
+    function updateMemorialPopupLanguage(lang) {
+      const tEn = document.getElementById('memTextEn');
+      const tUr = document.getElementById('memTextUr');
+      const tHi = document.getElementById('memTextHi');
+      const subTitle = document.getElementById('memCardSubtitle');
+      const pName = document.getElementById('memPersonName');
+      const crossBtn = document.getElementById('memCloseCross');
+      const actionWrap = document.getElementById('memActionWrap');
+
+      if (!tEn || !tUr || !tHi) return;
+
+      tEn.classList.add('hidden');
+      tUr.classList.add('hidden');
+      tHi.classList.add('hidden');
+
+      if (lang === 'ur') {
+        tUr.classList.remove('hidden');
+        if (subTitle) subTitle.textContent = "یادِ رفتگاں و خراجِ عقیدت";
+        if (pName) pName.textContent = "محمد صادق ٹاک";
+        // Immediate close unlock on language switch
+        if (crossBtn) crossBtn.classList.remove('hidden');
+        if (actionWrap) actionWrap.classList.remove('hidden');
+        clearTimeout(memorialTimer);
+      } else if (lang === 'hi') {
+        tHi.classList.remove('hidden');
+        if (subTitle) subTitle.textContent = "अमर स्मृति एवं सादर श्रद्धांजलि";
+        if (pName) pName.textContent = "मोहम्मद सादिक़ टाक";
+        // Immediate close unlock on language switch
+        if (crossBtn) crossBtn.classList.remove('hidden');
+        if (actionWrap) actionWrap.classList.remove('hidden');
+        clearTimeout(memorialTimer);
+      } else {
+        tEn.classList.remove('hidden');
+        if (subTitle) subTitle.textContent = "In Eternal Remembrance";
+        if (pName) pName.textContent = "Muhammad Sadiq Tak";
+      }
+    }
+
+    function closeMemorialModal() {
+      const modal = document.getElementById('memorialModal');
+      if (modal) modal.classList.add('hidden');
+      clearTimeout(memorialTimer);
+    }
 
     // Safe Init Guarantee
     function initApp() {
@@ -3249,8 +3366,8 @@ _Dedicated by M. Waseem Sadiq Tak (Neemray Walay)_`;
       document.getElementById('langSelect').value = 'en';
       changeLanguage('en');
       updateCensusCounters();
-    }
-
+      initMemorialPopup();
+ }
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', initApp);
     } else {
