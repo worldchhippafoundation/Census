@@ -3287,25 +3287,25 @@ _Dedicated by M. Waseem Sadiq Tak (Neemray Walay)_`;
         alert("Database has been successfully cleared.");
       }
     }
-    // ==========================================
+        // ==========================================
     // MEMORIAL POPUP LOGIC: V.6.6.1 Amendment
     // ==========================================
     let memorialTimer = null;
 
     function initMemorialPopup() {
       const modal = document.getElementById('memorialModal');
-      const crossBtn = document.getElementById('memCloseCross');
-      const actionWrap = document.getElementById('memActionWrap');
-
       if (!modal) return;
       modal.classList.remove('hidden');
+    }
 
-      // 4-Second Delay Rule for English Landing
-      memorialTimer = setTimeout(() => {
-      
-        if (crossBtn) crossBtn.classList.remove('hidden');
-        if (actionWrap) actionWrap.classList.remove('hidden');
-      }, 4000);
+    function switchMemorialLang(lang) {
+      if (typeof changeLanguage === 'function') {
+        const langSel = document.getElementById('langSelect');
+        if (langSel) langSel.value = lang;
+        changeLanguage(lang);
+      } else {
+        updateMemorialPopupLanguage(lang);
+      }
     }
 
     function updateMemorialPopupLanguage(lang) {
@@ -3314,8 +3314,11 @@ _Dedicated by M. Waseem Sadiq Tak (Neemray Walay)_`;
       const tHi = document.getElementById('memTextHi');
       const subTitle = document.getElementById('memCardSubtitle');
       const pName = document.getElementById('memPersonName');
-      const crossBtn = document.getElementById('memCloseCross');
-      const actionWrap = document.getElementById('memActionWrap');
+      const btnEnter = document.getElementById('btnMemEnter');
+
+      const bEn = document.getElementById('btnMemLangEn');
+      const bUr = document.getElementById('btnMemLangUr');
+      const bHi = document.getElementById('btnMemLangHi');
 
       if (!tEn || !tUr || !tHi) return;
 
@@ -3323,33 +3326,43 @@ _Dedicated by M. Waseem Sadiq Tak (Neemray Walay)_`;
       tUr.classList.add('hidden');
       tHi.classList.add('hidden');
 
+      const activeBtnCls = "px-2.5 py-1 text-xs font-bold rounded-md bg-amber-800 text-white shadow-sm transition";
+      const inactiveBtnCls = "px-2.5 py-1 text-xs font-bold rounded-md bg-slate-100 text-slate-700 hover:bg-slate-200 transition";
+
+      if (bEn) bEn.className = inactiveBtnCls;
+      if (bUr) bUr.className = inactiveBtnCls;
+      if (bHi) bHi.className = inactiveBtnCls;
+
       if (lang === 'ur') {
         tUr.classList.remove('hidden');
+        if (bUr) bUr.className = activeBtnCls;
         if (subTitle) subTitle.textContent = "یادِ رفتگاں و خراجِ عقیدت";
         if (pName) pName.textContent = "محمد صادق ٹاک";
-        // Immediate close unlock on language switch
-        if (crossBtn) crossBtn.classList.remove('hidden');
-        if (actionWrap) actionWrap.classList.remove('hidden');
-        clearTimeout(memorialTimer);
+        if (btnEnter) btnEnter.textContent = "پورٹل میں داخل ہوں / آمین";
       } else if (lang === 'hi') {
         tHi.classList.remove('hidden');
+        if (bHi) bHi.className = activeBtnCls;
         if (subTitle) subTitle.textContent = "अमर स्मृति एवं सादर श्रद्धांजलि";
         if (pName) pName.textContent = "मोहम्मद सादिक़ टाक";
-        // Immediate close unlock on language switch
-        if (crossBtn) crossBtn.classList.remove('hidden');
-        if (actionWrap) actionWrap.classList.remove('hidden');
-        clearTimeout(memorialTimer);
+        if (btnEnter) btnEnter.textContent = "पोर्टल में प्रवेश करें / आमीन";
       } else {
         tEn.classList.remove('hidden');
+        if (bEn) bEn.className = activeBtnCls;
         if (subTitle) subTitle.textContent = "In Eternal Remembrance";
         if (pName) pName.textContent = "Muhammad Sadiq Tak";
+        if (btnEnter) btnEnter.textContent = "Enter Portal / Aameen";
+      }
+    }
+
+    function handleMemorialBackdropClick(e) {
+      if (e.target && e.target.id === 'memorialModal') {
+        closeMemorialModal();
       }
     }
 
     function closeMemorialModal() {
       const modal = document.getElementById('memorialModal');
       if (modal) modal.classList.add('hidden');
-      clearTimeout(memorialTimer);
     }
 
     // Safe Init Guarantee
@@ -3367,7 +3380,8 @@ _Dedicated by M. Waseem Sadiq Tak (Neemray Walay)_`;
       changeLanguage('en');
       updateCensusCounters();
       initMemorialPopup();
- }
+    }
+
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', initApp);
     } else {
@@ -3376,3 +3390,4 @@ _Dedicated by M. Waseem Sadiq Tak (Neemray Walay)_`;
   </script>
 </body>
 </html>
+
