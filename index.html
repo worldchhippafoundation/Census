@@ -316,91 +316,45 @@
             <span id="headAgeCalculatedBadge" class="text-[10px] font-semibold text-slate-500 mt-0.5 block">Age: -</span>
           </div>
 
-          <!-- Hardcoded Fallbacks for Gender -->
           <div>
             <label id="lblHeadGender" class="block text-xs font-semibold text-slate-700">
               Gender<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
-            <select id="headGender" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-amber-500 outline-none bg-white">
-              <option value="Male" selected>Male / مرد</option>
-              <option value="Female">Female / عورت</option>
-              <option value="Other">Other / دیگر</option>
-            </select>
+            <select id="headGender" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-amber-500 outline-none bg-white"></select>
           </div>
 
-          <!-- Hardcoded Fallbacks for Marital Status -->
           <div>
             <label id="lblHeadMarital" class="block text-xs font-semibold text-slate-700">
               Marital Status<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
-            <select id="headMarital" required class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white">
-              <option value="Married" selected>Married / شادی شدہ</option>
-              <option value="Unmarried">Unmarried / غیر شادی شدہ</option>
-              <option value="Widowed">Widowed / بیوہ / رنڈوا</option>
-              <option value="Divorced">Divorced / طلاق یافتہ</option>
-            </select>
+            <select id="headMarital" required class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white"></select>
           </div>
 
-          <!-- Hardcoded Fallbacks for Clan -->
           <div>
             <label id="lblHeadClan" class="block text-xs font-semibold text-slate-700">
               Clan / Sub-Caste<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
-            <select id="headClan" required onchange="toggleManualInput(this, 'headClanOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white">
-              <option value="Tak" selected>Tak / ٹاک</option>
-              <option value="Bhati">Bhati / بھاٹی</option>
-              <option value="Rao">Rao / راؤ</option>
-              <option value="Molani">Molani / مولانی</option>
-              <option value="Lodha">Lodha / لودھا</option>
-              <option value="Deora">Deora / دیوڑا</option>
-              <option value="Other">Other / دیگر</option>
-            </select>
+            <select id="headClan" required onchange="toggleManualInput(this, 'headClanOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white"></select>
             <div id="headClanOtherWrap" class="hidden mt-2">
               <input type="text" id="headClanOther" class="w-full border border-amber-400 rounded-lg px-3 text-xs bg-amber-50 outline-none">
             </div>
           </div>
 
-          <!-- Hardcoded Fallbacks for Education -->
           <div>
             <label id="lblHeadEdu" class="block text-xs font-semibold text-slate-700">
               Education Level<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
-            <select id="headEdu" required onchange="toggleManualInput(this, 'headEduOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-slate-700 text-sm focus:ring-2 focus:ring-amber-500 outline-none bg-white">
-              <option value="Matric" selected>Matriculation (10th) / میٹرک</option>
-              <option value="Intermediate">Intermediate (12th) / انٹرمیڈیٹ</option>
-              <option value="Graduate">Graduate (Bachelors) / گریجویشن</option>
-              <option value="Masters">Post Graduate (Masters) / ماسٹرز</option>
-              <option value="Primary">Primary / پرائمری</option>
-              <option value="Religious">Islamic Scholar / دینی تعلیم</option>
-              <option value="Uneducated">Uneducated / ناخواندہ</option>
-              <option value="Other">Other / دیگر</option>
-            </select>
+            <select id="headEdu" required onchange="toggleManualInput(this, 'headEduOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-slate-700 text-sm focus:ring-2 focus:ring-amber-500 outline-none bg-white"></select>
             <div id="headEduOtherWrap" class="hidden mt-2">
               <input type="text" id="headEduOther" class="w-full border border-amber-400 rounded-lg px-3 text-xs bg-amber-50 outline-none">
             </div>
           </div>
 
-          <!-- Hardcoded Fallbacks for Job -->
           <div>
             <label id="lblHeadJob" class="block text-xs font-semibold text-slate-700">
               Occupation / Job<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
-            <select id="headJob" required onchange="toggleManualInput(this, 'headJobOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white">
-              <option value="Business" selected>Business / کاروبار</option>
-              <option value="Textile">Textile / کپڑے کا کام</option>
-              <option value="Tailor">Tailor / درزی</option>
-              <option value="PrivateJob">Private Job / پرائیویٹ ملازمت</option>
-              <option value="GovtJob">Government Job / سرکاری ملازمت</option>
-              <option value="Teacher">Teacher / استاد</option>
-              <option value="Healthcare">Healthcare / میڈیکل</option>
-              <option value="EngineerIT">Engineer / IT</option>
-              <option value="Driver">Driver / ڈرائیور</option>
-              <option value="DailyWage">Daily Wage / محنت کش</option>
-              <option value="Student">Student / طالب علم</option>
-              <option value="Homemaker">Homemaker / گھریلو خاتون</option>
-              <option value="Retired">Retired / ریٹائرڈ</option>
-              <option value="Other">Other / دیگر</option>
-            </select>
+            <select id="headJob" required onchange="toggleManualInput(this, 'headJobOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white"></select>
             <div id="headJobOtherWrap" class="hidden mt-2">
               <input type="text" id="headJobOther" class="w-full border border-amber-400 rounded-lg px-3 text-xs bg-amber-50 outline-none">
             </div>
@@ -413,21 +367,11 @@
             <input type="tel" id="headPhone" required placeholder="+923001234567" class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-amber-500 outline-none text-left">
           </div>
 
-          <!-- Hardcoded Fallbacks for Country -->
           <div>
             <label id="lblHeadCountry" class="block text-xs font-semibold text-slate-700">
               Country<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
-            <select id="headCountry" required onchange="toggleManualInput(this, 'headCountryOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-amber-500 outline-none bg-white">
-              <option value="Pakistan" selected>Pakistan / پاکستان</option>
-              <option value="India">India / بھارت</option>
-              <option value="Morocco">Morocco / مراکش</option>
-              <option value="Saudi Arabia">Saudi Arabia / سعودی عرب</option>
-              <option value="United Arab Emirates">United Arab Emirates / متحدہ عرب امارات</option>
-              <option value="United Kingdom">United Kingdom / برطانیہ</option>
-              <option value="United States">United States / امریکہ</option>
-              <option value="Other">Other / دیگر</option>
-            </select>
+            <select id="headCountry" required onchange="toggleManualInput(this, 'headCountryOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-amber-500 outline-none bg-white"></select>
             <div id="headCountryOtherWrap" class="hidden mt-2">
               <input type="text" id="headCountryOther" class="w-full border border-amber-400 rounded-lg px-3 text-xs bg-amber-50 outline-none">
             </div>
@@ -1056,20 +1000,20 @@
           Father: "والد", Mother: "والدہ", Brother: "بھائی", Sister: "بہن", Other: "دیگر"
         },
         maritalStatuses: {
-          Married: "شادی شدہ (Married)", Unmarried: "غیر شادی شدہ (Unmarried)",
-          Widowed: "بیوہ / رنڈوا (Widowed)", Divorced: "طلاق یافتہ (Divorced)"
+          Married: "شادی شدہ", Unmarried: "غیر شادی شدہ",
+          Widowed: "بیوہ / رنڈوا", Divorced: "طلاق یافتہ"
         },
         genders: { Male: "مرد", Female: "عورت", Other: "دیگر" },
         lineage: { Chhippa: "چھیپا", NonChhippa: "غیر چھیپا" },
         clans: { Tak: "ٹاک", Bhati: "بھاٹی", Rao: "راؤ", Molani: "مولانی", Lodha: "لودھا", Deora: "دیوڑا", Other: "دیگر" },
         education: {
-          Uneducated: "ناخواندہ", Primary: "پرائمری", Matric: "میٹرک", Intermediate: "انٹرمیڈیٹ",
-          Graduate: "گریجویشن", Masters: "ماسٹرز", Religious: "حافظ قرآن / دینی تعلیم", Other: "دیگر"
+          Matric: "میٹرک", Intermediate: "انٹرمیڈیٹ", Graduate: "گریجویشن", Masters: "ماسٹرز",
+          Primary: "پرائمری", Religious: "دینی تعلیم / حافظ", Uneducated: "ناخواندہ", Other: "دیگر"
         },
         jobs: {
-          Business: "کاروبار / تاجر", Textile: "کپڑے کا تاجر / ٹیکسٹائل", Tailor: "درزی / سلائی کڑھائی",
+          Business: "کاروبار / تجارت", Textile: "کپڑے کا تاجر / ٹیکسٹائل", Tailor: "درزی / سلائی کڑھائی",
           PrivateJob: "پرائیویٹ ملازمت", GovtJob: "سرکاری ملازمت", Teacher: "استاد / تعلیم",
-          Healthcare: "طبی شعبہ / میڈیکل", EngineerIT: "انجینئر / سافٹ ویئر", Driver: "ڈرائیور / ٹرانسپورٹ",
+          Healthcare: "طبی شعبہ / میڈیکل", EngineerIT: "انجینئر / آئی ٹی", Driver: "ڈرائیور / ٹرانسپورٹ",
           DailyWage: "دستکار / محنت کش", Student: "طالب علم", Homemaker: "گھریلو خاتون", Retired: "ریٹائرڈ", Other: "دیگر"
         }
       },
@@ -1197,15 +1141,15 @@
           Father: "पिता", Mother: "माता", Brother: "भाई", Sister: "बहन", Other: "अन्य"
         },
         maritalStatuses: {
-          Married: "विवाहित (Married)", Unmarried: "अविवाहित (Unmarried)",
-          Widowed: "विधवा / विधुर (Widowed)", Divorced: "तलाकशुदा (Divorced)"
+          Married: "विवाहित", Unmarried: "अविवाहित",
+          Widowed: "विधवा / विधुर", Divorced: "तलाकशुदा"
         },
         genders: { Male: "पुरुष", Female: "महिला", Other: "अन्य" },
         lineage: { Chhippa: "छीपा", NonChhippa: "गैर छीपा" },
         clans: { Tak: "टाक", Bhati: "भाटी", Rao: "राव", Molani: "मोलानी", Lodha: "लोधा", Deora: "देवड़ा", Other: "अन्य" },
         education: {
-          Uneducated: "अशिक्षित", Primary: "प्राथमिक", Matric: "मैट्रिक", Intermediate: "इंटरमीडिएट",
-          Graduate: "स्नातक", Masters: "स्नातकोत्तर", Religious: "धार्मिक शिक्षा", Other: "अन्य"
+          Matric: "मैट्रिक", Intermediate: "इंटरमीडिएट", Graduate: "स्नातक", Masters: "स्नातकोत्तर",
+          Primary: "प्राथमिक", Religious: "धार्मिक शिक्षा", Uneducated: "अशिक्षित", Other: "अन्य"
         },
         jobs: {
           Business: "व्यापार / व्यापारी", Textile: "कपड़ा व्यापारी / टेक्सटाइल", Tailor: "दर्जी / सिलाई कार्य",
@@ -1344,9 +1288,10 @@
         lineage: { Chhippa: "Chhippa", NonChhippa: "Non-Chhippa" },
         clans: { Tak: "Tak", Bhati: "Bhati", Rao: "Rao", Molani: "Molani", Lodha: "Lodha", Deora: "Deora", Other: "Other" },
         education: {
-          Uneducated: "Uneducated", Primary: "Primary School", Matric: "Matriculation (10th)",
-          Intermediate: "Intermediate (12th)", Graduate: "Graduate (Bachelors)",
-          Masters: "Post Graduate (Masters)", Religious: "Islamic / Religious Scholar", Other: "Other"
+          Matric: "Matriculation (10th)", Intermediate: "Intermediate (12th)",
+          Graduate: "Graduate (Bachelors)", Masters: "Post Graduate (Masters)",
+          Primary: "Primary School", Religious: "Islamic / Religious Scholar",
+          Uneducated: "Uneducated", Other: "Other"
         },
         jobs: {
           Business: "Business / Self-Employed", Textile: "Cloth Merchant / Textile", Tailor: "Tailor / Embroidery",
@@ -1704,35 +1649,60 @@
       const decEl = document.getElementById('frcDeclarationText');
       if (decEl) decEl.textContent = dict.frcDeclaration;
 
+      // Strict Single Language Dropdown Population (No Mixed Slashing)
       populateSelectOptions('headGender', dict.genders, 'Male');
       populateSelectOptions('headMarital', dict.maritalStatuses, 'Married');
       populateSelectOptions('headClan', dict.clans, 'Tak');
       populateSelectOptions('headEdu', dict.education, 'Matric');
       populateSelectOptions('headJob', dict.jobs, 'Business');
 
+      // Populate Country Single Language
       const countrySel = document.getElementById('headCountry');
-      const prevCountry = countrySel.value || 'Pakistan';
-      countrySel.innerHTML = allWorldCountries.map(c => `<option value="${c}">${getCountryLocalizedName(c, currentLang)}</option>`).join('');
-      countrySel.value = prevCountry;
+      if (countrySel) {
+        const prevCountry = countrySel.value || 'Pakistan';
+        countrySel.innerHTML = '';
+        allWorldCountries.forEach(c => {
+          const opt = document.createElement('option');
+          opt.value = c;
+          opt.textContent = getCountryLocalizedName(c, currentLang);
+          if (c === prevCountry) opt.selected = true;
+          countrySel.appendChild(opt);
+        });
+      }
+
+      // Check if "Other" input needs to be toggled
+      toggleManualInput(document.getElementById('headClan'), 'headClanOtherWrap');
+      toggleManualInput(document.getElementById('headEdu'), 'headEduOtherWrap');
+      toggleManualInput(document.getElementById('headJob'), 'headJobOtherWrap');
+      toggleManualInput(document.getElementById('headCountry'), 'headCountryOtherWrap');
 
       populateAdminCountryOptions();
       refreshMemberCardsLanguage();
     }
 
+    // Clean & Strict Single-Language Options Generator
     function populateSelectOptions(selectId, optionsObj, defaultValue) {
       const select = document.getElementById(selectId);
-      if (!select) return;
-      const currentSelected = select.value || defaultValue;
-      select.innerHTML = Object.entries(optionsObj)
-        .map(([k, v]) => `<option value="${k}">${v}</option>`)
-        .join('');
-      if (optionsObj[currentSelected]) {
-        select.value = currentSelected;
-      }
+      if (!select || !optionsObj) return;
+
+      const previousValue = select.value || defaultValue;
+      select.innerHTML = '';
+
+      Object.entries(optionsObj).forEach(([k, v]) => {
+        const opt = document.createElement('option');
+        opt.value = k;
+        opt.textContent = v; // Single pure language string
+        if (k === previousValue) {
+          opt.selected = true;
+        }
+        select.appendChild(opt);
+      });
     }
 
+    // Open/Close Manual Input Box When "Other" Is Chosen
     function toggleManualInput(selectElem, wrapId) {
       const wrap = document.getElementById(wrapId);
+      if (!wrap || !selectElem) return;
       if (selectElem.value === 'Other') {
         wrap.classList.remove('hidden');
       } else {
@@ -1849,7 +1819,7 @@
           totalPop++;
           const hAge = parseInt(rec.head.age) || calculateAge(rec.head.dob);
           if (hAge < 18) minors++;
-          else if (rec.head.genderKey === 'Male' || rec.head.gender === 'مرد' || rec.head.gender === 'Male') males++;
+          else if (rec.head.genderKey === 'Male' || rec.head.gender === 'مرد' || rec.head.gender === 'Male' || rec.head.gender === 'पुरुष') males++;
           else females++;
         }
 
@@ -1866,7 +1836,7 @@
               totalPop++;
               const mAge = parseInt(m.age) || calculateAge(m.dob);
               if (mAge < 18) minors++;
-              else if (m.genderKey === 'Male' || m.gender === 'مرد' || m.gender === 'Male') males++;
+              else if (m.genderKey === 'Male' || m.gender === 'مرد' || m.gender === 'Male' || m.gender === 'पुरुष') males++;
               else females++;
             }
           });
@@ -1916,17 +1886,7 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
           <div>
             <label class="block text-xs font-semibold text-slate-700 lbl-mem-rel">${dict.lblMemRel} *</label>
-            <select id="memRel_${id}" onchange="handleRelationChange(${id})" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white">
-              <option value="Wife" selected>Wife / اہلیہ</option>
-              <option value="Son">Son / فرزند</option>
-              <option value="Daughter">Daughter / دختر</option>
-              <option value="Mother">Mother / والدہ</option>
-              <option value="Father">Father / والد</option>
-              <option value="Brother">Brother / بھائی</option>
-              <option value="Sister">Sister / بہن</option>
-              <option value="Husband">Husband / شوہر</option>
-              <option value="Other">Other / دیگر</option>
-            </select>
+            <select id="memRel_${id}" onchange="handleRelationChange(${id})" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white"></select>
           </div>
           <div>
             <label class="block text-xs font-semibold text-slate-700 lbl-mem-name">${dict.lblMemName} *</label>
@@ -1938,20 +1898,11 @@
           </div>
           <div>
             <label class="block text-xs font-semibold text-slate-700 lbl-mem-gender">${dict.lblMemGender} *</label>
-            <select id="memGender_${id}" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white">
-              <option value="Female" selected>Female / عورت</option>
-              <option value="Male">Male / مرد</option>
-              <option value="Other">Other / دیگر</option>
-            </select>
+            <select id="memGender_${id}" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white"></select>
           </div>
           <div>
             <label class="block text-xs font-semibold text-slate-700 lbl-mem-marital">${dict.lblMemMarital} *</label>
-            <select id="memMarital_${id}" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white">
-              <option value="Married" selected>Married / شادی شدہ</option>
-              <option value="Unmarried">Unmarried / غیر شادی شدہ</option>
-              <option value="Widowed">Widowed / بیوہ / رنڈوا</option>
-              <option value="Divorced">Divorced / طلاق یافتہ</option>
-            </select>
+            <select id="memMarital_${id}" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white"></select>
           </div>
           <div>
             <label class="block text-xs font-semibold text-slate-700 lbl-mem-age">${dict.lblMemAge} *</label>
@@ -1963,42 +1914,18 @@
           </div>
           <div id="memWifeLineageWrap_${id}" class="hidden">
             <label class="block text-xs font-semibold text-slate-700 lbl-mem-lineage">${dict.lblMemLineage} *</label>
-            <select id="memLineage_${id}" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white">
-              <option value="Chhippa" selected>Chhippa / چھیپا</option>
-              <option value="NonChhippa">Non-Chhippa / غیر چھیپا</option>
-            </select>
+            <select id="memLineage_${id}" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white"></select>
           </div>
           <div>
             <label class="block text-xs font-semibold text-slate-700 lbl-mem-edu">${dict.lblMemEdu} *</label>
-            <select id="memEdu_${id}" onchange="toggleManualInput(this, 'memEduOtherWrap_${id}')" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white">
-              <option value="Matric" selected>Matriculation / میٹرک</option>
-              <option value="Intermediate">Intermediate / انٹرمیڈیٹ</option>
-              <option value="Graduate">Graduate / گریجویشن</option>
-              <option value="Masters">Masters / ماسٹرز</option>
-              <option value="Primary">Primary / پرائمری</option>
-              <option value="Religious">Religious / دینی تعلیم</option>
-              <option value="Uneducated">Uneducated / ناخواندہ</option>
-              <option value="Other">Other / دیگر</option>
-            </select>
+            <select id="memEdu_${id}" onchange="toggleManualInput(this, 'memEduOtherWrap_${id}')" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white"></select>
             <div id="memEduOtherWrap_${id}" class="hidden mt-2">
               <input type="text" id="memEduOther_${id}" class="w-full border border-amber-400 rounded-lg px-3 text-xs bg-amber-50 outline-none">
             </div>
           </div>
           <div>
             <label class="block text-xs font-semibold text-slate-700 lbl-mem-job">${dict.lblMemJob} *</label>
-            <select id="memJob_${id}" onchange="toggleManualInput(this, 'memJobOtherWrap_${id}')" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white">
-              <option value="Homemaker" selected>Homemaker / گھریلو خاتون</option>
-              <option value="Business">Business / کاروبار</option>
-              <option value="Textile">Textile / ٹیکسٹائل</option>
-              <option value="Tailor">Tailor / درزی</option>
-              <option value="PrivateJob">Private Job / ملازمت</option>
-              <option value="GovtJob">Govt Job / سرکاری ملازمت</option>
-              <option value="Teacher">Teacher / استاد</option>
-              <option value="Healthcare">Healthcare / میڈیکل</option>
-              <option value="Student">Student / طالب علم</option>
-              <option value="Retired">Retired / ریٹائرڈ</option>
-              <option value="Other">Other / دیگر</option>
-            </select>
+            <select id="memJob_${id}" onchange="toggleManualInput(this, 'memJobOtherWrap_${id}')" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white"></select>
             <div id="memJobOtherWrap_${id}" class="hidden mt-2">
               <input type="text" id="memJobOther_${id}" class="w-full border border-amber-400 rounded-lg px-3 text-xs bg-amber-50 outline-none">
             </div>
@@ -2013,9 +1940,7 @@
           <div id="memOtherAddrWrap_${id}" class="hidden md:col-span-3 bg-amber-50/70 p-3 rounded-lg border border-amber-200 grid grid-cols-1 md:grid-cols-3 gap-2">
             <div>
               <label class="block text-[11px] font-semibold text-slate-700 mb-0.5">${dict.lblMemCountry} *</label>
-              <select id="memCountry_${id}" class="w-full border border-slate-300 rounded px-2 py-1 text-xs bg-white">
-                ${allWorldCountries.map(c => `<option value="${c}">${getCountryLocalizedName(c, currentLang)}</option>`).join('')}
-              </select>
+              <select id="memCountry_${id}" class="w-full border border-slate-300 rounded px-2 py-1 text-xs bg-white"></select>
             </div>
             <div>
               <label class="block text-[11px] font-semibold text-slate-700 mb-0.5">${dict.lblMemCity} *</label>
@@ -2030,6 +1955,25 @@
       `;
 
       document.getElementById('membersContainer').appendChild(card);
+      
+      populateSelectOptions(`memRel_${id}`, dict.relations, 'Wife');
+      populateSelectOptions(`memGender_${id}`, dict.genders, 'Female');
+      populateSelectOptions(`memMarital_${id}`, dict.maritalStatuses, 'Married');
+      populateSelectOptions(`memLineage_${id}`, dict.lineage, 'Chhippa');
+      populateSelectOptions(`memEdu_${id}`, dict.education, 'Matric');
+      populateSelectOptions(`memJob_${id}`, dict.jobs, 'Homemaker');
+
+      const memCountry = document.getElementById(`memCountry_${id}`);
+      if (memCountry) {
+        allWorldCountries.forEach(c => {
+          const opt = document.createElement('option');
+          opt.value = c;
+          opt.textContent = getCountryLocalizedName(c, currentLang);
+          if (c === 'Pakistan') opt.selected = true;
+          memCountry.appendChild(opt);
+        });
+      }
+
       handleRelationChange(id);
 
       if (existingData) {
@@ -2039,6 +1983,9 @@
         if (existingData.dob) document.getElementById(`memDOB_${id}`).value = existingData.dob;
         if (existingData.maritalStatusKey) document.getElementById(`memMarital_${id}`).value = existingData.maritalStatusKey;
         if (existingData.relationKey) document.getElementById(`memRel_${id}`).value = existingData.relationKey;
+        if (existingData.genderKey) document.getElementById(`memGender_${id}`).value = existingData.genderKey;
+        if (existingData.eduKey) document.getElementById(`memEdu_${id}`).value = existingData.eduKey;
+        if (existingData.jobKey) document.getElementById(`memJob_${id}`).value = existingData.jobKey;
         if (existingData.addrChoice === 'other') {
           document.getElementById(`memAddrChoice_${id}`).value = 'other';
           document.getElementById(`memOtherAddrWrap_${id}`).classList.remove('hidden');
@@ -2094,12 +2041,28 @@
         card.querySelector('.lbl-mem-addr').textContent = `${dict.lblMemAddrChoice} *`;
         card.querySelector('button').textContent = dict.btnRemove;
 
-        populateSelectOptions(`memRel_${id}`, dict.relations);
-        populateSelectOptions(`memGender_${id}`, dict.genders);
-        populateSelectOptions(`memMarital_${id}`, dict.maritalStatuses, 'Unmarried');
+        populateSelectOptions(`memRel_${id}`, dict.relations, 'Wife');
+        populateSelectOptions(`memGender_${id}`, dict.genders, 'Female');
+        populateSelectOptions(`memMarital_${id}`, dict.maritalStatuses, 'Married');
         populateSelectOptions(`memLineage_${id}`, dict.lineage, 'Chhippa');
         populateSelectOptions(`memEdu_${id}`, dict.education, 'Matric');
-        populateSelectOptions(`memJob_${id}`, dict.jobs, 'Student');
+        populateSelectOptions(`memJob_${id}`, dict.jobs, 'Homemaker');
+
+        const memCountry = document.getElementById(`memCountry_${id}`);
+        if (memCountry) {
+          const prevMC = memCountry.value || 'Pakistan';
+          memCountry.innerHTML = '';
+          allWorldCountries.forEach(c => {
+            const opt = document.createElement('option');
+            opt.value = c;
+            opt.textContent = getCountryLocalizedName(c, currentLang);
+            if (c === prevMC) opt.selected = true;
+            memCountry.appendChild(opt);
+          });
+        }
+
+        toggleManualInput(document.getElementById(`memEdu_${id}`), `memEduOtherWrap_${id}`);
+        toggleManualInput(document.getElementById(`memJob_${id}`), `memJobOtherWrap_${id}`);
         handleRelationChange(id);
       });
     }
@@ -2990,7 +2953,7 @@ _Dedicated by M. Waseem Sadiq Tak (Neemray Walay)_`;
       allRecords.forEach(rec => {
         if (rec.members && Array.isArray(rec.members)) {
           rec.members.forEach(m => {
-            const isChild = (m.relationKey === 'Son' || m.relationKey === 'Daughter' || m.relation.includes('بیٹا') || m.relation.includes('بیٹی'));
+            const isChild = (m.relationKey === 'Son' || m.relationKey === 'Daughter' || m.relation.includes('بیٹا') || m.relation.includes('بیٹی') || m.relation.includes('बेटा') || m.relation.includes('बेटी'));
             const ageNum = parseInt(m.age) || calculateAge(m.dob);
             const isUnmarried = (m.maritalStatusKey === 'Unmarried' || !m.maritalStatusKey);
 
@@ -3072,8 +3035,8 @@ _Dedicated by M. Waseem Sadiq Tak (Neemray Walay)_`;
       allRecords.forEach(rec => {
         if (rec.members && Array.isArray(rec.members)) {
           rec.members.forEach(m => {
-            const isWife = (m.relationKey === 'Wife' || m.relation.includes('بیوی'));
-            const isNonChhippa = m.lineage.includes('غیر') || m.lineage.includes('Non');
+            const isWife = (m.relationKey === 'Wife' || m.relation.includes('بیوی') || m.relation.includes('पत्नी'));
+            const isNonChhippa = m.lineage.includes('غیر') || m.lineage.includes('Non') || m.lineage.includes('गैर');
             if (isWife && isNonChhippa) {
               const fullWifeLoc = `${rec.head.phone} (${m.address || rec.head.address || ''}, ${m.city || rec.head.city || ''}, ${m.country || rec.head.country || ''})`;
               nonChhippaList.push({
