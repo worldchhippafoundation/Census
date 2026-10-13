@@ -163,7 +163,7 @@
       </button>
     </div>
 
-    <!-- Registration Mode Selection (Locked Point 3: Spacing & Line-Height Fixed) -->
+    <!-- Registration Mode Selection -->
     <div id="regTypeSelectorCard" class="bg-amber-50/90 border border-amber-300 rounded-xl p-4 flex flex-col md:flex-row justify-between items-center gap-3">
       <div>
         <h3 id="lblRegModeHeading" class="text-sm font-bold text-amber-950 mb-1 leading-relaxed">Select Registration Mode:</h3>
@@ -283,14 +283,14 @@
             <label id="lblHeadName" class="block text-xs font-semibold text-slate-700">
               Full Name<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
-            <input type="text" id="headName" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-amber-500 outline-none">
+            <input type="text" id="headName" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-amber-500 outline-none" placeholder="Enter full name...">
           </div>
 
           <div>
             <label id="lblHeadFather" class="block text-xs font-semibold text-slate-700">
               Father's Full Name<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
-            <input type="text" id="headFather" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-amber-500 outline-none">
+            <input type="text" id="headFather" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-amber-500 outline-none" placeholder="Enter father name...">
             <div class="flex items-center gap-2 mt-1">
               <input type="checkbox" id="headFatherDeceased" class="rounded text-amber-600">
               <label for="headFatherDeceased" id="lblFatherDeceased" class="text-[10px] text-slate-500 !mb-0 !leading-none">Deceased / Unavailable</label>
@@ -316,45 +316,91 @@
             <span id="headAgeCalculatedBadge" class="text-[10px] font-semibold text-slate-500 mt-0.5 block">Age: -</span>
           </div>
 
+          <!-- Hardcoded Fallbacks for Gender -->
           <div>
             <label id="lblHeadGender" class="block text-xs font-semibold text-slate-700">
               Gender<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
-            <select id="headGender" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-amber-500 outline-none"></select>
+            <select id="headGender" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-amber-500 outline-none bg-white">
+              <option value="Male" selected>Male / مرد</option>
+              <option value="Female">Female / عورت</option>
+              <option value="Other">Other / دیگر</option>
+            </select>
           </div>
 
+          <!-- Hardcoded Fallbacks for Marital Status -->
           <div>
             <label id="lblHeadMarital" class="block text-xs font-semibold text-slate-700">
               Marital Status<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
-            <select id="headMarital" required class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none"></select>
+            <select id="headMarital" required class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white">
+              <option value="Married" selected>Married / شادی شدہ</option>
+              <option value="Unmarried">Unmarried / غیر شادی شدہ</option>
+              <option value="Widowed">Widowed / بیوہ / رنڈوا</option>
+              <option value="Divorced">Divorced / طلاق یافتہ</option>
+            </select>
           </div>
 
+          <!-- Hardcoded Fallbacks for Clan -->
           <div>
             <label id="lblHeadClan" class="block text-xs font-semibold text-slate-700">
               Clan / Sub-Caste<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
-            <select id="headClan" required onchange="toggleManualInput(this, 'headClanOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none"></select>
+            <select id="headClan" required onchange="toggleManualInput(this, 'headClanOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white">
+              <option value="Tak" selected>Tak / ٹاک</option>
+              <option value="Bhati">Bhati / بھاٹی</option>
+              <option value="Rao">Rao / راؤ</option>
+              <option value="Molani">Molani / مولانی</option>
+              <option value="Lodha">Lodha / لودھا</option>
+              <option value="Deora">Deora / دیوڑا</option>
+              <option value="Other">Other / دیگر</option>
+            </select>
             <div id="headClanOtherWrap" class="hidden mt-2">
               <input type="text" id="headClanOther" class="w-full border border-amber-400 rounded-lg px-3 text-xs bg-amber-50 outline-none">
             </div>
           </div>
 
+          <!-- Hardcoded Fallbacks for Education -->
           <div>
             <label id="lblHeadEdu" class="block text-xs font-semibold text-slate-700">
               Education Level<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
-            <select id="headEdu" required onchange="toggleManualInput(this, 'headEduOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-slate-700 text-sm focus:ring-2 focus:ring-amber-500 outline-none"></select>
+            <select id="headEdu" required onchange="toggleManualInput(this, 'headEduOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-slate-700 text-sm focus:ring-2 focus:ring-amber-500 outline-none bg-white">
+              <option value="Matric" selected>Matriculation (10th) / میٹرک</option>
+              <option value="Intermediate">Intermediate (12th) / انٹرمیڈیٹ</option>
+              <option value="Graduate">Graduate (Bachelors) / گریجویشن</option>
+              <option value="Masters">Post Graduate (Masters) / ماسٹرز</option>
+              <option value="Primary">Primary / پرائمری</option>
+              <option value="Religious">Islamic Scholar / دینی تعلیم</option>
+              <option value="Uneducated">Uneducated / ناخواندہ</option>
+              <option value="Other">Other / دیگر</option>
+            </select>
             <div id="headEduOtherWrap" class="hidden mt-2">
               <input type="text" id="headEduOther" class="w-full border border-amber-400 rounded-lg px-3 text-xs bg-amber-50 outline-none">
             </div>
           </div>
 
+          <!-- Hardcoded Fallbacks for Job -->
           <div>
             <label id="lblHeadJob" class="block text-xs font-semibold text-slate-700">
               Occupation / Job<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
-            <select id="headJob" required onchange="toggleManualInput(this, 'headJobOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none"></select>
+            <select id="headJob" required onchange="toggleManualInput(this, 'headJobOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white">
+              <option value="Business" selected>Business / کاروبار</option>
+              <option value="Textile">Textile / کپڑے کا کام</option>
+              <option value="Tailor">Tailor / درزی</option>
+              <option value="PrivateJob">Private Job / پرائیویٹ ملازمت</option>
+              <option value="GovtJob">Government Job / سرکاری ملازمت</option>
+              <option value="Teacher">Teacher / استاد</option>
+              <option value="Healthcare">Healthcare / میڈیکل</option>
+              <option value="EngineerIT">Engineer / IT</option>
+              <option value="Driver">Driver / ڈرائیور</option>
+              <option value="DailyWage">Daily Wage / محنت کش</option>
+              <option value="Student">Student / طالب علم</option>
+              <option value="Homemaker">Homemaker / گھریلو خاتون</option>
+              <option value="Retired">Retired / ریٹائرڈ</option>
+              <option value="Other">Other / دیگر</option>
+            </select>
             <div id="headJobOtherWrap" class="hidden mt-2">
               <input type="text" id="headJobOther" class="w-full border border-amber-400 rounded-lg px-3 text-xs bg-amber-50 outline-none">
             </div>
@@ -367,11 +413,21 @@
             <input type="tel" id="headPhone" required placeholder="+923001234567" class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-amber-500 outline-none text-left">
           </div>
 
+          <!-- Hardcoded Fallbacks for Country -->
           <div>
             <label id="lblHeadCountry" class="block text-xs font-semibold text-slate-700">
               Country<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
-            <select id="headCountry" required onchange="toggleManualInput(this, 'headCountryOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-amber-500 outline-none"></select>
+            <select id="headCountry" required onchange="toggleManualInput(this, 'headCountryOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-amber-500 outline-none bg-white">
+              <option value="Pakistan" selected>Pakistan / پاکستان</option>
+              <option value="India">India / بھارت</option>
+              <option value="Morocco">Morocco / مراکش</option>
+              <option value="Saudi Arabia">Saudi Arabia / سعودی عرب</option>
+              <option value="United Arab Emirates">United Arab Emirates / متحدہ عرب امارات</option>
+              <option value="United Kingdom">United Kingdom / برطانیہ</option>
+              <option value="United States">United States / امریکہ</option>
+              <option value="Other">Other / دیگر</option>
+            </select>
             <div id="headCountryOtherWrap" class="hidden mt-2">
               <input type="text" id="headCountryOther" class="w-full border border-amber-400 rounded-lg px-3 text-xs bg-amber-50 outline-none">
             </div>
@@ -381,14 +437,14 @@
             <label id="lblHeadCity" class="block text-xs font-semibold text-slate-700">
               City<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
-            <input type="text" id="headCity" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-amber-500 outline-none">
+            <input type="text" id="headCity" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-amber-500 outline-none" placeholder="City name...">
           </div>
 
           <div class="md:col-span-3">
             <label id="lblHeadAddress" class="block text-xs font-semibold text-slate-700">
               Full Residential Address<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
-            <input type="text" id="headAddress" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-amber-500 outline-none">
+            <input type="text" id="headAddress" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-amber-500 outline-none" placeholder="House number, street, area...">
           </div>
         </div>
       </div>
@@ -408,7 +464,7 @@
         <div id="membersContainer" class="p-5 space-y-4"></div>
       </div>
 
-      <!-- Free Community Reference Verification Box (Locked Point 4: Fully Translated Placeholders) -->
+      <!-- Free Community Reference Verification Box -->
       <div id="communityRefCard" class="bg-white rounded-xl shadow border border-slate-200 p-5 space-y-3">
         <h3 id="lblRefTitle" class="text-sm font-bold text-slate-800">Community Reference Verification (Zero Cost Free Service)</h3>
         <p id="lblRefSub" class="text-xs text-slate-500">Provide a trusted Foundation Member or elder reference to expedite administrative review without SMS OTP.</p>
@@ -443,13 +499,11 @@
           </div>
           
           <div class="flex items-center gap-1.5 md:gap-2">
-            <!-- Download Button: Visible only when Approved -->
             <button onclick="downloadCertificatePDF()" id="btnDownloadAction" class="bandhani-bg text-white text-[11px] md:text-xs font-bold px-3 md:px-4 py-2 rounded-lg transition shadow flex items-center gap-1">
               Download PDF
             </button>
-            <!-- Direct WCF WhatsApp Share Button -->
             <button onclick="shareDirectToWCF()" id="btnModalWhatsAppShare" class="bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] md:text-xs font-bold px-3 md:px-4 py-2 rounded-lg transition shadow flex items-center gap-1">
-              <i class="fa-brands fa-whatsapp"></i> WhatsApp Share (WCF Direct)
+              WhatsApp Share (WCF Direct)
             </button>
             <button onclick="closeFRCModal()" id="btnModalClose" class="bg-slate-700 hover:bg-slate-600 text-white text-[11px] md:text-xs px-2.5 py-2 rounded-lg">
               Close
@@ -457,7 +511,6 @@
           </div>
         </div>
 
-        <!-- Pending Verification Notice Box (Inside Modal) -->
         <div id="modalPendingNotice" class="hidden bg-amber-50 border-b border-amber-300 p-4 text-center">
           <div class="flex items-center justify-center gap-2 text-amber-900 font-bold text-sm">
             <span>⏳</span> <span id="lblPendingNoticeTitle">Application Under Verification</span>
@@ -534,7 +587,7 @@
                   </table>
                 </div>
 
-                <!-- ================= LOCKED POINT 1 & 2: SELF-DECLARATION BELOW TABLE (WITHOUT BOX) ================= -->
+                <!-- Self-Declaration Below Table (Without Box) -->
                 <p class="text-center text-[8.5px] text-slate-500 italic mt-3 mb-1 px-4 leading-normal" id="frcDeclarationText">
                   Notice & Declaration: This certificate is issued based on applicant's self-declaration. The WCF Board reserves the right to revoke/cancel it in case of false information or ineligible lineage.
                 </p>
@@ -678,7 +731,7 @@
       </div>
     </div>
 
-    <!-- Admin Panel Modal (Locked Point 5: Real Firebase Toggle & Sync Button Added) -->
+    <!-- Admin Panel Modal -->
     <div id="adminModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 overflow-y-auto p-4 flex items-center justify-center font-latin" dir="ltr">
       <div class="bg-white w-full max-w-2xl rounded-xl shadow-2xl border border-slate-300 p-6 space-y-4 text-slate-800 my-auto">
         <div class="flex justify-between items-center border-b pb-3">
@@ -822,7 +875,6 @@
         auth = firebase.auth();
         db = firebase.firestore();
         
-        // Enable Offline IndexedDB Persistence
         db.enablePersistence({ synchronizeTabs: true }).catch(err => {
           if (err.code === 'failed-precondition') {
             console.warn("Multiple tabs open, persistence active in first tab.");
@@ -967,7 +1019,6 @@
         modalTopHeading: "خاندانی رجسٹریشن سرٹیفکیٹ (Official FRC)",
         modalTopHeadingInd: "انفرادی شناختی سرٹیفکیٹ (Official IIC)",
         btnDownloadPdf: "ڈاؤن لوڈ PDF",
-        btnWhatsappShare: "واٹس ایپ شیئر کریں",
         btnCloseModal: "بند کریں",
         lblPendingNoticeTitle: "درخواست تصدیق کے مراحل میں ہے (Pending Verification)",
         lblPendingNoticeBody: "آپ کی درخواست مستقل ممبر آئی ڈی کے ساتھ کامیابی سے محفوظ کر لی گئی ہے۔ دفتری توثیق مکمل ہونے تک حتمی سرٹیفکیٹ ڈاؤن لوڈ اور کیو آر تصدیق غیر فعال رہے گی۔",
@@ -1109,7 +1160,6 @@
         modalTopHeading: "पारिवारिक पंजीकरण प्रमाण पत्र (Official FRC)",
         modalTopHeadingInd: "व्यक्तिगत पहचान प्रमाण पत्र (Official IIC)",
         btnDownloadPdf: "PDF डाउनलोड करें",
-        btnWhatsappShare: "व्हाट्सएप शेयर",
         btnCloseModal: "बंद करें",
         lblPendingNoticeTitle: "आवेदन सत्यापन प्रक्रिया में है (Pending Verification)",
         lblPendingNoticeBody: "आपका आवेदन स्थायी सदस्य आईडी के साथ सुरक्षित कर लिया गया है। आधिकारिक सत्यापन पूर्ण होने तक अंतिम प्रमाणपत्र डाउनलोड व क्यूआर सत्यापन सक्रिय नहीं होगा।",
@@ -1251,7 +1301,6 @@
         modalTopHeading: "Family Registration Certificate (Official FRC)",
         modalTopHeadingInd: "Individual Identity Certificate (Official IIC)",
         btnDownloadPdf: "Download PDF",
-        btnWhatsappShare: "WhatsApp Share",
         btnCloseModal: "Close",
         lblPendingNoticeTitle: "Application Under Verification (Pending Verification)",
         lblPendingNoticeBody: "Your registration application has been saved with permanent Member ID. The final certificate download and QR verification will become active once official verification is completed.",
@@ -1867,13 +1916,21 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
           <div>
             <label class="block text-xs font-semibold text-slate-700 lbl-mem-rel">${dict.lblMemRel} *</label>
-            <select id="memRel_${id}" onchange="handleRelationChange(${id})" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none">
-              ${Object.entries(dict.relations).map(([k, v]) => `<option value="${k}">${v}</option>`).join('')}
+            <select id="memRel_${id}" onchange="handleRelationChange(${id})" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white">
+              <option value="Wife" selected>Wife / اہلیہ</option>
+              <option value="Son">Son / فرزند</option>
+              <option value="Daughter">Daughter / دختر</option>
+              <option value="Mother">Mother / والدہ</option>
+              <option value="Father">Father / والد</option>
+              <option value="Brother">Brother / بھائی</option>
+              <option value="Sister">Sister / بہن</option>
+              <option value="Husband">Husband / شوہر</option>
+              <option value="Other">Other / دیگر</option>
             </select>
           </div>
           <div>
             <label class="block text-xs font-semibold text-slate-700 lbl-mem-name">${dict.lblMemName} *</label>
-            <input type="text" id="memName_${id}" required class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none">
+            <input type="text" id="memName_${id}" required class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none" placeholder="Full name...">
           </div>
           <div>
             <label class="block text-xs font-semibold text-slate-700 lbl-mem-dob">${dict.lblMemDOB} *</label>
@@ -1881,14 +1938,19 @@
           </div>
           <div>
             <label class="block text-xs font-semibold text-slate-700 lbl-mem-gender">${dict.lblMemGender} *</label>
-            <select id="memGender_${id}" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none">
-              ${Object.entries(dict.genders).map(([k, v]) => `<option value="${k}">${v}</option>`).join('')}
+            <select id="memGender_${id}" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white">
+              <option value="Female" selected>Female / عورت</option>
+              <option value="Male">Male / مرد</option>
+              <option value="Other">Other / دیگر</option>
             </select>
           </div>
           <div>
             <label class="block text-xs font-semibold text-slate-700 lbl-mem-marital">${dict.lblMemMarital} *</label>
-            <select id="memMarital_${id}" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none">
-              ${Object.entries(dict.maritalStatuses).map(([k, v]) => `<option value="${k}">${v}</option>`).join('')}
+            <select id="memMarital_${id}" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white">
+              <option value="Married" selected>Married / شادی شدہ</option>
+              <option value="Unmarried">Unmarried / غیر شادی شدہ</option>
+              <option value="Widowed">Widowed / بیوہ / رنڈوا</option>
+              <option value="Divorced">Divorced / طلاق یافتہ</option>
             </select>
           </div>
           <div>
@@ -1901,14 +1963,22 @@
           </div>
           <div id="memWifeLineageWrap_${id}" class="hidden">
             <label class="block text-xs font-semibold text-slate-700 lbl-mem-lineage">${dict.lblMemLineage} *</label>
-            <select id="memLineage_${id}" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none">
-              ${Object.entries(dict.lineage).map(([k, v]) => `<option value="${k}">${v}</option>`).join('')}
+            <select id="memLineage_${id}" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white">
+              <option value="Chhippa" selected>Chhippa / چھیپا</option>
+              <option value="NonChhippa">Non-Chhippa / غیر چھیپا</option>
             </select>
           </div>
           <div>
             <label class="block text-xs font-semibold text-slate-700 lbl-mem-edu">${dict.lblMemEdu} *</label>
-            <select id="memEdu_${id}" onchange="toggleManualInput(this, 'memEduOtherWrap_${id}')" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none">
-              ${Object.entries(dict.education).map(([k, v]) => `<option value="${k}">${v}</option>`).join('')}
+            <select id="memEdu_${id}" onchange="toggleManualInput(this, 'memEduOtherWrap_${id}')" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white">
+              <option value="Matric" selected>Matriculation / میٹرک</option>
+              <option value="Intermediate">Intermediate / انٹرمیڈیٹ</option>
+              <option value="Graduate">Graduate / گریجویشن</option>
+              <option value="Masters">Masters / ماسٹرز</option>
+              <option value="Primary">Primary / پرائمری</option>
+              <option value="Religious">Religious / دینی تعلیم</option>
+              <option value="Uneducated">Uneducated / ناخواندہ</option>
+              <option value="Other">Other / دیگر</option>
             </select>
             <div id="memEduOtherWrap_${id}" class="hidden mt-2">
               <input type="text" id="memEduOther_${id}" class="w-full border border-amber-400 rounded-lg px-3 text-xs bg-amber-50 outline-none">
@@ -1916,8 +1986,18 @@
           </div>
           <div>
             <label class="block text-xs font-semibold text-slate-700 lbl-mem-job">${dict.lblMemJob} *</label>
-            <select id="memJob_${id}" onchange="toggleManualInput(this, 'memJobOtherWrap_${id}')" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none">
-              ${Object.entries(dict.jobs).map(([k, v]) => `<option value="${k}">${v}</option>`).join('')}
+            <select id="memJob_${id}" onchange="toggleManualInput(this, 'memJobOtherWrap_${id}')" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white">
+              <option value="Homemaker" selected>Homemaker / گھریلو خاتون</option>
+              <option value="Business">Business / کاروبار</option>
+              <option value="Textile">Textile / ٹیکسٹائل</option>
+              <option value="Tailor">Tailor / درزی</option>
+              <option value="PrivateJob">Private Job / ملازمت</option>
+              <option value="GovtJob">Govt Job / سرکاری ملازمت</option>
+              <option value="Teacher">Teacher / استاد</option>
+              <option value="Healthcare">Healthcare / میڈیکل</option>
+              <option value="Student">Student / طالب علم</option>
+              <option value="Retired">Retired / ریٹائرڈ</option>
+              <option value="Other">Other / دیگر</option>
             </select>
             <div id="memJobOtherWrap_${id}" class="hidden mt-2">
               <input type="text" id="memJobOther_${id}" class="w-full border border-amber-400 rounded-lg px-3 text-xs bg-amber-50 outline-none">
@@ -2087,7 +2167,7 @@
     }
 
     // ==========================================
-    // 4. Form Submission Pipeline (V.6.5 Approval & Soundex Duplication Logic)
+    // 4. Form Submission Pipeline
     // ==========================================
     async function handleFormSubmit(e) {
       e.preventDefault();
@@ -2103,7 +2183,6 @@
       const headDOB = document.getElementById('headDOB').value;
       const headAge = calculateAge(headDOB);
 
-      // Hard-Stop: Minor under 18 cannot register alone
       if (headAge < 18) {
         alert("Registration Stop: Minors under 18 years of age cannot register as an independent Head. They must be registered within their parent/guardian's Family Record.");
         submitBtn.disabled = false;
@@ -2111,7 +2190,6 @@
         return;
       }
 
-      // Mandatory Community Reference Check for Individual Adult
       const refElder = document.getElementById('refElderName').value.trim();
       const refContact = document.getElementById('refElderContact').value.trim();
 
@@ -2205,7 +2283,6 @@
         });
       }
 
-      // Soundex duplication check (V.6.5 Engine Preserved)
       const dupCheck = checkGoldenBiographicDuplication(headFather, headDOB, headClan, members, editingExistingFRCCode);
       if (dupCheck.duplicate) {
         alert(dupCheck.reason);
@@ -2214,7 +2291,6 @@
         return;
       }
 
-      // Strict V.6.5 Approval Rule: Family Unit Approved, Individual Pending Verification
       let assignedStatus = "Approved";
       if (currentRegMode === 'individual') {
         assignedStatus = "Pending Verification";
@@ -2284,7 +2360,7 @@
     }
 
     // ==========================================
-    // 5. Display Certificates with Approval Verification Guard
+    // 5. Display Certificates
     // ==========================================
     function displayCertificateModal(record) {
       activeViewingRecord = record;
@@ -2299,13 +2375,11 @@
 
       const isApproved = record.status === 'Approved';
 
-      // Status Badge Styling
       statusBadge.textContent = `Status: ${record.status || 'Pending Verification'}`;
       statusBadge.className = isApproved ? 
         'text-[10px] bg-emerald-500/30 text-emerald-300 border border-emerald-400/40 px-2 py-0.5 rounded font-mono' : 
         'text-[10px] bg-amber-500/30 text-amber-300 border border-amber-400/40 px-2 py-0.5 rounded font-mono';
 
-      // PDF Download Button & Pending Notice Lock
       if (isApproved) {
         downloadBtn.classList.remove('hidden');
         pendingNotice.classList.add('hidden');
@@ -2359,7 +2433,6 @@
         document.getElementById('frcHeadAddress').textContent = record.head.address || '-';
         document.getElementById('frcHeadLineage').textContent = record.head.lineage;
 
-        // Dynamic Declaration Text
         document.getElementById('frcDeclarationText').textContent = dict.frcDeclaration;
 
         const qrContainer = document.getElementById('frcQRCode');
@@ -2451,11 +2524,10 @@
       document.getElementById('frcModal').classList.remove('hidden');
     }
 
-    // Direct WhatsApp Click-to-Chat with City, Country, Date and Time
+    // Direct WhatsApp Function with Official WCF Number (+212708273330)
     function shareDirectToWCF() {
       if (!activeViewingRecord) return;
       const record = activeViewingRecord;
-      const wcfNumber = "923332176490";
 
       const now = new Date();
       const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
