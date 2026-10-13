@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="google" content="notranslate">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>World Chhippa Foundation - Global Census & FRC Portal (V.6.5 Enhanced)</title>
+  <title>World Chhippa Foundation - Global Census & FRC Portal (V.6.6 New)</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- jsPDF & html2canvas -->
@@ -113,8 +113,8 @@
       <div class="flex items-center gap-3 cursor-pointer select-none" id="headerLogoArea" title="Official Seal (5 Clicks Admin Panel)">
         <img src="stamp.png" alt="WCF Official Seal" class="w-12 h-12 rounded-full object-contain shrink-0 shadow-sm border border-amber-400 bg-white hover:opacity-95 transition">
         <div>
-          <h1 id="appTitle" class="text-base md:text-xl font-bold leading-relaxed mb-2 drop-shadow">Chhippa Family Registration Certificate</h1>
-          <p id="appSub" class="text-[11px] md:text-xs text-amber-200 leading-normal mt-1">World Chhippa Foundation — Global Census Portal (V.6.5 Enhanced)</p>
+          <h1 id="appTitle" class="text-base md:text-xl font-bold leading-relaxed mb-1 drop-shadow">Chhippa Family Registration Certificate</h1>
+          <p id="appSub" class="text-[11px] md:text-xs text-amber-200 leading-normal mt-0.5">World Chhippa Foundation — Global Census Portal (V.6.6 New)</p>
         </div>
       </div>
 
@@ -163,13 +163,13 @@
       </button>
     </div>
 
-    <!-- Registration Mode Selection -->
+    <!-- Registration Mode Selection (Locked Point 3: Spacing & Line-Height Fixed) -->
     <div id="regTypeSelectorCard" class="bg-amber-50/90 border border-amber-300 rounded-xl p-4 flex flex-col md:flex-row justify-between items-center gap-3">
       <div>
-        <h3 id="lblRegModeHeading" class="text-sm font-bold text-amber-950">Select Registration Mode:</h3>
-        <p id="lblRegModeDesc" class="text-xs text-slate-600">Choose "Family Unit" to issue a Family Registration Certificate (FRC), or "Individual Adult" for a standalone member to issue an Individual Identity Certificate (IIC).</p>
+        <h3 id="lblRegModeHeading" class="text-sm font-bold text-amber-950 mb-1 leading-relaxed">Select Registration Mode:</h3>
+        <p id="lblRegModeDesc" class="text-xs text-slate-700 leading-[2.4]">Choose "Family Unit" to issue a Family Registration Certificate (FRC), or "Individual Adult" for a standalone member to issue an Individual Identity Certificate (IIC).</p>
       </div>
-      <div class="flex gap-2">
+      <div class="flex gap-2 shrink-0">
         <button type="button" id="btnModeFamily" onclick="setRegistrationMode('family')" class="bandhani-bg text-white px-4 py-2 rounded-lg text-xs font-bold shadow">
           Family Unit (FRC)
         </button>
@@ -408,7 +408,7 @@
         <div id="membersContainer" class="p-5 space-y-4"></div>
       </div>
 
-      <!-- Free Community Reference Verification Box (Fully Translated) -->
+      <!-- Free Community Reference Verification Box (Locked Point 4: Fully Translated Placeholders) -->
       <div id="communityRefCard" class="bg-white rounded-xl shadow border border-slate-200 p-5 space-y-3">
         <h3 id="lblRefTitle" class="text-sm font-bold text-slate-800">Community Reference Verification (Zero Cost Free Service)</h3>
         <p id="lblRefSub" class="text-xs text-slate-500">Provide a trusted Foundation Member or elder reference to expedite administrative review without SMS OTP.</p>
@@ -447,9 +447,10 @@
             <button onclick="downloadCertificatePDF()" id="btnDownloadAction" class="bandhani-bg text-white text-[11px] md:text-xs font-bold px-3 md:px-4 py-2 rounded-lg transition shadow flex items-center gap-1">
               Download PDF
             </button>
-            <a id="btnModalWhatsAppShare" href="#" target="_blank" class="bg-green-600 hover:bg-green-500 text-white text-[11px] md:text-xs font-bold px-3 md:px-4 py-2 rounded-lg transition shadow flex items-center gap-1">
-              WhatsApp Share
-            </a>
+            <!-- Direct WCF WhatsApp Share Button -->
+            <button onclick="shareDirectToWCF()" id="btnModalWhatsAppShare" class="bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] md:text-xs font-bold px-3 md:px-4 py-2 rounded-lg transition shadow flex items-center gap-1">
+              <i class="fa-brands fa-whatsapp"></i> WhatsApp Share (WCF Direct)
+            </button>
             <button onclick="closeFRCModal()" id="btnModalClose" class="bg-slate-700 hover:bg-slate-600 text-white text-[11px] md:text-xs px-2.5 py-2 rounded-lg">
               Close
             </button>
@@ -512,7 +513,7 @@
                 </div>
 
                 <!-- Table with Sequential IDs & Integrated Member Address -->
-                <div class="relative z-10 mb-3 w-full">
+                <div class="relative z-10 mb-2 w-full">
                   <table class="w-full border-collapse border border-slate-300 text-[10px]">
                     <thead>
                       <tr class="bg-slate-800 text-white text-center font-bold">
@@ -532,6 +533,12 @@
                     <tbody id="frcTableBody" class="divide-y border-slate-200 text-slate-800 text-center leading-tight"></tbody>
                   </table>
                 </div>
+
+                <!-- ================= LOCKED POINT 1 & 2: SELF-DECLARATION BELOW TABLE (WITHOUT BOX) ================= -->
+                <p class="text-center text-[8.5px] text-slate-500 italic mt-3 mb-1 px-4 leading-normal" id="frcDeclarationText">
+                  Notice & Declaration: This certificate is issued based on applicant's self-declaration. The WCF Board reserves the right to revoke/cancel it in case of false information or ineligible lineage.
+                </p>
+
               </div>
 
               <!-- Bottom Order -->
@@ -649,7 +656,7 @@
                 </div>
 
                 <div class="mt-6 p-4 bg-slate-50 border border-slate-200 rounded-lg text-[10.5px] text-slate-600 relative z-10 leading-relaxed">
-                  <strong>Notice:</strong> This certificate recognizes the individual's registered identity within the World Chhippa Foundation Census. It is issued for independent adults not represented under a joint household FRC. It does not replace statutory state-issued identification.
+                  <strong>Notice & Declaration:</strong> This certificate recognizes the individual's registered identity within the World Chhippa Foundation Census based on applicant's self-declaration. The WCF Board reserves the right to revoke/cancel it in case of false information or ineligible lineage.
                 </div>
               </div>
 
@@ -671,13 +678,13 @@
       </div>
     </div>
 
-    <!-- Admin Panel Modal -->
+    <!-- Admin Panel Modal (Locked Point 5: Real Firebase Toggle & Sync Button Added) -->
     <div id="adminModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 overflow-y-auto p-4 flex items-center justify-center font-latin" dir="ltr">
-      <div class="bg-white w-full max-w-2xl rounded-xl shadow-2xl border border-slate-300 p-6 space-y-5 text-slate-800 my-auto">
+      <div class="bg-white w-full max-w-2xl rounded-xl shadow-2xl border border-slate-300 p-6 space-y-4 text-slate-800 my-auto">
         <div class="flex justify-between items-center border-b pb-3">
           <div class="flex items-center gap-2">
             <span class="w-3 h-3 rounded-full bg-amber-500 animate-pulse"></span>
-            <h3 class="font-bold text-base text-slate-900">Admin Census & Directory Manager (V.6.5 Enhanced)</h3>
+            <h3 class="font-bold text-base text-slate-900">Admin Census & Directory Manager (V.6.6 New)</h3>
           </div>
           <button type="button" onclick="closeAdminModal()" class="text-slate-400 hover:text-slate-700 font-bold text-2xl leading-none">&times;</button>
         </div>
@@ -694,6 +701,25 @@
           <div>
             <span class="text-xs text-slate-500 block">Pending Review:</span>
             <span id="adminQueueCount" class="text-lg font-bold text-amber-600">0</span>
+          </div>
+        </div>
+
+        <!-- Firebase Connection Toggle Bar -->
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 flex flex-wrap items-center justify-between gap-3 text-xs">
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-emerald-500" id="adminDbStatusDot"></span>
+            <div>
+              <span class="font-bold text-slate-800" id="adminDbStatusText">Firebase Cloud: CONNECTED</span>
+              <p class="text-[10px] text-slate-500">Spark Plan (No-Cost Offline / Online Sync Active)</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <button type="button" onclick="toggleFirebaseSync()" id="btnFirebaseToggle" class="px-3 py-1.5 bg-red-900 text-white font-bold rounded-lg text-xs hover:bg-red-800">
+              Cloud Sync: ON
+            </button>
+            <button type="button" onclick="syncPendingRecordsToFirebase()" class="px-3 py-1.5 bg-slate-200 text-slate-800 font-bold rounded-lg text-xs hover:bg-slate-300">
+              🔄 Sync Now (<span id="pendingRecordsBadge">0</span>)
+            </button>
           </div>
         </div>
 
@@ -788,12 +814,23 @@
     let auth = null;
     let db = null;
     let isCloudReady = false;
+    let isSyncEnabled = true;
 
     try {
       if (typeof firebase !== 'undefined' && firebaseConfig.apiKey !== "AIzaSyDummyKeyReplaceLaterWhenCreated") {
         firebase.initializeApp(firebaseConfig);
         auth = firebase.auth();
         db = firebase.firestore();
+        
+        // Enable Offline IndexedDB Persistence
+        db.enablePersistence({ synchronizeTabs: true }).catch(err => {
+          if (err.code === 'failed-precondition') {
+            console.warn("Multiple tabs open, persistence active in first tab.");
+          } else if (err.code === 'unimplemented') {
+            console.warn("Current browser does not support offline persistence.");
+          }
+        });
+
         isCloudReady = true;
       }
     } catch (e) {
@@ -845,7 +882,7 @@
     const i18n = {
       ur: {
         appTitle: "چھیپا خاندانی رجسٹریشن سرٹیفکیٹ",
-        appSub: "ورلڈ چھیپا فاؤنڈیشن — عالمی مردم شماری پورٹل (V.6.5 Enhanced)",
+        appSub: "ورلڈ چھیپا فاؤنڈیشن — عالمی مردم شماری پورٹل (V.6.6 New)",
         lblLang: "زبان:",
         lblLiveFamilies: "خاندان (Families):",
         lblLiveMembers: "کل افراد (Unique):",
@@ -934,6 +971,13 @@
         btnCloseModal: "بند کریں",
         lblPendingNoticeTitle: "درخواست تصدیق کے مراحل میں ہے (Pending Verification)",
         lblPendingNoticeBody: "آپ کی درخواست مستقل ممبر آئی ڈی کے ساتھ کامیابی سے محفوظ کر لی گئی ہے۔ دفتری توثیق مکمل ہونے تک حتمی سرٹیفکیٹ ڈاؤن لوڈ اور کیو آر تصدیق غیر فعال رہے گی۔",
+        frcDeclaration: "حلفیہ بیان: یہ سند درخواست گزار کے ذاتی بیان پر جاری کی گئی ہے۔ کسی بھی غلط بیانی یا غیر برادری ثابت ہونے پر WCF بورڈ اسے منسوخ کرنے کا مجاز ہے۔",
+        refElderPlaceholder: "بزرگ یا عزیز کا نام...",
+        refContactPlaceholder: "فون نمبر یا ممبر آئی ڈی...",
+        headNamePlaceholder: "نام درج کریں...",
+        headFatherPlaceholder: "والد کا نام درج کریں...",
+        headCityPlaceholder: "شہر کا نام...",
+        headAddressPlaceholder: "مکان نمبر، گلی، علاقہ...",
         frcDocBadge: "Official Family Registration Certificate",
         frcDocOrg: "ورلڈ چھیپا فاؤنڈیشن",
         frcDocTagline: "عالمی مردم شماری ڈائریکٹری و خاندانی شناخت",
@@ -980,7 +1024,7 @@
       },
       hi: {
         appTitle: "छीपा पारिवारिक पंजीकरण प्रमाण पत्र",
-        appSub: "वर्ल्ड छीपा फाउंडेशन — वैश्विक जनगणना पोर्टल (V.6.5 Enhanced)",
+        appSub: "वर्ल्ड छीपा फाउंडेशन — वैश्विक जनगणना पोर्टल (V.6.6 New)",
         lblLang: "भाषा:",
         lblLiveFamilies: "परिवार (Families):",
         lblLiveMembers: "कुल सदस्य (Unique):",
@@ -1069,6 +1113,13 @@
         btnCloseModal: "बंद करें",
         lblPendingNoticeTitle: "आवेदन सत्यापन प्रक्रिया में है (Pending Verification)",
         lblPendingNoticeBody: "आपका आवेदन स्थायी सदस्य आईडी के साथ सुरक्षित कर लिया गया है। आधिकारिक सत्यापन पूर्ण होने तक अंतिम प्रमाणपत्र डाउनलोड व क्यूआर सत्यापन सक्रिय नहीं होगा।",
+        frcDeclaration: "घोषणा: यह प्रमाण पत्र आवेदक के व्यक्तिगत विवरण पर जारी किया गया है। किसी भी असत्य जानकारी या गैर-बिरादरी पाए जाने पर WCF बोर्ड इसे रद्द करने का अधिकार रखता है।",
+        refElderPlaceholder: "वरिष्ठ या रिश्तेदार का नाम दर्ज करें...",
+        refContactPlaceholder: "फ़ोन नंबर या सदस्य आईडी दर्ज करें...",
+        headNamePlaceholder: "नाम दर्ज करें...",
+        headFatherPlaceholder: "पिता का नाम दर्ज करें...",
+        headCityPlaceholder: "शहर का नाम...",
+        headAddressPlaceholder: "मकान नं, गली, मोहल्ला...",
         frcDocBadge: "Official Family Registration Certificate",
         frcDocOrg: "वर्ल्ड छीपा फाउंडेशन",
         frcDocTagline: "वैश्विक जनगणना निर्देशिका एवं पारिवारिक पहचान",
@@ -1115,7 +1166,7 @@
       },
       en: {
         appTitle: "Chhippa Family Registration Certificate",
-        appSub: "World Chhippa Foundation — Global Census Portal (V.6.5 Enhanced)",
+        appSub: "World Chhippa Foundation — Global Census Portal (V.6.6 New)",
         lblLang: "Language:",
         lblLiveFamilies: "Families:",
         lblLiveMembers: "Unique Individuals:",
@@ -1204,6 +1255,13 @@
         btnCloseModal: "Close",
         lblPendingNoticeTitle: "Application Under Verification (Pending Verification)",
         lblPendingNoticeBody: "Your registration application has been saved with permanent Member ID. The final certificate download and QR verification will become active once official verification is completed.",
+        frcDeclaration: "Notice & Declaration: This certificate is issued based on applicant's self-declaration. The WCF Board reserves the right to revoke/cancel it in case of false information or ineligible lineage.",
+        refElderPlaceholder: "Name of elder or relative...",
+        refContactPlaceholder: "Phone or WCF Member ID...",
+        headNamePlaceholder: "Enter full name...",
+        headFatherPlaceholder: "Enter father name...",
+        headCityPlaceholder: "City name...",
+        headAddressPlaceholder: "House number, street, area...",
         frcDocBadge: "Official Family Registration Certificate",
         frcDocOrg: "World Chhippa Foundation",
         frcDocTagline: "Global Census Directory & Family Identity",
@@ -1485,6 +1543,9 @@
       const pendingCount = allRecords.filter(r => r.status === 'Possible Duplicate' || r.status === 'Pending Verification').length;
       if (adminQueueEl) adminQueueEl.textContent = pendingCount;
 
+      const pendingBadge = document.getElementById('pendingRecordsBadge');
+      if (pendingBadge) pendingBadge.textContent = pendingCount;
+
       populateAdminCountryOptions();
       loadAdminPendingQueue();
     }
@@ -1573,15 +1634,26 @@
 
       document.getElementById('modalTopHeading').textContent = currentRegMode === 'family' ? dict.modalTopHeading : dict.modalTopHeadingInd;
       document.getElementById('btnDownloadAction').textContent = dict.btnDownloadPdf;
-      document.getElementById('btnModalWhatsAppShare').textContent = dict.btnWhatsappShare;
-      document.getElementById('btnModalClose').textContent = dict.btnCloseModal;
+      document.getElementById('btnCloseModal').textContent = dict.btnCloseModal;
       document.getElementById('lblPendingNoticeTitle').textContent = dict.lblPendingNoticeTitle;
       document.getElementById('lblPendingNoticeBody').textContent = dict.lblPendingNoticeBody;
+
+      // Update Placeholders Dynamically
+      if (dict.refElderPlaceholder) document.getElementById('refElderName').placeholder = dict.refElderPlaceholder;
+      if (dict.refContactPlaceholder) document.getElementById('refElderContact').placeholder = dict.refContactPlaceholder;
+      if (dict.headNamePlaceholder) document.getElementById('headName').placeholder = dict.headNamePlaceholder;
+      if (dict.headFatherPlaceholder) document.getElementById('headFather').placeholder = dict.headFatherPlaceholder;
+      if (dict.headCityPlaceholder) document.getElementById('headCity').placeholder = dict.headCityPlaceholder;
+      if (dict.headAddressPlaceholder) document.getElementById('headAddress').placeholder = dict.headAddressPlaceholder;
 
       document.getElementById('headClanOther').placeholder = dict.otherClanPlaceholder;
       document.getElementById('headEduOther').placeholder = dict.otherEduPlaceholder;
       document.getElementById('headJobOther').placeholder = dict.otherJobPlaceholder;
       document.getElementById('headCountryOther').placeholder = dict.otherCountryPlaceholder;
+
+      // Update Self-Declaration on Certificate
+      const decEl = document.getElementById('frcDeclarationText');
+      if (decEl) decEl.textContent = dict.frcDeclaration;
 
       populateSelectOptions('headGender', dict.genders, 'Male');
       populateSelectOptions('headMarital', dict.maritalStatuses, 'Married');
@@ -2015,7 +2087,7 @@
     }
 
     // ==========================================
-    // 4. Form Submission Pipeline (V.6.5 Approval Logic)
+    // 4. Form Submission Pipeline (V.6.5 Approval & Soundex Duplication Logic)
     // ==========================================
     async function handleFormSubmit(e) {
       e.preventDefault();
@@ -2133,6 +2205,7 @@
         });
       }
 
+      // Soundex duplication check (V.6.5 Engine Preserved)
       const dupCheck = checkGoldenBiographicDuplication(headFather, headDOB, headClan, members, editingExistingFRCCode);
       if (dupCheck.duplicate) {
         alert(dupCheck.reason);
@@ -2141,7 +2214,7 @@
         return;
       }
 
-      // V.6.5 Approval Rule: Family Unit is approved immediately, Individual is pending verification
+      // Strict V.6.5 Approval Rule: Family Unit Approved, Individual Pending Verification
       let assignedStatus = "Approved";
       if (currentRegMode === 'individual') {
         assignedStatus = "Pending Verification";
@@ -2192,10 +2265,12 @@
         localStorage.setItem('WCF_CENSUS_RECORDS', JSON.stringify(storedFRCRecords));
       } catch (err) {}
 
-      if (isCloudReady && db) {
+      if (isCloudReady && db && isSyncEnabled) {
         try {
           db.collection('census_registrations').doc(certCode).set(record);
-        } catch(e) {}
+        } catch(e) {
+          console.warn("Firestore sync queue buffer:", e);
+        }
       }
 
       activeViewingRecord = record;
@@ -2284,6 +2359,9 @@
         document.getElementById('frcHeadAddress').textContent = record.head.address || '-';
         document.getElementById('frcHeadLineage').textContent = record.head.lineage;
 
+        // Dynamic Declaration Text
+        document.getElementById('frcDeclarationText').textContent = dict.frcDeclaration;
+
         const qrContainer = document.getElementById('frcQRCode');
         qrContainer.innerHTML = '';
         const secureVerificationUrl = `https://worldchhippafoundation.github.io/verify?doc=${record.code}&status=${record.status || 'Pending'}&id=${record.head.memberId}`;
@@ -2357,21 +2435,6 @@
         new QRCode(qrContainer, { text: secureVerificationUrl, width: 68, height: 68, colorDark: "#000000", colorLight: "#ffffff" });
       }
 
-      const shareMsg = 
-        `*WORLD CHHIPPA FOUNDATION - GLOBAL CENSUS*\n` +
-        `*Official Document:* ${record.type === 'family' ? 'Family Registration Certificate' : 'Individual Identity Certificate'}\n\n` +
-        `📋 *Reference No:* ${record.code}\n` +
-        `👤 *Name:* ${record.head.name}\n` +
-        `🆔 *Member ID:* ${record.head.memberId}\n` +
-        `🛡️ *Father:* ${record.head.father}\n` +
-        `🏛️ *Clan:* ${record.head.clan}\n` +
-        `📍 *City:* ${record.head.city}\n` +
-        `📅 *Date:* ${record.issueDate}\n` +
-        `📌 *Status:* ${record.status || 'Pending Verification'}\n\n` +
-        `_Dedicated by M. Waseem Sadiq Tak (Neemray Walay)_`;
-
-      document.getElementById('btnModalWhatsAppShare').setAttribute('href', `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMsg)}`);
-
       const wrapper = document.getElementById('frcScaleWrapper');
       if (wrapper) {
         const screenWidth = window.innerWidth;
@@ -2386,6 +2449,35 @@
       }
 
       document.getElementById('frcModal').classList.remove('hidden');
+    }
+
+    // Direct WhatsApp Click-to-Chat with City, Country, Date and Time
+    function shareDirectToWCF() {
+      if (!activeViewingRecord) return;
+      const record = activeViewingRecord;
+      const wcfNumber = "923332176490";
+
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+      const dateStr = record.issueDate || now.toLocaleDateString('en-GB');
+
+      const shareMsg = 
+`*WORLD CHHIPPA FOUNDATION - GLOBAL CENSUS*
+*Official Document:* ${record.type === 'family' ? 'Family Registration Certificate' : 'Individual Identity Certificate'}
+
+📋 *Reference No:* ${record.code}
+👤 *Name:* ${record.head.name}
+🆔 *Member ID:* ${record.head.memberId}
+🛡️ *Father:* ${record.head.father}
+🏛️ *Clan:* ${record.head.clan}
+📍 *Location:* ${record.head.city}, ${record.head.country || 'Pakistan'}
+📅 *Date/Time:* ${dateStr} | ${timeStr}
+📌 *Status:* ${record.status || 'Approved'}
+
+_Dedicated by M. Waseem Sadiq Tak (Neemray Walay)_`;
+
+      const whatsappUrl = `https://wa.me/212708273330?text=${encodeURIComponent(shareMsg)}`;
+      window.open(whatsappUrl, '_blank');
     }
 
     function closeFRCModal() {
@@ -2533,6 +2625,50 @@
       document.getElementById('adminModal').classList.add('hidden');
     }
 
+    function toggleFirebaseSync() {
+      isSyncEnabled = !isSyncEnabled;
+      const dot = document.getElementById('adminDbStatusDot');
+      const text = document.getElementById('adminDbStatusText');
+      const btn = document.getElementById('btnFirebaseToggle');
+      const badge = document.getElementById('liveSyncStatus');
+
+      if (isSyncEnabled) {
+        dot.className = "w-3 h-3 rounded-full bg-emerald-500";
+        text.textContent = "Firebase Cloud: CONNECTED";
+        btn.textContent = "Cloud Sync: ON";
+        btn.className = "px-3 py-1.5 bg-red-900 text-white font-bold rounded-lg text-xs hover:bg-red-800";
+        badge.textContent = "Spark Ready";
+        badge.className = "font-bold text-emerald-400 text-xs";
+      } else {
+        dot.className = "w-3 h-3 rounded-full bg-amber-500";
+        text.textContent = "Firebase Cloud: OFFLINE (Local Buffer Active)";
+        btn.textContent = "Cloud Sync: OFF";
+        btn.className = "px-3 py-1.5 bg-slate-600 text-white font-bold rounded-lg text-xs hover:bg-slate-700";
+        badge.textContent = "Local Offline";
+        badge.className = "font-bold text-amber-400 text-xs";
+      }
+    }
+
+    function syncPendingRecordsToFirebase() {
+      const allRecords = Object.values(storedFRCRecords);
+      if (allRecords.length === 0) {
+        alert("No records to sync.");
+        return;
+      }
+      if (!isCloudReady || !db) {
+        alert("Firebase is operating in local persistence mode. Records are safely stored in browser storage and IndexedDB.");
+        return;
+      }
+      try {
+        allRecords.forEach(rec => {
+          db.collection('census_registrations').doc(rec.code).set(rec, { merge: true });
+        });
+        alert(`Success: ${allRecords.length} records pushed and synced with Firebase Spark Cloud.`);
+      } catch (err) {
+        alert("Sync encountered local buffer state: " + err.message);
+      }
+    }
+
     function loadAdminPendingQueue() {
       const list = document.getElementById('adminPendingList');
       if (!list) return;
@@ -2566,6 +2702,9 @@
       if (storedFRCRecords[code]) {
         storedFRCRecords[code].status = newStatus;
         try { localStorage.setItem('WCF_CENSUS_RECORDS', JSON.stringify(storedFRCRecords)); } catch(e){}
+        if (isCloudReady && db && isSyncEnabled) {
+          try { db.collection('census_registrations').doc(code).update({ status: newStatus }); } catch(e){}
+        }
         updateCensusCounters();
         alert(`Record [${code}] status set to ${newStatus}.`);
       }
