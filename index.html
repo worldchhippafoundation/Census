@@ -3507,6 +3507,124 @@ _Dedicated by M. Waseem Sadiq Tak (Neemray Walay)_`;
     } else {
       initApp();
     }
+    // --- AUTO RESET AGE BADGE ON EMPTY DOB ---
+(function() {
+  const dobInput = document.getElementById('headDOB');
+  const badge = document.getElementById('headAgeCalculatedBadge');
+  if (dobInput && badge) {
+    dobInput.addEventListener('input', function() {
+      if (!this.value) {
+        badge.textContent = '';
+      }
+    });
+    dobInput.addEventListener('change', function() {
+      if (!this.value) {
+        badge.textContent = '';
+      }
+    });
+  }
+})();
+// --- FIX 2: DROPDOWNS TRANSLATION SYNC ---
+function syncDropdownTranslations(lang) {
+  const gender = document.getElementById('headGender');
+  const marital = document.getElementById('headMarital');
+  
+  const translations = {
+    ur: {
+      male: "مرد", female: "عورت", other: "دیگر",
+      single: "غیر شادی شدہ", married: "شادی شدہ", widowed: "بیوہ / رنڈوا", divorced: "طلاق یافتہ"
+    },
+    hi: {
+      male: "पुरुष", female: "महिला", other: "अन्य",
+      single: "अविवाहित", married: "विवाहित", widowed: "विधवा / विधुर", divorced: "तलाकशुदा"
+    },
+    en: {
+      male: "Male", female: "Female", other: "Other",
+      single: "Single", married: "Married", widowed: "Widowed", divorced: "Divorced"
+    }
+  };
+
+  const t = translations[lang] || translations.en;
+
+  if (gender && gender.options.length >= 3) {
+    gender.options[0].text = t.male;
+    gender.options[1].text = t.female;
+    gender.options[2].text = t.other;
+  }
+
+  if (marital && marital.options.length >= 4) {
+    marital.options[0].text = t.single;
+    marital.options[1].text = t.married;
+    marital.options[2].text = t.widowed;
+    marital.options[3].text = t.divorced;
+  }
+}
+
+document.getElementById('langSelect')?.addEventListener('change', function() {
+  syncDropdownTranslations(this.value);
+});
+
+
+// --- FIX 3: INPUT PLACEHOLDERS TRANSLATION SYNC ---
+function syncPlaceholderTranslations(lang) {
+  const placeholders = {
+    ur: {
+      headName: "مکمل نام درج کریں...",
+      headFather: "والد کا نام درج کریں...",
+      headMother: "والدہ کا نام درج کریں...",
+      headPhone: "03XXXXXXXXX",
+      headCity: "شہر کا نام...",
+      headAddress: "مکمل رہائشی پتہ..."
+    },
+    hi: {
+      headName: "पूरा नाम दर्ज करें...",
+      headFather: "पिता का पूरा नाम दर्ज करें...",
+      headMother: "माता का नाम दर्ज करें...",
+      headPhone: "03XXXXXXXXX",
+      headCity: "शहर का नाम...",
+      headAddress: "पूरा आवासीय पता..."
+    },
+    en: {
+      headName: "Enter full name...",
+      headFather: "Enter father name...",
+      headMother: "Mother's name (if known)...",
+      headPhone: "+923001234567",
+      headCity: "City name...",
+      headAddress: "House number, street, area..."
+    }
+  };
+
+  const p = placeholders[lang] || placeholders.en;
+  for (const [id, text] of Object.entries(p)) {
+    const el = document.getElementById(id);
+    if (el) el.placeholder = text;
+  }
+}
+
+document.getElementById('langSelect')?.addEventListener('change', function() {
+  syncPlaceholderTranslations(this.value);
+});
+
+
+// --- FIX 4: FAMILY MEMBER CARDS LANGUAGE SYNC ---
+function syncMemberCardsLanguage(lang) {
+  const memberTitles = {
+    ur: "رکن #",
+    hi: "सदस्य #",
+    en: "Member #"
+  };
+
+  const prefix = memberTitles[lang] || memberTitles.en;
+  const cards = document.querySelectorAll('.member-title, .member-card-title');
+  
+  cards.forEach((el, index) => {
+    el.textContent = `${prefix} ${index + 1}`;
+  });
+}
+
+document.getElementById('langSelect')?.addEventListener('change', function() {
+  syncMemberCardsLanguage(this.value);
+});
   </script>
 </body>
 </html>
