@@ -636,8 +636,8 @@
                     Thank you to all those who laid the foundation of the World Chhippa Foundation:
                   </p>
                   <p class="text-[8.5px] font-semibold text-slate-700 mt-0.5">
-                    • Subrati Deen Bhatti (Nimbi Jodhan) IND &nbsp;&nbsp;|&nbsp;&nbsp; 
-                    • Mrs. Saleem Rao (Ghachi Pur Walay) PAK &nbsp;&nbsp;|&nbsp;&nbsp; 
+                    • Subrati Deen Bhati (Nimbi Jodhan) IND &nbsp;&nbsp;|&nbsp;&nbsp; 
+                    • Mrs. Saleem Rao (Ghachi Pura Walay) PAK &nbsp;&nbsp;|&nbsp;&nbsp; 
                     • Sufyan Tak / Safwan Tak (Neemray Walay) PAK
                   </p>
                 </div>
@@ -837,58 +837,54 @@
     </div>
   </footer>
 
-  <!-- MEMORIAL TRIBUTE POPUP -->
-  <div id="memorialModal" class="fixed inset-0 z-[99999] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 transition-opacity duration-300" onclick="handleMemorialBackdropClick(event)">
-    <div class="relative w-full max-w-xl bg-white rounded-2xl shadow-2xl border-2 border-amber-500/50 overflow-hidden text-center p-6 sm:p-8" onclick="event.stopPropagation()">
-      <div class="flex justify-between items-center mb-3">
-        <div class="flex items-center gap-1.5">
-          <button type="button" onclick="switchMemorialLang('en')" id="btnMemLangEn" class="px-2.5 py-1 text-xs font-bold rounded bg-amber-800 text-white shadow-sm transition">English</button>
-          <button type="button" onclick="switchMemorialLang('ur')" id="btnMemLangUr" class="px-2.5 py-1 text-xs font-bold rounded bg-slate-100 text-slate-700 hover:bg-slate-200 transition">اردو</button>
-          <button type="button" onclick="switchMemorialLang('hi')" id="btnMemLangHi" class="px-2.5 py-1 text-xs font-bold rounded bg-slate-100 text-slate-700 hover:bg-slate-200 transition">हिन्दी</button>
-        </div>
-        <button type="button" id="memCloseCross" onclick="closeMemorialModal()" class="text-slate-400 hover:text-slate-800 text-2xl font-black leading-none w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center transition cursor-pointer" title="Close Tribute">
-          &times;
-        </button>
-      </div>
+    <!-- COMPACT MEMORIAL TRIBUTE POPUP -->
+  <div id="memorialModal" class="fixed inset-0 z-30 flex flex-col items-center justify-start bg-black/40 backdrop-blur-[1px] p-4 pt-36" onclick="handleMemorialBackdropClick(event)">
+    <div class="relative w-full max-w-sm bg-white rounded-2xl shadow-2xl border-2 border-amber-500/60 p-4 text-center mx-auto" onclick="event.stopPropagation()">
+      
+      <!-- Close Button -->
+      <button type="button" id="memCloseCross" onclick="closeMemorialModal()" class="absolute top-2.5 right-2.5 text-slate-400 hover:text-slate-800 text-lg font-bold w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center transition cursor-pointer">
+        &times;
+      </button>
 
-      <div class="mx-auto mb-2 w-12 h-12 rounded-full bg-amber-50 border border-amber-300 flex items-center justify-center text-amber-700 shadow-inner">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <!-- Golden Icon -->
+      <div class="mx-auto mb-1.5 w-9 h-9 rounded-full bg-amber-50 border border-amber-300 flex items-center justify-center text-amber-700 shadow-sm">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
         </svg>
       </div>
 
-      <h2 id="memCardSubtitle" class="text-xs sm:text-sm font-semibold tracking-widest text-amber-800 uppercase mb-1">In Eternal Remembrance</h2>
-      <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight" id="memPersonName">Muhammad Sadiq Tak</h1>
-      <p class="text-sm font-semibold text-amber-700 mb-4">(Neemray Walay) • 1931 – 2022</p>
+      <h2 id="memCardSubtitle" class="text-[10px] font-bold tracking-wider text-amber-800 uppercase mb-0.5">In Eternal Remembrance</h2>
+      <h1 class="text-base sm:text-lg font-black text-slate-900 leading-tight" id="memPersonName">Muhammad Sadiq Tak</h1>
+      <p class="text-[11px] font-semibold text-amber-700 mb-2">(Neemray Walay) • 1931 – 2021</p>
 
-      <div id="memTextEn" class="text-slate-700 text-sm leading-relaxed space-y-3">
-        <p class="italic">"Honoring a lifetime of selfless dedication, love, and tireless service to the Chhippa Community. This portal stands as a living tribute to his noble values and vision for a united community."</p>
-        <p class="text-xs font-semibold text-slate-500">May Allah grant him the highest ranks in Jannat-ul-Firdous. Aameen.</p>
-        <p class="text-xs font-bold text-amber-900 pt-1">Dedicated with Love by: Tak Family (Neemray Walay)</p>
+      <!-- English Text -->
+      <div id="memTextEn" class="text-slate-700 text-xs leading-relaxed space-y-1.5">
+        <p class="italic">"Honoring a lifetime of selfless dedication, love, and tireless service to the Chhippa Community."</p>
+        <p class="text-[10px] font-semibold text-slate-500">May Allah grant him the highest ranks in Jannat-ul-Firdous. Aameen.</p>
+        <p class="text-[10px] font-bold text-amber-900">Dedicated with Love by: Tak Family (Neemray Walay)</p>
       </div>
 
-      <div id="memTextUr" class="hidden text-slate-800 text-base leading-loose space-y-2 font-urdu" dir="rtl">
-        <p>"چھیپا برادری کے لیے بے لوث خدمت، محبت اور لازوال قربانیوں کی یاد میں۔ یہ مردم شماری پورٹل ان کے نیک مقاصد اور برادری کو ایک لڑی میں پرونے کے خواب کو خراجِ عقیدت ہے۔"</p>
-        <p class="text-xs font-bold text-slate-600">اللہ تعالیٰ انہیں جنت الفردوس میں اعلیٰ مقام عطا فرمائے۔ آمین۔</p>
-        <p class="text-xs font-bold text-amber-900 pt-1">پیش کش: ٹاک فیملی (نیمڑے والے)</p>
+      <!-- Urdu Text -->
+      <div id="memTextUr" class="hidden text-slate-800 text-xs leading-loose space-y-1" dir="rtl">
+        <p>"چھیپا برادری کے لیے بے لوث خدمت، محبت اور لازوال قربانیوں کی یاد میں۔"</p>
+        <p class="text-[10px] font-bold text-slate-600">اللہ تعالیٰ انہیں جنت الفردوس میں اعلیٰ مقام عطا فرمائے۔ آمین۔</p>
+        <p class="text-[10px] font-bold text-amber-900">پیش کش: ٹاک فیملی (نیمڑے والے)</p>
       </div>
 
-      <div id="memTextHi" class="hidden text-slate-700 text-sm leading-relaxed space-y-3 font-devanagari">
-        <p>"छीपा बिरादरी के लिए निस्वार्थ सेवा, समर्पण और अटूट प्रेम को समर्पित। यह पोर्टल उनके नेक विचारों और बिरादरी की एकता के विज़न को एक विनम्र श्रद्धांजलि है।"</p>
-        <p class="text-xs font-semibold text-slate-500">अल्लाह उन्हें जन्नत-उल-फ़िरदौस में आला मक़ाम अता फरमाए। आमीन।</p>
-        <p class="text-xs font-bold text-amber-900 pt-1">समर्पित: टाक परिवार (नीमड़े वाले)</p>
+      <!-- Hindi Text -->
+      <div id="memTextHi" class="hidden text-slate-700 text-xs leading-relaxed space-y-1.5 font-devanagari">
+        <p>"छीपा बिरादरी के लिए निस्वार्थ सेवा, समर्पण और अटूट प्रेम को समर्पित।"</p>
+        <p class="text-[10px] font-semibold text-slate-500">अल्लाह उन्हें जन्नत-उल-फ़िरदौस में आला मक़ाम अता फरमाए। आमीन।</p>
+        <p class="text-[10px] font-bold text-amber-900">समर्पित: टाक परिवार (नीमड़े वाले)</p>
       </div>
 
-      <div class="mt-6 pt-4 border-t border-slate-100 flex flex-col items-center gap-1">
-        <button type="button" id="btnMemEnter" onclick="closeMemorialModal()" class="w-full sm:w-auto px-8 py-2.5 bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white text-sm font-bold rounded-xl shadow-md transition transform active:scale-95 cursor-pointer">
+      <!-- Enter Button -->
+      <div class="mt-3 pt-2 border-t border-slate-100">
+        <button type="button" id="btnMemEnter" onclick="closeMemorialModal()" class="w-full py-1.5 bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white text-xs font-bold rounded-xl shadow transition transform active:scale-95 cursor-pointer">
           Enter Portal / آمین
         </button>
-        <p class="text-[10px] text-slate-400">Closes automatically in 5 seconds or click Enter</p>
+        <p class="text-[9px] text-slate-400 mt-1">Closes automatically in 5 seconds or click Enter</p>
       </div>
-
-    </div>
-  </div>
-
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyDummyKeyReplaceLaterWhenCreated",
@@ -1626,137 +1622,142 @@
       loadAdminPendingQueue();
     }
 
+        function getKeyFromValue(optionsObj, val) {
+      if (!val) return null;
+      if (optionsObj[val]) return val;
+      for (const [k, v] of Object.entries(optionsObj)) {
+        if (v === val || k === val) return k;
+      }
+      for (const langKey of ['en', 'ur', 'hi']) {
+        const d = i18n[langKey];
+        if (!d) continue;
+        for (const cat of ['genders', 'maritalStatuses', 'clans', 'education', 'jobs', 'relations', 'lineage']) {
+          if (d[cat]) {
+            for (const [k, v] of Object.entries(d[cat])) {
+              if (v === val || k === val) return k;
+            }
+          }
+        }
+      }
+      return null;
+    }
+
     function changeLanguage(lang) {
       currentLang = lang;
-      const dict = i18n[lang];
+      const dict = i18n[lang] || i18n.en;
 
       const isRTL = lang === 'ur';
       document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
       document.body.className = `bg-slate-50 text-slate-900 min-h-screen ${lang === 'hi' ? 'font-devanagari' : (lang === 'en' ? 'font-latin' : '')}`;
 
-      document.getElementById('appTitle').textContent = dict.appTitle;
-      document.getElementById('appSub').textContent = dict.appSub;
-      document.getElementById('lblLang').textContent = dict.lblLang;
+      const setText = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
+      const setHtml = (id, html) => { const el = document.getElementById(id); if (el) el.innerHTML = html; };
 
-      document.getElementById('lblLiveFamilies').textContent = dict.lblLiveFamilies;
-      document.getElementById('lblLiveMembers').textContent = dict.lblLiveMembers;
+      setText('appTitle', dict.appTitle);
+      setText('appSub', dict.appSub);
+      setText('lblLang', dict.lblLang);
+      setText('lblLiveFamilies', dict.lblLiveFamilies);
+      setText('lblLiveMembers', dict.lblLiveMembers);
 
-      document.getElementById('tabNewReg').textContent = dict.tabNew;
-      document.getElementById('tabSearchReg').textContent = dict.tabSearch;
-      document.getElementById('tabCityStats').textContent = dict.tabCityStats;
+      setText('tabNewReg', dict.tabNew);
+      setText('tabSearchReg', dict.tabSearch);
+      setText('tabCityStats', dict.tabCityStats);
 
-      document.getElementById('lblRegModeHeading').textContent = dict.lblRegModeHeading;
-      document.getElementById('lblRegModeDesc').textContent = dict.lblRegModeDesc;
-      document.getElementById('btnModeFamily').textContent = dict.btnModeFamily;
-      document.getElementById('btnModeIndividual').textContent = dict.btnModeIndividual;
-      
-      document.getElementById('searchTitle').textContent = dict.searchTitle;
-      document.getElementById('searchSub').textContent = dict.searchSub;
-      document.getElementById('searchFRCInput').placeholder = dict.searchPlaceholder;
-      document.getElementById('btnSearchAction').textContent = dict.btnSearchAction;
-      document.getElementById('btnSearchAddMember').textContent = dict.btnSearchAddMember;
+      setText('lblRegModeHeading', dict.lblRegModeHeading);
+      setText('lblRegModeDesc', dict.lblRegModeDesc);
+      setText('btnModeFamily', dict.btnModeFamily);
+      setText('btnModeIndividual', dict.btnModeIndividual);
 
-      document.getElementById('cityStatsTitle').textContent = dict.cityStatsTitle;
-      document.getElementById('cityStatsSub').textContent = dict.cityStatsSub;
-      document.getElementById('cityStatAuthInput').placeholder = dict.popAuthPlaceholder;
-      document.getElementById('btnCityStatsVerify').textContent = dict.btnCityStatsVerify;
-      document.getElementById('popAccessNoticeText').textContent = dict.popAccessNoticeText;
-      document.getElementById('btnPopLock').textContent = dict.btnPopLock;
-      document.getElementById('lblPopCountry').textContent = dict.lblPopCountry;
-      document.getElementById('lblPopCity').textContent = dict.lblPopCity;
-      document.getElementById('popCityInput').placeholder = dict.popCityPlaceholder;
-      document.getElementById('btnPopUpdateStats').textContent = dict.btnPopUpdateStats;
-      document.getElementById('lblStatResAreaHeading').textContent = dict.lblStatResAreaHeading;
-      document.getElementById('badgeAggregateStats').textContent = dict.badgeAggregateStats;
-      
-      document.getElementById('lblStatFamilies').textContent = dict.lblStatFamilies;
-      document.getElementById('lblStatTotalPop').textContent = dict.lblStatTotalPop;
-      document.getElementById('lblStatMales').textContent = dict.lblStatMales;
-      document.getElementById('lblStatFemales').textContent = dict.lblStatFemales;
-      document.getElementById('lblStatMinors').textContent = dict.lblStatMinors;
-      
-      document.getElementById('headCardTitle').textContent = currentRegMode === 'family' ? dict.headCardTitle : dict.headCardTitleInd;
-      document.getElementById('headBadge').textContent = currentRegMode === 'family' ? dict.headBadge : dict.headBadgeInd;
+      setText('searchTitle', dict.searchTitle);
+      setText('searchSub', dict.searchSub);
+      const searchInp = document.getElementById('searchFRCInput');
+      if (searchInp) searchInp.placeholder = dict.searchPlaceholder;
+      setText('btnSearchAction', dict.btnSearchAction);
+      setText('btnSearchAddMember', dict.btnSearchAddMember);
 
-      document.getElementById('lblHeadName').innerHTML = `${dict.lblHeadName} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`;
-      document.getElementById('lblHeadFather').innerHTML = `${dict.lblHeadFather} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`;
-      document.getElementById('lblHeadMother').textContent = dict.lblHeadMother;
-      document.getElementById('lblFatherDeceased').textContent = dict.lblDeceased;
-      document.getElementById('lblMotherDeceased').textContent = dict.lblDeceased;
+      setText('cityStatsTitle', dict.cityStatsTitle);
+      setText('cityStatsSub', dict.cityStatsSub);
+      const cityInp = document.getElementById('cityStatAuthInput');
+      if (cityInp) cityInp.placeholder = dict.popAuthPlaceholder;
+      setText('btnCityStatsVerify', dict.btnCityStatsVerify);
+      setText('popAccessNoticeText', dict.popAccessNoticeText);
+      setText('btnPopLock', dict.btnPopLock);
+      setText('lblPopCountry', dict.lblPopCountry);
+      setText('lblPopCity', dict.lblPopCity);
+      const popCityInp = document.getElementById('popCityInput');
+      if (popCityInp) popCityInp.placeholder = dict.popCityPlaceholder;
+      setText('btnPopUpdateStats', dict.btnPopUpdateStats);
+      setText('lblStatResAreaHeading', dict.lblStatResAreaHeading);
+      setText('badgeAggregateStats', dict.badgeAggregateStats);
 
-      document.getElementById('lblHeadDOB').innerHTML = `${dict.lblHeadDOB} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`;
-      document.getElementById('lblHeadGender').innerHTML = `${dict.lblHeadGender} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`;
-      document.getElementById('lblHeadMarital').innerHTML = `${dict.lblHeadMarital} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`;
-      document.getElementById('lblHeadClan').innerHTML = `${dict.lblHeadClan} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`;
-      document.getElementById('lblHeadEdu').innerHTML = `${dict.lblHeadEdu} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`;
-      document.getElementById('lblHeadJob').innerHTML = `${dict.lblHeadJob} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`;
-      document.getElementById('lblHeadPhone').innerHTML = `${dict.lblHeadPhone} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`;
-      document.getElementById('lblHeadCountry').innerHTML = `${dict.lblHeadCountry} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`;
-      document.getElementById('lblHeadCity').innerHTML = `${dict.lblHeadCity} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`;
-      document.getElementById('lblHeadAddress').innerHTML = `${dict.lblHeadAddress} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`;
+      setText('lblStatFamilies', dict.lblStatFamilies);
+      setText('lblStatTotalPop', dict.lblStatTotalPop);
+      setText('lblStatMales', dict.lblStatMales);
+      setText('lblStatFemales', dict.lblStatFemales);
+      setText('lblStatMinors', dict.lblStatMinors);
 
-      document.getElementById('membersSectionTitle').textContent = dict.membersSectionTitle;
-      document.getElementById('membersSectionSub').textContent = dict.membersSectionSub;
-      document.getElementById('btnAddMemberBtn').textContent = dict.btnAddMemberBtn;
+      setText('headCardTitle', currentRegMode === 'family' ? dict.headCardTitle : dict.headCardTitleInd);
+      setText('headBadge', currentRegMode === 'family' ? dict.headBadge : dict.headBadgeInd);
 
-      document.getElementById('lblRefTitle').textContent = dict.lblRefTitle;
-      document.getElementById('lblRefSub').textContent = dict.lblRefSub;
-      
+      setHtml('lblHeadName', `${dict.lblHeadName} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`);
+      setHtml('lblHeadFather', `${dict.lblHeadFather} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`);
+      setText('lblHeadMother', dict.lblHeadMother);
+      setText('lblFatherDeceased', dict.lblDeceased);
+      setText('lblMotherDeceased', dict.lblDeceased);
+
+      setHtml('lblHeadDOB', `${dict.lblHeadDOB} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`);
+      setHtml('lblHeadGender', `${dict.lblHeadGender} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`);
+      setHtml('lblHeadMarital', `${dict.lblHeadMarital} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`);
+      setHtml('lblHeadClan', `${dict.lblHeadClan} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`);
+      setHtml('lblHeadEdu', `${dict.lblHeadEdu} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`);
+      setHtml('lblHeadJob', `${dict.lblHeadJob} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`);
+      setHtml('lblHeadPhone', `${dict.lblHeadPhone} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`);
+      setHtml('lblHeadCountry', `${dict.lblHeadCountry} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`);
+      setHtml('lblHeadCity', `${dict.lblHeadCity} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`);
+      setHtml('lblHeadAddress', `${dict.lblHeadAddress} <span class="text-red-500 font-bold ml-1 mr-1">*</span>`);
+
+      setText('membersSectionTitle', dict.membersSectionTitle);
+      setText('membersSectionSub', dict.membersSectionSub);
+      setText('btnAddMemberBtn', dict.btnAddMemberBtn);
+
+      setText('lblRefTitle', dict.lblRefTitle);
+      setText('lblRefSub', dict.lblRefSub);
       const isInd = currentRegMode === 'individual';
-      document.getElementById('lblRefName').innerHTML = isInd ? `${dict.lblRefName} <span class="text-red-500 font-bold ml-1">*</span>` : dict.lblRefName;
-      document.getElementById('lblRefContact').innerHTML = isInd ? `${dict.lblRefContact} <span class="text-red-500 font-bold ml-1">*</span>` : dict.lblRefContact;
+      setHtml('lblRefName', isInd ? `${dict.lblRefName} <span class="text-red-500 font-bold ml-1">*</span>` : dict.lblRefName);
+      setHtml('lblRefContact', isInd ? `${dict.lblRefContact} <span class="text-red-500 font-bold ml-1">*</span>` : dict.lblRefContact);
 
-      document.getElementById('btnSubmitForm').textContent = dict.btnSubmitForm;
+      setText('btnSubmitForm', dict.btnSubmitForm);
 
-      document.getElementById('modalTopHeading').textContent = currentRegMode === 'family' ? dict.modalTopHeading : dict.modalTopHeadingInd;
-      document.getElementById('btnDownloadAction').textContent = dict.btnDownloadPdf;
-      document.getElementById('btnCloseModal').textContent = dict.btnCloseModal;
-      document.getElementById('lblPendingNoticeTitle').textContent = dict.lblPendingNoticeTitle;
-      document.getElementById('lblPendingNoticeBody').textContent = dict.lblPendingNoticeBody;
+      // Head Dropdowns Translation
+      populateSelectOptions('headGender', dict.genders, 'Male');
+      populateSelectOptions('headMarital', dict.maritalStatuses, 'Married');
+      populateSelectOptions('headClan', dict.clans, 'Tak');
+      populateSelectOptions('headEdu', dict.education, 'Matric');
+      populateSelectOptions('headJob', dict.jobs, 'Business');
 
-      if (dict.refElderPlaceholder) document.getElementById('refElderName').placeholder = dict.refElderPlaceholder;
-      if (dict.refContactPlaceholder) document.getElementById('refElderContact').placeholder = dict.refContactPlaceholder;
-      if (dict.headNamePlaceholder) document.getElementById('headName').placeholder = dict.headNamePlaceholder;
-      if (dict.headFatherPlaceholder) document.getElementById('headFather').placeholder = dict.headFatherPlaceholder;
-      if (dict.headCityPlaceholder) document.getElementById('headCity').placeholder = dict.headCityPlaceholder;
-      if (dict.headAddressPlaceholder) document.getElementById('headAddress').placeholder = dict.headAddressPlaceholder;
-
-      document.getElementById('headClanOther').placeholder = dict.otherClanPlaceholder;
-      document.getElementById('headEduOther').placeholder = dict.otherEduPlaceholder;
-      document.getElementById('headJobOther').placeholder = dict.otherJobPlaceholder;
-      document.getElementById('headCountryOther').placeholder = dict.otherCountryPlaceholder;
-
-      const decEl = document.getElementById('frcDeclarationText');
-      if (decEl) decEl.textContent = dict.frcDeclaration;
-
-      const prevGender = document.getElementById('headGender')?.value || 'Male';
-      const prevMarital = document.getElementById('headMarital')?.value || 'Married';
-      const prevClan = document.getElementById('headClan')?.value || 'Tak';
-      const prevEdu = document.getElementById('headEdu')?.value || 'Matric';
-      const prevJob = document.getElementById('headJob')?.value || 'Business';
-      const prevCountry = document.getElementById('headCountry')?.value || 'Pakistan';
-
-      populateSelectOptions('headGender', dict.genders, prevGender);
-      populateSelectOptions('headMarital', dict.maritalStatuses, prevMarital);
-      populateSelectOptions('headClan', dict.clans, prevClan);
-      populateSelectOptions('headEdu', dict.education, prevEdu);
-      populateSelectOptions('headJob', dict.jobs, prevJob);
-
+      // Country Dropdown Fix (Guaranteed Population)
       const countrySel = document.getElementById('headCountry');
       if (countrySel) {
+        const rawCountry = countrySel.value || 'Pakistan';
+        let matchedCountry = 'Pakistan';
+        for (const c of allWorldCountries) {
+          if (c === rawCountry || getCountryLocalizedName(c, 'ur') === rawCountry || getCountryLocalizedName(c, 'hi') === rawCountry) {
+            matchedCountry = c;
+            break;
+          }
+        }
         countrySel.innerHTML = '';
         allWorldCountries.forEach(c => {
           const opt = document.createElement('option');
           opt.value = c;
           opt.textContent = getCountryLocalizedName(c, currentLang);
-          if (c === prevCountry) opt.selected = true;
+          if (c === matchedCountry) opt.selected = true;
           countrySel.appendChild(opt);
         });
         if (!countrySel.value && countrySel.options.length > 0) {
           countrySel.selectedIndex = 0;
         }
       }
-
       toggleManualInput(document.getElementById('headClan'), 'headClanOtherWrap');
       toggleManualInput(document.getElementById('headEdu'), 'headEduOtherWrap');
       toggleManualInput(document.getElementById('headJob'), 'headJobOtherWrap');
@@ -3363,24 +3364,19 @@ _Dedicated by M. Waseem Sadiq Tak (Neemray Walay)_`;
       }
     }
 
-    function initMemorialPopup() {
+        function initMemorialPopup() {
       if (memorialHasBeenClosed) return;
       const modal = document.getElementById('memorialModal');
       if (!modal) return;
       modal.classList.remove('hidden');
-      resetMemorialTimer();
-    }
+      
+      // ہیڈر کی منتخب زبان کے مطابق متن دکھائے
+      updateMemorialPopupLanguage(currentLang || 'en');
 
-    function resetMemorialTimer() {
       if (memorialTimer) clearTimeout(memorialTimer);
       memorialTimer = setTimeout(() => {
         closeMemorialModal();
       }, 5000);
-    }
-
-    function switchMemorialLang(lang) {
-      updateMemorialPopupLanguage(lang);
-      resetMemorialTimer();
     }
 
     function updateMemorialPopupLanguage(lang) {
@@ -3391,38 +3387,24 @@ _Dedicated by M. Waseem Sadiq Tak (Neemray Walay)_`;
       const pName = document.getElementById('memPersonName');
       const btnEnter = document.getElementById('btnMemEnter');
 
-      const bEn = document.getElementById('btnMemLangEn');
-      const bUr = document.getElementById('btnMemLangUr');
-      const bHi = document.getElementById('btnMemLangHi');
-
       if (!tEn || !tUr || !tHi) return;
 
       tEn.classList.add('hidden');
       tUr.classList.add('hidden');
       tHi.classList.add('hidden');
 
-      const activeBtnCls = "px-2.5 py-1 text-xs font-bold rounded bg-amber-800 text-white shadow-sm transition";
-      const inactiveBtnCls = "px-2.5 py-1 text-xs font-bold rounded bg-slate-100 text-slate-700 hover:bg-slate-200 transition";
-
-      if (bEn) bEn.className = inactiveBtnCls;
-      if (bUr) bUr.className = inactiveBtnCls;
-      if (bHi) bHi.className = inactiveBtnCls;
-
       if (lang === 'ur') {
         tUr.classList.remove('hidden');
-        if (bUr) bUr.className = activeBtnCls;
         if (subTitle) subTitle.textContent = "یادِ رفتگاں و خراجِ عقیدت";
         if (pName) pName.textContent = "محمد صادق ٹاک";
         if (btnEnter) btnEnter.textContent = "پورٹل میں داخل ہوں / آمین";
       } else if (lang === 'hi') {
         tHi.classList.remove('hidden');
-        if (bHi) bHi.className = activeBtnCls;
         if (subTitle) subTitle.textContent = "अमर स्मृति एवं सादर श्रद्धांजलि";
         if (pName) pName.textContent = "मोहम्मद सादिक़ टाक";
         if (btnEnter) btnEnter.textContent = "पोर्टल में प्रवेश करें / आमीन";
       } else {
         tEn.classList.remove('hidden');
-        if (bEn) bEn.className = activeBtnCls;
         if (subTitle) subTitle.textContent = "In Eternal Remembrance";
         if (pName) pName.textContent = "Muhammad Sadiq Tak";
         if (btnEnter) btnEnter.textContent = "Enter Portal / Aameen";
@@ -3441,6 +3423,7 @@ _Dedicated by M. Waseem Sadiq Tak (Neemray Walay)_`;
       if (memorialTimer) clearTimeout(memorialTimer);
       memorialHasBeenClosed = true;
     }
+
 
     function initApp() {
       const modal = document.getElementById('frcModal');
