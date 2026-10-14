@@ -322,7 +322,7 @@
             <label id="lblHeadDOB" class="block text-xs font-semibold text-slate-700">
               Date of Birth (DOB)<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
-            <input type="date" id="headDOB" required onchange="handleHeadDOBValidation()" class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-amber-500 outline-none">
+            <input type="date" id="headDOB" required onchange="handleHeadDOBValidation()" oninput="handleHeadDOBValidation()" class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-amber-500 outline-none">
             <span id="headAgeCalculatedBadge" class="text-[10px] font-semibold text-slate-500 mt-0.5 block">Age: -</span>
           </div>
 
@@ -640,7 +640,6 @@
                         <text x="100" y="85" fill="#082f49" font-family="'Inter', sans-serif" font-size="12" text-anchor="middle" font-weight="900">★ ★ ★</text>
                         <text x="100" y="108" fill="#082f49" font-family="'Inter', sans-serif" font-weight="900" font-size="19" text-anchor="middle" letter-spacing="2">VERIFIED</text>
                         <line x1="38" y1="115" x2="162" y2="115" stroke="#082f49" stroke-width="2.5" />
-                        <!-- Fixed SVG syntax error here -->
                         <text x="100" y="127" fill="#082f49" font-family="'Inter', sans-serif" font-size="9.5" text-anchor="middle" font-weight="900" letter-spacing="1.5">AUTHENTIC</text>
                       </svg>
                     </div>
@@ -864,13 +863,9 @@
     </div>
   </footer>
 
-  <!-- ========================================== -->
-  <!-- MEMORIAL TRIBUTE POPUP: V.6.6.1 Fixed -->
-  <!-- ========================================== -->
+  <!-- MEMORIAL TRIBUTE POPUP -->
   <div id="memorialModal" class="fixed inset-0 z-[99999] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 transition-opacity duration-300" onclick="handleMemorialBackdropClick(event)">
     <div class="relative w-full max-w-xl bg-white rounded-2xl shadow-2xl border-2 border-amber-500/50 overflow-hidden text-center p-6 sm:p-8" onclick="event.stopPropagation()">
-      
-      <!-- Top Bar: Languages Left, Close X Right -->
       <div class="flex justify-between items-center mb-3">
         <div class="flex items-center gap-1.5">
           <button type="button" onclick="switchMemorialLang('en')" id="btnMemLangEn" class="px-2.5 py-1 text-xs font-bold rounded bg-amber-800 text-white shadow-sm transition">English</button>
@@ -882,40 +877,34 @@
         </button>
       </div>
 
-      <!-- Decorative Emblem -->
       <div class="mx-auto mb-2 w-12 h-12 rounded-full bg-amber-50 border border-amber-300 flex items-center justify-center text-amber-700 shadow-inner">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
         </svg>
       </div>
 
-      <!-- Main Headings -->
       <h2 id="memCardSubtitle" class="text-xs sm:text-sm font-semibold tracking-widest text-amber-800 uppercase mb-1">In Eternal Remembrance</h2>
       <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight" id="memPersonName">Muhammad Sadiq Tak</h1>
       <p class="text-sm font-semibold text-amber-700 mb-4">(Neemray Walay) • 1931 – 2022</p>
 
-      <!-- Text Container: English -->
       <div id="memTextEn" class="text-slate-700 text-sm leading-relaxed space-y-3">
         <p class="italic">"Honoring a lifetime of selfless dedication, love, and tireless service to the Chhippa Community. This portal stands as a living tribute to his noble values and vision for a united community."</p>
         <p class="text-xs font-semibold text-slate-500">May Allah grant him the highest ranks in Jannat-ul-Firdous. Aameen.</p>
         <p class="text-xs font-bold text-amber-900 pt-1">Dedicated with Love by: Tak Family (Neemray Walay)</p>
       </div>
 
-      <!-- Text Container: Urdu -->
       <div id="memTextUr" class="hidden text-slate-800 text-base leading-loose space-y-2 font-urdu" dir="rtl">
         <p>"چھیپا برادری کے لیے بے لوث خدمت، محبت اور لازوال قربانیوں کی یاد میں۔ یہ مردم شماری پورٹل ان کے نیک مقاصد اور برادری کو ایک لڑی میں پرونے کے خواب کو خراجِ عقیدت ہے۔"</p>
         <p class="text-xs font-bold text-slate-600">اللہ تعالیٰ انہیں جنت الفردوس میں اعلیٰ مقام عطا فرمائے۔ آمین۔</p>
         <p class="text-xs font-bold text-amber-900 pt-1">پیش کش: ٹاک فیملی (نیمڑے والے)</p>
       </div>
 
-      <!-- Text Container: Hindi -->
       <div id="memTextHi" class="hidden text-slate-700 text-sm leading-relaxed space-y-3 font-devanagari">
         <p>"छीपा बिरादरी के लिए निस्वार्थ सेवा, समर्पण और अटूट प्रेम को समर्पित। यह पोर्टल उनके नेक विचारों और बिरादरी की एकता के विज़न को एक विनम्र श्रद्धांजलि है।"</p>
         <p class="text-xs font-semibold text-slate-500">अल्लाह उन्हें जन्नत-उल-फ़िरदौस में आला मक़ाम अता फरमाए। आमीन।</p>
         <p class="text-xs font-bold text-amber-900 pt-1">समर्पित: टाक परिवार (नीमड़े वाले)</p>
       </div>
 
-      <!-- Bottom Enter/Action Button -->
       <div class="mt-6 pt-4 border-t border-slate-100 flex flex-col items-center gap-1">
         <button type="button" id="btnMemEnter" onclick="closeMemorialModal()" class="w-full sm:w-auto px-8 py-2.5 bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white text-sm font-bold rounded-xl shadow-md transition transform active:scale-95 cursor-pointer">
           Enter Portal / آمین
@@ -927,7 +916,6 @@
   </div>
 
   <script>
-    // Replace with real Firebase config keys whenever available
     const firebaseConfig = {
       apiKey: "AIzaSyDummyKeyReplaceLaterWhenCreated",
       authDomain: "wcf-app.firebaseapp.com",
@@ -1244,16 +1232,16 @@
         btnCloseModal: "बंद करें",
         lblPendingNoticeTitle: "आवेदन सत्यापन प्रक्रिया में है (Pending Verification)",
         lblPendingNoticeBody: "आपका आवेदन सुरक्षित कर लिया गया है।",
-        frcDeclaration: "घोषणा: यह प्रमाण पत्र आवेदक کے ذاتی بیان پر جاری کیا گیا ہے۔ کسی بھی غلط بیانی پر WCF بورڈ اسے منسوخ کر سکتا ہے۔",
-        refElderPlaceholder: "वरिष्ठ یا رشتہ دار کا نام...",
-        refContactPlaceholder: "फ़ोन نمبر یا ممبر آئی ڈی...",
-        headNamePlaceholder: "نام درج کریں...",
-        headFatherPlaceholder: "والد کا نام...",
-        headCityPlaceholder: "شہر...",
-        headAddressPlaceholder: "پتہ...",
+        frcDeclaration: "घोषणा: यह प्रमाण पत्र आवेदक के स्व-घोषणा पत्र पर आधारित है। किसी भी असत्य जानकारी या अयोग्य वंश साबित होने पर WCF बोर्ड इसे रद्द करने का अधिकार रखता है।",
+        refElderPlaceholder: "वरिष्ठ या रिश्तेदार का नाम...",
+        refContactPlaceholder: "फ़ोन नंबर या सदस्य आईडी...",
+        headNamePlaceholder: "पूरा नाम दर्ज करें...",
+        headFatherPlaceholder: "पिता का पूरा नाम दर्ज करें...",
+        headCityPlaceholder: "शहर का नाम...",
+        headAddressPlaceholder: "पूरा आवासीय पता...",
         frcDocBadge: "Official Family Registration Certificate",
-        frcDocOrg: "ورلڈ چھیپا فاؤنڈیشن",
-        frcDocTagline: "عالمی مردم شماری ڈائریکٹری",
+        frcDocOrg: "वर्ल्ड छीपा फाउंडेशन",
+        frcDocTagline: "वैश्विक जनगणना निर्देशिका",
         frcLblHeadName: "परिवार के मुखिया:",
         frcLblHeadFather: "पिता / संरक्षक:",
         frcLblHeadClan: "गोत्र / उप-जाति:",
@@ -1285,13 +1273,13 @@
         lineage: { Chhippa: "छीपा", NonChhippa: "गैर छीपा" },
         clans: { Tak: "टाक", Bhati: "भाटी", Rao: "राव", Molani: "मोलानी", Lodha: "लोधा", Deora: "देवड़ा", Other: "अन्य" },
         education: {
-          Matric: "मैट्रिक", Intermediate: "इंटरमीडिएट", Graduate: "स्नातक", Masters: "स्नातकोत्तर",
-          Primary: "प्राथमिक", Religious: "धार्मिक शिक्षा", Uneducated: "अशिक्षित", Other: "अन्य"
+          Matric: "मैट्रिक (10वीं)", Intermediate: "इंटरमीडिएट (12वीं)", Graduate: "स्नातक", Masters: "स्नातकोत्तर",
+          Primary: "प्राथमिक विद्यालय", Religious: "धार्मिक शिक्षा", Uneducated: "अशिक्षित", Other: "अन्य"
         },
         jobs: {
-          Business: "व्यापार / व्यापारी", Textile: "कपड़ा व्यापारी / टेक्सटाइल", Tailor: "दर्जी / सिलाई कार्य",
+          Business: "व्यापार / स्व-रोजगार", Textile: "कपड़ा व्यापारी / टेक्सटाइल", Tailor: "दर्जी / सिलाई कार्य",
           PrivateJob: "निजी नौकरी", GovtJob: "सरकारी नौकरी", Teacher: "शिक्षक / शिक्षा",
-          Healthcare: "चिकित्सा क्षेत्र", EngineerIT: "इंजीनियर / आईटी", Driver: "ड्राइवर / ट्रांसपोर्ट",
+          Healthcare: "चिकित्सा क्षेत्र", EngineerIT: "इंजीनियर / आईटी", Driver: "ड्राइवर / परिवहन",
           DailyWage: "कारीगर / श्रमिक", Student: "विद्यार्थी", Homemaker: "गृहिणी", Retired: "सेवानिवृत्त", Other: "अन्य"
         }
       },
@@ -1466,7 +1454,6 @@
       return id;
     }
 
-    // Unicode-aware normalization for Latin, Arabic/Urdu, and Devanagari scripts
     function normalizeCleanString(str) {
       if (!str) return '';
       return String(str)
@@ -1499,14 +1486,22 @@
     function calculateAge(dobString) {
       if (!dobString) return 0;
       const bDate = new Date(dobString);
+      if (isNaN(bDate.getTime())) return 0;
       const diff = Date.now() - bDate.getTime();
       return Math.abs(new Date(diff).getUTCFullYear() - 1970);
     }
 
     function handleHeadDOBValidation() {
-      const dobVal = document.getElementById('headDOB').value;
-      const age = calculateAge(dobVal);
+      const dobInput = document.getElementById('headDOB');
       const badge = document.getElementById('headAgeCalculatedBadge');
+      if (!dobInput || !badge) return;
+
+      if (!dobInput.value) {
+        badge.textContent = '';
+        return;
+      }
+
+      const age = calculateAge(dobInput.value);
       badge.textContent = `Calculated Age: ${age} years`;
 
       if (age < 18) {
@@ -1551,7 +1546,6 @@
       }
     }
 
-    // Accurate duplicate checking that avoids false positives in Urdu/Hindi
     function checkGoldenBiographicDuplication(newFather, newDOB, newClanKey, newMembers = [], currentEditingCode = null) {
       const allRecords = Object.values(storedFRCRecords);
       const headName = document.getElementById('headName').value.trim();
@@ -1568,13 +1562,12 @@
         if (currentEditingCode && rec.code === currentEditingCode) continue;
         if (!rec.head) continue;
 
-        // Mobile match rule (at least 8 clean digits required)
         const recHeadPhone = (rec.head.phone || '').replace(/[^0-9]/g, '');
         if (cleanHeadPhone.length >= 8 && recHeadPhone.length >= 8) {
           if (cleanHeadPhone.endsWith(recHeadPhone.slice(-8)) || recHeadPhone.endsWith(cleanHeadPhone.slice(-8))) {
             return {
               duplicate: true,
-              reason: `سیکیورٹی الرٹ (موبائل نمبر مماثلت)!\nیہ رابطہ فون پہلے سے سرٹیفکیٹ [${rec.code}] میں درج ہے۔`
+              reason: `सیکیورٹی الرٹ (موبائل نمبر مماثلت)!\nیہ رابطہ فون پہلے سے سرٹیفکیٹ [${rec.code}] میں درج ہے۔`
             };
           }
         }
@@ -1586,7 +1579,6 @@
         const recHFatherSndx = getPhoneticSoundex(rec.head.father);
         const recHYear = (rec.head.dob || '').split('-')[0];
 
-        // Biographic validation compares standard keys & normalized non-empty strings
         const clanMatches = (newClanKey === recClanKey);
         const namesNotEmpty = (hNameNorm.length > 0 && recHNameNorm.length > 0);
         const fathersNotEmpty = (hFatherNorm.length > 0 && recHFatherNorm.length > 0);
@@ -1763,15 +1755,21 @@
       const decEl = document.getElementById('frcDeclarationText');
       if (decEl) decEl.textContent = dict.frcDeclaration;
 
-      populateSelectOptions('headGender', dict.genders, 'Male');
-      populateSelectOptions('headMarital', dict.maritalStatuses, 'Married');
-      populateSelectOptions('headClan', dict.clans, 'Tak');
-      populateSelectOptions('headEdu', dict.education, 'Matric');
-      populateSelectOptions('headJob', dict.jobs, 'Business');
+      const prevGender = document.getElementById('headGender')?.value || 'Male';
+      const prevMarital = document.getElementById('headMarital')?.value || 'Married';
+      const prevClan = document.getElementById('headClan')?.value || 'Tak';
+      const prevEdu = document.getElementById('headEdu')?.value || 'Matric';
+      const prevJob = document.getElementById('headJob')?.value || 'Business';
+      const prevCountry = document.getElementById('headCountry')?.value || 'Pakistan';
+
+      populateSelectOptions('headGender', dict.genders, prevGender);
+      populateSelectOptions('headMarital', dict.maritalStatuses, prevMarital);
+      populateSelectOptions('headClan', dict.clans, prevClan);
+      populateSelectOptions('headEdu', dict.education, prevEdu);
+      populateSelectOptions('headJob', dict.jobs, prevJob);
 
       const countrySel = document.getElementById('headCountry');
       if (countrySel) {
-        const prevCountry = countrySel.value || 'Pakistan';
         countrySel.innerHTML = '';
         allWorldCountries.forEach(c => {
           const opt = document.createElement('option');
@@ -1790,7 +1788,6 @@
       populateAdminCountryOptions();
       refreshMemberCardsLanguage();
 
-      // Only update tribute text if memorial is actively open
       const memorial = document.getElementById('memorialModal');
       if (memorial && !memorial.classList.contains('hidden')) {
         updateMemorialPopupLanguage(lang);
@@ -1993,7 +1990,6 @@
       card.id = `memberCard_${id}`;
       card.className = "p-4 bg-slate-50 border border-slate-200 rounded-xl relative space-y-3 transition";
 
-      // Store existing permanent member id if updating
       const savedMemberId = existingData && existingData.memberId ? existingData.memberId : '';
 
       card.innerHTML = `
@@ -2184,7 +2180,6 @@
       }
     }
 
-    // Language switch preserves user-selected options without overriding marital status
     function refreshMemberCardsLanguage() {
       const dict = i18n[currentLang];
       const cards = document.querySelectorAll('[id^="memberCard_"]');
@@ -2233,11 +2228,10 @@
 
         toggleManualInput(document.getElementById(`memEdu_${id}`), `memEduOtherWrap_${id}`);
         toggleManualInput(document.getElementById(`memJob_${id}`), `memJobOtherWrap_${id}`);
-        handleRelationChange(id, false); // do not force override of marital status
+        handleRelationChange(id, false);
       });
     }
 
-    // Completely restores all Head & Member values without resetting to defaults
     function loadFRCForAddingMember() {
       const inputVal = document.getElementById('searchFRCInput').value.trim();
       const cleanUpper = inputVal.toUpperCase();
@@ -2253,12 +2247,10 @@
       let foundRecord = null;
       const allRecords = Object.values(storedFRCRecords);
 
-      // Search Certificate Reference Code
       if (storedFRCRecords[cleanUpper]) {
         foundRecord = storedFRCRecords[cleanUpper];
       }
 
-      // Search Head or Member IDs
       if (!foundRecord) {
         foundRecord = allRecords.find(rec => {
           if (rec.head && rec.head.memberId && rec.head.memberId.toUpperCase() === cleanUpper) return true;
@@ -2269,7 +2261,6 @@
         });
       }
 
-      // Strict Phone Matching (Requires at least 8 digits)
       if (!foundRecord && cleanPhoneInput.length >= 8) {
         foundRecord = allRecords.find(rec => {
           if (rec.head && rec.head.phone) {
@@ -2307,7 +2298,6 @@
       document.getElementById('updatingFRCCode').textContent = foundRecord.code;
       document.getElementById('btnSubmitForm').textContent = `Update Family (${foundRecord.code})`;
 
-      // Full Head data restoration
       const h = foundRecord.head;
       document.getElementById('headName').value = h.name || '';
       document.getElementById('headFather').value = h.father || '';
@@ -2350,7 +2340,6 @@
 
       handleHeadDOBValidation();
 
-      // Restore all existing family members
       const container = document.getElementById('membersContainer');
       container.innerHTML = '';
       memberCount = 0;
@@ -2358,7 +2347,7 @@
       if (foundRecord.members && Array.isArray(foundRecord.members)) {
         foundRecord.members.forEach(m => addMemberCard(m));
       }
-      addMemberCard(); // add blank card for the new member
+      addMemberCard();
     }
 
     function cancelUpdatingFamily() {
@@ -2369,6 +2358,7 @@
       document.getElementById('membersContainer').innerHTML = '';
       memberCount = 0;
       document.getElementById('btnSubmitForm').textContent = i18n[currentLang].btnSubmitForm;
+      handleHeadDOBValidation();
     }
 
     async function handleFormSubmit(e) {
@@ -2421,7 +2411,6 @@
       const headAddress = document.getElementById('headAddress').value.trim();
 
       const certCode = editingExistingFRCCode || (currentRegMode === 'family' ? `WCF-${Math.floor(100000 + Math.random() * 900000)}` : `IIC-${Math.floor(100000 + Math.random() * 900000)}`);
-      // Keep existing head member ID if updating, else generate new
       const headMemberId = editingExistingHeadMemberId || generatePermanentMemberId();
 
       const members = [];
@@ -2444,7 +2433,6 @@
             mLineage = dict.lineage[mLineageKey];
           }
 
-          // Fixed education bug: save member's own education, not head's
           const mEduKey = document.getElementById(`memEdu_${id}`).value;
           const mEdu = mEduKey === 'Other' ? (document.getElementById(`memEduOther_${id}`).value.trim() || dict.education.Other) : dict.education[mEduKey];
 
@@ -2650,7 +2638,6 @@
         const tableBody = document.getElementById('frcTableBody');
         tableBody.innerHTML = '';
 
-        // Safely escaped names and data injection
         const headRow = document.createElement('tr');
         headRow.className = "bg-slate-100 font-bold";
         headRow.innerHTML = `
@@ -2768,6 +2755,7 @@ _Dedicated by M. Waseem Sadiq Tak (Neemray Walay)_`;
       document.getElementById('updatingFamilyBanner').classList.add('hidden');
       editingExistingFRCCode = null;
       editingExistingHeadMemberId = null;
+      handleHeadDOBValidation();
       changeLanguage(currentLang);
     }
 
@@ -2822,7 +2810,6 @@ _Dedicated by M. Waseem Sadiq Tak (Neemray Walay)_`;
       btn.disabled = false;
     }
 
-    // Comprehensive search across Certificate Codes, Head/Member IDs, and exact Phone matching
     function searchAndReprintCertificate() {
       const inputVal = document.getElementById('searchFRCInput').value.trim();
       const cleanUpper = inputVal.toUpperCase();
@@ -2838,12 +2825,10 @@ _Dedicated by M. Waseem Sadiq Tak (Neemray Walay)_`;
       let foundRecord = null;
       const allRecords = Object.values(storedFRCRecords);
 
-      // Search Certificate Reference Code
       if (storedFRCRecords[cleanUpper]) {
         foundRecord = storedFRCRecords[cleanUpper];
       }
 
-      // Search Head or Member IDs
       if (!foundRecord) {
         foundRecord = allRecords.find(rec => {
           if (rec.head && rec.head.memberId && rec.head.memberId.toUpperCase() === cleanUpper) return true;
@@ -2854,7 +2839,6 @@ _Dedicated by M. Waseem Sadiq Tak (Neemray Walay)_`;
         });
       }
 
-      // Strict Phone Matching (Requires at least 8 clean digits)
       if (!foundRecord && cleanPhoneInput.length >= 8) {
         foundRecord = allRecords.find(rec => {
           if (rec.head && rec.head.phone) {
@@ -3401,16 +3385,11 @@ _Dedicated by M. Waseem Sadiq Tak (Neemray Walay)_`;
       }
     }
 
-    // ==========================================
-    // MEMORIAL POPUP LOGIC: V.6.6.1 Fixed
-    // ==========================================
     function initMemorialPopup() {
       if (memorialHasBeenClosed) return;
       const modal = document.getElementById('memorialModal');
       if (!modal) return;
       modal.classList.remove('hidden');
-
-      // Closes automatically after 5 seconds
       resetMemorialTimer();
     }
 
@@ -3423,7 +3402,6 @@ _Dedicated by M. Waseem Sadiq Tak (Neemray Walay)_`;
 
     function switchMemorialLang(lang) {
       updateMemorialPopupLanguage(lang);
-      // Give another 5 seconds to read in the newly chosen language
       resetMemorialTimer();
     }
 
@@ -3500,6 +3478,7 @@ _Dedicated by M. Waseem Sadiq Tak (Neemray Walay)_`;
       changeLanguage('en');
       updateCensusCounters();
       initMemorialPopup();
+      handleHeadDOBValidation();
     }
 
     if (document.readyState === 'loading') {
@@ -3507,124 +3486,6 @@ _Dedicated by M. Waseem Sadiq Tak (Neemray Walay)_`;
     } else {
       initApp();
     }
-    // --- AUTO RESET AGE BADGE ON EMPTY DOB ---
-(function() {
-  const dobInput = document.getElementById('headDOB');
-  const badge = document.getElementById('headAgeCalculatedBadge');
-  if (dobInput && badge) {
-    dobInput.addEventListener('input', function() {
-      if (!this.value) {
-        badge.textContent = '';
-      }
-    });
-    dobInput.addEventListener('change', function() {
-      if (!this.value) {
-        badge.textContent = '';
-      }
-    });
-  }
-})();
-// --- FIX 2: DROPDOWNS TRANSLATION SYNC ---
-function syncDropdownTranslations(lang) {
-  const gender = document.getElementById('headGender');
-  const marital = document.getElementById('headMarital');
-  
-  const translations = {
-    ur: {
-      male: "مرد", female: "عورت", other: "دیگر",
-      single: "غیر شادی شدہ", married: "شادی شدہ", widowed: "بیوہ / رنڈوا", divorced: "طلاق یافتہ"
-    },
-    hi: {
-      male: "पुरुष", female: "महिला", other: "अन्य",
-      single: "अविवाहित", married: "विवाहित", widowed: "विधवा / विधुर", divorced: "तलाकशुदा"
-    },
-    en: {
-      male: "Male", female: "Female", other: "Other",
-      single: "Single", married: "Married", widowed: "Widowed", divorced: "Divorced"
-    }
-  };
-
-  const t = translations[lang] || translations.en;
-
-  if (gender && gender.options.length >= 3) {
-    gender.options[0].text = t.male;
-    gender.options[1].text = t.female;
-    gender.options[2].text = t.other;
-  }
-
-  if (marital && marital.options.length >= 4) {
-    marital.options[0].text = t.single;
-    marital.options[1].text = t.married;
-    marital.options[2].text = t.widowed;
-    marital.options[3].text = t.divorced;
-  }
-}
-
-document.getElementById('langSelect')?.addEventListener('change', function() {
-  syncDropdownTranslations(this.value);
-});
-
-
-// --- FIX 3: INPUT PLACEHOLDERS TRANSLATION SYNC ---
-function syncPlaceholderTranslations(lang) {
-  const placeholders = {
-    ur: {
-      headName: "مکمل نام درج کریں...",
-      headFather: "والد کا نام درج کریں...",
-      headMother: "والدہ کا نام درج کریں...",
-      headPhone: "03XXXXXXXXX",
-      headCity: "شہر کا نام...",
-      headAddress: "مکمل رہائشی پتہ..."
-    },
-    hi: {
-      headName: "पूरा नाम दर्ज करें...",
-      headFather: "पिता का पूरा नाम दर्ज करें...",
-      headMother: "माता का नाम दर्ज करें...",
-      headPhone: "03XXXXXXXXX",
-      headCity: "शहर का नाम...",
-      headAddress: "पूरा आवासीय पता..."
-    },
-    en: {
-      headName: "Enter full name...",
-      headFather: "Enter father name...",
-      headMother: "Mother's name (if known)...",
-      headPhone: "+923001234567",
-      headCity: "City name...",
-      headAddress: "House number, street, area..."
-    }
-  };
-
-  const p = placeholders[lang] || placeholders.en;
-  for (const [id, text] of Object.entries(p)) {
-    const el = document.getElementById(id);
-    if (el) el.placeholder = text;
-  }
-}
-
-document.getElementById('langSelect')?.addEventListener('change', function() {
-  syncPlaceholderTranslations(this.value);
-});
-
-
-// --- FIX 4: FAMILY MEMBER CARDS LANGUAGE SYNC ---
-function syncMemberCardsLanguage(lang) {
-  const memberTitles = {
-    ur: "رکن #",
-    hi: "सदस्य #",
-    en: "Member #"
-  };
-
-  const prefix = memberTitles[lang] || memberTitles.en;
-  const cards = document.querySelectorAll('.member-title, .member-card-title');
-  
-  cards.forEach((el, index) => {
-    el.textContent = `${prefix} ${index + 1}`;
-  });
-}
-
-document.getElementById('langSelect')?.addEventListener('change', function() {
-  syncMemberCardsLanguage(this.value);
-});
   </script>
 </body>
 </html>
