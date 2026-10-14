@@ -331,11 +331,7 @@
             <label id="lblHeadGender" class="block text-xs font-semibold text-slate-700">
               Gender<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
-            <select id="headGender" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-amber-500 outline-none bg-white">
-              <option value="Male" selected>Male</option>
-              <option value="Female">Female</option>
-              <option value="Other">Other</option>
-            </select>
+            <select id="headGender" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-amber-500 outline-none bg-white"></select>
           </div>
 
           <!-- Marital Status Dropdown -->
@@ -343,12 +339,7 @@
             <label id="lblHeadMarital" class="block text-xs font-semibold text-slate-700">
               Marital Status<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
-            <select id="headMarital" required class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white">
-              <option value="Married" selected>Married</option>
-              <option value="Unmarried">Unmarried</option>
-              <option value="Widowed">Widowed</option>
-              <option value="Divorced">Divorced</option>
-            </select>
+            <select id="headMarital" required class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white"></select>
           </div>
 
           <!-- Clan Dropdown -->
@@ -356,15 +347,7 @@
             <label id="lblHeadClan" class="block text-xs font-semibold text-slate-700">
               Clan / Sub-Caste<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
-            <select id="headClan" required onchange="toggleManualInput(this, 'headClanOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white">
-              <option value="Tak" selected>Tak</option>
-              <option value="Bhati">Bhati</option>
-              <option value="Rao">Rao</option>
-              <option value="Molani">Molani</option>
-              <option value="Lodha">Lodha</option>
-              <option value="Deora">Deora</option>
-              <option value="Other">Other</option>
-            </select>
+            <select id="headClan" required onchange="toggleManualInput(this, 'headClanOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white"></select>
             <div id="headClanOtherWrap" class="hidden mt-2">
               <input type="text" id="headClanOther" class="w-full border border-amber-400 rounded-lg px-3 text-xs bg-amber-50 outline-none">
             </div>
@@ -375,16 +358,7 @@
             <label id="lblHeadEdu" class="block text-xs font-semibold text-slate-700">
               Education Level<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
-            <select id="headEdu" required onchange="toggleManualInput(this, 'headEduOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-slate-700 text-sm focus:ring-2 focus:ring-amber-500 outline-none bg-white">
-              <option value="Matric" selected>Matriculation (10th)</option>
-              <option value="Intermediate">Intermediate (12th)</option>
-              <option value="Graduate">Graduate (Bachelors)</option>
-              <option value="Masters">Post Graduate (Masters)</option>
-              <option value="Primary">Primary School</option>
-              <option value="Religious">Islamic / Religious Scholar</option>
-              <option value="Uneducated">Uneducated</option>
-              <option value="Other">Other</option>
-            </select>
+            <select id="headEdu" required onchange="toggleManualInput(this, 'headEduOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-slate-700 text-sm focus:ring-2 focus:ring-amber-500 outline-none bg-white"></select>
             <div id="headEduOtherWrap" class="hidden mt-2">
               <input type="text" id="headEduOther" class="w-full border border-amber-400 rounded-lg px-3 text-xs bg-amber-50 outline-none">
             </div>
@@ -395,27 +369,11 @@
             <label id="lblHeadJob" class="block text-xs font-semibold text-slate-700">
               Occupation / Job<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
-            <select id="headJob" required onchange="toggleManualInput(this, 'headJobOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white">
-              <option value="Business" selected>Business / Self-Employed</option>
-              <option value="Textile">Cloth Merchant / Textile</option>
-              <option value="Tailor">Tailor / Embroidery</option>
-              <option value="PrivateJob">Private Job</option>
-              <option value="GovtJob">Government Job</option>
-              <option value="Teacher">Teacher / Education</option>
-              <option value="Healthcare">Doctor / Healthcare</option>
-              <option value="EngineerIT">Engineer / IT Software</option>
-              <option value="Driver">Driver / Transport</option>
-              <option value="DailyWage">Artisan / Daily Wage</option>
-              <option value="Student">Student</option>
-              <option value="Homemaker">Homemaker / Housewife</option>
-              <option value="Retired">Retired</option>
-              <option value="Other">Other</option>
-            </select>
+            <select id="headJob" required onchange="toggleManualInput(this, 'headJobOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white"></select>
             <div id="headJobOtherWrap" class="hidden mt-2">
               <input type="text" id="headJobOther" class="w-full border border-amber-400 rounded-lg px-3 text-xs bg-amber-50 outline-none">
             </div>
           </div>
-
           <div>
             <label id="lblHeadPhone" class="block text-xs font-semibold text-slate-700">
               Contact Phone / WhatsApp<span class="text-red-500 font-bold ml-1 mr-1">*</span>
@@ -429,14 +387,6 @@
               Country<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
             <select id="headCountry" required onchange="toggleManualInput(this, 'headCountryOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-amber-500 outline-none bg-white">
-              <option value="Pakistan" selected>Pakistan</option>
-              <option value="India">India</option>
-              <option value="Morocco">Morocco</option>
-              <option value="Saudi Arabia">Saudi Arabia</option>
-              <option value="United Arab Emirates">United Arab Emirates</option>
-              <option value="United Kingdom">United Kingdom</option>
-              <option value="United States">United States</option>
-              <option value="Other">Other</option>
             </select>
             <div id="headCountryOtherWrap" class="hidden mt-2">
               <input type="text" id="headCountryOther" class="w-full border border-amber-400 rounded-lg px-3 text-xs bg-amber-50 outline-none">
