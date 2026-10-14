@@ -837,12 +837,12 @@
     </div>
   </footer>
 
-    <!-- COMPACT MEMORIAL TRIBUTE POPUP -->
-    <div id="memorialModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 overflow-y-auto p-4 flex items-center justify-center">
-    <div class="relative w-full max-w-sm bg-white rounded-2xl shadow-2xl border-2 border-amber-500/60 p-4 text-center mx-auto" onclick="event.stopPropagation()">
+      <!-- COMPACT MEMORIAL TRIBUTE POPUP -->
+  <div id="memorialModal" class="fixed inset-0 z-50 overflow-y-auto p-4 flex items-center justify-center font-latin pointer-events-auto">
+    <div class="relative w-full max-w-sm bg-white rounded-2xl shadow-2xl border-2 border-amber-500/60 p-4 text-center mx-auto z-50">
       
       <!-- Close Button -->
-      <button type="button" id="memCloseCross" onclick="closeMemorialModal()" class="absolute top-2.5 right-2.5 text-slate-400 hover:text-slate-800 text-lg font-bold w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center transition cursor-pointer">
+      <button type="button" id="memCloseCross" onclick="closeMemorialModal()" class="absolute top-2.5 right-2.5 text-slate-400 hover:text-slate-800 text-lg font-bold w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center transition cursor-pointer z-50">
         &times;
       </button>
 
@@ -879,9 +879,8 @@
       </div>
 
       <!-- Enter Button -->
-            <!-- Enter Button -->
       <div class="mt-3 pt-2 border-t border-slate-100">
-        <button type="button" id="btnMemEnter" onclick="closeMemorialModal()" class="w-full py-1.5 bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white text-xs font-bold rounded-xl shadow transition transform active:scale-95 cursor-pointer">
+        <button type="button" id="btnMemEnter" onclick="closeMemorialModal()" class="w-full py-1.5 bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white text-xs font-bold rounded-xl shadow transition transform active:scale-95 cursor-pointer relative z-50">
           Enter Portal / آمین
         </button>
         <p class="text-[9px] text-slate-400 mt-1">Closes automatically in 5 seconds or click Enter</p>
