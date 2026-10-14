@@ -1746,27 +1746,31 @@
       }
     }
 
-    function populateSelectOptions(selectId, optionsObj, defaultValue) {
+      function populateSelectOptions(selectId, optionsObj, defaultValue) {
       const select = document.getElementById(selectId);
       if (!select || !optionsObj) return;
 
-      const previousValue = select.value || defaultValue;
+      const targetVal = (select.value && select.value !== '') ? select.value : defaultValue;
       select.innerHTML = '';
 
+      let hasSelected = false;
       Object.entries(optionsObj).forEach(([k, v]) => {
         const opt = document.createElement('option');
         opt.value = k;
         opt.textContent = v;
-        if (k === previousValue) {
+        if (targetVal && k === targetVal) {
           opt.selected = true;
+          hasSelected = true;
         }
         select.appendChild(opt);
       });
 
-      if (!select.value && select.options.length > 0) {
+      if (!hasSelected && select.options.length > 0) {
+        select.options[0].selected = true;
         select.selectedIndex = 0;
       }
     }
+
 
     function toggleManualInput(selectElem, wrapId) {
       const wrap = document.getElementById(wrapId);
