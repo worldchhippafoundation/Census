@@ -406,6 +406,14 @@
             </div>
           </div>
 
+          <!-- Contact Phone / WhatsApp -->
+          <div>
+            <label id="lblHeadPhone" class="block text-xs font-semibold text-slate-700">
+              Contact Phone / WhatsApp<span class="text-red-500 font-bold ml-1 mr-1">*</span>
+            </label>
+            <input type="tel" id="headPhone" required class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-amber-500 outline-none text-left" placeholder="+92 300 0000000">
+          </div>
+
           <!-- Country Dropdown -->
           <div>
             <label id="lblHeadCountry" class="block text-xs font-semibold text-slate-700">
@@ -837,12 +845,12 @@
     </div>
   </footer>
 
-      <!-- COMPACT MEMORIAL TRIBUTE POPUP -->
-  <div id="memorialModal" class="fixed inset-0 z-50 overflow-y-auto p-4 flex items-center justify-center font-latin pointer-events-auto">
-    <div class="relative w-full max-w-sm bg-white rounded-2xl shadow-2xl border-2 border-amber-500/60 p-4 text-center mx-auto z-50">
+  <!-- COMPACT MEMORIAL TRIBUTE POPUP -->
+  <div id="memorialModal" onclick="handleMemorialBackdropClick(event)" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 overflow-y-auto p-4 flex items-center justify-center">
+    <div class="relative w-full max-w-sm bg-white rounded-2xl shadow-2xl border-2 border-amber-500/60 p-4 text-center mx-auto" onclick="event.stopPropagation()">
       
       <!-- Close Button -->
-      <button type="button" id="memCloseCross" onclick="closeMemorialModal()" class="absolute top-2.5 right-2.5 text-slate-400 hover:text-slate-800 text-lg font-bold w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center transition cursor-pointer z-50">
+      <button type="button" id="memCloseCross" onclick="closeMemorialModal()" class="absolute top-2.5 right-2.5 text-slate-400 hover:text-slate-800 text-lg font-bold w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center transition cursor-pointer">
         &times;
       </button>
 
@@ -880,13 +888,14 @@
 
       <!-- Enter Button -->
       <div class="mt-3 pt-2 border-t border-slate-100">
-        <button type="button" id="btnMemEnter" onclick="closeMemorialModal()" class="w-full py-1.5 bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white text-xs font-bold rounded-xl shadow transition transform active:scale-95 cursor-pointer relative z-50">
+        <button type="button" id="btnMemEnter" onclick="closeMemorialModal()" class="w-full py-1.5 bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white text-xs font-bold rounded-xl shadow transition transform active:scale-95 cursor-pointer">
           Enter Portal / آمین
         </button>
-        <p class="text-[9px] text-slate-400 mt-1">Closes automatically in 5 seconds or click Enter</p>
+        <p class="text-[9px] text-slate-400 mt-1">Closes automatically in 10 seconds or click Enter</p>
       </div>
     </div>
   </div>
+
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyDummyKeyReplaceLaterWhenCreated",
@@ -1539,7 +1548,7 @@
           if (cleanHeadPhone.endsWith(recHeadPhone.slice(-8)) || recHeadPhone.endsWith(cleanHeadPhone.slice(-8))) {
             return {
               duplicate: true,
-              reason: `سیکیورٹی الرٹ (موبائل نمبر مماثلت)!\nیہ رابطہ فون پہلے سے سرٹیفکیٹ [${rec.code}] میں درج ہے۔`
+              reason: `سیکیورٹی الرٹ (موبایل نمبر مماثلت)!\nیہ رابطہ فون پہلے سے سرٹیفکیٹ [${rec.code}] میں درج ہے۔`
             };
           }
         }
@@ -1624,7 +1633,7 @@
       loadAdminPendingQueue();
     }
 
-        function getKeyFromValue(optionsObj, val) {
+    function getKeyFromValue(optionsObj, val) {
       if (!val) return null;
       if (optionsObj[val]) return val;
       for (const [k, v] of Object.entries(optionsObj)) {
@@ -1730,6 +1739,23 @@
 
       setText('btnSubmitForm', dict.btnSubmitForm);
 
+      const setPh = (id, txt) => { const el = document.getElementById(id); if (el && txt) el.placeholder = txt; };
+      setPh('headName', dict.headNamePlaceholder);
+      setPh('headFather', dict.headFatherPlaceholder);
+      setPh('headCity', dict.headCityPlaceholder);
+      setPh('headAddress', dict.headAddressPlaceholder);
+      setPh('refElderName', dict.refElderPlaceholder);
+      setPh('refElderContact', dict.refContactPlaceholder);
+      setPh('headClanOther', dict.otherClanPlaceholder);
+      setPh('headEduOther', dict.otherEduPlaceholder);
+      setPh('headJobOther', dict.otherJobPlaceholder);
+      setPh('headCountryOther', dict.otherCountryPlaceholder);
+
+      setText('btnDownloadAction', dict.btnDownloadPdf);
+      setText('btnModalClose', dict.btnCloseModal);
+      setText('lblPendingNoticeTitle', dict.lblPendingNoticeTitle);
+      setText('lblPendingNoticeBody', dict.lblPendingNoticeBody);
+
       // Head Dropdowns Translation
       populateSelectOptions('headGender', dict.genders, 'Male');
       populateSelectOptions('headMarital', dict.maritalStatuses, 'Married');
@@ -1774,7 +1800,7 @@
       }
     }
 
-      function populateSelectOptions(selectId, optionsObj, defaultValue) {
+    function populateSelectOptions(selectId, optionsObj, defaultValue) {
       const select = document.getElementById(selectId);
       if (!select || !optionsObj) return;
 
@@ -2344,195 +2370,205 @@
 
     async function handleFormSubmit(e) {
       e.preventDefault();
-try {
-      const submitBtn = document.getElementById('btnSubmitForm');
-      const originalBtnText = submitBtn.textContent;
-      submitBtn.disabled = true;
-      submitBtn.textContent = "Processing & Securing...";
-      const dict = i18n[currentLang];
-      const headName = document.getElementById('headName').value.trim();
-      const headFather = document.getElementById('headFather').value.trim();
-      const headDOB = document.getElementById('headDOB').value;
-      const headAge = calculateAge(headDOB);
-
-      if (headAge < 18) {
-        alert("Registration Stop: Minors under 18 years of age cannot register as an independent Head. They must be registered within a Family Record.");
-        submitBtn.disabled = false;
-        submitBtn.textContent = originalBtnText;
-        return;
-      const refElder = document.getElementById('refElderName').value.trim();
-      const refContact = document.getElementById('refElderContact').value.trim();
-
-      if (currentRegMode === 'individual' && (!refElder || !refContact)) {
-        alert("Reference Required: For Individual Adult registration without family unit, providing a verified community reference name and contact is mandatory.");
-        submitBtn.disabled = false;
-        submitBtn.textContent = originalBtnText;
-        document.getElementById('refElderName').focus();
-        return;
-      }
-
-      const headGenderKey = document.getElementById('headGender').value;
-      const headMaritalKey = document.getElementById('headMarital').value;
-      const headClanKey = document.getElementById('headClan').value;
-      const headClan = headClanKey === 'Other' ? (document.getElementById('headClanOther').value.trim() || dict.clans.Other) : dict.clans[headClanKey];
-      
-      const headEduKey = document.getElementById('headEdu').value;
-      const headEdu = headEduKey === 'Other' ? (document.getElementById('headEduOther').value.trim() || dict.education.Other) : dict.education[headEduKey];
-
-      const headJobKey = document.getElementById('headJob').value;
-      const headJob = headJobKey === 'Other' ? (document.getElementById('headJobOther').value.trim() || dict.jobs.Other) : dict.jobs[headJobKey];
-      
-      const headPhone = document.getElementById('headPhone').value.trim();
-      const headCountryKey = document.getElementById('headCountry').value;
-      const headCountry = headCountryKey === 'Other' ? (document.getElementById('headCountryOther').value.trim() || "Other") : headCountryKey;
-      const headCity = document.getElementById('headCity').value.trim();
-      const headAddress = document.getElementById('headAddress').value.trim();
-
-      const certCode = editingExistingFRCCode || (currentRegMode === 'family' ? `WCF-${Math.floor(100000 + Math.random() * 900000)}` : `IIC-${Math.floor(100000 + Math.random() * 900000)}`);
-      const headMemberId = editingExistingHeadMemberId || generatePermanentMemberId();
-
-      const members = [];
-      if (currentRegMode === 'family') {
-        const cards = document.querySelectorAll('[id^="memberCard_"]');
-        cards.forEach((card, idx) => {
-          const id = card.id.split('_')[1];
-          const mRelKey = document.getElementById(`memRel_${id}`).value;
-          const mName = document.getElementById(`memName_${id}`).value.trim();
-          const mDOB = document.getElementById(`memDOB_${id}`).value;
-          const mGenderKey = document.getElementById(`memGender_${id}`).value;
-          const mMaritalKey = document.getElementById(`memMarital_${id}`).value;
-          const mAgeVal = document.getElementById(`memAge_${id}`).value;
-          const mPhone = document.getElementById(`memPhone_${id}`) ? document.getElementById(`memPhone_${id}`).value.trim() : '';
-
-          let mLineage = dict.lineage.Chhippa;
-          let mLineageKey = 'Chhippa';
-          if (mRelKey === 'Wife') {
-            mLineageKey = document.getElementById(`memLineage_${id}`).value;
-            mLineage = dict.lineage[mLineageKey];
-          }
-
-          const mEduKey = document.getElementById(`memEdu_${id}`).value;
-          const mEdu = mEduKey === 'Other' ? (document.getElementById(`memEduOther_${id}`).value.trim() || dict.education.Other) : dict.education[mEduKey];
-
-          const mJobKey = document.getElementById(`memJob_${id}`).value;
-          const mJob = mJobKey === 'Other' ? (document.getElementById(`memJobOther_${id}`).value.trim() || dict.jobs.Other) : dict.jobs[mJobKey];
-
-          const mAddrChoice = document.getElementById(`memAddrChoice_${id}`).value;
-          let mCountry = headCountry;
-          let mCity = headCity;
-          let mAddress = headAddress;
-
-          if (mAddrChoice === 'other') {
-            mCountry = document.getElementById(`memCountry_${id}`).value;
-            mCity = document.getElementById(`memCity_${id}`).value.trim() || headCity;
-            mAddress = document.getElementById(`memAddress_${id}`).value.trim() || headAddress;
-          }
-
-          const existingMemberIdVal = document.getElementById(`memSavedId_${id}`) ? document.getElementById(`memSavedId_${id}`).value : '';
-          const finalMemberId = existingMemberIdVal || generatePermanentMemberId();
-
-          members.push({
-            memberId: finalMemberId,
-            uniqueId: `${certCode}-${idx + 2}`,
-            name: mName,
-            relation: dict.relations[mRelKey],
-            relationKey: mRelKey,
-            gender: dict.genders[mGenderKey],
-            genderKey: mGenderKey,
-            dob: mDOB,
-            maritalStatus: dict.maritalStatuses[mMaritalKey],
-            maritalStatusKey: mMaritalKey,
-            age: parseInt(mAgeVal) || calculateAge(mDOB),
-            phone: mPhone,
-            edu: mEdu,
-            eduKey: mEduKey,
-            job: mJob,
-            jobKey: mJobKey,
-            addrChoice: mAddrChoice,
-            country: mCountry,
-            city: mCity,
-            address: mAddress,
-            lineage: mLineage,
-            lineageKey: mLineageKey
-          });
-        });
-      }
-
-      const dupCheck = checkGoldenBiographicDuplication(headFather, headDOB, headClanKey, members, editingExistingFRCCode);
-      if (dupCheck.duplicate) {
-        alert(dupCheck.reason);
-        submitBtn.disabled = false;
-        submitBtn.textContent = originalBtnText;
-        return;
-      }
-
-      let assignedStatus = "Approved";
-      if (currentRegMode === 'individual') {
-        assignedStatus = "Pending Verification";
-      }
-
-      const record = {
-        code: certCode,
-        type: currentRegMode,
-        status: assignedStatus,
-        lang: currentLang,
-        issueDate: new Date().toLocaleDateString('en-GB'),
-        head: {
-          memberId: headMemberId,
-          uniqueId: `${certCode}-1`,
-          name: headName,
-          father: headFather,
-          fatherDeceased: document.getElementById('headFatherDeceased').checked,
-          mother: document.getElementById('headMother').value.trim() || 'Not Specified',
-          motherDeceased: document.getElementById('headMotherDeceased').checked,
-          dob: headDOB,
-          age: headAge,
-          gender: dict.genders[headGenderKey],
-          genderKey: headGenderKey,
-          maritalStatus: dict.maritalStatuses[headMaritalKey],
-          maritalStatusKey: headMaritalKey,
-          clan: headClan,
-          clanKey: headClanKey,
-          lineage: dict.lineage.Chhippa,
-          edu: headEdu,
-          eduKey: headEduKey,
-          job: headJob,
-          jobKey: headJobKey,
-          phone: headPhone,
-          country: headCountry,
-          city: headCity,
-          location: `${headCity}, ${getCountryLocalizedName(headCountry, currentLang)}`,
-          address: headAddress
-        },
-        members: members,
-        reference: {
-          elder: refElder,
-          contact: refContact
-        }
-      };
-
-      storedFRCRecords[certCode] = record;
       try {
-        localStorage.setItem('WCF_CENSUS_RECORDS', JSON.stringify(storedFRCRecords));
-      } catch (err) {}
+        const submitBtn = document.getElementById('btnSubmitForm');
+        const originalBtnText = submitBtn.textContent;
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Processing & Securing...";
+        const dict = i18n[currentLang];
+        const headName = document.getElementById('headName').value.trim();
+        const headFather = document.getElementById('headFather').value.trim();
+        const headDOB = document.getElementById('headDOB').value;
+        const headAge = calculateAge(headDOB);
 
-      if (isCloudReady && db && isSyncEnabled) {
-        try {
-          db.collection('census_registrations').doc(certCode).set(record);
-        } catch(e) {
-          console.warn("Firestore sync queue buffer:", e);
+        if (headAge < 18) {
+          alert("Registration Stop: Minors under 18 years of age cannot register as an independent Head. They must be registered within a Family Record.");
+          submitBtn.disabled = false;
+          submitBtn.textContent = originalBtnText;
+          return;
         }
+        const refElder = document.getElementById('refElderName').value.trim();
+        const refContact = document.getElementById('refElderContact').value.trim();
+
+        if (currentRegMode === 'individual' && (!refElder || !refContact)) {
+          alert("Reference Required: For Individual Adult registration without family unit, providing a verified community reference name and contact is mandatory.");
+          submitBtn.disabled = false;
+          submitBtn.textContent = originalBtnText;
+          document.getElementById('refElderName').focus();
+          return;
+        }
+
+        const headGenderKey = document.getElementById('headGender').value;
+        const headMaritalKey = document.getElementById('headMarital').value;
+        const headClanKey = document.getElementById('headClan').value;
+        const headClan = headClanKey === 'Other' ? (document.getElementById('headClanOther').value.trim() || dict.clans.Other) : dict.clans[headClanKey];
+        
+        const headEduKey = document.getElementById('headEdu').value;
+        const headEdu = headEduKey === 'Other' ? (document.getElementById('headEduOther').value.trim() || dict.education.Other) : dict.education[headEduKey];
+
+        const headJobKey = document.getElementById('headJob').value;
+        const headJob = headJobKey === 'Other' ? (document.getElementById('headJobOther').value.trim() || dict.jobs.Other) : dict.jobs[headJobKey];
+        
+        const headPhone = document.getElementById('headPhone').value.trim();
+        const headCountryKey = document.getElementById('headCountry').value;
+        const headCountry = headCountryKey === 'Other' ? (document.getElementById('headCountryOther').value.trim() || "Other") : headCountryKey;
+        const headCity = document.getElementById('headCity').value.trim();
+        const headAddress = document.getElementById('headAddress').value.trim();
+
+        const certCode = editingExistingFRCCode || (currentRegMode === 'family' ? `WCF-${Math.floor(100000 + Math.random() * 900000)}` : `IIC-${Math.floor(100000 + Math.random() * 900000)}`);
+        const headMemberId = editingExistingHeadMemberId || generatePermanentMemberId();
+
+        const members = [];
+        if (currentRegMode === 'family') {
+          const cards = document.querySelectorAll('[id^="memberCard_"]');
+          cards.forEach((card, idx) => {
+            const id = card.id.split('_')[1];
+            const mRelKey = document.getElementById(`memRel_${id}`).value;
+            const mName = document.getElementById(`memName_${id}`).value.trim();
+            const mDOB = document.getElementById(`memDOB_${id}`).value;
+            const mGenderKey = document.getElementById(`memGender_${id}`).value;
+            const mMaritalKey = document.getElementById(`memMarital_${id}`).value;
+            const mAgeVal = document.getElementById(`memAge_${id}`).value;
+            const mPhone = document.getElementById(`memPhone_${id}`) ? document.getElementById(`memPhone_${id}`).value.trim() : '';
+
+            let mLineage = dict.lineage.Chhippa;
+            let mLineageKey = 'Chhippa';
+            if (mRelKey === 'Wife') {
+              mLineageKey = document.getElementById(`memLineage_${id}`).value;
+              mLineage = dict.lineage[mLineageKey];
+            }
+
+            const mEduKey = document.getElementById(`memEdu_${id}`).value;
+            const mEdu = mEduKey === 'Other' ? (document.getElementById(`memEduOther_${id}`).value.trim() || dict.education.Other) : dict.education[mEduKey];
+
+            const mJobKey = document.getElementById(`memJob_${id}`).value;
+            const mJob = mJobKey === 'Other' ? (document.getElementById(`memJobOther_${id}`).value.trim() || dict.jobs.Other) : dict.jobs[mJobKey];
+
+            const mAddrChoice = document.getElementById(`memAddrChoice_${id}`).value;
+            let mCountry = headCountry;
+            let mCity = headCity;
+            let mAddress = headAddress;
+
+            if (mAddrChoice === 'other') {
+              mCountry = document.getElementById(`memCountry_${id}`).value;
+              mCity = document.getElementById(`memCity_${id}`).value.trim() || headCity;
+              mAddress = document.getElementById(`memAddress_${id}`).value.trim() || headAddress;
+            }
+
+            const existingMemberIdVal = document.getElementById(`memSavedId_${id}`) ? document.getElementById(`memSavedId_${id}`).value : '';
+            const finalMemberId = existingMemberIdVal || generatePermanentMemberId();
+
+            members.push({
+              memberId: finalMemberId,
+              uniqueId: `${certCode}-${idx + 2}`,
+              name: mName,
+              relation: dict.relations[mRelKey],
+              relationKey: mRelKey,
+              gender: dict.genders[mGenderKey],
+              genderKey: mGenderKey,
+              dob: mDOB,
+              maritalStatus: dict.maritalStatuses[mMaritalKey],
+              maritalStatusKey: mMaritalKey,
+              age: parseInt(mAgeVal) || calculateAge(mDOB),
+              phone: mPhone,
+              edu: mEdu,
+              eduKey: mEduKey,
+              job: mJob,
+              jobKey: mJobKey,
+              addrChoice: mAddrChoice,
+              country: mCountry,
+              city: mCity,
+              address: mAddress,
+              lineage: mLineage,
+              lineageKey: mLineageKey
+            });
+          });
+        }
+
+        const dupCheck = checkGoldenBiographicDuplication(headFather, headDOB, headClanKey, members, editingExistingFRCCode);
+        if (dupCheck.duplicate) {
+          alert(dupCheck.reason);
+          submitBtn.disabled = false;
+          submitBtn.textContent = originalBtnText;
+          return;
+        }
+
+        let assignedStatus = "Approved";
+        if (currentRegMode === 'individual') {
+          assignedStatus = "Pending Verification";
+        }
+
+        const record = {
+          code: certCode,
+          type: currentRegMode,
+          status: assignedStatus,
+          lang: currentLang,
+          issueDate: new Date().toLocaleDateString('en-GB'),
+          head: {
+            memberId: headMemberId,
+            uniqueId: `${certCode}-1`,
+            name: headName,
+            father: headFather,
+            fatherDeceased: document.getElementById('headFatherDeceased').checked,
+            mother: document.getElementById('headMother').value.trim() || 'Not Specified',
+            motherDeceased: document.getElementById('headMotherDeceased').checked,
+            dob: headDOB,
+            age: headAge,
+            gender: dict.genders[headGenderKey],
+            genderKey: headGenderKey,
+            maritalStatus: dict.maritalStatuses[headMaritalKey],
+            maritalStatusKey: headMaritalKey,
+            clan: headClan,
+            clanKey: headClanKey,
+            lineage: dict.lineage.Chhippa,
+            edu: headEdu,
+            eduKey: headEduKey,
+            job: headJob,
+            jobKey: headJobKey,
+            phone: headPhone,
+            country: headCountry,
+            city: headCity,
+            location: `${headCity}, ${getCountryLocalizedName(headCountry, currentLang)}`,
+            address: headAddress
+          },
+          members: members,
+          reference: {
+            elder: refElder,
+            contact: refContact
+          }
+        };
+
+        storedFRCRecords[certCode] = record;
+        try {
+          localStorage.setItem('WCF_CENSUS_RECORDS', JSON.stringify(storedFRCRecords));
+        } catch (err) {}
+
+        if (isCloudReady && db && isSyncEnabled) {
+          try {
+            db.collection('census_registrations').doc(certCode).set(record);
+          } catch(e) {
+            console.warn("Firestore sync queue buffer:", e);
+          }
+        }
+
+        activeViewingRecord = record;
+        editingExistingFRCCode = null;
+        editingExistingHeadMemberId = null;
+        document.getElementById('updatingFamilyBanner').classList.add('hidden');
+        submitBtn.textContent = dict.btnSubmitForm;
+        submitBtn.disabled = false;
+
+        updateCensusCounters();
+        displayCertificateModal(record);
+      } catch (err) {
+        console.error("Form submission error:", err);
+        const submitBtn = document.getElementById('btnSubmitForm');
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = (i18n[currentLang] && i18n[currentLang].btnSubmitForm) ? i18n[currentLang].btnSubmitForm : "Submit Form & Issue Official Certificate";
+        }
+        alert("An unexpected error occurred: " + err.message);
       }
-
-      activeViewingRecord = record;
-      editingExistingFRCCode = null;
-      editingExistingHeadMemberId = null;
-      document.getElementById('updatingFamilyBanner').classList.add('hidden');
-      submitBtn.textContent = dict.btnSubmitForm;
-      submitBtn.disabled = false;
-
-      updateCensusCounters();
-      displayCertificateModal(record);
     }
 
     function displayCertificateModal(record) {
@@ -3363,19 +3399,18 @@ _Dedicated by M. Waseem Sadiq Tak (Neemray Walay)_`;
       }
     }
 
-        function initMemorialPopup() {
+    function initMemorialPopup() {
       if (memorialHasBeenClosed) return;
       const modal = document.getElementById('memorialModal');
       if (!modal) return;
       modal.classList.remove('hidden');
       
-      // ہیڈر کی منتخب زبان کے مطابق متن دکھائے
       updateMemorialPopupLanguage(currentLang || 'en');
 
       if (memorialTimer) clearTimeout(memorialTimer);
       memorialTimer = setTimeout(() => {
         closeMemorialModal();
-      }, 5000);
+      }, 10000); // یہاں 10 سیکنڈ (10000ms) کا درست ٹائمر سیٹ کر دیا گیا ہے
     }
 
     function updateMemorialPopupLanguage(lang) {
@@ -3422,7 +3457,6 @@ _Dedicated by M. Waseem Sadiq Tak (Neemray Walay)_`;
       if (memorialTimer) clearTimeout(memorialTimer);
       memorialHasBeenClosed = true;
     }
-
 
     function initApp() {
       const modal = document.getElementById('frcModal');
