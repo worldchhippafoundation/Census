@@ -1567,7 +1567,7 @@
           if (cleanHeadPhone.endsWith(recHeadPhone.slice(-8)) || recHeadPhone.endsWith(cleanHeadPhone.slice(-8))) {
             return {
               duplicate: true,
-              reason: `सیکیورٹی الرٹ (موبائل نمبر مماثلت)!\nیہ رابطہ فون پہلے سے سرٹیفکیٹ [${rec.code}] میں درج ہے۔`
+              reason: `سیکیورٹی الرٹ (موبائل نمبر مماثلت)!\nیہ رابطہ فون پہلے سے سرٹیفکیٹ [${rec.code}] میں درج ہے۔`
             };
           }
         }
@@ -1971,7 +1971,7 @@
       const dobVal = document.getElementById(`memDOB_${id}`).value;
       if (!dobVal) return;
       const calculatedAge = calculateAge(dobVal);
-      document.getElementById(`memAge_${id}`).value = isNaN(calculatedAge) ? 0 : calculatedAge;
+      document.getElementById(`memAge_${id}`).value = isNaN(calculatedAge) ? '' : calculatedAge;
     }
 
     function toggleMemberAddressMode(id) {
@@ -2040,7 +2040,7 @@
           </div>
           <div>
             <label class="block text-xs font-semibold text-slate-700 lbl-mem-age">${dict.lblMemAge} *</label>
-            <input type="number" id="memAge_${id}" min="0" max="120" value="20" required class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none">
+            <input type="number" id="memAge_${id}" min="0" max="120" value="" placeholder="0" required class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none">
           </div>
           <div>
             <label class="block text-xs font-semibold text-slate-700 lbl-mem-phone">${dict.lblMemPhoneOpt}</label>
@@ -2134,7 +2134,7 @@
 
       if (existingData) {
         document.getElementById(`memName_${id}`).value = existingData.name || '';
-        document.getElementById(`memAge_${id}`).value = existingData.age || 20;
+        document.getElementById(`memAge_${id}`).value = existingData.age || '';
         if (existingData.phone) document.getElementById(`memPhone_${id}`).value = existingData.phone;
         if (existingData.dob) document.getElementById(`memDOB_${id}`).value = existingData.dob;
         if (existingData.relationKey) document.getElementById(`memRel_${id}`).value = existingData.relationKey;
@@ -2185,26 +2185,52 @@
       const cards = document.querySelectorAll('[id^="memberCard_"]');
       cards.forEach(card => {
         const id = card.id.split('_')[1];
-        card.querySelector('.member-title').textContent = `${dict.memberCardTitle} ${id}`;
-        card.querySelector('.lbl-mem-rel').textContent = `${dict.lblMemRel} *`;
-        card.querySelector('.lbl-mem-name').textContent = `${dict.lblMemName} *`;
-        card.querySelector('.lbl-mem-dob').textContent = `${dict.lblMemDOB} *`;
-        card.querySelector('.lbl-mem-gender').textContent = `${dict.lblMemGender} *`;
-        card.querySelector('.lbl-mem-marital').textContent = `${dict.lblMemMarital} *`;
-        card.querySelector('.lbl-mem-age').textContent = `${dict.lblMemAge} *`;
-        card.querySelector('.lbl-mem-phone').textContent = dict.lblMemPhoneOpt;
-        card.querySelector('.lbl-mem-edu').textContent = `${dict.lblMemEdu} *`;
-        card.querySelector('.lbl-mem-lineage').textContent = `${dict.lblMemLineage} *`;
-        card.querySelector('.lbl-mem-job').textContent = `${dict.lblMemJob} *`;
-        card.querySelector('.lbl-mem-addr').textContent = `${dict.lblMemAddrChoice} *`;
-        card.querySelector('button').textContent = dict.btnRemove;
+        
+        const titleEl = card.querySelector('.member-title');
+        if (titleEl) titleEl.textContent = `${dict.memberCardTitle} ${id}`;
+        
+        const relLbl = card.querySelector('.lbl-mem-rel');
+        if (relLbl) relLbl.innerHTML = `${dict.lblMemRel} <span class="text-red-500 font-bold">*</span>`;
+        
+        const nameLbl = card.querySelector('.lbl-mem-name');
+        if (nameLbl) nameLbl.innerHTML = `${dict.lblMemName} <span class="text-red-500 font-bold">*</span>`;
+        
+        const dobLbl = card.querySelector('.lbl-mem-dob');
+        if (dobLbl) dobLbl.innerHTML = `${dict.lblMemDOB} <span class="text-red-500 font-bold">*</span>`;
+        
+        const genLbl = card.querySelector('.lbl-mem-gender');
+        if (genLbl) genLbl.innerHTML = `${dict.lblMemGender} <span class="text-red-500 font-bold">*</span>`;
+        
+        const marLbl = card.querySelector('.lbl-mem-marital');
+        if (marLbl) marLbl.innerHTML = `${dict.lblMemMarital} <span class="text-red-500 font-bold">*</span>`;
+        
+        const ageLbl = card.querySelector('.lbl-mem-age');
+        if (ageLbl) ageLbl.innerHTML = `${dict.lblMemAge} <span class="text-red-500 font-bold">*</span>`;
+        
+        const phoneLbl = card.querySelector('.lbl-mem-phone');
+        if (phoneLbl) phoneLbl.textContent = dict.lblMemPhoneOpt;
+        
+        const eduLbl = card.querySelector('.lbl-mem-edu');
+        if (eduLbl) eduLbl.innerHTML = `${dict.lblMemEdu} <span class="text-red-500 font-bold">*</span>`;
+        
+        const linLbl = card.querySelector('.lbl-mem-lineage');
+        if (linLbl) linLbl.innerHTML = `${dict.lblMemLineage} <span class="text-red-500 font-bold">*</span>`;
+        
+        const jobLbl = card.querySelector('.lbl-mem-job');
+        if (jobLbl) jobLbl.innerHTML = `${dict.lblMemJob} <span class="text-red-500 font-bold">*</span>`;
+        
+        const addrLbl = card.querySelector('.lbl-mem-addr');
+        if (addrLbl) addrLbl.innerHTML = `${dict.lblMemAddrChoice} <span class="text-red-500 font-bold">*</span>`;
+        
+        const removeBtn = card.querySelector('button');
+        if (removeBtn) removeBtn.textContent = dict.btnRemove;
 
-        const prevRel = document.getElementById(`memRel_${id}`).value;
-        const prevGen = document.getElementById(`memGender_${id}`).value;
-        const prevMar = document.getElementById(`memMarital_${id}`).value;
-        const prevLin = document.getElementById(`memLineage_${id}`).value;
-        const prevEdu = document.getElementById(`memEdu_${id}`).value;
-        const prevJob = document.getElementById(`memJob_${id}`).value;
+        const prevRel = document.getElementById(`memRel_${id}`)?.value || 'Wife';
+        const prevGen = document.getElementById(`memGender_${id}`)?.value || 'Female';
+        const prevMar = document.getElementById(`memMarital_${id}`)?.value || 'Married';
+        const prevLin = document.getElementById(`memLineage_${id}`)?.value || 'Chhippa';
+        const prevEdu = document.getElementById(`memEdu_${id}`)?.value || 'Matric';
+        const prevJob = document.getElementById(`memJob_${id}`)?.value || 'Homemaker';
 
         populateSelectOptions(`memRel_${id}`, dict.relations, prevRel);
         populateSelectOptions(`memGender_${id}`, dict.genders, prevGen);
@@ -2212,6 +2238,16 @@
         populateSelectOptions(`memLineage_${id}`, dict.lineage, prevLin);
         populateSelectOptions(`memEdu_${id}`, dict.education, prevEdu);
         populateSelectOptions(`memJob_${id}`, dict.jobs, prevJob);
+
+        const memAddrChoice = document.getElementById(`memAddrChoice_${id}`);
+        if (memAddrChoice) {
+          const currentChoice = memAddrChoice.value;
+          memAddrChoice.innerHTML = `
+            <option value="same">${dict.optSameAsHead}</option>
+            <option value="other">${dict.optOtherAddr}</option>
+          `;
+          memAddrChoice.value = currentChoice;
+        }
 
         const memCountry = document.getElementById(`memCountry_${id}`);
         if (memCountry) {
