@@ -386,8 +386,7 @@
             <label id="lblHeadCountry" class="block text-xs font-semibold text-slate-700">
               Country<span class="text-red-500 font-bold ml-1 mr-1">*</span>
             </label>
-            <select id="headCountry" required onchange="toggleManualInput(this, 'headCountryOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-amber-500 outline-none bg-white">
-            </select>
+            <select id="headCountry" required onchange="toggleManualInput(this, 'headCountryOtherWrap')" class="w-full border border-slate-300 rounded-lg px-3 text-sm focus:ring-2 focus:ring-amber-500 outline-none bg-white"></select>
             <div id="headCountryOtherWrap" class="hidden mt-2">
               <input type="text" id="headCountryOther" class="w-full border border-amber-400 rounded-lg px-3 text-xs bg-amber-50 outline-none">
             </div>
@@ -1728,6 +1727,9 @@
           if (c === prevCountry) opt.selected = true;
           countrySel.appendChild(opt);
         });
+        if (!countrySel.value && countrySel.options.length > 0) {
+          countrySel.selectedIndex = 0;
+        }
       }
 
       toggleManualInput(document.getElementById('headClan'), 'headClanOtherWrap');
@@ -1760,6 +1762,10 @@
         }
         select.appendChild(opt);
       });
+
+      if (!select.value && select.options.length > 0) {
+        select.selectedIndex = 0;
+      }
     }
 
     function toggleManualInput(selectElem, wrapId) {
@@ -1930,130 +1936,135 @@
       if (choice === 'other') wrap.classList.remove('hidden');
       else wrap.classList.add('hidden');
     }
+
     function addMemberCard(existingData = null) {
-  memberCount++;
-  const id = memberCount;
-  const dict = i18n[currentLang];
+      memberCount++;
+      const id = memberCount;
+      const dict = i18n[currentLang];
 
-  const card = document.createElement('div');
-  card.id = `memberCard_${id}`;
-  card.className = "p-4 bg-slate-50 border border-slate-200 rounded-xl relative space-y-3 transition";
+      const card = document.createElement('div');
+      card.id = `memberCard_${id}`;
+      card.className = "p-4 bg-slate-50 border border-slate-200 rounded-xl relative space-y-3 transition";
 
-  const savedMemberId = existingData && existingData.memberId ? existingData.memberId : '';
+      const savedMemberId = existingData && existingData.memberId ? existingData.memberId : '';
 
-  card.innerHTML = `
-    <input type="hidden" id="memSavedId_${id}" value="${escapeHtml(savedMemberId)}">
-    <div class="flex justify-between items-center border-b border-slate-200 pb-2">
-      <span class="text-xs font-bold text-slate-700 member-title">${dict.memberCardTitle} ${id}</span>
-      <button type="button" onclick="removeMemberCard(${id})" class="text-xs text-red-600 hover:text-red-700 font-semibold">${dict.btnRemove}</button>
-    </div>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-      <div>
-        <label class="block text-xs font-semibold text-slate-700 lbl-mem-rel">${dict.lblMemRel} *</label>
-        <select id="memRel_${id}" onchange="handleRelationChange(${id})" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white"></select>
-      </div>
-      <div>
-        <label class="block text-xs font-semibold text-slate-700 lbl-mem-name">${dict.lblMemName} *</label>
-        <input type="text" id="memName_${id}" required class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none" placeholder="Full name...">
-      </div>
-      <div>
-        <label class="block text-xs font-semibold text-slate-700 lbl-mem-dob">${dict.lblMemDOB} *</label>
-        <input type="date" id="memDOB_${id}" onchange="handleDOBChange(${id})" required class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none">
-      </div>
-      <div>
-        <label class="block text-xs font-semibold text-slate-700 lbl-mem-gender">${dict.lblMemGender} *</label>
-        <select id="memGender_${id}" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white"></select>
-      </div>
-      <div>
-        <label class="block text-xs font-semibold text-slate-700 lbl-mem-marital">${dict.lblMemMarital} *</label>
-        <select id="memMarital_${id}" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white"></select>
-      </div>
-      <div>
-        <label class="block text-xs font-semibold text-slate-700 lbl-mem-age">${dict.lblMemAge} *</label>
-        <input type="number" id="memAge_${id}" min="0" max="120" value="" placeholder="0" required class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none">
-      </div>
-      <div>
-        <label class="block text-xs font-semibold text-slate-700 lbl-mem-phone">${dict.lblMemPhoneOpt}</label>
-        <input type="tel" id="memPhone_${id}" placeholder="+92..." class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none text-left">
-      </div>
-      <div id="memWifeLineageWrap_${id}" class="hidden">
-        <label class="block text-xs font-semibold text-slate-700 lbl-mem-lineage">${dict.lblMemLineage} *</label>
-        <select id="memLineage_${id}" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white"></select>
-      </div>
-      <div>
-        <label class="block text-xs font-semibold text-slate-700 lbl-mem-edu">${dict.lblMemEdu} *</label>
-        <select id="memEdu_${id}" onchange="toggleManualInput(this, 'memEduOtherWrap_${id}')" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white"></select>
-        <div id="memEduOtherWrap_${id}" class="hidden mt-2">
-          <input type="text" id="memEduOther_${id}" class="w-full border border-amber-400 rounded-lg px-3 text-xs bg-amber-50 outline-none">
+      card.innerHTML = `
+        <input type="hidden" id="memSavedId_${id}" value="${escapeHtml(savedMemberId)}">
+        <div class="flex justify-between items-center border-b border-slate-200 pb-2">
+          <span class="text-xs font-bold text-slate-700 member-title">${dict.memberCardTitle} ${id}</span>
+          <button type="button" onclick="removeMemberCard(${id})" class="text-xs text-red-600 hover:text-red-700 font-semibold">${dict.btnRemove}</button>
         </div>
-      </div>
-      <div>
-        <label class="block text-xs font-semibold text-slate-700 lbl-mem-job">${dict.lblMemJob} *</label>
-        <select id="memJob_${id}" onchange="toggleManualInput(this, 'memJobOtherWrap_${id}')" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white"></select>
-        <div id="memJobOtherWrap_${id}" class="hidden mt-2">
-          <input type="text" id="memJobOther_${id}" class="w-full border border-amber-400 rounded-lg px-3 text-xs bg-amber-50 outline-none">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 lbl-mem-rel">${dict.lblMemRel} *</label>
+            <select id="memRel_${id}" onchange="handleRelationChange(${id})" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white"></select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 lbl-mem-name">${dict.lblMemName} *</label>
+            <input type="text" id="memName_${id}" required class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none" placeholder="Full name...">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 lbl-mem-dob">${dict.lblMemDOB} *</label>
+            <input type="date" id="memDOB_${id}" onchange="handleDOBChange(${id})" required class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 lbl-mem-gender">${dict.lblMemGender} *</label>
+            <select id="memGender_${id}" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white"></select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 lbl-mem-marital">${dict.lblMemMarital} *</label>
+            <select id="memMarital_${id}" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white"></select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 lbl-mem-age">${dict.lblMemAge} *</label>
+            <input type="number" id="memAge_${id}" min="0" max="120" value="" placeholder="0" required class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 lbl-mem-phone">${dict.lblMemPhoneOpt}</label>
+            <input type="tel" id="memPhone_${id}" placeholder="+92..." class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none text-left">
+          </div>
+          <div id="memWifeLineageWrap_${id}" class="hidden">
+            <label class="block text-xs font-semibold text-slate-700 lbl-mem-lineage">${dict.lblMemLineage} *</label>
+            <select id="memLineage_${id}" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white"></select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 lbl-mem-edu">${dict.lblMemEdu} *</label>
+            <select id="memEdu_${id}" onchange="toggleManualInput(this, 'memEduOtherWrap_${id}')" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white"></select>
+            <div id="memEduOtherWrap_${id}" class="hidden mt-2">
+              <input type="text" id="memEduOther_${id}" class="w-full border border-amber-400 rounded-lg px-3 text-xs bg-amber-50 outline-none">
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 lbl-mem-job">${dict.lblMemJob} *</label>
+            <select id="memJob_${id}" onchange="toggleManualInput(this, 'memJobOtherWrap_${id}')" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white"></select>
+            <div id="memJobOtherWrap_${id}" class="hidden mt-2">
+              <input type="text" id="memJobOther_${id}" class="w-full border border-amber-400 rounded-lg px-3 text-xs bg-amber-50 outline-none">
+            </div>
+          </div>
+          <div class="md:col-span-2">
+            <label class="block text-xs font-semibold text-slate-700 lbl-mem-addr">${dict.lblMemAddrChoice} *</label>
+            <select id="memAddrChoice_${id}" onchange="toggleMemberAddressMode(${id})" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white">
+              <option value="same">${dict.optSameAsHead}</option>
+              <option value="other">${dict.optOtherAddr}</option>
+            </select>
+          </div>
+          <div id="memOtherAddrWrap_${id}" class="hidden md:col-span-3 bg-amber-50/70 p-3 rounded-lg border border-amber-200 grid grid-cols-1 md:grid-cols-3 gap-2">
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-700 mb-0.5">${dict.lblMemCountry} *</label>
+              <select id="memCountry_${id}" class="w-full border border-slate-300 rounded px-2 py-1 text-xs bg-white"></select>
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-700 mb-0.5">${dict.lblMemCity} *</label>
+              <input type="text" id="memCity_${id}" placeholder="e.g. Lahore, Jodhpur..." class="w-full border border-slate-300 rounded px-2 py-1 text-xs bg-white">
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-700 mb-0.5">${dict.lblMemAddress} *</label>
+              <input type="text" id="memAddress_${id}" placeholder="Street, Colony, House..." class="w-full border border-slate-300 rounded px-2 py-1 text-xs bg-white">
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="md:col-span-2">
-        <label class="block text-xs font-semibold text-slate-700 lbl-mem-addr">${dict.lblMemAddrChoice} *</label>
-        <select id="memAddrChoice_${id}" onchange="toggleMemberAddressMode(${id})" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white">
-          <option value="same">${dict.optSameAsHead}</option>
-          <option value="other">${dict.optOtherAddr}</option>
-        </select>
-      </div>
-      <div id="memOtherAddrWrap_${id}" class="hidden md:col-span-3 bg-amber-50/70 p-3 rounded-lg border border-amber-200 grid grid-cols-1 md:grid-cols-3 gap-2">
-        <div>
-          <label class="block text-[11px] font-semibold text-slate-700 mb-0.5">${dict.lblMemCountry} *</label>
-          <select id="memCountry_${id}" class="w-full border border-slate-300 rounded px-2 py-1 text-xs bg-white"></select>
-        </div>
-        <div>
-          <label class="block text-[11px] font-semibold text-slate-700 mb-0.5">${dict.lblMemCity} *</label>
-          <input type="text" id="memCity_${id}" placeholder="e.g. Lahore, Jodhpur..." class="w-full border border-slate-300 rounded px-2 py-1 text-xs bg-white">
-        </div>
-        <div>
-          <label class="block text-[11px] font-semibold text-slate-700 mb-0.5">${dict.lblMemAddress} *</label>
-          <input type="text" id="memAddress_${id}" placeholder="Street, Colony, House..." class="w-full border border-slate-300 rounded px-2 py-1 text-xs bg-white">
-        </div>
-      </div>
-    </div>
-  `;
+      `;
 
-  document.getElementById('membersContainer').appendChild(card);
-  
-  populateSelectOptions(`memRel_${id}`, dict.relations, existingData?.relationKey || 'Wife');
-  populateSelectOptions(`memGender_${id}`, dict.genders, existingData?.genderKey || 'Female');
-  populateSelectOptions(`memMarital_${id}`, dict.maritalStatuses, existingData?.maritalStatusKey || 'Married');
-  populateSelectOptions(`memLineage_${id}`, dict.lineage, existingData?.lineageKey || 'Chhippa');
-  populateSelectOptions(`memEdu_${id}`, dict.education, existingData?.eduKey || 'Matric');
-  populateSelectOptions(`memJob_${id}`, dict.jobs, existingData?.jobKey || 'Homemaker');
+      document.getElementById('membersContainer').appendChild(card);
+      
+      populateSelectOptions(`memRel_${id}`, dict.relations, existingData?.relationKey || 'Wife');
+      populateSelectOptions(`memGender_${id}`, dict.genders, existingData?.genderKey || 'Female');
+      populateSelectOptions(`memMarital_${id}`, dict.maritalStatuses, existingData?.maritalStatusKey || 'Married');
+      populateSelectOptions(`memLineage_${id}`, dict.lineage, existingData?.lineageKey || 'Chhippa');
+      populateSelectOptions(`memEdu_${id}`, dict.education, existingData?.eduKey || 'Matric');
+      populateSelectOptions(`memJob_${id}`, dict.jobs, existingData?.jobKey || 'Homemaker');
 
-  const memCountry = document.getElementById(`memCountry_${id}`);
-  if (memCountry) {
-    const selC = existingData?.country || 'Pakistan';
-    allWorldCountries.forEach(c => {
-      const opt = document.createElement('option');
-      opt.value = c;
-      opt.textContent = getCountryLocalizedName(c, currentLang);
-      if (c === selC) opt.selected = true;
-      memCountry.appendChild(opt);
-    });
-  }
+      const memCountry = document.getElementById(`memCountry_${id}`);
+      if (memCountry) {
+        const selC = existingData?.country || 'Pakistan';
+        allWorldCountries.forEach(c => {
+          const opt = document.createElement('option');
+          opt.value = c;
+          opt.textContent = getCountryLocalizedName(c, currentLang);
+          if (c === selC) opt.selected = true;
+          memCountry.appendChild(opt);
+        });
+        if (!memCountry.value && memCountry.options.length > 0) {
+          memCountry.selectedIndex = 0;
+        }
+      }
 
-  if (existingData) {
-    document.getElementById(`memName_${id}`).value = existingData.name || '';
-    document.getElementById(`memAge_${id}`).value = existingData.age || '';
-    if (existingData.phone) document.getElementById(`memPhone_${id}`).value = existingData.phone;
-    if (existingData.dob) document.getElementById(`memDOB_${id}`).value = existingData.dob;
-    if (existingData.addrChoice === 'other') {
-      document.getElementById(`memAddrChoice_${id}`).value = 'other';
-      document.getElementById(`memOtherAddrWrap_${id}`).classList.remove('hidden');
-      if (existingData.city) document.getElementById(`memCity_${id}`).value = existingData.city;
-      if (existingData.address) document.getElementById(`memAddress_${id}`).value = existingData.address;
+      if (existingData) {
+        document.getElementById(`memName_${id}`).value = existingData.name || '';
+        document.getElementById(`memAge_${id}`).value = existingData.age || '';
+        if (existingData.phone) document.getElementById(`memPhone_${id}`).value = existingData.phone;
+        if (existingData.dob) document.getElementById(`memDOB_${id}`).value = existingData.dob;
+        if (existingData.addrChoice === 'other') {
+          document.getElementById(`memAddrChoice_${id}`).value = 'other';
+          document.getElementById(`memOtherAddrWrap_${id}`).classList.remove('hidden');
+          if (existingData.city) document.getElementById(`memCity_${id}`).value = existingData.city;
+          if (existingData.address) document.getElementById(`memAddress_${id}`).value = existingData.address;
+        }
+      }
+
+      handleRelationChange(id, false);
     }
-  }
 
-  handleRelationChange(id, false);
-}
     function removeMemberCard(id) {
       const card = document.getElementById(`memberCard_${id}`);
       if (card) card.remove();
@@ -2159,6 +2170,9 @@
             if (c === prevMC) opt.selected = true;
             memCountry.appendChild(opt);
           });
+          if (!memCountry.value && memCountry.options.length > 0) {
+            memCountry.selectedIndex = 0;
+          }
         }
 
         toggleManualInput(document.getElementById(`memEdu_${id}`), `memEduOtherWrap_${id}`);
@@ -3400,9 +3414,6 @@ _Dedicated by M. Waseem Sadiq Tak (Neemray Walay)_`;
     }
 
     function initApp() {
-      const form = document.getElementById('censusForm');
-      if (form) form.reset();
-
       const modal = document.getElementById('frcModal');
       if (modal) modal.classList.add('hidden');
 
