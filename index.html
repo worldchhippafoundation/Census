@@ -838,7 +838,7 @@
   </footer>
 
     <!-- COMPACT MEMORIAL TRIBUTE POPUP -->
-  <div id="memorialModal" class="fixed inset-0 z-30 flex flex-col items-center justify-start bg-black/40 backdrop-blur-[1px] p-4 pt-36" onclick="handleMemorialBackdropClick(event)">
+  <div id="memorialModal" style="margin-top: 60px;" class="fixed inset-0 ...">
     <div class="relative w-full max-w-sm bg-white rounded-2xl shadow-2xl border-2 border-amber-500/60 p-4 text-center mx-auto" onclick="event.stopPropagation()">
       
       <!-- Close Button -->
@@ -2342,12 +2342,11 @@
 
     async function handleFormSubmit(e) {
       e.preventDefault();
-
+try {
       const submitBtn = document.getElementById('btnSubmitForm');
       const originalBtnText = submitBtn.textContent;
       submitBtn.disabled = true;
       submitBtn.textContent = "Processing & Securing...";
-
       const dict = i18n[currentLang];
       const headName = document.getElementById('headName').value.trim();
       const headFather = document.getElementById('headFather').value.trim();
@@ -2359,8 +2358,6 @@
         submitBtn.disabled = false;
         submitBtn.textContent = originalBtnText;
         return;
-      }
-
       const refElder = document.getElementById('refElderName').value.trim();
       const refContact = document.getElementById('refElderContact').value.trim();
 
