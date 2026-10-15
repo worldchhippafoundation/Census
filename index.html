@@ -148,6 +148,9 @@
             <option value="ur" class="bg-slate-900 text-white">اردو (Urdu)</option>
             <option value="hi" class="bg-slate-900 text-white">हिन्दी (Hindi)</option>
           </select>
+          <button type="button" id="btnAboutUs" onclick="openAboutUsModal()" class="bg-black/60 hover:bg-black/80 text-amber-200 text-xs font-semibold px-3 py-1.5 rounded-lg border border-amber-400/40 transition shadow-inner cursor-pointer">
+  About Us
+</button>
         </div>
       </div>
 
@@ -461,8 +464,8 @@
         <div id="membersContainer" class="p-5 space-y-4"></div>
       </div>
 
-      <!-- Community Reference Verification Box -->
-      <div id="communityRefCard" class="bg-white rounded-xl shadow border border-slate-200 p-5 space-y-3">
+            <!-- Community Reference Verification Box -->
+      <div id="communityRefCard" class="hidden bg-white rounded-xl shadow border border-slate-200 p-5 space-y-3">
         <h3 id="lblRefTitle" class="text-sm font-bold text-slate-800">Community Reference Verification (Zero Cost Free Service)</h3>
         <p id="lblRefSub" class="text-xs text-slate-500">Provide a trusted Foundation Member or elder reference to expedite administrative review without SMS OTP.</p>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -523,7 +526,7 @@
             <div id="frcCertificateSheet" class="relative bg-white w-[794px] min-h-[1050px] p-6 border border-slate-300 shadow text-slate-900 overflow-hidden shrink-0 flex flex-col justify-between font-latin">
               
               <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
-                <img src="stamp.png" alt="Watermark" class="w-[420px] h-[420px] object-contain opacity-[0.05]">
+                <img src="stamp.png" alt="Watermark" class="w-[420px] h-[420px] object-contain opacity-[0.05]" style="mix-blend-mode: multiply;">
               </div>
 
 
@@ -648,11 +651,11 @@
               </div>
             </div>
 
-            <!-- Type B: Individual Identity Certificate (IIC) -->
+        <!-- Type B: Individual Identity Certificate (IIC) -->
             <div id="iicCertificateSheet" class="hidden relative bg-white w-[794px] min-h-[1050px] p-8 border border-slate-300 shadow text-slate-900 overflow-hidden shrink-0 flex flex-col justify-between font-latin">
               
               <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
-                <img src="stamp.png" alt="Watermark" class="w-[420px] h-[420px] object-contain opacity-[0.05]">
+                <img src="stamp.png" alt="Watermark" class="w-[420px] h-[420px] object-contain opacity-[0.05]" style="mix-blend-mode: multiply;">
               </div>
 
 
@@ -672,8 +675,8 @@
                     <p class="text-[10px] text-slate-500">Official Non-Governmental Community Registry Document</p>
                   </div>
                   <div class="col-span-3 flex justify-end items-center">
-                    <img src="stamp.png" alt="Official Seal" class="top-header-seal" onerror="this.src='https://via.placeholder.com/82?text=WCF+SEAL'">
-                  </div>
+  <img src="stamp.png" alt="Official Seal" class="top-header-seal" onerror="...">
+</div>
                 </div>
 
                 <div class="bg-amber-50/60 border border-amber-200 rounded-xl p-6 space-y-4 text-xs relative z-10">
@@ -729,7 +732,7 @@
                       <line x1="38" y1="115" x2="162" y2="115" stroke="#082f49" stroke-width="2.5" />
                       <text x="100" y="127" fill="#082f49" font-family="'Inter', sans-serif" font-size="9.5" text-anchor="middle" font-weight="900" letter-spacing="1.5">AUTHENTIC</text>
                     </svg>
-                    <img src="signature.png" alt="Signature" class="absolute -top-2 w-32 h-auto object-contain z-10 transform -rotate-3 scale-110 pointer-events-none" onerror="this.style.display='none'">
+                      <img src="./signature.png" alt="Signature" class="absolute -top-2 w-32 h-auto object-contain z-10 transform -rotate-3 scale-110 pointer-events-none">
                   </div>
                   <div class="w-44 border-t border-slate-700 pt-0.5 text-center mt-1">
                     <p id="iicDocSig" class="text-[8.5px] font-bold text-slate-700 leading-tight">Registrar WCF (Authorized Signature & Seal)</p>
@@ -866,7 +869,7 @@
   </footer>
 
   <!-- COMPACT MEMORIAL TRIBUTE POPUP -->
- <div id="memorialModal" onclick="handleMemorialBackdropClick(event)" class="fixed inset-x-0 bottom-0 top-20 bg-black/30 z-40 overflow-y-auto p-4 flex items-center justify-center"> 
+ <div id="memorialModal" onclick="handleMemorialBackdropClick(event)" class="fixed inset-x-0 bottom-0 top-24 bg-black/30 z-40 overflow-y-auto p-4 flex items-center justify-center"> 
     <div class="relative w-full max-w-sm bg-white rounded-2xl shadow-2xl border-2 border-amber-500/60 p-4 text-center mx-auto" onclick="event.stopPropagation()">
       
       <!-- Close Button -->
@@ -1512,11 +1515,12 @@
       }
     }
 
-    function setRegistrationMode(mode) {
+            function setRegistrationMode(mode) {
       currentRegMode = mode;
       const btnFam = document.getElementById('btnModeFamily');
       const btnInd = document.getElementById('btnModeIndividual');
       const famCard = document.getElementById('familyMembersCard');
+      const refCard = document.getElementById('communityRefCard');
       const refElderInput = document.getElementById('refElderName');
       const refContactInput = document.getElementById('refElderContact');
       const dict = i18n[currentLang];
@@ -1525,17 +1529,21 @@
         btnFam.className = "bandhani-bg text-white px-4 py-2 rounded-lg text-xs font-bold shadow";
         btnInd.className = "bg-slate-200 text-slate-800 hover:bg-slate-300 px-4 py-2 rounded-lg text-xs font-bold";
         famCard.classList.remove('hidden');
+        if (refCard) refCard.classList.add('hidden');
         document.getElementById('headCardTitle').textContent = dict.headCardTitle;
         document.getElementById('headBadge').textContent = dict.headBadge;
 
         refElderInput.required = false;
         refContactInput.required = false;
+        refElderInput.value = '';
+        refContactInput.value = '';
         document.getElementById('lblRefName').innerHTML = `${dict.lblRefName}`;
         document.getElementById('lblRefContact').innerHTML = `${dict.lblRefContact}`;
       } else {
         btnInd.className = "bandhani-bg text-white px-4 py-2 rounded-lg text-xs font-bold shadow";
         btnFam.className = "bg-slate-200 text-slate-800 hover:bg-slate-300 px-4 py-2 rounded-lg text-xs font-bold";
         famCard.classList.add('hidden');
+        if (refCard) refCard.classList.remove('hidden');
         document.getElementById('headCardTitle').textContent = dict.headCardTitleInd;
         document.getElementById('headBadge').textContent = dict.headBadgeInd;
 
@@ -1545,13 +1553,11 @@
         document.getElementById('lblRefContact').innerHTML = `${dict.lblRefContact} <span class="text-red-500 font-bold ml-1">*</span>`;
       }
     }
-
-    function checkGoldenBiographicDuplication(newFather, newDOB, newClanKey, newMembers = [], currentEditingCode = null) {
-      const allRecords = Object.values(storedFRCRecords);
+        function checkGoldenBiographicDuplication(newFather, newDOB, newClanKey, newMembers, currentEditingCode) {
       const headName = document.getElementById('headName').value.trim();
-      const rawHeadPhone = document.getElementById('headPhone').value.trim();
-      const cleanHeadPhone = rawHeadPhone.replace(/[^0-9]/g, '');
-
+      const headPhone = document.getElementById('headPhone').value.trim();
+      const cleanHeadPhone = headPhone.replace(/[^0-9]/g, '');
+      const allRecords = Object.values(storedFRCRecords);
       const hNameNorm = normalizeCleanString(headName);
       const hFatherNorm = normalizeCleanString(newFather);
       const hNameSndx = getPhoneticSoundex(headName);
@@ -1673,6 +1679,45 @@
     }
 
     function changeLanguage(lang) {
+          // Update About Us Modal Texts based on Language
+      const aboutTitle = document.getElementById('aboutModalTitle');
+      const aboutCloseBtn = document.getElementById('aboutCloseBtn');
+      const textEn = document.getElementById('aboutTextEn');
+      const textUr = document.getElementById('aboutTextUr');
+      const textHi = document.getElementById('aboutTextHi');
+      const btnAboutUs = document.getElementById('btnAboutUs');
+
+      if (btnAboutUs) {
+        if (lang === 'ur') {
+          btnAboutUs.textContent = "تعارف";
+        } else if (lang === 'hi') {
+          btnAboutUs.textContent = "परिचय";
+        } else {
+          btnAboutUs.textContent = "About Us";
+        }
+      }
+
+      if (aboutTitle) {
+        if (lang === 'ur') {
+          aboutTitle.textContent = "ورلڈ چھیپا فاؤنڈیشن کے بارے میں";
+          if (aboutCloseBtn) aboutCloseBtn.textContent = "بند کریں / Close";
+          if (textEn) textEn.classList.add('hidden');
+          if (textUr) textUr.classList.remove('hidden');
+          if (textHi) textHi.classList.add('hidden');
+        } else if (lang === 'hi') {
+          aboutTitle.textContent = "वर्ल्ड छीपा फाउंडेशन के बारे में";
+          if (aboutCloseBtn) aboutCloseBtn.textContent = "बंद करें / Close";
+          if (textEn) textEn.classList.add('hidden');
+          if (textUr) textUr.classList.add('hidden');
+          if (textHi) textHi.classList.remove('hidden');
+        } else {
+          aboutTitle.textContent = "About World Chhippa Foundation";
+          if (aboutCloseBtn) aboutCloseBtn.textContent = "Close / بند کریں";
+          if (textEn) textEn.classList.remove('hidden');
+          if (textUr) textUr.classList.add('hidden');
+          if (textHi) textHi.classList.add('hidden');
+        }
+      }
       currentLang = lang;
       const dict = i18n[lang] || i18n.en;
 
@@ -3537,6 +3582,80 @@ _Dedicated by M. Waseem Sadiq Tak (Neemray Walay)_`;
     } else {
       initApp();
     }
+  <!-- ABOUT US / DISCLAIMER MODAL -->
+<div id="aboutUsModal" onclick="handleAboutUsBackdropClick(event)" class="hidden fixed inset-0 bg-black/85 backdrop-blur-sm z-50 overflow-y-auto p-4 flex items-center justify-center font-latin" dir="ltr">
+  <div class="relative w-full max-w-md bg-white rounded-2xl shadow-2xl border-2 border-amber-500/60 p-5 text-slate-800 my-auto" onclick="event.stopPropagation()">
+    
+    <!-- Close Button -->
+    <button type="button" onclick="closeAboutUsModal()" class="absolute top-3 right-3 text-slate-400 hover:text-slate-800 text-lg font-bold w-7 h-7 rounded-full bg-slate-100 flex items-center justify-center transition cursor-pointer">
+      &times;
+    </button>
+
+    <!-- Header Icon & Title -->
+    <div class="text-center mb-3">
+      <div class="mx-auto mb-2 w-10 h-10 rounded-full bg-amber-50 border border-amber-300 flex items-center justify-center text-amber-700 shadow-sm">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
+      <h2 id="aboutModalTitle" class="text-sm font-black text-amber-900 uppercase tracking-wide">About World Chhippa Foundation</h2>
+    </div>
+
+    <!-- Content Box (English, Urdu, Hindi Multi-language support) -->
+    <div class="space-y-2 text-xs leading-relaxed text-slate-700 font-latin">
+      
+      <!-- English Text -->
+      <div id="aboutTextEn" class="space-y-2">
+        <p>This portal is exclusively created for the global census and population count of the traditional <strong>Chhippa Muslim Community</strong> (originating from Marwar, Ahmedabad, Chittor, and associated regions, identified by ancestral sub-castes/clans like Tak, Molani, Bhati, etc.).</p>
+        <p class="font-semibold text-amber-900 bg-amber-50 p-2 rounded border border-amber-200">
+          <strong>Important Notice:</strong> This foundation does not collect any donations or funds, nor does it host political news or community bulletins. It is strictly and purely a demographic census directory.
+        </p>
+      </div>
+
+      <!-- Urdu Text (Nastaliq & Right-to-Left) -->
+      <div id="aboutTextUr" class="hidden space-y-2 text-right" style="font-family: 'Noto Nastaliq Urdu', sans-serif; line-height: 2.2;" dir="rtl">
+        <p>یہ پورٹل خالصتاً اور صرف اس تاریخی اور آبائی <strong>چھیپا مسلم برادری</strong> کی مردم شماری (Census) کے لیے ہے جن کا تعلق مارواڑ، احمد آباد، چتور اور ان سے جڑے علاقوں سے ہے (اور جن کی شناخت ہمارے مخصوص گوتوں/اٹک جیسے ٹاک، مولانی، بھاٹی وغیرہ سے ہے)۔</p>
+        <p class="font-semibold text-amber-900 bg-amber-50 p-2 rounded border border-amber-200" style="line-height: 2.0;">
+          <strong>اہم وضاحت:</strong> اس فاؤنڈیشن کا مقصد کوئی چندہ یا فنڈ وصول کرنا نہیں ہے، اور نہ ہی یہاں کسی قسم کی سیاسی یا دوسری خبریں دی جاتی ہیں۔ یہ صرف اور صرف خالص مردم شماری کا پورٹل ہے۔
+        </p>
+      </div>
+
+      <!-- Hindi Text (Devanagari) -->
+      <div id="aboutTextHi" class="hidden space-y-2 font-devanagari">
+        <p>यह पोर्टल विशेष रूप से पारंपरिक <strong>छीपा मुस्लिम समुदाय</strong> (मारवाड़, अहमदाबाद, चित्तौड़ और संबंधित क्षेत्रों के मूल निवासी, जिनकी पहचान टाक, मोलानी, भाटी आदि गोत्रों से है) की वैश्विक जनगणना के लिए बनाया गया है।</p>
+        <p class="font-semibold text-amber-900 bg-amber-50 p-2 rounded border border-amber-200">
+          <strong>महत्वपूर्ण सूचना:</strong> इस फाउंडेशन का उद्देश्य कोई चंदा या फंड एकत्र करना नहीं है, और न ही यहाँ कोई राजनीतिक या अन्य समाचार दिए जाते हैं। यह केवल और केवल एक शुद्ध जनगणना पोर्टल है।
+        </p>
+      </div>
+
+    </div>
+
+    <!-- Close Action Button -->
+    <div class="mt-4 pt-2 border-t border-slate-100 text-center">
+      <button type="button" onclick="closeAboutUsModal()" id="aboutCloseBtn" class="w-full py-2 bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold rounded-xl shadow transition cursor-pointer">
+        Close / بند کریں
+      </button>
+    </div>
+
+  </div>
+</div>  
+
+// About Us Modal Functions
+function openAboutUsModal() {
+  const modal = document.getElementById('aboutUsModal');
+  if (modal) modal.classList.remove('hidden');
+}
+
+function closeAboutUsModal() {
+  const modal = document.getElementById('aboutUsModal');
+  if (modal) modal.classList.add('hidden');
+}
+
+function handleAboutUsBackdropClick(event) {
+  if (event.target.id === 'aboutUsModal') {
+    closeAboutUsModal();
+  }
+}
   </script>
 </body>
 </html>
