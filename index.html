@@ -117,6 +117,11 @@
           <p id="appSub" class="text-[11px] md:text-xs text-amber-200 leading-normal mt-0.5">World Chhippa Foundation — Global Census Portal (V.6.6.1)</p>
         </div>
       </div>
+  <!-- Official Launch Notice Banner -->
+  <div id="launchNoticeBanner" class="hidden bg-amber-700 text-white p-3 rounded-lg shadow-md my-3 flex items-center justify-between text-xs md:text-sm">
+    <span>Official Portal Launch on 4th November 2026</span>
+    <button type="button" onclick="dismissLaunchBanner()" class="bg-black/30 hover:bg-black/50 text-amber-200 px-2.5 py-1 rounded transition">Hide</button>
+  </div>
 
       <div class="flex items-center gap-3 flex-wrap">
         <div class="flex items-center gap-3 bg-black/60 border border-amber-400/50 px-3 py-1 rounded-lg text-xs font-mono shadow-inner">
@@ -516,7 +521,11 @@
             
             <!-- Type A: Family Registration Certificate (FRC) -->
             <div id="frcCertificateSheet" class="relative bg-white w-[794px] min-h-[1050px] p-6 border border-slate-300 shadow text-slate-900 overflow-hidden shrink-0 flex flex-col justify-between font-latin">
-              <div class="watermark-container">World Chhippa Foundation</div>
+              
+              <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
+                <img src="stamp.png" alt="Watermark" class="w-[420px] h-[420px] object-contain opacity-[0.05]">
+              </div>
+
 
               <div class="w-full">
                 <div id="frcDocHeader" class="border-b-2 border-slate-900 pb-2 mb-3 grid grid-cols-12 items-center relative z-10">
@@ -598,43 +607,30 @@
                     </strong>
                   </div>
 
-                  <div class="flex items-center gap-3 shrink-0">
-                    <div class="w-24 h-24 select-none shrink-0" title="Official Verified Stamp">
-                      <svg viewBox="0 0 200 200" class="w-full h-full transform -rotate-6">
+                  <div class="flex flex-col items-center shrink-0 relative w-48 pt-2">
+                    <div class="relative w-32 h-24 flex items-center justify-center select-none">
+                      <svg viewBox="0 0 200 200" class="absolute inset-0 w-full h-full transform -rotate-6 opacity-90 pointer-events-none">
                         <circle cx="100" cy="100" r="95" fill="none" stroke="#082f49" stroke-width="5" />
                         <circle cx="100" cy="100" r="88" fill="none" stroke="#082f49" stroke-width="2.2" stroke-dasharray="5,2" />
                         <circle cx="100" cy="100" r="62" fill="none" stroke="#082f49" stroke-width="3" />
-                        
                         <path id="curveTop" d="M 20,100 A 80,80 0 0,1 180,100" fill="none" />
                         <text fill="#082f49" font-family="'Inter', sans-serif" font-weight="900" font-size="11" letter-spacing="1.2">
-                          <textPath href="#curveTop" startOffset="50%" text-anchor="middle">
-                            ★ WORLD CHHIPPA FOUNDATION ★
-                          </textPath>
+                          <textPath href="#curveTop" startOffset="50%" text-anchor="middle">★ WORLD CHHIPPA FOUNDATION ★</textPath>
                         </text>
-
                         <path id="curveBottom" d="M 176,100 A 76,76 0 0,1 24,100" fill="none" />
                         <text fill="#082f49" font-family="'Inter', sans-serif" font-weight="900" font-size="9" letter-spacing="1.5">
-                          <textPath href="#curveBottom" startOffset="50%" text-anchor="middle">
-                            GLOBAL CENSUS DIRECTORY
-                          </textPath>
+                          <textPath href="#curveBottom" startOffset="50%" text-anchor="middle">GLOBAL CENSUS DIRECTORY</textPath>
                         </text>
-
                         <text x="100" y="85" fill="#082f49" font-family="'Inter', sans-serif" font-size="12" text-anchor="middle" font-weight="900">★ ★ ★</text>
                         <text x="100" y="108" fill="#082f49" font-family="'Inter', sans-serif" font-weight="900" font-size="19" text-anchor="middle" letter-spacing="2">VERIFIED</text>
                         <line x1="38" y1="115" x2="162" y2="115" stroke="#082f49" stroke-width="2.5" />
                         <text x="100" y="127" fill="#082f49" font-family="'Inter', sans-serif" font-size="9.5" text-anchor="middle" font-weight="900" letter-spacing="1.5">AUTHENTIC</text>
                       </svg>
+                      <img src="signature.png" alt="Signature" class="absolute -top-2 w-32 h-auto object-contain z-10 transform -rotate-3 scale-110 pointer-events-none" onerror="this.style.display='none'">
                     </div>
-
-                    <div class="text-center">
-                      <div class="text-slate-900 font-signature text-xl font-bold leading-tight select-none">
-                        M.Waseem Sadiq Tak
-                      </div>
-                      <div class="w-40 border-b border-slate-700 pb-0.5 mb-0.5 text-[9.5px] font-semibold text-slate-800">
-                        M.Waseem Sadiq Tak (Neemray Walay)
-                      </div>
-                      <p id="frcDocSig" class="text-[8.5px] font-bold text-slate-600">Registrar WCF (Authorized Signature & Seal)</p>
-                      <p class="text-[7.5px] text-slate-400">Authorized Digital Signature</p>
+                    <div class="w-44 border-t border-slate-700 pt-0.5 text-center mt-1">
+                      <p id="frcDocSig" class="text-[8.5px] font-bold text-slate-700 leading-tight">Registrar WCF (Authorized Signature & Seal)</p>
+                      <p class="text-[7px] text-slate-400">Authorized Digital Signature</p>
                     </div>
                   </div>
                 </div>
@@ -654,7 +650,11 @@
 
             <!-- Type B: Individual Identity Certificate (IIC) -->
             <div id="iicCertificateSheet" class="hidden relative bg-white w-[794px] min-h-[1050px] p-8 border border-slate-300 shadow text-slate-900 overflow-hidden shrink-0 flex flex-col justify-between font-latin">
-              <div class="watermark-container">COMMUNITY IDENTITY RECORD</div>
+              
+              <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
+                <img src="stamp.png" alt="Watermark" class="w-[420px] h-[420px] object-contain opacity-[0.05]">
+              </div>
+
 
               <div class="w-full">
                 <div class="border-b-2 border-amber-900 pb-3 mb-6 grid grid-cols-12 items-center relative z-10">
@@ -705,19 +705,39 @@
                 </div>
               </div>
 
-              <div class="w-full relative z-10 pt-4 border-t border-slate-300 flex justify-between items-end">
+                            <div class="w-full relative z-10 pt-4 border-t border-slate-300 flex justify-between items-end">
                 <div class="text-left text-[9px] text-slate-500 max-w-sm">
                   Dedicated by <strong>M. Waseem Sadiq Tak (Neemray Walay)</strong><br>
                   World Chhippa Foundation Global Census Registry
                 </div>
-                <div class="text-center">
-                  <div class="text-slate-900 font-signature text-xl font-bold leading-tight select-none">M.Waseem Sadiq Tak</div>
-                  <div class="w-36 border-b border-slate-700 pb-0.5 mb-0.5 text-[9px] font-semibold text-slate-800">Registrar WCF</div>
-                  <p class="text-[7.5px] text-slate-400">Certified Community Identity</p>
+                <div class="flex flex-col items-center shrink-0 relative w-48 pt-2">
+                  <div class="relative w-32 h-24 flex items-center justify-center select-none">
+                    <svg viewBox="0 0 200 200" class="absolute inset-0 w-full h-full transform -rotate-6 opacity-90 pointer-events-none">
+                      <circle cx="100" cy="100" r="95" fill="none" stroke="#082f49" stroke-width="5" />
+                      <circle cx="100" cy="100" r="88" fill="none" stroke="#082f49" stroke-width="2.2" stroke-dasharray="5,2" />
+                      <circle cx="100" cy="100" r="62" fill="none" stroke="#082f49" stroke-width="3" />
+                      <path id="curveTopIIC" d="M 20,100 A 80,80 0 0,1 180,100" fill="none" />
+                      <text fill="#082f49" font-family="'Inter', sans-serif" font-weight="900" font-size="11" letter-spacing="1.2">
+                        <textPath href="#curveTopIIC" startOffset="50%" text-anchor="middle">★ WORLD CHHIPPA FOUNDATION ★</textPath>
+                      </text>
+                      <path id="curveBottomIIC" d="M 176,100 A 76,76 0 0,1 24,100" fill="none" />
+                      <text fill="#082f49" font-family="'Inter', sans-serif" font-weight="900" font-size="9" letter-spacing="1.5">
+                        <textPath href="#curveBottomIIC" startOffset="50%" text-anchor="middle">GLOBAL CENSUS DIRECTORY</textPath>
+                      </text>
+                      <text x="100" y="85" fill="#082f49" font-family="'Inter', sans-serif" font-size="12" text-anchor="middle" font-weight="900">★ ★ ★</text>
+                      <text x="100" y="108" fill="#082f49" font-family="'Inter', sans-serif" font-weight="900" font-size="19" text-anchor="middle" letter-spacing="2">VERIFIED</text>
+                      <line x1="38" y1="115" x2="162" y2="115" stroke="#082f49" stroke-width="2.5" />
+                      <text x="100" y="127" fill="#082f49" font-family="'Inter', sans-serif" font-size="9.5" text-anchor="middle" font-weight="900" letter-spacing="1.5">AUTHENTIC</text>
+                    </svg>
+                    <img src="signature.png" alt="Signature" class="absolute -top-2 w-32 h-auto object-contain z-10 transform -rotate-3 scale-110 pointer-events-none" onerror="this.style.display='none'">
+                  </div>
+                  <div class="w-44 border-t border-slate-700 pt-0.5 text-center mt-1">
+                    <p id="iicDocSig" class="text-[8.5px] font-bold text-slate-700 leading-tight">Registrar WCF (Authorized Signature & Seal)</p>
+                    <p class="text-[7px] text-slate-400">Authorized Digital Signature</p>
+                  </div>
                 </div>
               </div>
             </div>
-
           </div>
         </div>
       </div>
@@ -898,14 +918,13 @@
 
   <script>
     const firebaseConfig = {
-      apiKey: "AIzaSyDummyKeyReplaceLaterWhenCreated",
-      authDomain: "wcf-app.firebaseapp.com",
-      databaseURL: "https://wcf-app-default-rtdb.firebaseio.com",
-      projectId: "wcf-app",
-      storageBucket: "wcf-app.appspot.com",
-      messagingSenderId: "1234567890",
-      appId: "1:1234567890:web:abcdef"
-    };
+  apiKey: "AIzaSyDnhy28IGzf_xLULYBJuiO9HHRz0lIhgGA",
+  authDomain: "chippa-census.firebaseapp.com",
+  projectId: "chippa-census",
+  storageBucket: "chippa-census.firebasestorage.app",
+  messagingSenderId: "285949399557",
+  appId: "1:285949399557:web:45bdb5ff288fdecdd3026c"
+};
 
     let auth = null;
     let db = null;
@@ -3489,6 +3508,29 @@ _Dedicated by M. Waseem Sadiq Tak (Neemray Walay)_`;
       initMemorialPopup();
       handleHeadDOBValidation();
     }
+    function checkAndShowLaunchBanner() {
+      const banner = document.getElementById('launchNoticeBanner');
+      if (!banner) return;
+      // 4 نومبر 2026 کی رات 12:00 بجے کا ٹائم (یعنی 5 نومبر 2026, 00:00:00)
+      const expiryTime = new Date(2026, 10, 5, 0, 0, 0).getTime();
+      const currentTime = new Date().getTime();
+
+      if (currentTime < expiryTime && !localStorage.getItem('WCF_BANNER_DISMISSED')) {
+        banner.classList.remove('hidden');
+      } else {
+        banner.classList.add('hidden');
+      }
+    }
+
+    function dismissLaunchBanner() {
+      const banner = document.getElementById('launchNoticeBanner');
+      if (banner) banner.classList.add('hidden');
+      localStorage.setItem('WCF_BANNER_DISMISSED', 'true');
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      checkAndShowLaunchBanner();
+    });
 
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', initApp);
