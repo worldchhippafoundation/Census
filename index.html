@@ -1679,23 +1679,56 @@
     }
 
     function changeLanguage(lang) {
-          // Update About Us Modal Texts based on Language
-      const aboutTitle = document.getElementById('aboutModalTitle');
-      const aboutCloseBtn = document.getElementById('aboutCloseBtn');
-      const textEn = document.getElementById('aboutTextEn');
-      const textUr = document.getElementById('aboutTextUr');
-      const textHi = document.getElementById('aboutTextHi');
-      const btnAboutUs = document.getElementById('btnAboutUs');
+  currentLang = lang;
+  const dict = i18n[lang] || i18n.en;
+  const isRTL = lang === 'ur';
+  document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
+  document.body.className = `bg-slate-50 text-slate-900 min-h-screen ${lang === 'hi' ? 'font-devanagari' : (lang === 'en' ? 'font-latin' : '')}`;
 
-      if (btnAboutUs) {
-        if (lang === 'ur') {
-          btnAboutUs.textContent = "تعارف";
-        } else if (lang === 'hi') {
-          btnAboutUs.textContent = "परिचय";
-        } else {
-          btnAboutUs.textContent = "About Us";
-        }
-      }
+  const setText = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
+  setText('appTitle', dict.appTitle);
+  setText('appSub', dict.appSub);
+  setText('lblLang', dict.lblLang);
+  setText('lblLiveFamilies', dict.lblLiveFamilies);
+  setText('lblLiveMembers', dict.lblLiveMembers);
+  setText('tabNewReg', dict.tabNew);
+  setText('tabSearchReg', dict.tabSearch);
+  setText('tabCityStats', dict.tabCityStats);
+  setText('btnSubmitForm', dict.btnSubmitForm);
+
+  const btnAboutUs = document.getElementById('btnAboutUs');
+  if (btnAboutUs) {
+    btnAboutUs.textContent = lang === 'ur' ? "تعارف" : (lang === 'hi' ? "परिचय" : "About Us");
+  }
+
+  const aboutTitle = document.getElementById('aboutModalTitle');
+  const aboutCloseBtn = document.getElementById('aboutCloseBtn');
+  const textEn = document.getElementById('aboutTextEn');
+  const textUr = document.getElementById('aboutTextUr');
+  const textHi = document.getElementById('aboutTextHi');
+
+  if (aboutTitle) {
+    if (lang === 'ur') {
+      aboutTitle.textContent = "ورلڈ چھیپا فاؤنڈیشن کے بارے میں";
+      if (aboutCloseBtn) aboutCloseBtn.textContent = "بند کریں / Close";
+      if (textEn) textEn.classList.add('hidden');
+      if (textUr) textUr.classList.remove('hidden');
+      if (textHi) textHi.classList.add('hidden');
+    } else if (lang === 'hi') {
+      aboutTitle.textContent = "वर्ल्ड छीपा फाउंडेशन के बारे में";
+      if (aboutCloseBtn) aboutCloseBtn.textContent = "बंद करें / Close";
+      if (textEn) textEn.classList.add('hidden');
+      if (textUr) textUr.classList.add('hidden');
+      if (textHi) textHi.classList.remove('hidden');
+    } else {
+      aboutTitle.textContent = "About World Chhippa Foundation";
+      if (aboutCloseBtn) aboutCloseBtn.textContent = "Close / بند کریں";
+      if (textEn) textEn.classList.remove('hidden');
+      if (textUr) textUr.classList.add('hidden');
+      if (textHi) textHi.classList.add('hidden');
+    }
+  }
+}
 
       if (aboutTitle) {
         if (lang === 'ur') {
