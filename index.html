@@ -532,11 +532,12 @@ Close
 <p id="frcIssueDate" class="text-[8.5px] text-slate-500 mt-0.5"></p>
 </div>
 </div>
-<div id="frcTitleSection" class="col-span-9 text-center">
+<div id="frcTitleSection" class="col-span-6 text-center">
 <span id="frcDocBadge" class="text-[9px] font-bold text-slate-800 tracking-wider uppercase block">Official Family Registration Certificate</span>
 <h2 id="frcDocOrg" class="text-lg md:text-xl font-black text-slate-900 mt-0.5">World Chhippa Foundation</h2>
 <p id="frcDocTagline" class="text-[10px] md:text-[11px] text-slate-500">Global Census Directory & Family Identity</p>
 </div>
+<div class="col-span-3"></div>
 </div>
 <!-- Head Summary Compact -->
 <div class="bg-slate-50 border border-slate-200 rounded-lg p-2.5 mb-3 text-[11px] grid grid-cols-2 gap-2 relative z-10 leading-snug">
@@ -618,13 +619,13 @@ M. WASEEM SADIQ TAK (Neemray Walay)
 </div>
 </div>
 </div>
-<!-- FIX: Standardized spelling to Bhatti & Ghachi Pura Walay -->
+<!-- FIX: Standardized spelling to Bhati & Ghachi Pura Walay -->
 <div class="bg-amber-50/90 border border-amber-200 rounded px-3 py-1.5 text-center font-latin mt-1">
 <p class="text-[9px] font-bold text-amber-950 uppercase tracking-wide">
 Thank you to all those who laid the foundation of the World Chhippa Foundation:
 </p>
 <p class="text-[8.5px] font-semibold text-slate-700 mt-0.5">
-• Subrati Deen Bhatti (Nimbi Jodhan) IND &nbsp;&nbsp;|&nbsp;&nbsp;
+• Subrati Deen Bhati (Nimbi Jodhan) IND &nbsp;&nbsp;|&nbsp;&nbsp;
 • Mrs. Saleem Rao (Ghachi Pura Walay) PAK &nbsp;&nbsp;|&nbsp;&nbsp;
 • Sufyan Tak / Safwan Tak (Neemray Walay) PAK
 </p>
@@ -646,10 +647,13 @@ Thank you to all those who laid the foundation of the World Chhippa Foundation:
 <p id="iicIssueDate" class="text-[8.5px] text-slate-500 mt-0.5"></p>
 </div>
 </div>
-<div class="col-span-9 text-center">
+<div class="col-span-6 text-center">
 <span class="text-[10px] font-bold text-amber-900 tracking-wider uppercase block">WORLD CHHIPPA FOUNDATION</span>
 <h2 class="text-xl font-black text-slate-900 mt-0.5">INDIVIDUAL IDENTITY CERTIFICATE</h2>
 <p class="text-[10px] text-slate-500">Official Non-Governmental Community Registry Document</p>
+</div>
+<div class="col-span-3"></div>
+</div>
 </div>
 </div>
 <div class="bg-amber-50/60 border border-amber-200 rounded-xl p-6 space-y-4 text-xs relative z-10">
@@ -845,9 +849,9 @@ M. WASEEM SADIQ TAK (Neemray Walay)
 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
 </svg>
 </div>
-<h2 id="memCardSubtitle" class="text-[10px] font-bold tracking-wider text-amber-800 uppercase mb-2.0">In Eternal Remembrance</h2>
-<h1 class="text-base sm:text-lg font-black text-slate-900 leading-tight" id="memPersonName">Muhammad Sadiq Tak</h1>
-<p class="text-[11px] font-semibold text-amber-700 mb-2">(Neemray Walay) • 1931 – 2021</p>
+<h2 id="memCardSubtitle" class="text-[10px] font-bold tracking-wider text-amber-800 uppercase mb-3">In Eternal Remembrance</h2>
+<h1 class="text-base sm:text-lg font-black text-slate-900 leading-normal my-2" id="memPersonName">Muhammad Sadiq Tak</h1>
+<p class="text-[11px] font-semibold text-amber-700 mb-3" dir="ltr">(Neemray Walay) • 1931 – 2021</p>
 <!-- English Text -->
 <div id="memTextEn" class="text-slate-700 text-xs leading-relaxed space-y-1.5">
 <p class="italic">"Honoring a lifetime of selfless dedication, love, and tireless service to the Chhippa Community."</p>
@@ -2685,18 +2689,23 @@ wrapper.style.transform = 'none';
 wrapper.style.marginBottom = '0px';
 const prevFont = sheet.style.fontFamily;
 const prevLetterSpacing = sheet.style.letterSpacing;
+
+// ===== FIX: Force clear word spacing & font styling for PDF export =====
 sheet.style.fontFamily = "Arial, Helvetica, sans-serif";
-sheet.style.letterSpacing = "0px";
+sheet.style.letterSpacing = "0.2px";
+sheet.style.wordSpacing = "2px";
+
 const { jsPDF } = window.jspdf;
 const canvas = await html2canvas(sheet, {
 scale: 2.5,
 useCORS: true,
 logging: false,
-letterRendering: false,
+letterRendering: true,
 windowWidth: 794
 });
 sheet.style.fontFamily = prevFont;
 sheet.style.letterSpacing = prevLetterSpacing;
+sheet.style.wordSpacing = "normal";
 wrapper.style.transform = prevTransform;
 wrapper.style.marginBottom = prevMargin;
 const imgData = canvas.toDataURL('image/jpeg', 0.98);
