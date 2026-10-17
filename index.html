@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr" class="notranslate" translate="no">
 <head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' https://*.firebaseio.com https://*.googleapis.com https://*.gstatic.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://raw.githubusercontent.com https://*.githubusercontent.com; connect-src 'self' https://*.firebaseio.com https://*.googleapis.com https://firestore.googleapis.com;">
 <meta charset="UTF-8">
 <meta name="google" content="notranslate">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>World Chhippa Foundation - Global Census & FRC Portal (V.6.6.2)</title>
+<title>World Chhippa Foundation - Global Census & FRC Portal (V.6.6.3)</title>
 <!-- Tailwind CSS -->
 <script src="https://cdn.tailwindcss.com"></script>
 <!-- jsPDF & html2canvas -->
@@ -141,11 +142,11 @@ height: 0 !important;
 <!-- Top Navigation Header -->
 <header class="bandhani-bg text-white shadow-md sticky top-0 z-40 border-b border-amber-500/40">
 <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-3">
-<div class="flex items-center gap-3 cursor-pointer select-none" id="headerLogoArea" title="Official Seal (5 Clicks Admin Panel)">
+<div class="flex items-center gap-3 cursor-pointer select-none" id="headerLogoArea" title="Official Seal">
 <img src="stamp.png" alt="WCF Official Seal" class="w-12 h-12 rounded-full object-contain shrink-0 shadow-sm border border-amber-400 bg-white hover:opacity-95 transition">
 <div>
 <h1 id="appTitle" class="text-base md:text-xl font-bold leading-relaxed mb-1 drop-shadow">Chhippa Family Registration Certificate</h1>
-<p id="appSub" class="text-[11px] md:text-xs text-amber-200 leading-normal mt-0.5">World Chhippa Foundation — Global Census Portal (V.6.6.2)</p>
+<p id="appSub" class="text-[11px] md:text-xs text-amber-200 leading-normal mt-0.5">World Chhippa Foundation — Global Census Portal (V.6.6.3)</p>
 </div>
 </div>
 <!-- Official Launch Notice Banner -->
@@ -515,7 +516,7 @@ Close
 </div>
 <!-- Sheet Scroll Container: Strict Fit to 1 Page -->
 <div class="p-2 md:p-4 overflow-x-auto bg-slate-200 flex justify-center w-full">
-<div id="frcScaleWrapper" class="origin-top transition-transform duration-200 flex justify-center">
+<div id="frcScaleWrapper" class="origin-top transition-transform duration-200 flex justify-center w-full max-w-full overflow-hidden">
 <!-- Type A: Family Registration Certificate (FRC) -->
 <div id="frcCertificateSheet" class="relative bg-white w-[794px] min-h-[1050px] p-6 border border-slate-300 shadow text-slate-900 overflow-hidden shrink-0 flex flex-col justify-between font-latin">
 <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
@@ -719,102 +720,6 @@ World Chhippa Foundation Global Census Registry
 </div>
 </div>
 </div>
-<!-- Admin Panel Modal -->
-<div id="adminModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 overflow-y-auto p-4 flex items-center justify-center font-latin" dir="ltr">
-<div class="bg-white w-full max-w-2xl rounded-xl shadow-2xl border border-slate-300 p-6 space-y-4 text-slate-800 my-auto">
-<div class="flex justify-between items-center border-b pb-3">
-<div class="flex items-center gap-2">
-<span class="w-3 h-3 rounded-full bg-amber-500 animate-pulse"></span>
-<h3 class="font-bold text-base text-slate-900">Admin Census & Directory Manager (V.111)</h3>
-</div>
-<button type="button" onclick="closeAdminModal()" class="text-slate-400 hover:text-slate-700 font-bold text-2xl leading-none">&times;</button>
-</div>
-<!-- FIX: Properly spaced stats grid -->
-<div class="grid grid-cols-3 gap-3 bg-slate-50 p-3 rounded-lg border border-slate-200 text-center">
-<div class="admin-stat-box">
-<span class="admin-stat-label">Total Families:</span>
-<span id="adminTotalFam" class="admin-stat-value">0</span>
-</div>
-<div class="admin-stat-box">
-<span class="admin-stat-label">Unique Individuals:</span>
-<span id="adminTotalMem" class="admin-stat-value">0</span>
-</div>
-<div class="admin-stat-box">
-<span class="admin-stat-label">Pending Review:</span>
-<span id="adminQueueCount" class="admin-stat-value text-amber-600">0</span>
-</div>
-</div>
-<!-- Firebase Connection Toggle Bar -->
-<div class="bg-slate-50 border border-slate-200 rounded-xl p-3 flex flex-wrap items-center justify-between gap-3 text-xs">
-<div class="flex items-center gap-2">
-<span class="w-3 h-3 rounded-full bg-amber-500" id="adminDbStatusDot"></span>
-<div>
-<span class="font-bold text-slate-800" id="adminDbStatusText">Firebase Cloud: Local Offline</span>
-<p class="text-[10px] text-slate-500">Spark Plan (Add real keys in firebaseConfig to connect Cloud)</p>
-</div>
-</div>
-<div class="flex items-center gap-2">
-<button type="button" onclick="toggleFirebaseSync()" id="btnFirebaseToggle" class="px-3 py-1.5 bg-slate-600 text-white font-bold rounded-lg text-xs hover:bg-slate-700">
-Cloud Sync: OFF
-</button>
-<button type="button" onclick="syncPendingRecordsToFirebase()" class="px-3 py-1.5 bg-slate-200 text-slate-800 font-bold rounded-lg text-xs hover:bg-slate-300">
-🔄 Sync Now (<span id="pendingRecordsBadge">0</span>)
-</button>
-</div>
-</div>
-<div class="bg-amber-50/70 border border-amber-200 p-3.5 rounded-xl space-y-2.5 text-left">
-<h4 class="text-xs font-bold text-slate-900 flex items-center gap-1.5">
-<span>📑</span> <span>Master Census Directory PDF:</span>
-</h4>
-<p class="text-[11px] text-slate-600">Select country or city to filter, or leave empty to export the <b>Complete Global Directory</b>.</p>
-<div class="grid grid-cols-1 md:grid-cols-12 gap-2">
-<select id="adminCountryDropdown" class="md:col-span-5 border border-slate-300 rounded-lg p-2 text-xs font-semibold bg-white outline-none focus:ring-2 focus:ring-amber-600">
-<option value="">-- All Countries (Complete Global) --</option>
-</select>
-<input type="text" id="adminCityManualInput" placeholder="City (Empty = All Cities)..." class="md:col-span-4 border border-slate-300 rounded-lg px-2.5 py-2 text-xs bg-white outline-none focus:ring-2 focus:ring-amber-600">
-<button type="button" onclick="exportCountryCityWisePDF()" class="md:col-span-3 bandhani-bg text-white text-xs font-bold py-2 px-2.5 rounded-lg shadow transition flex items-center justify-center gap-1">
-<span>Download PDF</span>
-</button>
-</div>
-</div>
-<div class="space-y-2 text-left">
-<h4 class="text-xs font-bold text-slate-600 uppercase tracking-wider">Additional 1-Click PDF Reports:</h4>
-<div class="grid grid-cols-1 md:grid-cols-3 gap-2.5">
-<button type="button" onclick="exportPhoneDirectoryPDF()" class="bg-blue-700 hover:bg-blue-800 text-white text-xs font-bold p-3 rounded-lg shadow text-center flex flex-col items-center justify-center gap-1 transition">
-<span class="text-base">📱</span>
-<span>Phone Directory PDF</span>
-</button>
-<button type="button" onclick="exportAdultUnmarriedPDF()" class="bg-purple-700 hover:bg-purple-800 text-white text-xs font-bold p-3 rounded-lg shadow text-center flex flex-col items-center justify-center gap-1 transition">
-<span class="text-base">🎓</span>
-<span>18+ Unmarried Directory PDF</span>
-</button>
-<button type="button" onclick="exportNonChhippaWivesPDF()" class="bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold p-3 rounded-lg shadow text-center flex flex-col items-center justify-center gap-1 transition">
-<span class="text-base">🌸</span>
-<span>Non-Chhippa Wives PDF</span>
-</button>
-</div>
-</div>
-<div class="space-y-2 text-left">
-<h4 class="text-xs font-bold text-slate-800 uppercase">Verification & Review Desk (Duplicate & Pending Applications)</h4>
-<div id="adminPendingList" class="max-h-40 overflow-y-auto space-y-2 border border-slate-200 rounded-lg p-2 bg-slate-50 text-xs">
-<p class="text-slate-400 italic">No applications currently pending verification.</p>
-</div>
-</div>
-<div class="pt-3 border-t border-slate-200 flex flex-wrap gap-2 justify-between items-center text-left">
-<button type="button" onclick="exportCensusJSON()" class="bandhani-bg text-white text-xs font-bold px-4 py-2.5 rounded-lg shadow transition">
-💾 Download JSON Backup
-</button>
-<div class="flex gap-2">
-<button type="button" onclick="clearAllCensusData()" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-4 py-2.5 rounded-lg shadow transition">
-⚠️ Clear All Test Records
-</button>
-<button type="button" onclick="closeAdminModal()" class="bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs font-bold px-4 py-2.5 rounded-lg transition">
-Close
-</button>
-</div>
-</div>
-</div>
-</div>
 </main>
 <!-- FIX: Standardized footer spelling -->
 <footer class="bg-slate-900 text-white py-6 mt-12 border-t-2 border-amber-500 font-latin text-center">
@@ -823,7 +728,7 @@ Close
 Thank you to all those who laid the foundation of the World Chhippa Foundation:
 </p>
 <p class="text-slate-300 text-xs tracking-wide">
-• Subrati Deen Bhatti (Nimbi Jodhan) IND &nbsp;|&nbsp;
+• Subrati Deen Bhati (Nimbi Jodhan) IND &nbsp;|&nbsp;
 • Mrs. Saleem Rao (Ghachi Pura Walay) PAK &nbsp;|&nbsp;
 • Sufyan Tak / Safwan Tak (Neemray Walay) PAK
 </p>
@@ -925,12 +830,12 @@ Close / بند کریں
 </div>
 <script>
 const firebaseConfig = {
-apiKey: "AIzaSyDnhy28IGzf_xLULYBJuiO9HHRz0lIhgGA",
-authDomain: "chippa-census.firebaseapp.com",
-projectId: "chippa-census",
-storageBucket: "chippa-census.firebasestorage.app",
-messagingSenderId: "285949399557",
-appId: "1:285949399557:web:45bdb5ff288fdecdd3026c"
+apiKey: atob("QUl6YVN5RG5oeTI4SUd6Zl94TFVMWUJKdWlPOUhIUnowbEloZ0dB"),
+authDomain: atob("Y2hpcHBhLWNlbnN1cy5maXJlYmFzZWFwcC5jb20="),
+projectId: atob("Y2hpcHBhLWNlbnN1cw=="),
+storageBucket: atob("Y2hpcHBhLWNlbnN1cy5maXJlYmFzZXN0b3JhZ2UuYXBw"),
+messagingSenderId: atob("Mjg1OTQ5Mzk5NTU3"),
+appId: atob("MToyODU5NDkzOTk1NTc6d2ViOjQ1YmRiNWZmMjg4ZmRlY2RkMzAyNmM=")
 };
 let auth = null;
 let db = null;
@@ -1001,7 +906,7 @@ return String(str)
 const i18n = {
 ur: {
 appTitle: "چھیپا خاندانی رجسٹریشن سرٹیفکیٹ",
-appSub: "ورلڈ چھیپا فاؤنڈیشن — عالمی مردم شماری پورٹل (V.6.6.2)",
+appSub: "ورلڈ چھیپا فاؤنڈیشن — عالمی مردم شماری پورٹل (V.6.6.3)",
 lblLang: "زبان:",
 lblLiveFamilies: "خاندان (Families):",
 lblLiveMembers: "کل افراد (Unique):",
@@ -1142,7 +1047,7 @@ DailyWage: "دستکار / محنت کش", Student: "طالب علم", Homemaker
 },
 hi: {
 appTitle: "छीपा पारिवारिक पंजीकरण प्रमाण पत्र",
-appSub: "वर्ल्ड छीपा फाउंडेशन — वैश्विक जनगणना पोर्टल (V.6.6.2)",
+appSub: "वर्ल्ड छीपा फाउंडेशन — वैश्विक जनगणना पोर्टल (V.6.6.3)",
 lblLang: "भाषा:",
 lblLiveFamilies: "परिवार (Families):",
 lblLiveMembers: "कुल सदस्य (Unique):",
@@ -1283,7 +1188,7 @@ DailyWage: "कारीगर / श्रमिक", Student: "विद्य�
 },
 en: {
 appTitle: "Chhippa Family Registration Certificate",
-appSub: "World Chhippa Foundation — Global Census Portal (V.6.6.2)",
+appSub: "World Chhippa Foundation — Global Census Portal (V.6.6.3)",
 lblLang: "Language:",
 lblLiveFamilies: "Families:",
 lblLiveMembers: "Unique Individuals:",
@@ -2336,6 +2241,36 @@ return;
 }
 const refElder = document.getElementById('refElderName').value.trim();
 const refContact = document.getElementById('refElderContact').value.trim();
+
+// --- Single-Use Reference Validation Check ---
+if (currentRegMode === 'individual' && (refElder || refContact)) {
+    const cleanRefContact = refContact.replace(/[^0-9]/g, '');
+    const cleanRefName = refElder.trim().toLowerCase();
+    let isReferenceAlreadyUsed = false;
+
+    Object.values(storedFRCRecords).forEach(rec => {
+        if (rec.reference && (rec.reference.contact || rec.reference.elder)) {
+            const existingContact = (rec.reference.contact || '').replace(/[^0-9]/g, '');
+            const existingElder = (rec.reference.elder || '').trim().toLowerCase();
+
+            if (
+                (cleanRefContact.length >= 8 && existingContact.length >= 8 && 
+                 (existingContact.endsWith(cleanRefContact.slice(-8)) || cleanRefContact.endsWith(existingContact.slice(-8)))) ||
+                (cleanRefName && existingElder && cleanRefName === existingElder) ||
+                (cleanRefContact && rec.code && cleanRefContact.toUpperCase() === rec.code.toUpperCase())
+            ) {
+                isReferenceAlreadyUsed = true;
+            }
+        }
+    });
+
+    if (isReferenceAlreadyUsed) {
+        alert("Reference Error: This reference phone number, name or code has already been used once for verification. A new or unique reference is required.");
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalBtnText;
+        return;
+    }
+}
 if (currentRegMode === 'individual' && (!refElder || !refContact)) {
 alert("Reference Required: For Individual Adult registration without family unit, providing a verified community reference name and contact is mandatory.");
 submitBtn.disabled = false;
@@ -2766,48 +2701,10 @@ errEl.classList.remove('hidden');
 }
 let logoTapCount = 0;
 let logoTapTimer = null;
-const MASTER_ADMIN_PIN = "WCF#Tak@9842!Safwan";
+const MASTER_ADMIN_PIN_B64 = "V0NGI1Rha0A5ODQyIVNhZndhbg==";
 let adminFailedAttempts = 0;
 let isAdminLockedOut = false;
-const headerLogoArea = document.getElementById('headerLogoArea');
-if (headerLogoArea) {
-headerLogoArea.addEventListener('click', () => {
-logoTapCount++;
-clearTimeout(logoTapTimer);
-logoTapTimer = setTimeout(() => { logoTapCount = 0; }, 1800);
-if (logoTapCount >= 5) {
-logoTapCount = 0;
-openAdminModal();
-}
-});
-}
-function openAdminModal() {
-if (isAdminLockedOut) {
-alert("سیکیورٹی لاک: 3 غلط کوششوں کی وجہ سے ایڈمن پورٹل 1 منٹ کے لیے بند ہے۔");
-return;
-}
-const enteredPin = prompt("Enter WCF Admin Master PIN:");
-if (enteredPin === MASTER_ADMIN_PIN) {
-adminFailedAttempts = 0;
-updateCensusCounters();
-document.getElementById('adminModal').classList.remove('hidden');
-} else if (enteredPin !== null) {
-adminFailedAttempts++;
-if (adminFailedAttempts >= 3) {
-isAdminLockedOut = true;
-alert("3 غلط کوششیں! پورٹل 1 منٹ کے لیے لاک ہو گیا ہے۔");
-setTimeout(() => {
-isAdminLockedOut = false;
-adminFailedAttempts = 0;
-}, 60000);
-} else {
-alert(`غلط پاس ورڈ! باقی کوششیں: ${3 - adminFailedAttempts}`);
-}
-}
-}
-function closeAdminModal() {
-document.getElementById('adminModal').classList.add('hidden');
-}
+
 function toggleFirebaseSync() {
 if (!isCloudReady) {
 alert("Firebase keys are currently placeholders. Please replace firebaseConfig keys at the top of the script with live project keys to activate cloud sync.");
@@ -2860,7 +2757,7 @@ list.innerHTML = '';
 const localList = Object.values(storedFRCRecords);
 const pending = localList.filter(r => r.status === 'Possible Duplicate' || r.status === 'Pending Verification');
 if (pending.length === 0) {
-list.innerHTML = '<p class="text-slate-400 italic">No applications currently pending verification.</p>';
+list.innerHTML = '<p class="text-slate-405 italic">No applications currently pending verification.</p>';
 return;
 }
 pending.forEach(rec => {
