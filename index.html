@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr" class="notranslate" translate="no">
 <head>
-<meta http-equiv="Content-Security-Policy" content="default-src 'self' https://*.firebaseio.com https://*.googleapis.com https://*.gstatic.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://raw.githubusercontent.com https://*.githubusercontent.com; connect-src 'self' https://*.firebaseio.com https://*.googleapis.com https://firestore.googleapis.com;">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' https://*.firebaseio.com https://*.googleapis.com https://*.gstatic.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://*.firebaseio.com https://*.googleapis.com https://firestore.googleapis.com;">
 <meta charset="UTF-8">
 <meta name="google" content="notranslate">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>World Chhippa Foundation - Global Census & FRC Portal (V.6.6.3)</title>
+<title>World Chhippa Foundation - Global Census & FRC Portal (V.6.6.2)</title>
 <!-- Tailwind CSS -->
 <script src="https://cdn.tailwindcss.com"></script>
 <!-- jsPDF & html2canvas -->
@@ -146,7 +146,7 @@ height: 0 !important;
 <img src="stamp.png" alt="WCF Official Seal" class="w-12 h-12 rounded-full object-contain shrink-0 shadow-sm border border-amber-400 bg-white hover:opacity-95 transition">
 <div>
 <h1 id="appTitle" class="text-base md:text-xl font-bold leading-relaxed mb-1 drop-shadow">Chhippa Family Registration Certificate</h1>
-<p id="appSub" class="text-[11px] md:text-xs text-amber-200 leading-normal mt-0.5">World Chhippa Foundation — Global Census Portal (V.6.6.3)</p>
+<p id="appSub" class="text-[11px] md:text-xs text-amber-200 leading-normal mt-0.5">World Chhippa Foundation — Global Census Portal (V.6.6.2)</p>
 </div>
 </div>
 <!-- Official Launch Notice Banner -->
@@ -728,7 +728,7 @@ World Chhippa Foundation Global Census Registry
 Thank you to all those who laid the foundation of the World Chhippa Foundation:
 </p>
 <p class="text-slate-300 text-xs tracking-wide">
-• Subrati Deen Bhati (Nimbi Jodhan) IND &nbsp;|&nbsp;
+• Subrati Deen Bhatti (Nimbi Jodhan) IND &nbsp;|&nbsp;
 • Mrs. Saleem Rao (Ghachi Pura Walay) PAK &nbsp;|&nbsp;
 • Sufyan Tak / Safwan Tak (Neemray Walay) PAK
 </p>
@@ -906,7 +906,7 @@ return String(str)
 const i18n = {
 ur: {
 appTitle: "چھیپا خاندانی رجسٹریشن سرٹیفکیٹ",
-appSub: "ورلڈ چھیپا فاؤنڈیشن — عالمی مردم شماری پورٹل (V.6.6.3)",
+appSub: "ورلڈ چھیپا فاؤنڈیشن — عالمی مردم شماری پورٹل (V.6.6.2)",
 lblLang: "زبان:",
 lblLiveFamilies: "خاندان (Families):",
 lblLiveMembers: "کل افراد (Unique):",
@@ -1047,7 +1047,7 @@ DailyWage: "دستکار / محنت کش", Student: "طالب علم", Homemaker
 },
 hi: {
 appTitle: "छीपा पारिवारिक पंजीकरण प्रमाण पत्र",
-appSub: "वर्ल्ड छीपा फाउंडेशन — वैश्विक जनगणना पोर्टल (V.6.6.3)",
+appSub: "वर्ल्ड छीपा फाउंडेशन — वैश्विक जनगणना पोर्टल (V.6.6.2)",
 lblLang: "भाषा:",
 lblLiveFamilies: "परिवार (Families):",
 lblLiveMembers: "कुल सदस्य (Unique):",
@@ -1188,7 +1188,7 @@ DailyWage: "कारीगर / श्रमिक", Student: "विद्य�
 },
 en: {
 appTitle: "Chhippa Family Registration Certificate",
-appSub: "World Chhippa Foundation — Global Census Portal (V.6.6.3)",
+appSub: "World Chhippa Foundation — Global Census Portal (V.6.6.2)",
 lblLang: "Language:",
 lblLiveFamilies: "Families:",
 lblLiveMembers: "Unique Individuals:",
@@ -2271,6 +2271,8 @@ if (currentRegMode === 'individual' && (refElder || refContact)) {
         return;
     }
 }
+const refElder = document.getElementById('refElderName').value.trim();
+const refContact = document.getElementById('refElderContact').value.trim();
 if (currentRegMode === 'individual' && (!refElder || !refContact)) {
 alert("Reference Required: For Individual Adult registration without family unit, providing a verified community reference name and contact is mandatory.");
 submitBtn.disabled = false;
@@ -2409,7 +2411,10 @@ localStorage.setItem('WCF_CENSUS_RECORDS', JSON.stringify(storedFRCRecords));
 } catch (err) {}
 if (isCloudReady && db && isSyncEnabled) {
 try {
-db.collection('census_registrations').doc(certCode).set(record);
+const trialExpiryTime = new Date('2026-11-03T00:00:00').getTime();
+const currentTime = new Date().getTime();
+let targetCol = (currentTime < trialExpiryTime) ? 'trial_census_registrations' : 'census_registrations';
+db.collection(targetCol).doc(certCode).set(record);
 } catch(e) {
 console.warn("Firestore sync queue buffer:", e);
 }
@@ -2757,7 +2762,7 @@ list.innerHTML = '';
 const localList = Object.values(storedFRCRecords);
 const pending = localList.filter(r => r.status === 'Possible Duplicate' || r.status === 'Pending Verification');
 if (pending.length === 0) {
-list.innerHTML = '<p class="text-slate-405 italic">No applications currently pending verification.</p>';
+list.innerHTML = '<p class="text-slate-400 italic">No applications currently pending verification.</p>';
 return;
 }
 pending.forEach(rec => {
