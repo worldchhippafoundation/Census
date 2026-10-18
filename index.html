@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr" class="notranslate" translate="no">
 <head>
-<meta http-equiv="Content-Security-Policy" content="default-src 'self' https://*.firebaseio.com https://*.googleapis.com https://*.gstatic.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://*.firebaseio.com https://*.googleapis.com https://firestore.googleapis.com;">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' https://*.firebaseio.com https://*.googleapis.com https://*.gstatic.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://raw.githubusercontent.com https://*.githubusercontent.com; connect-src 'self' https://*.firebaseio.com https://*.googleapis.com https://firestore.googleapis.com;">
 <meta charset="UTF-8">
 <meta name="google" content="notranslate">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>World Chhippa Foundation - Global Census & FRC Portal (V.6.6.2)</title>
+<title>World Chhippa Foundation - Global Census & FRC Portal (V.6.6.3)</title>
 <!-- Tailwind CSS -->
 <script src="https://cdn.tailwindcss.com"></script>
 <!-- jsPDF & html2canvas -->
@@ -146,7 +146,7 @@ height: 0 !important;
 <img src="stamp.png" alt="WCF Official Seal" class="w-12 h-12 rounded-full object-contain shrink-0 shadow-sm border border-amber-400 bg-white hover:opacity-95 transition">
 <div>
 <h1 id="appTitle" class="text-base md:text-xl font-bold leading-relaxed mb-1 drop-shadow">Chhippa Family Registration Certificate</h1>
-<p id="appSub" class="text-[11px] md:text-xs text-amber-200 leading-normal mt-0.5">World Chhippa Foundation — Global Census Portal (V.6.6.2)</p>
+<p id="appSub" class="text-[11px] md:text-xs text-amber-200 leading-normal mt-0.5">World Chhippa Foundation — Global Census Portal (V.6.6.3)</p>
 </div>
 </div>
 <!-- Official Launch Notice Banner -->
@@ -516,7 +516,7 @@ Close
 </div>
 <!-- Sheet Scroll Container: Strict Fit to 1 Page -->
 <div class="p-2 md:p-4 overflow-x-auto bg-slate-200 flex justify-center w-full">
-<div id="frcScaleWrapper" class="origin-top transition-transform duration-200 flex justify-center w-[794px] shrink-0 mx-auto">
+<div id="frcScaleWrapper" class="origin-top transition-transform duration-200 flex justify-center w-full max-w-full overflow-hidden">
 <!-- Type A: Family Registration Certificate (FRC) -->
 <div id="frcCertificateSheet" class="relative bg-white w-[794px] min-h-[1050px] p-6 border border-slate-300 shadow text-slate-900 overflow-hidden shrink-0 flex flex-col justify-between font-latin">
 <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
@@ -728,7 +728,7 @@ World Chhippa Foundation Global Census Registry
 Thank you to all those who laid the foundation of the World Chhippa Foundation:
 </p>
 <p class="text-slate-300 text-xs tracking-wide">
-• Subrati Deen Bhatti (Nimbi Jodhan) IND &nbsp;|&nbsp;
+• Subrati Deen Bhati (Nimbi Jodhan) IND &nbsp;|&nbsp;
 • Mrs. Saleem Rao (Ghachi Pura Walay) PAK &nbsp;|&nbsp;
 • Sufyan Tak / Safwan Tak (Neemray Walay) PAK
 </p>
@@ -755,7 +755,7 @@ M. WASEEM SADIQ TAK (Neemray Walay)
 </div>
 <h2 id="memCardSubtitle" class="text-[10px] font-bold tracking-wider text-amber-800 uppercase mb-3">In Eternal Remembrance</h2>
 <h1 class="text-base sm:text-lg font-black text-slate-900 leading-normal my-2" id="memPersonName">Muhammad Sadiq Tak</h1>
-<p id="memDates" class="text-[11px] font-semibold text-amber-700 mb-3" dir="ltr">(Neemray Walay) • 1931 – 2021</p>
+<p class="text-[11px] font-semibold text-amber-700 mb-3" dir="ltr">(Neemray Walay) • 1931 – 2021</p>
 <!-- English Text -->
 <div id="memTextEn" class="text-slate-700 text-xs leading-relaxed space-y-1.5">
 <p class="italic">"Honoring a lifetime of selfless dedication, love, and tireless service to the Chhippa Community."</p>
@@ -769,10 +769,10 @@ M. WASEEM SADIQ TAK (Neemray Walay)
 <p class="text-[10px] font-bold text-amber-900">پیش کش: ٹاک فیملی (نیمڑے والے)</p>
 </div>
 <!-- Hindi Text -->
-<div id="memTextHi" class="hidden text-slate-700 text-xs leading-relaxed space-y-1.5 font-devanagari" style="line-height: 2.1; word-spacing: 1.5px;">
-<p class="italic">"छीपा बिरादरी के लिए बे-लौस ख़िदमत, मोहब्बत और लाज़वाल क़ुर्बानियों की याद में।"</p>
-<p class="text-[10px] font-semibold text-slate-500">अल्लाह तआला उन्हें जन्नत-उल-फ़िरदौस में आला मक़ाम अता फ़रमाए। आमीन।</p>
-<p class="text-[10px] font-bold text-amber-900">पेश-कश: टाक फ़ैमिली (नीमड़े वाले)-कराची, पाकिस्तान</p>
+<div id="memTextHi" class="hidden text-slate-700 text-xs leading-relaxed space-y-1.5 font-devanagari">
+<p>"छीपा बिरादरी के लिए निस्वार्थ सेवा, समर्पण और अटूट प्रेम को समर्पित।"</p>
+<p class="text-[10px] font-semibold text-slate-500">अल्लाह उन्हें जन्नत-उल-फ़िरदौस में आला मक़ाम अता फरमाए। आमीन।</p>
+<p class="text-[10px] font-bold text-amber-900">समर्पित: टाक परिवार (नीमड़े वाले)</p>
 </div>
 <!-- Enter Button -->
 <div class="mt-3 pt-2 border-t border-slate-100">
@@ -906,7 +906,7 @@ return String(str)
 const i18n = {
 ur: {
 appTitle: "چھیپا خاندانی رجسٹریشن سرٹیفکیٹ",
-appSub: "ورلڈ چھیپا فاؤنڈیشن — عالمی مردم شماری پورٹل (V.6.6.2)",
+appSub: "ورلڈ چھیپا فاؤنڈیشن — عالمی مردم شماری پورٹل (V.6.6.3)",
 lblLang: "زبان:",
 lblLiveFamilies: "خاندان (Families):",
 lblLiveMembers: "کل افراد (Unique):",
@@ -1047,7 +1047,7 @@ DailyWage: "دستکار / محنت کش", Student: "طالب علم", Homemaker
 },
 hi: {
 appTitle: "छीपा पारिवारिक पंजीकरण प्रमाण पत्र",
-appSub: "वर्ल्ड छीपा फाउंडेशन — वैश्विक जनगणना पोर्टल (V.6.6.2)",
+appSub: "वर्ल्ड छीपा फाउंडेशन — वैश्विक जनगणना पोर्टल (V.6.6.3)",
 lblLang: "भाषा:",
 lblLiveFamilies: "परिवार (Families):",
 lblLiveMembers: "कुल सदस्य (Unique):",
@@ -1188,7 +1188,7 @@ DailyWage: "कारीगर / श्रमिक", Student: "विद्य�
 },
 en: {
 appTitle: "Chhippa Family Registration Certificate",
-appSub: "World Chhippa Foundation — Global Census Portal (V.6.6.2)",
+appSub: "World Chhippa Foundation — Global Census Portal (V.6.6.3)",
 lblLang: "Language:",
 lblLiveFamilies: "Families:",
 lblLiveMembers: "Unique Individuals:",
@@ -1709,9 +1709,8 @@ if (textHi) textHi.classList.add('hidden');
 }
 const memorial = document.getElementById('memorialModal');
 if (memorial) {
-updateMemorialPopupLanguage(lang);
 memorial.classList.remove('hidden');
-memorial.style.setProperty('display', 'flex', 'important');
+updateMemorialPopupLanguage(lang);
 if (typeof memorialTimer !== 'undefined' && memorialTimer) clearTimeout(memorialTimer);
 memorialTimer = setTimeout(() => {
 closeMemorialModal();
@@ -1767,7 +1766,6 @@ tabNewBtn.className = activeCls;
 tabSearchBtn.className = inactiveCls;
 tabCityBtn.className = inactiveCls;
 formEl.reset();
-handleHeadDOBValidation();
 const memCont = document.getElementById('membersContainer');
 if (memCont) memCont.innerHTML = '';
 if (typeof memberCount !== 'undefined') memberCount = 0;
@@ -2273,8 +2271,6 @@ if (currentRegMode === 'individual' && (refElder || refContact)) {
         return;
     }
 }
-const refElder = document.getElementById('refElderName').value.trim();
-const refContact = document.getElementById('refElderContact').value.trim();
 if (currentRegMode === 'individual' && (!refElder || !refContact)) {
 alert("Reference Required: For Individual Adult registration without family unit, providing a verified community reference name and contact is mandatory.");
 submitBtn.disabled = false;
@@ -2413,10 +2409,7 @@ localStorage.setItem('WCF_CENSUS_RECORDS', JSON.stringify(storedFRCRecords));
 } catch (err) {}
 if (isCloudReady && db && isSyncEnabled) {
 try {
-const trialExpiryTime = new Date('2026-11-03T00:00:00').getTime();
-const currentTime = new Date().getTime();
-let targetCol = (currentTime < trialExpiryTime) ? 'trial_census_registrations' : 'census_registrations';
-db.collection(targetCol).doc(certCode).set(record);
+db.collection('census_registrations').doc(certCode).set(record);
 } catch(e) {
 console.warn("Firestore sync queue buffer:", e);
 }
@@ -2764,7 +2757,7 @@ list.innerHTML = '';
 const localList = Object.values(storedFRCRecords);
 const pending = localList.filter(r => r.status === 'Possible Duplicate' || r.status === 'Pending Verification');
 if (pending.length === 0) {
-list.innerHTML = '<p class="text-slate-400 italic">No applications currently pending verification.</p>';
+list.innerHTML = '<p class="text-slate-405 italic">No applications currently pending verification.</p>';
 return;
 }
 pending.forEach(rec => {
@@ -3115,19 +3108,14 @@ alert("Database has been successfully cleared.");
 }
 }
 function initMemorialPopup() {
+if (memorialHasBeenClosed) return;
 const modal = document.getElementById('memorialModal');
 if (!modal) return;
 modal.classList.remove('hidden');
-modal.style.setProperty('display', 'flex', 'important');
 updateMemorialPopupLanguage(currentLang || 'en');
-const btnEnter = document.getElementById('btnMemEnter');
-if (btnEnter) btnEnter.onclick = closeMemorialModal;
-const btnCross = document.getElementById('memCloseCross');
-if (btnCross) btnCross.onclick = closeMemorialModal;
 if (memorialTimer) clearTimeout(memorialTimer);
 memorialTimer = setTimeout(() => {
 closeMemorialModal();
-}, 10000);
 }, 10000);
 }
 function updateMemorialPopupLanguage(lang) {
@@ -3164,17 +3152,11 @@ closeMemorialModal();
 }
 }
 function closeMemorialModal() {
-    const modal = document.getElementById('memorialModal');
-    if (modal) {
-        modal.classList.add('hidden');
-        modal.style.setProperty('display', 'none', 'important');
-    }
-    }
-    if (typeof memorialTimer !== 'undefined' && memorialTimer) {
-        clearTimeout(memorialTimer);
-    }
+const modal = document.getElementById('memorialModal');
+if (modal) modal.classList.add('hidden');
+if (memorialTimer) clearTimeout(memorialTimer);
+memorialHasBeenClosed = true;
 }
-window.closeMemorialModal = closeMemorialModal;
 function initApp() {
 const modal = document.getElementById('frcModal');
 if (modal) modal.classList.add('hidden');
