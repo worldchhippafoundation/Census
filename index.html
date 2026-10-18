@@ -3164,12 +3164,14 @@ closeMemorialModal();
 }
 }
 function closeMemorialModal() {
-const modal = document.getElementById('memorialModal');
-if (modal) {
-modal.classList.add('hidden');
-modal.style.setProperty('display', 'none', 'important');
-}
-if (typeof memorialTimer !== 'undefined' && memorialTimer) clearTimeout(memorialTimer);
+    const modal = document.getElementById('memorialModal');
+    if (modal) {
+        modal.classList.add('hidden');
+        modal.style.setProperty('display', 'none', 'important');
+    }
+    if (typeof memorialTimer !== 'undefined' && memorialTimer) {
+        clearTimeout(memorialTimer);
+    }
 }
 window.closeMemorialModal = closeMemorialModal;
 function initApp() {
