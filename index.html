@@ -516,7 +516,7 @@ Close
 </div>
 <!-- Sheet Scroll Container: Strict Fit to 1 Page -->
 <div class="p-2 md:p-4 overflow-x-auto bg-slate-200 flex justify-center w-full">
-<div id="frcScaleWrapper" class="origin-top transition-transform duration-200 flex justify-center w-full max-w-full overflow-hidden">
+<div id="frcScaleWrapper" class="origin-top transition-transform duration-200 flex justify-center w-[794px] shrink-0 mx-auto">
 <!-- Type A: Family Registration Certificate (FRC) -->
 <div id="frcCertificateSheet" class="relative bg-white w-[794px] min-h-[1050px] p-6 border border-slate-300 shadow text-slate-900 overflow-hidden shrink-0 flex flex-col justify-between font-latin">
 <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
@@ -755,7 +755,7 @@ M. WASEEM SADIQ TAK (Neemray Walay)
 </div>
 <h2 id="memCardSubtitle" class="text-[10px] font-bold tracking-wider text-amber-800 uppercase mb-3">In Eternal Remembrance</h2>
 <h1 class="text-base sm:text-lg font-black text-slate-900 leading-normal my-2" id="memPersonName">Muhammad Sadiq Tak</h1>
-<p class="text-[11px] font-semibold text-amber-700 mb-3" dir="ltr">(Neemray Walay) • 1931 – 2021</p>
+<p id="memDates" class="text-[11px] font-semibold text-amber-700 mb-3" dir="ltr">(Neemray Walay) • 1931 – 2021</p>
 <!-- English Text -->
 <div id="memTextEn" class="text-slate-700 text-xs leading-relaxed space-y-1.5">
 <p class="italic">"Honoring a lifetime of selfless dedication, love, and tireless service to the Chhippa Community."</p>
@@ -769,10 +769,10 @@ M. WASEEM SADIQ TAK (Neemray Walay)
 <p class="text-[10px] font-bold text-amber-900">پیش کش: ٹاک فیملی (نیمڑے والے)</p>
 </div>
 <!-- Hindi Text -->
-<div id="memTextHi" class="hidden text-slate-700 text-xs leading-relaxed space-y-1.5 font-devanagari">
-<p>"छीपा बिरादरी के लिए निस्वार्थ सेवा, समर्पण और अटूट प्रेम को समर्पित।"</p>
-<p class="text-[10px] font-semibold text-slate-500">अल्लाह उन्हें जन्नत-उल-फ़िरदौस में आला मक़ाम अता फरमाए। आमीन।</p>
-<p class="text-[10px] font-bold text-amber-900">समर्पित: टाक परिवार (नीमड़े वाले)</p>
+<div id="memTextHi" class="hidden text-slate-700 text-xs leading-relaxed space-y-1.5 font-devanagari" style="line-height: 2.1; word-spacing: 1.5px;">
+<p class="italic">"छीपा बिरादरी के लिए बे-लौस ख़िदमत, मोहब्बत और लाज़वाल क़ुर्बानियों की याद में।"</p>
+<p class="text-[10px] font-semibold text-slate-500">अल्लाह तआला उन्हें जन्नत-उल-फ़िरदौस में आला मक़ाम अता फ़रमाए। आमीन।</p>
+<p class="text-[10px] font-bold text-amber-900">पेश-कश: टाक फ़ैमिली (नीमड़े वाले)-कराची, पाकिस्तान</p>
 </div>
 <!-- Enter Button -->
 <div class="mt-3 pt-2 border-t border-slate-100">
@@ -1709,12 +1709,14 @@ if (textHi) textHi.classList.add('hidden');
 }
 const memorial = document.getElementById('memorialModal');
 if (memorial) {
-memorial.classList.remove('hidden');
 updateMemorialPopupLanguage(lang);
+if (!memorialHasBeenClosed) {
+memorial.classList.remove('hidden');
 if (typeof memorialTimer !== 'undefined' && memorialTimer) clearTimeout(memorialTimer);
 memorialTimer = setTimeout(() => {
 closeMemorialModal();
 }, 10000);
+}
 }
 }
 function populateSelectOptions(selectId, optionsObj, defaultValue) {
@@ -1766,6 +1768,7 @@ tabNewBtn.className = activeCls;
 tabSearchBtn.className = inactiveCls;
 tabCityBtn.className = inactiveCls;
 formEl.reset();
+handleHeadDOBValidation();
 const memCont = document.getElementById('membersContainer');
 if (memCont) memCont.innerHTML = '';
 if (typeof memberCount !== 'undefined') memberCount = 0;
@@ -3117,10 +3120,16 @@ if (memorialHasBeenClosed) return;
 const modal = document.getElementById('memorialModal');
 if (!modal) return;
 modal.classList.remove('hidden');
+modal.style.display = 'flex';
 updateMemorialPopupLanguage(currentLang || 'en');
+const btnEnter = document.getElementById('btnMemEnter');
+if (btnEnter) btnEnter.onclick = closeMemorialModal;
+const btnCross = document.getElementById('memCloseCross');
+if (btnCross) btnCross.onclick = closeMemorialModal;
 if (memorialTimer) clearTimeout(memorialTimer);
 memorialTimer = setTimeout(() => {
 closeMemorialModal();
+}, 10000);
 }, 10000);
 }
 function updateMemorialPopupLanguage(lang) {
@@ -3129,6 +3138,7 @@ const tUr = document.getElementById('memTextUr');
 const tHi = document.getElementById('memTextHi');
 const subTitle = document.getElementById('memCardSubtitle');
 const pName = document.getElementById('memPersonName');
+const memDates = document.getElementById('memDates');
 const btnEnter = document.getElementById('btnMemEnter');
 if (!tEn || !tUr || !tHi) return;
 tEn.classList.add('hidden');
@@ -3138,7 +3148,21 @@ if (lang === 'ur') {
 tUr.classList.remove('hidden');
 if (subTitle) subTitle.textContent = "یادِ رفتگاں و خراجِ عقیدت";
 if (pName) pName.textContent = "محمد صادق ٹاک";
+if (memDates) memDates.textContent = "(نیمڑے والے) • 1931 – 2021";
 if (btnEnter) btnEnter.textContent = "پورٹل میں داخل ہوں / آمین";
+} else if (lang === 'hi') {
+tHi.classList.remove('hidden');
+if (subTitle) subTitle.textContent = "याद-ए-रफ़्तगाँ व ख़िराज-ए-अक़ीदत";
+if (pName) pName.textContent = "मोहम्मद सादिक़ टाक";
+if (memDates) memDates.textContent = "(नीमड़े वाले) • 1931– 2021";
+if (btnEnter) btnEnter.textContent = "पोर्टल में प्रवेश करें / आमीन";
+} else {
+tEn.classList.remove('hidden');
+if (subTitle) subTitle.textContent = "In Eternal Remembrance";
+if (pName) pName.textContent = "Muhammad Sadiq Tak";
+if (memDates) memDates.textContent = "(Neemray Walay) • 1931 – 2021";
+if (btnEnter) btnEnter.textContent = "Enter Portal / آمین";
+}
 } else if (lang === 'hi') {
 tHi.classList.remove('hidden');
 if (subTitle) subTitle.textContent = "अमर स्मृति एवं सादर श्रद्धांजलि";
@@ -3158,10 +3182,14 @@ closeMemorialModal();
 }
 function closeMemorialModal() {
 const modal = document.getElementById('memorialModal');
-if (modal) modal.classList.add('hidden');
-if (memorialTimer) clearTimeout(memorialTimer);
+if (modal) {
+modal.classList.add('hidden');
+modal.style.display = 'none';
+}
+if (typeof memorialTimer !== 'undefined' && memorialTimer) clearTimeout(memorialTimer);
 memorialHasBeenClosed = true;
 }
+window.closeMemorialModal = closeMemorialModal;
 function initApp() {
 const modal = document.getElementById('frcModal');
 if (modal) modal.classList.add('hidden');
