@@ -1710,13 +1710,12 @@ if (textHi) textHi.classList.add('hidden');
 const memorial = document.getElementById('memorialModal');
 if (memorial) {
 updateMemorialPopupLanguage(lang);
-if (!memorialHasBeenClosed) {
 memorial.classList.remove('hidden');
+memorial.style.setProperty('display', 'flex', 'important');
 if (typeof memorialTimer !== 'undefined' && memorialTimer) clearTimeout(memorialTimer);
 memorialTimer = setTimeout(() => {
 closeMemorialModal();
 }, 10000);
-}
 }
 }
 function populateSelectOptions(selectId, optionsObj, defaultValue) {
@@ -3116,11 +3115,10 @@ alert("Database has been successfully cleared.");
 }
 }
 function initMemorialPopup() {
-if (memorialHasBeenClosed) return;
 const modal = document.getElementById('memorialModal');
 if (!modal) return;
 modal.classList.remove('hidden');
-modal.style.display = 'flex';
+modal.style.setProperty('display', 'flex', 'important');
 updateMemorialPopupLanguage(currentLang || 'en');
 const btnEnter = document.getElementById('btnMemEnter');
 if (btnEnter) btnEnter.onclick = closeMemorialModal;
@@ -3138,7 +3136,6 @@ const tUr = document.getElementById('memTextUr');
 const tHi = document.getElementById('memTextHi');
 const subTitle = document.getElementById('memCardSubtitle');
 const pName = document.getElementById('memPersonName');
-const memDates = document.getElementById('memDates');
 const btnEnter = document.getElementById('btnMemEnter');
 if (!tEn || !tUr || !tHi) return;
 tEn.classList.add('hidden');
@@ -3148,21 +3145,7 @@ if (lang === 'ur') {
 tUr.classList.remove('hidden');
 if (subTitle) subTitle.textContent = "یادِ رفتگاں و خراجِ عقیدت";
 if (pName) pName.textContent = "محمد صادق ٹاک";
-if (memDates) memDates.textContent = "(نیمڑے والے) • 1931 – 2021";
 if (btnEnter) btnEnter.textContent = "پورٹل میں داخل ہوں / آمین";
-} else if (lang === 'hi') {
-tHi.classList.remove('hidden');
-if (subTitle) subTitle.textContent = "याद-ए-रफ़्तगाँ व ख़िराज-ए-अक़ीदत";
-if (pName) pName.textContent = "मोहम्मद सादिक़ टाक";
-if (memDates) memDates.textContent = "(नीमड़े वाले) • 1931– 2021";
-if (btnEnter) btnEnter.textContent = "पोर्टल में प्रवेश करें / आमीन";
-} else {
-tEn.classList.remove('hidden');
-if (subTitle) subTitle.textContent = "In Eternal Remembrance";
-if (pName) pName.textContent = "Muhammad Sadiq Tak";
-if (memDates) memDates.textContent = "(Neemray Walay) • 1931 – 2021";
-if (btnEnter) btnEnter.textContent = "Enter Portal / آمین";
-}
 } else if (lang === 'hi') {
 tHi.classList.remove('hidden');
 if (subTitle) subTitle.textContent = "अमर स्मृति एवं सादर श्रद्धांजलि";
@@ -3184,10 +3167,9 @@ function closeMemorialModal() {
 const modal = document.getElementById('memorialModal');
 if (modal) {
 modal.classList.add('hidden');
-modal.style.display = 'none';
+modal.style.setProperty('display', 'none', 'important');
 }
 if (typeof memorialTimer !== 'undefined' && memorialTimer) clearTimeout(memorialTimer);
-memorialHasBeenClosed = true;
 }
 window.closeMemorialModal = closeMemorialModal;
 function initApp() {
