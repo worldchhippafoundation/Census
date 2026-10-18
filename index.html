@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr" class="notranslate" translate="no">
 <head>
-<meta http-equiv="Content-Security-Policy" content="default-src 'self' https://*.firebaseio.com https://*.googleapis.com https://*.gstatic.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://*.githubusercontent.com; connect-src 'self' https://*.googleapis.com https://firestore.googleapis.com;
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' https://*.firebaseio.com https://*.googleapis.com https://*.gstatic.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://*.firebaseio.com https://*.googleapis.com https://firestore.googleapis.com;">
 <meta charset="UTF-8">
 <meta name="google" content="notranslate">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>World Chhippa Foundation - Global Census & FRC Portal (V.6.6.3)</title>
+<title>World Chhippa Foundation - Global Census & FRC Portal (V.6.6.2)</title>
 <!-- Tailwind CSS -->
 <script src="https://cdn.tailwindcss.com"></script>
 <!-- jsPDF & html2canvas -->
@@ -146,7 +146,7 @@ height: 0 !important;
 <img src="stamp.png" alt="WCF Official Seal" class="w-12 h-12 rounded-full object-contain shrink-0 shadow-sm border border-amber-400 bg-white hover:opacity-95 transition">
 <div>
 <h1 id="appTitle" class="text-base md:text-xl font-bold leading-relaxed mb-1 drop-shadow">Chhippa Family Registration Certificate</h1>
-<p id="appSub" class="text-[11px] md:text-xs text-amber-200 leading-normal mt-0.5">World Chhippa Foundation — Global Census Portal (V.6.6.3)</p>
+<p id="appSub" class="text-[11px] md:text-xs text-amber-200 leading-normal mt-0.5">World Chhippa Foundation — Global Census Portal (V.6.6.2)</p>
 </div>
 </div>
 <!-- Official Launch Notice Banner -->
@@ -175,7 +175,7 @@ height: 0 !important;
 <label id="lblLang" class="text-xs text-amber-200 !mb-0 !leading-none font-semibold">Language:</label>
 <select id="langSelect" onchange="changeLanguage(this.value)" class="!bg-black/80 !text-amber-200 text-xs md:text-sm font-semibold rounded px-2.5 py-1 outline-none cursor-pointer border border-amber-400/50">
 <option value="en" selected class="bg-slate-900 text-white">English</option>
-<option value="ur" class="bg-slate-900 text-white">Urdu</option>
+<option value="ur" class="bg-slate-900 text-white">اردو (Urdu)</option>
 <option value="hi" class="bg-slate-900 text-white">हिन्दी (Hindi)</option>
 </select>
 <button type="button" id="btnAboutUs" onclick="openAboutUsModal()" class="bg-black/60 hover:bg-black/80 text-amber-200 text-xs font-semibold px-3 py-1.5 rounded-lg border border-amber-400/40 transition shadow-inner cursor-pointer">
@@ -225,7 +225,7 @@ Verify & Access
 <p id="cityStatsErrorMsg" class="text-xs text-red-600 font-semibold hidden"></p>
 <div id="popFilterArea" class="hidden pt-3 border-t border-slate-200 space-y-3">
 <div class="bg-amber-50 border border-amber-200 p-3 rounded-lg flex flex-wrap items-center justify-between gap-2 text-xs">
-<span id="popAccessNoticeText" class="text-amber-950 font-semibold">Access Granted: You can view census records for any country or city.</span>
+<span id="popAccessNoticeText" class="text-amber-950 font-semibold">✅ Access Granted: You can view census records for any country or city.</span>
 <button type="button" id="btnPopLock" onclick="lockPopulationDashboard()" class="text-slate-500 hover:text-red-600 font-bold underline">Lock</button>
 </div>
 <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -268,7 +268,7 @@ Update Statistics
 <span id="statResFemales" class="text-lg font-black text-purple-700">0</span>
 </div>
 <div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm col-span-2 md:col-span-1">
-<span class="text-[10px] text-slate-500 block" id="lblStatMinors">Minors (<18):</span>
+<span class="text-[10px] text-slate-500 block" id="lblStatMinors">Minors (&lt;18):</span>
 <span id="statResMinors" class="text-lg font-black text-amber-600">0</span>
 </div>
 </div>
@@ -512,11 +512,11 @@ Close
 <div class="flex items-center justify-center gap-2 text-amber-900 font-bold text-sm">
 <span>⏳</span> <span id="lblPendingNoticeTitle">Application Under Verification</span>
 </div>
-<p id="lblPendingNoticeBody" class="text-xs text-amber-800 mt-1">Your registration application has been submitted successfully with permanent Member ID. The official certificate download and QR verification will become active once administrative or community verification is completed
+<p id="lblPendingNoticeBody" class="text-xs text-amber-800 mt-1">Your registration application has been submitted successfully with permanent Member ID. The official certificate download and QR verification will become active once administrative or community verification is completed.</p>
 </div>
 <!-- Sheet Scroll Container: Strict Fit to 1 Page -->
 <div class="p-2 md:p-4 overflow-x-auto bg-slate-200 flex justify-center w-full">
-<div id="frcScaleWrapper" class="origin-top transition-transform duration-200 flex justify-center w-[794px] shrink-0 mx-auto">
+<div id="frcScaleWrapper" class="origin-top transition-transform duration-200 flex justify-center w-full max-w-full overflow-hidden">
 <!-- Type A: Family Registration Certificate (FRC) -->
 <div id="frcCertificateSheet" class="relative bg-white w-[794px] min-h-[1050px] p-6 border border-slate-300 shadow text-slate-900 overflow-hidden shrink-0 flex flex-col justify-between font-latin">
 <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
@@ -558,7 +558,7 @@ Close
 <!-- Table with Sequential IDs & Integrated Member Address -->
 <div class="relative z-10 mb-2 w-full">
 <table class="w-full border-collapse border border-slate-300 text-[10px]">
-<head>
+<thead>
 <tr class="bg-slate-800 text-white text-center font-bold">
 <th class="border border-slate-300 p-1 w-5">#</th>
 <th id="thUID" class="border border-slate-300 p-1">Member ID</th>
@@ -600,7 +600,7 @@ M. WASEEM SADIQ TAK (Neemray Walay)
 <circle cx="100" cy="100" r="62" fill="none" stroke="#082f49" stroke-width="3" />
 <path id="curveTop" d="M 25,100 A 75,75 0 0,1 175,100" fill="none" />
 <text fill="#082f49" font-family="'Inter', sans-serif" font-weight="900" font-size="11.5" letter-spacing="1.2">
-<textPath href="#curveTop" startOffset="50%" text-anchor="middle">★ WORLD CHIPPA FOUNDATION ★</textPath>
+<textPath href="#curveTop" startOffset="50%" text-anchor="middle">★ WORLD CHHIPPA FOUNDATION ★</textPath>
 </text>
 <path id="curveBottom" d="M 172,100 A 72,72 0 0,1 28,100" fill="none" />
 <text fill="#082f49" font-family="'Inter', sans-serif" font-weight="900" font-size="9.5" letter-spacing="1.5">
@@ -625,8 +625,8 @@ M. WASEEM SADIQ TAK (Neemray Walay)
 Thank you to all those who laid the foundation of the World Chhippa Foundation:
 </p>
 <p class="text-[8.5px] font-semibold text-slate-700 mt-0.5">
-• Subrati Deen Bhati (Nimbi Jodhan) IND   |  
-• Mrs. Saleem Rao (Ghachi Pura Walay) PAK   |  
+• Subrati Deen Bhati (Nimbi Jodhan) IND &nbsp;&nbsp;|&nbsp;&nbsp;
+• Mrs. Saleem Rao (Ghachi Pura Walay) PAK &nbsp;&nbsp;|&nbsp;&nbsp;
 • Sufyan Tak / Safwan Tak (Neemray Walay) PAK
 </p>
 </div>
@@ -679,12 +679,12 @@ Thank you to all those who laid the foundation of the World Chhippa Foundation:
 </div>
 </div>
 <div class="mt-6 p-4 bg-slate-50 border border-slate-200 rounded-lg text-[10.5px] text-slate-600 relative z-10 leading-relaxed">
-<strong>Notice & Declaration:</strong> This certificate recognizes the individual's registered identity within the World Chhippa Foundation Census based on the applicant's self-declaration. The WCF Board reserves the right to revoke/cancel it in case of false information or ineligible lineage.
+<strong>Notice & Declaration:</strong> This certificate recognizes the individual's registered identity within the World Chhippa Foundation Census based on applicant's self-declaration. The WCF Board reserves the right to revoke/cancel it in case of false information or ineligible lineage.
 </div>
 </div>
 <div class="w-full relative z-10 pt-4 border-t border-slate-300 flex justify-between items-end">
 <div class="text-left text-[9px] text-slate-500 max-w-sm">
-Dedicated by <strong>M. Waseem Sadiq Tak (Neemray Walay).
+Dedicated by <strong>M. Waseem Sadiq Tak (Neemray Walay)</strong><br>
 World Chhippa Foundation Global Census Registry
 </div>
 <div class="flex flex-col items-center shrink-0 relative w-48 pt-2">
@@ -695,7 +695,7 @@ World Chhippa Foundation Global Census Registry
 <circle cx="100" cy="100" r="62" fill="none" stroke="#082f49" stroke-width="3" />
 <path id="curveTopIIC" d="M 20,100 A 80,80 0 0,1 180,100" fill="none" />
 <text fill="#082f49" font-family="'Inter', sans-serif" font-weight="900" font-size="11" letter-spacing="1.2">
-<textPath href="#curveTopIIC" startOffset="50%" text-anchor="middle">★ WORLD CHIPPA FOUNDATION ★</textPath>
+<textPath href="#curveTopIIC" startOffset="50%" text-anchor="middle">★ WORLD CHHIPPA FOUNDATION ★</textPath>
 </text>
 <path id="curveBottomIIC" d="M 24,100 A 76,76 0 0,0 176,100" fill="none" />
 <text fill="#082f49" font-family="'Inter', sans-serif" font-weight="900" font-size="9" letter-spacing="1.5">
@@ -728,8 +728,8 @@ World Chhippa Foundation Global Census Registry
 Thank you to all those who laid the foundation of the World Chhippa Foundation:
 </p>
 <p class="text-slate-300 text-xs tracking-wide">
-• Subrati Deen Bhati (Nimbi Jodhan) IND  | 
-• Mrs. Saleem Rao (Ghachi Pura Walay) PAK  | 
+• Subrati Deen Bhatti (Nimbi Jodhan) IND &nbsp;|&nbsp;
+• Mrs. Saleem Rao (Ghachi Pura Walay) PAK &nbsp;|&nbsp;
 • Sufyan Tak / Safwan Tak (Neemray Walay) PAK
 </p>
 <div class="pt-2 border-t border-slate-700 max-w-lg mx-auto">
@@ -745,7 +745,7 @@ M. WASEEM SADIQ TAK (Neemray Walay)
 <div class="relative w-full max-w-sm bg-white rounded-2xl shadow-2xl border-2 border-amber-500/60 p-4 text-center mx-auto" onclick="event.stopPropagation()">
 <!-- Close Button -->
 <button type="button" id="memCloseCross" onclick="closeMemorialModal()" class="absolute top-2.5 right-2.5 text-slate-400 hover:text-slate-800 text-lg font-bold w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center transition cursor-pointer">
-×
+&times;
 </button>
 <!-- Golden Icon -->
 <div class="mx-auto mb-1.5 w-9 h-9 rounded-full bg-amber-50 border border-amber-300 flex items-center justify-center text-amber-700 shadow-sm">
@@ -755,7 +755,7 @@ M. WASEEM SADIQ TAK (Neemray Walay)
 </div>
 <h2 id="memCardSubtitle" class="text-[10px] font-bold tracking-wider text-amber-800 uppercase mb-3">In Eternal Remembrance</h2>
 <h1 class="text-base sm:text-lg font-black text-slate-900 leading-normal my-2" id="memPersonName">Muhammad Sadiq Tak</h1>
-<p id="memDates" class="text-[11px] font-semibold text-amber-700 mb-3" dir="ltr">(Neemray Walay) • 1931 – 2021</p>
+<p class="text-[11px] font-semibold text-amber-700 mb-3" dir="ltr">(Neemray Walay) • 1931 – 2021</p>
 <!-- English Text -->
 <div id="memTextEn" class="text-slate-700 text-xs leading-relaxed space-y-1.5">
 <p class="italic">"Honoring a lifetime of selfless dedication, love, and tireless service to the Chhippa Community."</p>
@@ -764,20 +764,20 @@ M. WASEEM SADIQ TAK (Neemray Walay)
 </div>
 <!-- Urdu Text -->
 <div id="memTextUr" class="hidden text-slate-800 text-xs leading-loose space-y-1" dir="rtl">
-<p>"In memory of the selfless service, love, and eternal sacrifices for the Chhipa community."</p>
-<p class="text-[10px] font-bold text-slate-600">May Allah Almighty grant them the highest place in Paradise. Ameen.</p>
-<p class="text-[10px] font-bold text-amber-900">Offer: Talk Family (Nimde Wale)</p>
+<p>"چھیپا برادری کے لیے بے لوث خدمت، محبت اور لازوال قربانیوں کی یاد میں۔"</p>
+<p class="text-[10px] font-bold text-slate-600">اللہ تعالیٰ انہیں جنت الفردوس میں اعلیٰ مقام عطا فرمائے۔ آمین۔</p>
+<p class="text-[10px] font-bold text-amber-900">پیش کش: ٹاک فیملی (نیمڑے والے)</p>
 </div>
 <!-- Hindi Text -->
-<div id="memTextHi" class="hidden text-slate-700 text-xs leading-relaxed space-y-1.5 font-devanagari" style="line-height: 2.1; word-spacing: 1.5px;">
-</p
-<p class="text-[10px] font-semibold text-slate-500">May Allah grant him the highest position in Jannat-ul-Firdous. Amen.</p>
-<p class="text-[10px] font-bold text-amber-900">Presentation: Tak Family (Neemde Wale)-Karachi, Pakistan</p>
+<div id="memTextHi" class="hidden text-slate-700 text-xs leading-relaxed space-y-1.5 font-devanagari">
+<p>"छीपा बिरादरी के लिए निस्वार्थ सेवा, समर्पण और अटूट प्रेम को समर्पित।"</p>
+<p class="text-[10px] font-semibold text-slate-500">अल्लाह उन्हें जन्नत-उल-फ़िरदौस में आला मक़ाम अता फरमाए। आमीन।</p>
+<p class="text-[10px] font-bold text-amber-900">समर्पित: टाक परिवार (नीमड़े वाले)</p>
 </div>
 <!-- Enter Button -->
 <div class="mt-3 pt-2 border-t border-slate-100">
 <button type="button" id="btnMemEnter" onclick="closeMemorialModal()" class="w-full py-1.5 bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white text-xs font-bold rounded-xl shadow transition transform active:scale-95 cursor-pointer">
-Enter Portal / Amen
+Enter Portal / آمین
 </button>
 <p class="text-[9px] text-slate-400 mt-1">Closes automatically in 10 seconds or click Enter</p>
 </div>
@@ -788,7 +788,7 @@ Enter Portal / Amen
 <div class="relative w-full max-w-md bg-white rounded-2xl shadow-2xl border-2 border-amber-500/60 p-5 text-slate-800 my-auto" onclick="event.stopPropagation()">
 <!-- Close Button -->
 <button type="button" onclick="closeAboutUsModal()" class="absolute top-3 right-3 text-slate-400 hover:text-slate-800 text-lg font-bold w-7 h-7 rounded-full bg-slate-100 flex items-center justify-center transition cursor-pointer">
-×
+&times;
 </button>
 <!-- Header Icon & Title -->
 <div class="text-center mb-3">
@@ -808,22 +808,22 @@ Enter Portal / Amen
 </p>
 </div>
 <div id="aboutTextUr" class="hidden space-y-2 text-right" style="font-family: 'Noto Nastaliq Urdu', sans-serif; line-height: 2.2;" dir="rtl">
-<p>This portal is purely and solely for the census of the historical and ancestral <strong>Chhipa Muslim community</strong> who belong to Marwar, Ahmedabad, Chittor and adjoining areas (and who are identified with our specific castes/castes like Tak, Mulani, Bhati etc.).</p>
+<p>یہ پورٹل خالصتاً اور صرف اس تاریخی اور آبائی <strong>چھیپا مسلم برادری</strong> کی مردم شماری (Census) کے لیے ہے جن کا تعلق مارواڑ، احمد آباد، چتور اور ان سے جڑے علاقوں سے ہے (اور جن کی شناخت ہمارے مخصوص گوتوں/اٹک جیسے ٹاک، مولانی، بھاٹی وغیرہ سے ہے)۔</p>
 <p class="font-semibold text-amber-900 bg-amber-50 p-2 rounded border border-amber-200" style="line-height: 2.0;">
-<strong>Important clarification:</strong> This foundation does not aim to receive any donations or funds, nor does it provide any kind of political or other news. This is a purely census portal.
+<strong>اہم وضاحت:</strong> اس فاؤنڈیشن کا مقصد کوئی چندہ یا فنڈ وصول کرنا نہیں ہے، اور نہ ہی یہاں کسی قسم کی سیاسی یا دوسری خبریں دی جاتی ہیں۔ یہ صرف اور صرف خالص مردم شماری کا پورٹل ہے۔
 </p>
 </div>
 <div id="aboutTextHi" class="hidden space-y-2 font-devanagari">
-<p>This portal is specially designed for the global census of the traditional <strong>Hidden Muslim community</strong> (natives of Marwar, Ahmedabad, Chittor and related areas, identified with Tak, Molani, Bhati etc. gotras).</p>
+<p>यह पोर्टल विशेष रूप से पारंपरिक <strong>छीपा मुस्लिम समुदाय</strong> (मारवाड़, अहमदाबाद, चित्तौड़ और संबंधित क्षेत्रों के मूल निवासी, जिनकी पहचान टाक, मोलानी, भाटी आदि गोत्रों से है) की वैश्विक जनगणना के लिए बनाया गया है।</p>
 <p class="font-semibold text-amber-900 bg-amber-50 p-2 rounded border border-amber-200">
-<strong>Important notice:</strong> This foundation does not aim to collect donations or funds, nor does it provide any political or other news. This is only and only a pure census portal.
+<strong>महत्वपूर्ण सूचना:</strong> इस फाउंडेशन का उद्देश्य कोई चंदा या फंड एकत्र करना नहीं है, और न ही यहाँ कोई राजनीतिक या अन्य समाचार दिए जाते हैं। यह केवल और केवल एक शुद्ध जनगणना पोर्टल है।
 </p>
 </div>
 </div>
 <!-- Close Action Button -->
 <div class="mt-4 pt-2 border-t border-slate-100 text-center">
 <button type="button" onclick="closeAboutUsModal()" id="aboutCloseBtn" class="w-full py-2 bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold rounded-xl shadow transition cursor-pointer">
-Close
+Close / بند کریں
 </button>
 </div>
 </div>
@@ -832,7 +832,7 @@ Close
 const firebaseConfig = {
 apiKey: atob("QUl6YVN5RG5oeTI4SUd6Zl94TFVMWUJKdWlPOUhIUnowbEloZ0dB"),
 authDomain: atob("Y2hpcHBhLWNlbnN1cy5maXJlYmFzZWFwcC5jb20="),
-projectId: atob("Y2hpcHBhLWNlbnN1cw==");
+projectId: atob("Y2hpcHBhLWNlbnN1cw=="),
 storageBucket: atob("Y2hpcHBhLWNlbnN1cy5maXJlYmFzZXN0b3JhZ2UuYXBw"),
 messagingSenderId: atob("Mjg1OTQ5Mzk5NTU3"),
 appId: atob("MToyODU5NDkzOTk1NTc6d2ViOjQ1YmRiNWZmMjg4ZmRlY2RkMzAyNmM=")
@@ -871,20 +871,20 @@ const allWorldCountries = [
 ];
 const countriesI18n = {
 ur: {
-"Pakistan": "Pakistan", "India": "India", "Morocco": "Morocco", "United Arab Emirates": "United Arab Emirates", "Saudi Arabia": "Saudi Arabia",
-"Afghanistan": "Afghanistan", "Algeria": "Algeria", "Australia": "Australia", "Bahrain": "Bahrain", "Bangladesh": "Bangladesh",
-"Canada": "Canada", "China": "China", "Egypt": "Egypt", "France": "France", "Germany": "Germany", "Indonesia": "Indonesia",
-"Iran": "Iran", "Iraq": "Iraq", "Italy": "Italy", "Japan": "Japan", "Jordan": "Jordan", "Kuwait": "Kuwait", "Malaysia": "Malaysia",
-"Oman": "Oman", "Qatar": "Qatar", "South Africa": "South Africa", "Spain": "Spain", "Turkey": "Turkey", "United Kingdom": "United Kingdom",
-"United States": "United States", "Other": "Other"
+"Pakistan": "پاکستان", "India": "بھارت", "Morocco": "مراکش", "United Arab Emirates": "متحدہ عرب امارات", "Saudi Arabia": "سعودی عرب",
+"Afghanistan": "افغانستان", "Algeria": "الجزائر", "Australia": "آسٹریلیا", "Bahrain": "بحرین", "Bangladesh": "بنگلہ دیش",
+"Canada": "کینیڈا", "China": "چین", "Egypt": "مصر", "France": "فرانس", "Germany": "جرمنی", "Indonesia": "انڈونیشیا",
+"Iran": "ایران", "Iraq": "عراق", "Italy": "اٹلی", "Japan": "جاپان", "Jordan": "اردن", "Kuwait": "کویت", "Malaysia": "ملائیشیا",
+"Oman": "عمان", "Qatar": "قطر", "South Africa": "جنوبی افریقہ", "Spain": "اسپین", "Turkey": "ترکی", "United Kingdom": "برطانیہ",
+"United States": "امریکہ", "Other": "دیگر"
 },
 hi: {
-"Pakistan": "Pakistan", "India": "Bharat", "Morocco": "Morocco", "United Arab Emirates": "United Arab Emirates", "Saudi Arabia": "Saudi Arabia",
-"Afghanistan": "Afghanistan", "Algeria": "Algeria", "Australia": "Australia", "Bahrain": "Bahrain", "Bangladesh": "Bangladesh",
-"Canada": "Канада", "China": "Чин", "Egypt": "Миср", "France": "France", "Germany": "Germany", "Indonesia": "Indonesia",
-"Iran": "Iran", "Iraq": "Iraq", "Italy": "Italy", "Japan": "Japan", "Jordan": "Jordan", "Kuwait": "كووايت", "Malaysia": "Malaysia",
-"Oman": "Oman", "Qatar": "Qatar", "South Africa": "South Africa", "Spain": "Spain", "Turkey": "Turkey", "United Kingdom": "United Kingdom",
-"United States": "United States", "Other": "Other"
+"Pakistan": "पाकिस्तान", "India": "भारत", "Morocco": "मोरक्को", "United Arab Emirates": "संयुक्त अरब अमीरात", "Saudi Arabia": "सऊदी अरब",
+"Afghanistan": "अफ़ग़ानिस्तान", "Algeria": "अल्जीरिया", "Australia": "ऑस्ट्रेलिया", "Bahrain": "बहरीन", "Bangladesh": "बांग्लादेश",
+"Canada": "कनाडा", "China": "चीन", "Egypt": "मिस्र", "France": "फ़्रांस", "Germany": "जर्मनी", "Indonesia": "इंडोनेशिया",
+"Iran": "ईरान", "Iraq": "इराक", "Italy": "इटली", "Japan": "जापान", "Jordan": "जॉर्डन", "Kuwait": "कुवैत", "Malaysia": "मलेशिया",
+"Oman": "ओमान", "Qatar": "क़तर", "South Africa": "दक्षिण अफ्रीका", "Spain": "स्पेन", "Turkey": "तुर्की", "United Kingdom": "यूनाइटेड किंगडम",
+"United States": "संयुक्त राज्य अमेरिका", "Other": "अन्य"
 }
 };
 function getCountryLocalizedName(countryKey, lang) {
@@ -897,298 +897,298 @@ return countryKey;
 function escapeHtml(str) {
 if (!str) return '';
 return String(str)
-.replace(/&/g, '&')
-.replace(/</g, '<')
-.replace(/>/g, '>')
-.replace(/"/g, '"')
-.replace(/'/g, ''');
+.replace(/&/g, '&amp;')
+.replace(/</g, '&lt;')
+.replace(/>/g, '&gt;')
+.replace(/"/g, '&quot;')
+.replace(/'/g, '&#39;');
 }
 const i18n = {
 ur: {
-appTitle: "Hidden Family Registration Certificate",
-appSub: "World Census Foundation — Global Census Portal (V.6.6.3)",
-lblLang: "Language:",
-lblLiveFamilies: "Families:",
-lblLiveMembers: "Total Members (Unique):",
-tabNew: "+ new entry census",
-tabSearch: "Reprint/Search Certificate",
-tabCityStats: "City-wise population dashboard",
-lblRegModeHeading: "Select registration method:",
-lblRegModeDesc: "Select 'Family Unit' for a Family Registration Certificate (FRC), or 'Individual Identity Certificate (IIC)' for a single adult.",
-btnModeFamily: "Family Unit (FRC)",
-btnModeIndividual: "Individual (IIC)",
-searchTitle: "Search for Family Registration Certificate (FRC) or IIC",
-searchSub: "Enter your verified FRC / IIC code, member ID or registered mobile number",
-searchPlaceholder: "Enter certificate code, member ID or mobile number...",
-btnSearchAction: "Search and Print",
-btnSearchAddMember: "+ Add new member",
-cityStatsTitle: "Community Population Dashboard (Global Search)",
-cityStatsSub: "Enter your verified FRC / IIC code or mobile number to gain access",
-popAuthPlaceholder: "Enter certificate code or mobile phone number...",
-btnCityStatsVerify: "Verify and access",
-popAccessNoticeText: "✅ Access granted: You can review the census of any country or city",
-btnPopLock: "Lock",
-lblPopCountry: "Select country:",
-popCountryDefault: "-- (All Countries) All Countries --",
-lblPopCity: "City (optional or all):",
-popCityPlaceholder: "Enter city name (empty = all cities)",
-btnPopUpdateStats: "Update Statistics",
-lblStatResAreaHeading: "Selected area:",
-badgeAggregateStats: "Aggregate Statistics",
-lblStatFamilies: "Total Families:",
-lblStatTotalPop: "Total Population (Persons):",
-lblStatMales: "Adult Males (18+):",
-lblStatFemales: "Adult Females (18+):",
-lblStatMinors: "Minor children (<18):",
-headCardTitle: "Family Head Details",
-headCardTitleInd: "Individual Adult Applicant Details",
-headBadge: "Family Head",
-headBadgeInd: "Applicant (Individual)",
-lblHeadName: "Full Name (Parent)",
-lblHeadFather: "Father's full name",
-lblHeadMother: "Mother's name (optional / if known)",
-lblDeceased: "Deceased / Unavailable",
-lblHeadDOB: "Date of Birth",
-lblHeadGender: "Gender",
-lblHeadMarital: "Marital Status",
-lblHeadClan: "Attock / Sub-caste",
-lblHeadEdu: "Academic Qualifications",
-lblHeadJob: "Profession / Job",
-lblHeadPhone: "Contact Phone / WhatsApp",
-lblHeadCountry: "Country",
-lblHeadCity: "City",
-lblHeadAddress: "Full residential address",
-membersSectionTitle: "Other family/member details",
-membersSectionSub: "Add spouse, children, and other dependents",
-btnAddMemberBtn: "Add new member",
-lblRefTitle: "Community Reference Verification (No Fee / Free Facility)",
-lblRefSub: "Enter a reference from a foundation member or elder for instant verification without SMS OTP",
-lblRefName: "Referee's name / respected elder:",
-lblRefContact: "Referrer's Phone Number / Member ID:",
-btnSubmitForm: "Submit completed form and issue certificate",
-memberCardTitle: "Member #",
-lblMemRel: "Relationship to guardian",
-lblMemName: "Full Name",
-lblMemDOB: "Date of Birth (DOB)",
-lblMemGender: "Gender",
-lblMemMarital: "Marital Status",
-lblMemAge: "Age",
-lblMemPhoneOpt: "Contact Phone (optional)",
-lblMemEdu: "Educational Qualifications",
-lblMemLineage: "Wife's Lineage",
-lblMemJob: "Profession / Job",
-lblMemAddrChoice: "Residential Address",
-optSameAsHead: "Parental address (Same as Head)",
-optOtherAddr: "Other (different city or country)",
-lblMemCountry: "Country",
-lblMemCity: "City",
-lblMemAddress: "Residential Address",
-btnRemove: "Remove",
-otherClanPlaceholder: "Write your clan/branch...",
-otherEduPlaceholder: "Enter your education...",
-otherJobPlaceholder: "Enter your occupation...",
-otherCountryPlaceholder: "Enter your country name...",
-modalTopHeading: "Family Registration Certificate (Official FRC)",
-modalTopHeadingInd: "Individual Identity Certificate (Official IIC)",
-btnDownloadPdf: "Download PDF",
-btnCloseModal: "Close",
-lblPendingNoticeTitle: "Request is pending verification",
-lblPendingNoticeBody: "Your request has been successfully saved with a permanent member ID",
-frcDeclaration: "Affidavit: This certificate is issued on the personal statement of the applicant. The WCF Board reserves the right to cancel it if any misrepresentation or non-community is proven.",
-refElderPlaceholder: "Elder or loved one's name...",
-refContactPlaceholder: "Phone number or member ID...",
-headNamePlaceholder: "Enter name...",
-headFatherPlaceholder: "Enter father's name...",
-headCityPlaceholder: "City name...",
-headAddressPlaceholder: "House number, street, area...",
+appTitle: "چھیپا خاندانی رجسٹریشن سرٹیفکیٹ",
+appSub: "ورلڈ چھیپا فاؤنڈیشن — عالمی مردم شماری پورٹل (V.6.6.2)",
+lblLang: "زبان:",
+lblLiveFamilies: "خاندان (Families):",
+lblLiveMembers: "کل افراد (Unique):",
+tabNew: "+ نیا اندراج مردم شماری",
+tabSearch: "دوبارہ پرنٹ / سرچ سرٹیفکیٹ",
+tabCityStats: "شہر وار آبادی ڈیش بورڈ",
+lblRegModeHeading: "رجسٹریشن کا طریقہ منتخب کریں:",
+lblRegModeDesc: "خاندانی رجسٹریشن سرٹیفکیٹ (FRC) کے لیے 'خاندانی یونٹ' منتخب کریں، یا تنہا بالغ فرد کے لیے 'انفرادی شناختی سرٹیفکیٹ (IIC)' منتخب کریں۔",
+btnModeFamily: "خاندانی یونٹ (FRC)",
+btnModeIndividual: "انفرادی فرد (IIC)",
+searchTitle: "خاندانی رجسٹریشن سرٹیفکیٹ (FRC) یا IIC تلاش کریں",
+searchSub: "اپنا تصدیق شدہ FRC / IIC کوڈ، ممبر آئی ڈی یا رجسٹرڈ موبائل نمبر درج کریں۔",
+searchPlaceholder: "سرٹیفکیٹ کوڈ، ممبر آئی ڈی یا موبائل نمبر درج کریں...",
+btnSearchAction: "تلاش و پرنٹ کریں",
+btnSearchAddMember: "+ نیا رکن شامل کریں",
+cityStatsTitle: "کمیونٹی آبادی ڈیش بورڈ (گلوبل سرچ)",
+cityStatsSub: "اپنا تصدیق شدہ FRC / IIC کوڈ یا موبائل نمبر درج کریں تاکہ رسائی حاصل ہو سکے۔",
+popAuthPlaceholder: "سرٹیفکیٹ کوڈ یا موبائل فون نمبر درج کریں...",
+btnCityStatsVerify: "تصدیق و رسائی",
+popAccessNoticeText: "✅ رسائی منظور: آپ کسی بھی ملک یا شہر کی مردم شماری کا جائزہ لے سکتے ہیں۔",
+btnPopLock: "لاک کریں",
+lblPopCountry: "ملک منتخب کریں:",
+popCountryDefault: "-- (تمام ممالک) All Countries --",
+lblPopCity: "شہر (اختیاری یا سب):",
+popCityPlaceholder: "شہر کا نام لکھیں (خالی = تمام شہر)",
+btnPopUpdateStats: "اعداد و شمار اپڈیٹ کریں",
+lblStatResAreaHeading: "منتخب علاقہ:",
+badgeAggregateStats: "مجموعی شماریات (Aggregate)",
+lblStatFamilies: "کل خاندان:",
+lblStatTotalPop: "کل آبادی (افراد):",
+lblStatMales: "بالغ مرد (18+):",
+lblStatFemales: "بالغ خواتین (18+):",
+lblStatMinors: "نابالغ بچے (<18):",
+headCardTitle: "سرپرستِ خاندان کی تفصیلات",
+headCardTitleInd: "انفرادی بالغ درخواست گزار کی تفصیلات",
+headBadge: "سرپرستِ خاندان",
+headBadgeInd: "درخواست گزار (Individual)",
+lblHeadName: "مکمل نام (سرپرست)",
+lblHeadFather: "والد کا مکمل نام",
+lblHeadMother: "والدہ کا نام (اختیاری / اگر معلوم ہو)",
+lblDeceased: "فوت شدہ / غیر دستیاب",
+lblHeadDOB: "تاریخِ پیدائش (Date of Birth)",
+lblHeadGender: "جنس",
+lblHeadMarital: "ازدواجی حیثیت (Marital Status)",
+lblHeadClan: "اٹک / ذیلی ذات",
+lblHeadEdu: "تعلیمی قابلیت",
+lblHeadJob: "پیشہ / ملازمت",
+lblHeadPhone: "رابطہ فون / واٹس ایپ",
+lblHeadCountry: "ملک (Country)",
+lblHeadCity: "شہر",
+lblHeadAddress: "مکمل رہائشی پتہ",
+membersSectionTitle: "دیگر اہل خانہ / اراکین کی تفصیلات",
+membersSectionSub: "بیوی، بچے اور دیگر زیرِ کفالت افراد شامل کریں",
+btnAddMemberBtn: "نیا رکن شامل کریں",
+lblRefTitle: "کمیونٹی حوالہ جاتی تصدیق (بغیر کسی فیس / مفت سہولت)",
+lblRefSub: "ایس ایم ایس او ٹی پی کے بغیر فوری تصدیق کے لیے کسی فاؤنڈیشن ممبر یا بزرگ کا حوالہ درج کریں۔",
+lblRefName: "حوالہ دار کا نام / معزز بزرگ:",
+lblRefContact: "حوالہ دار کا فون نمبر / ممبر آئی ڈی:",
+btnSubmitForm: "مکمل فارم جمع کریں اور سرٹیفکیٹ جاری کریں",
+memberCardTitle: "رکن #",
+lblMemRel: "سرپرست سے رشتہ",
+lblMemName: "مکمل نام",
+lblMemDOB: "تاریخِ پیدائش (DOB)",
+lblMemGender: "جنس",
+lblMemMarital: "ازدواجی حیثیت (Marital Status)",
+lblMemAge: "عمر (Age)",
+lblMemPhoneOpt: "رابطہ فون (اختیاری)",
+lblMemEdu: "تعلیمی قابلیت",
+lblMemLineage: "بیوی کا نسب",
+lblMemJob: "پیشہ / ملازمت",
+lblMemAddrChoice: "رہائش کا پتہ",
+optSameAsHead: "سرپرست والا پتہ (Same as Head)",
+optOtherAddr: "دیگر (مختلف شہر یا ملک)",
+lblMemCountry: "ملک",
+lblMemCity: "شہر",
+lblMemAddress: "رہائشی پتہ",
+btnRemove: "ختم کریں",
+otherClanPlaceholder: "اپنی اٹک / شاخ لکھیں...",
+otherEduPlaceholder: "اپنی تعلیم درج کریں...",
+otherJobPlaceholder: "अपना پیشہ درج کریں...",
+otherCountryPlaceholder: "اپنے ملک کا نام درج کریں...",
+modalTopHeading: "خاندانی رجسٹریشن سرٹیفکیٹ (Official FRC)",
+modalTopHeadingInd: "انفرادی شناختی سرٹیفکیٹ (Official IIC)",
+btnDownloadPdf: "ڈاؤن لوڈ PDF",
+btnCloseModal: "بند کریں",
+lblPendingNoticeTitle: "درخواست تصدیق کے مراحل میں ہے (Pending Verification)",
+lblPendingNoticeBody: "آپ کی درخواست مستقل ممبر آئی ڈی کے ساتھ کامیابی سے محفوظ کر لی گئی ہے۔",
+frcDeclaration: "حلفیہ بیان: یہ سند درخواست گزار کے ذاتی بیان پر جاری کی گئی ہے۔ کسی بھی غلط بیانی یا غیر برادری ثابت ہونے پر WCF بورڈ اسے منسوخ کرنے کا مجاز ہے۔",
+refElderPlaceholder: "بزرگ یا عزیز کا نام...",
+refContactPlaceholder: "فون نمبر یا ممبر آئی ڈی...",
+headNamePlaceholder: "نام درج کریں...",
+headFatherPlaceholder: "والد کا نام درج کریں...",
+headCityPlaceholder: "شہر کا نام...",
+headAddressPlaceholder: "مکان نمبر، گلی، علاقہ...",
 frcDocBadge: "Official Family Registration Certificate",
-frcDocOrg: "World Chhipa Foundation",
-frcDocTagline: "World Census Directory and Family Identification",
-frcLblHeadName: "Family Head:",
-frcLblHeadFather: "Father / Guardian:",
-frcLblHeadClan: "Attic / Branch:",
-frcLblHeadEdu: "Educational Qualifications:",
-frcLblHeadPhone: "Contact Phone:",
-frcLblHeadLoc: "Country and City:",
-frcLblHeadAddress: "Residential Address:",
-frcLblHeadLineage: "Community Lineage:",
-thUID: "Member ID",
-thName: "Full Name",
-thRel: "Relationship",
-thGen: "Gender",
-thDOB: "Date of Birth",
-thMarital: "Marital status",
-thEdu: "Education",
-thJob: "Job",
-thLoc: "City and Residence",
-thLineage: "Lineage",
-frcDocSig: "Registrar WCF (Authorized Signature and Seal)",
+frcDocOrg: "ورلڈ چھیپا فاؤنڈیشن",
+frcDocTagline: "عالمی مردم شماری ڈائریکٹری و خاندانی شناخت",
+frcLblHeadName: "سرپرستِ خاندان:",
+frcLblHeadFather: "والد / سرپرست:",
+frcLblHeadClan: "اٹک / شاخ:",
+frcLblHeadEdu: "تعلیمی قابلیت:",
+frcLblHeadPhone: "رابطہ فون:",
+frcLblHeadLoc: "ملک و شہر:",
+frcLblHeadAddress: "رہائشی پتہ:",
+frcLblHeadLineage: "کمیونٹی نسب:",
+thUID: "ممبر آئی ڈی",
+thName: "مکمل نام",
+thRel: "رشتہ",
+thGen: "جنس",
+thDOB: "تاریخِ پیدائش",
+thMarital: "ازدواجی حیثیت",
+thEdu: "تعلیم",
+thJob: "پیشہ",
+thLoc: "شہر و رہائش",
+thLineage: "نسب",
+frcDocSig: "Registrar WCF (مجاز دستخط و مہر)",
 relations: {
-Wife: "बीवी", Husband: "शुहर", Son: "बीटा", Daughter: "बीटा",
-Father: "वाल्द", Mother: "वाल्दा", Brother: "भाई", Sister: "सेहन", Other: "औगर"
+Wife: "بیوی", Husband: "شوہر", Son: "بیٹا", Daughter: "بیٹی",
+Father: "والد", Mother: "والدہ", Brother: "بھائی", Sister: "بہن", Other: "دیگر"
 },
 maritalStatuses: {
-Married: "Married", Unmarried: "Unmarried",
-Widowed: "Widow", Divorced: "Divorced"
+Married: "شادی شدہ", Unmarried: "غیر شادی شدہ",
+Widowed: "بیوہ / رنڈوا", Divorced: "طلاق یافتہ"
 },
-genders: { Male: "Male", Female: "Female", Other: "Other" },
-lineage: { Chhippa: "hidden", NonChhippa: "non-hidden" },
-clans: { Tak: "Tak", Bhati: "Bhati", Rao: "Rao", Molani: "Molani", Lodha: "Lodha", Deora: "Deora", Other: "Other" },
+genders: { Male: "مرد", Female: "عورت", Other: "دیگر" },
+lineage: { Chhippa: "چھیپا", NonChhippa: "غیر چھیپا" },
+clans: { Tak: "ٹاک", Bhati: "بھاٹی", Rao: "راؤ", Molani: "مولانی", Lodha: "لودھا", Deora: "دیوڑا", Other: "دیگر" },
 education: {
-Matric: "Matric", Intermediate: "Intermediate", Graduate: "Graduation", Masters: "Masters",
-Primary: "Primary", Religious: "Religious Education / Hafiz", Uneducated: "Illiterate", Other: "Other"
+Matric: "میٹرک", Intermediate: "انٹرمیڈیٹ", Graduate: "گریجویشن", Masters: "ماسٹرز",
+Primary: "پرائمری", Religious: "دینی تعلیم / حافظ", Uneducated: "ناخواندہ", Other: "دیگر"
 },
 jobs: {
-Business: "Business / Trade", Textile: "Clothing Merchant / Textile", Tailor: "Tailor / Sewing / Embroidery",
-PrivateJob: "Private Job", GovtJob: "Government Job", Teacher: "Teacher / Education",
-Healthcare: "Medical Department / Medical", EngineerIT: "Engineer / IT", Driver: "Driver / Transport",
-DailyWage: "Craftsman / Laborer", Student: "Student", Homemaker: "Homemaker", Retired: "Retired", Other: "Other"
+Business: "کاروبار / تجارت", Textile: "کپڑے کا تاجر / ٹیکسٹائل", Tailor: "درزی / سلائی کڑھائی",
+PrivateJob: "پرائیویٹ ملازمت", GovtJob: "سرکاری ملازمت", Teacher: "استاد / تعلیم",
+Healthcare: "طبی شعبہ / میڈیکل", EngineerIT: "انجینئر / آئی ٹی", Driver: "ڈرائیور / ٹرانسپورٹ",
+DailyWage: "دستکار / محنت کش", Student: "طالب علم", Homemaker: "گھریلو خاتون", Retired: "ریٹائرڈ", Other: "دیگر"
 }
 },
 hi: {
-appTitle: "Hidden Family Registration Certificate",
-appSub: "World Chipa Foundation — Global Census Portal (V.6.6.3)",
-lblLang: "Language:",
-lblLiveFamilies: "Families:",
-lblLiveMembers: "Total Members (Unique):",
-tabNew: "+ New Registration Census",
-tabSearch: "Print/Search Certificate",
-tabCityStats: "City wise population dashboard",
-lblRegModeHeading: "Select Registration Type:",
-lblRegModeDesc: "Select 'Family Unit' for Family Registration Certificate (FRC), or 'Individual Identity Certificate (IIC)' for single adult.",
-btnModeFamily: "Family Unit (FRC)",
-btnModeIndividual: "Individual Adult (IIC)",
-searchTitle: "Search Family Registration Certificate (FRC) or IIC",
-searchSub: "Enter your verified FRC / IIC Code, Member ID or Mobile Number.",
-searchPlaceholder: "Enter Certificate Code, Member ID or Mobile Number...",
-btnSearchAction: "Search and Print",
-btnSearchAddMember: "+ Add new member",
-cityStatsTitle: "Community Population Dashboard (Global Search)",
-cityStatsSub: "View statistics by entering your verification code or mobile number.",
-popAuthPlaceholder: "Enter certificate code or mobile number...",
-btnCityStatsVerify: "Verification & Access",
-popAccessNoticeText: "Access Granted: You can view the census of any country or city.",
-btnPopLock: "Lock",
-lblPopCountry: "Select Country:",
-popCountryDefault: "-- All Countries --",
-lblPopCity: "City (optional or all):",
-popCityPlaceholder: "Enter city name (empty = all cities)",
-btnPopUpdateStats: "Update Stats",
-lblStatResAreaHeading: "Selected area:",
-badgeAggregateStats: "Aggregate Statistics",
-lblStatFamilies: "Total Families:",
-lblStatTotalPop: "Total Population (Persons):",
-lblStatMales: "Adult Males (18+):",
-lblStatFemales: "Adult Females (18+):",
-lblStatMinors: "Minor Children (<18):",
-headCardTitle: "Details of Head of Household",
-headCardTitleInd: "Individual Adult Applicant Details",
-headBadge: "Head of Family",
-headBadgeInd: "Applicant (Individual)",
-lblHeadName: "Full Name (Head)",
-lblHeadFather: "Father's Full Name",
-lblHeadMother: "Mother Name (optional / if known)",
-lblDeceased: "Deceased / Missing",
-lblHeadDOB: "Date of Birth",
-lblHeadGender: "Gender",
-lblHeadMarital: "Marital Status",
-lblHeadClan: "Gotra / Sub-Clan",
-lblHeadEdu: "Educational Qualification",
-lblHeadJob: "Occupation / Profession",
-lblHeadPhone: "Contact Phone / Whatsapp",
-lblHeadCountry: "Country",
-lblHeadCity: "City",
-lblHeadAddress: "full residential address",
-membersSectionTitle: "Details of Other Family Members",
-membersSectionSub: "Add Spouse, Children and Dependent Members",
-btnAddMemberBtn: "Add new member",
-lblRefTitle: "Community Reference Verification (FREE)",
-lblRefSub: "Enter reference for instant verification without SMS OTP.",
-lblRefName: "Name of Reference Person / Senior:",
-lblRefContact: "Ref Phone / Member ID:",
-btnSubmitForm: "Submit complete form and get certificate",
-memberCardTitle: "Member #",
-lblMemRel: "relation to head",
-lblMemName: "full name",
-lblMemDOB: "Date of Birth (DOB)",
-lblMemGender: "Gender",
-lblMemMarital: "Marital Status",
-lblMemAge: "Age",
-lblMemPhoneOpt: "Contact Phone (Optional)",
-lblMemEdu: "Educational Qualification",
-lblMemLineage: "Wife's Lineage",
-lblMemJob: "occupation/profession",
-lblMemAddrChoice: "Domicile Address",
-optSameAsHead: "Same as Head",
-optOtherAddr: "Other (different city or country)",
-lblMemCountry: "Country",
-lblMemCity: "City",
-lblMemAddress: "residential address",
-btnRemove: "Remove",
-otherClanPlaceholder: "Enter your Clan...",
-otherEduPlaceholder: "Enter your education...",
-otherJobPlaceholder: "Enter your occupation...",
-otherCountryPlaceholder: "Enter your country...",
-modalTopHeading: "Family Registration Certificate (Official FRC)",
-modalTopHeadingInd: "Individual Identity Certificate (Official IIC)",
-btnDownloadPdf: "Download PDF",
-btnCloseModal: "Close",
-lblPendingNoticeTitle: "Application is in process of verification (Pending Verification)",
-lblPendingNoticeBody: "Your application has been secured.",
-frcDeclaration: "Declaration: This certificate is based on the applicant's self-declaration. The WCF Board reserves the right to cancel the same if any false information or ineligible parentage is proved.",
-refElderPlaceholder: "Name of elder or relative...",
-refContactPlaceholder: "Phone Number or Member ID...",
-headNamePlaceholder: "Enter full name...",
-headFatherPlaceholder: "Enter father's full name...",
-headCityPlaceholder: "City Name...",
-headAddressPlaceholder: "Full Residential Address...",
+appTitle: "छीपा पारिवारिक पंजीकरण प्रमाण पत्र",
+appSub: "वर्ल्ड छीपा फाउंडेशन — वैश्विक जनगणना पोर्टल (V.6.6.2)",
+lblLang: "भाषा:",
+lblLiveFamilies: "परिवार (Families):",
+lblLiveMembers: "कुल सदस्य (Unique):",
+tabNew: "+ नया पंजीकरण जनगणना",
+tabSearch: "पुनः प्रिंट / खोज प्रमाण पत्र",
+tabCityStats: "शहर वार आबादी डैशबोर्ड",
+lblRegModeHeading: "पंजीकरण का प्रकार चुनें:",
+lblRegModeDesc: "पारिवारिक पंजीकरण प्रमाण पत्र (FRC) के लिए 'पारिवारिक इकाई' चुनें, या अकेले वयस्क के लिए 'व्यक्तिगत पहचान प्रमाण पत्र (IIC)' चुनें।",
+btnModeFamily: "पारिवारिक इकाई (FRC)",
+btnModeIndividual: "व्यक्तिगत वयस्क (IIC)",
+searchTitle: "परिवार पंजीकरण प्रमाणपत्र (FRC) या IIC खोजें",
+searchSub: "अपना सत्यापित FRC / IIC कोड, सदस्य आईडी या मोबाइल नंबर दर्ज करें।",
+searchPlaceholder: "प्रमाण पत्र कोड, सदस्य आईडी या मोबाइल नंबर दर्ज करें...",
+btnSearchAction: "खोजें और प्रिंट करें",
+btnSearchAddMember: "+ नया सदस्य जोड़ें",
+cityStatsTitle: "समुदाय आबादी डैशबोर्ड (वैश्विक खोज)",
+cityStatsSub: "अपना सत्यापित कोड या मोबाइल नंबर दर्ज करके आंकड़े देखें।",
+popAuthPlaceholder: "प्रमाण पत्र कोड या मोबाइल नंबर दर्ज करें...",
+btnCityStatsVerify: "सत्यापन एवं पहुंच",
+popAccessNoticeText: "✅ पहुंच स्वीकृत: आप किसी भी देश या शहर की जनगणना का जायजा ले सकते हैं।",
+btnPopLock: "लॉक करें",
+lblPopCountry: "देश चुनें:",
+popCountryDefault: "-- सभी देश (All Countries) --",
+lblPopCity: "शहर (वैकल्पिक या सभी):",
+popCityPlaceholder: "शहर का नाम लिखें (खाली = सभी शहर)",
+btnPopUpdateStats: "आंकड़े अपडेट करें",
+lblStatResAreaHeading: "चयनित क्षेत्र:",
+badgeAggregateStats: "समग्र आंकड़े (Aggregate)",
+lblStatFamilies: "कुल परिवार:",
+lblStatTotalPop: "कुल आबादी (व्यक्ति):",
+lblStatMales: "वयस्क पुरुष (18+):",
+lblStatFemales: "वयस्क महिला (18+):",
+lblStatMinors: "नाबालिग बच्चे (<18):",
+headCardTitle: "परिवार के मुखिया का विवरण",
+headCardTitleInd: "व्यक्तिगत वयस्क आवेदक का विवरण",
+headBadge: "परिवार के मुखिया",
+headBadgeInd: "आवेदक (Individual)",
+lblHeadName: "पूरा नाम (मुखिया)",
+lblHeadFather: "पिता का पूरा नाम",
+lblHeadMother: "माता का नाम (वैकल्पिक / यदि ज्ञात हो)",
+lblDeceased: "दिवंगत / अनुपलब्ध",
+lblHeadDOB: "जन्म तिथि (Date of Birth)",
+lblHeadGender: "लिंग",
+lblHeadMarital: "वैवाहिक स्थिति (Marital Status)",
+lblHeadClan: "गोत्र / उप-जाति",
+lblHeadEdu: "शैक्षणिक योग्यता",
+lblHeadJob: "व्यवसाय / पेशा",
+lblHeadPhone: "संपर्क फ़ोन / व्हाट्सएप",
+lblHeadCountry: "देश (Country)",
+lblHeadCity: "शहर",
+lblHeadAddress: "पूरा आवासीय पता",
+membersSectionTitle: "परिवार के अन्य सदस्यों का विवरण",
+membersSectionSub: "पत्नी, बच्चे और आश्रित सदस्य जोड़ें",
+btnAddMemberBtn: "नया सदस्य जोड़ें",
+lblRefTitle: "सामुदायिक संदर्भ सत्यापन (निःशुल्क सुविधा)",
+lblRefSub: "एसएमएस ओटीपी के बिना त्वरित सत्यापन हेतु संदर्भ दर्ज करें।",
+lblRefName: "संदर्भ व्यक्ति का नाम / वरिष्ठ:",
+lblRefContact: "संदर्भ फ़ोन / सदस्य आईडी:",
+btnSubmitForm: "पूर्ण फॉर्म जमा करें और प्रमाण पत्र प्राप्त करें",
+memberCardTitle: "सदस्य #",
+lblMemRel: "मुखिया से संबंध",
+lblMemName: "पूरा नाम",
+lblMemDOB: "जन्म तिथि (DOB)",
+lblMemGender: "लिंग",
+lblMemMarital: "वैवाहिक स्थिति (Marital Status)",
+lblMemAge: "उम्र (Age)",
+lblMemPhoneOpt: "संपर्क फोन (वैकल्पिक)",
+lblMemEdu: "शैक्षणिक योग्यता",
+lblMemLineage: "पत्नी का वंश",
+lblMemJob: "व्यवसाय / पेशा",
+lblMemAddrChoice: "निवास का पता",
+optSameAsHead: "मुखिया वाला पता (Same as Head)",
+optOtherAddr: "अन्य (अलग शहर या देश)",
+lblMemCountry: "देश",
+lblMemCity: "शहर",
+lblMemAddress: "आवासीय पता",
+btnRemove: "हटाएं",
+otherClanPlaceholder: "अपना गोत्र दर्ज करें...",
+otherEduPlaceholder: "अपनी शिक्षा लिखें...",
+otherJobPlaceholder: "अपना व्यवसाय लिखें...",
+otherCountryPlaceholder: "अपने देश का नाम दर्ज करें...",
+modalTopHeading: "पारिवारिक पंजीकरण प्रमाण पत्र (Official FRC)",
+modalTopHeadingInd: "व्यक्तिगत पहचान प्रमाण पत्र (Official IIC)",
+btnDownloadPdf: "PDF डाउनलोड करें",
+btnCloseModal: "बंद करें",
+lblPendingNoticeTitle: "आवेदन सत्यापन प्रक्रिया में है (Pending Verification)",
+lblPendingNoticeBody: "आपका आवेदन सुरक्षित कर लिया गया है।",
+frcDeclaration: "घोषणा: यह प्रमाण पत्र आवेदक के स्व-घोषणा पत्र पर आधारित है। किसी भी असत्य जानकारी या अयोग्य वंश साबित होने पर WCF बोर्ड इसे रद्द करने का अधिकार रखता है।",
+refElderPlaceholder: "वरिष्ठ या रिश्तेदार का नाम...",
+refContactPlaceholder: "फ़ोन नंबर या सदस्य आईडी...",
+headNamePlaceholder: "पूरा नाम दर्ज करें...",
+headFatherPlaceholder: "पिता का पूरा नाम दर्ज करें...",
+headCityPlaceholder: "शहर का नाम...",
+headAddressPlaceholder: "पूरा आवासीय पता...",
 frcDocBadge: "Official Family Registration Certificate",
-frcDocOrg: "World Turtle Foundation",
-frcDocTagline: "Global Census Directory",
-frcLblHeadName: "Head of Family:",
-frcLblHeadFather: "Father / Guardian:",
-frcLblHeadClan: "Gotra / Sub-Clan:",
-frcLblHeadEdu: "Educational Qualification:",
-frcLblHeadPhone: "Contact Phone:",
-frcLblHeadLoc: "Country and City:",
-frcLblHeadAddress: "Domicile Address:",
-frcLblHeadLineage: "Community Lineage:",
-thUID: "Member ID",
-thName: "full name",
-thRel: "relation",
-thGen: "Gender",
-thDOB: "Date of Birth",
-thMarital: "marital status",
-thEdu: "Education",
-thJob: "Occupation",
-thLoc: "City and Address",
-thLineage: "lineage",
-frcDocSig: "Registrar WCF (Authorized Signature & Seal)",
+frcDocOrg: "वर्ल्ड छीपा फाउंडेशन",
+frcDocTagline: "वैश्विक जनगणना निर्देशिका",
+frcLblHeadName: "परिवार के मुखिया:",
+frcLblHeadFather: "पिता / संरक्षक:",
+frcLblHeadClan: "गोत्र / उप-जाति:",
+frcLblHeadEdu: "शैक्षणिक योग्यता:",
+frcLblHeadPhone: "संपर्क फ़ोन:",
+frcLblHeadLoc: "देश एवं शहर:",
+frcLblHeadAddress: "आवासीय पता:",
+frcLblHeadLineage: "सामुदायिक वंश:",
+thUID: "सदस्य आईडी",
+thName: "पूरा नाम",
+thRel: "संबंध",
+thGen: "लिंग",
+thDOB: "जन्म तिथि",
+thMarital: "वैवाहिक स्थिति",
+thEdu: "शिक्षा",
+thJob: "व्यवसाय",
+thLoc: "शहर व पता",
+thLineage: "वंश",
+frcDocSig: "Registrar WCF (अधिकृत हस्ताक्षर एवं मुहर)",
 relations: {
-Wife: "पत्नी", Husband: "पति", Son: "बेता", Daughter: "बेती",
-Father: "Pita", Mother: "Mata", Brother: "Bhai", Sister: "Bahan", Other: "अन्य"
+Wife: "पत्नी", Husband: "पति", Son: "बेटा", Daughter: "बेटी",
+Father: "पिता", Mother: "माता", Brother: "भाई", Sister: "बहन", Other: "अन्य"
 },
 maritalStatuses: {
-Married, Unmarried
-Widowed: "Widower", Divorced: "Divorced"
+Married: "विवाहित", Unmarried: "अविवाहित",
+Widowed: "विधवा / विधुर", Divorced: "तलाकशुदा"
 },
-genders: { Male: "Purush", Female: "Mahila", Other: "अन्य" },
-lineage: { Chhippa: "hidden", NonChhippa: "non-hidden" },
-}
+genders: { Male: "पुरुष", Female: "महिला", Other: "अन्य" },
+lineage: { Chhippa: "छीपा", NonChhippa: "गैर छीपा" },
+clans: { Tak: "टाक", Bhati: "भाटी", Rao: "राव", Molani: "मोलानी", Lodha: "लोधा", Deora: "देवड़ा", Other: "अन्य" },
 education: {
-Matric: "Matric (10th)", Intermediate: "Intermediate (12th)", Graduate: "Graduate", Masters: "Post Graduate",
-Primary: "Primary School", Religious: "Religious Education", Uneducated: "Uneducated", Other: "Other"
+Matric: "मैट्रिक (10वीं)", Intermediate: "इंटरमीडिएट (12वीं)", Graduate: "स्नातक", Masters: "स्नातकोत्तर",
+Primary: "प्राथमिक विद्यालय", Religious: "धार्मिक शिक्षा", Uneducated: "अशिक्षित", Other: "अन्य"
 },
 jobs: {
-Business: "Trade / Self-Employed", Textile: "Clothes Merchant / Textile", Tailor: "Tailor / Sewing Work",
-PrivateJob: "निजी नूक्री", GovtJob: "शार्करी नूक्री", Teacher: "शिक्षक / शिक्षा",
-Healthcare: "Medical Sector", EngineerIT: "Engineer / IT", Driver: "Driver / Transport",
-DailyWage: "Artisan/Shramik", Student: "विद्धिर्थी", Homemaker: "Housewife", Retired: "शेवनिव्ट्र", Other: "अन्य"
+Business: "व्यापार / स्व-रोजगार", Textile: "कपड़ा व्यापारी / टेक्सटाइल", Tailor: "दर्जी / सिलाई कार्य",
+PrivateJob: "निजी नौकरी", GovtJob: "सरकारी नौकरी", Teacher: "शिक्षक / शिक्षा",
+Healthcare: "चिकित्सा क्षेत्र", EngineerIT: "इंजीनियर / आईटी", Driver: "ड्राइवर / परिवहन",
+DailyWage: "कारीगर / श्रमिक", Student: "विद्यार्थी", Homemaker: "गृहिणी", Retired: "सेवानिवृत्त", Other: "अन्य"
 }
 },
 en: {
 appTitle: "Chhippa Family Registration Certificate",
-appSub: "World Chhippa Foundation — Global Census Portal (V.6.6.3)",
+appSub: "World Chhippa Foundation — Global Census Portal (V.6.6.2)",
 lblLang: "Language:",
 lblLiveFamilies: "Families:",
 lblLiveMembers: "Unique Individuals:",
@@ -1208,7 +1208,7 @@ cityStatsTitle: "Community Population Dashboard (Global Search)",
 cityStatsSub: "Enter your verified Certificate Code or registered Mobile Number to gain access and check population for any country or city.",
 popAuthPlaceholder: "Enter Certificate Code or Mobile Number...",
 btnCityStatsVerify: "Verify & Access",
-popAccessNoticeText: "Access Granted: You can view census records for any country or city.",
+popAccessNoticeText: "✅ Access Granted: You can view census records for any country or city.",
 btnPopLock: "Lock",
 lblPopCountry: "Select Country:",
 popCountryDefault: "-- All Countries (Global) --",
@@ -1373,13 +1373,13 @@ function normalizeCleanString(str) {
 if (!str) return '';
 return String(str)
 .toLowerCase()
-.replace(/^(mohammad|muhammad|mohd|md|mian|syed|Muhammad|Syed|Mian)\s+/g, '')
+.replace(/^(mohammad|muhammad|mohd|md|mian|syed|محمد|سید|میان)\s+/g, '')
 .replace(/[^\p{L}\p{N}]/gu, '')
 .trim();
 }
 function getPhoneticSoundex(s) {
 if (!s) return "";
-let a = s.toLowerCase().trim().replace(/^(mohammad|muhammad|mohd|md|mian|syed)\s+/g, '').replace(/[^az]/g, '');
+let a = s.toLowerCase().trim().replace(/^(mohammad|muhammad|mohd|md|mian|syed)\s+/g, '').replace(/[^a-z]/g, '');
 if (!a) return "";
 const map = { b:1, f:1, p:1, v:1, c:2, g:2, j:2, k:2, q:2, s:2, x:2, z:2, d:3, t:3, l:4, m:5, n:5, r:6 };
 let out = a[0].toUpperCase();
@@ -1484,8 +1484,8 @@ if (cleanHeadPhone.length >= 8 && recHeadPhone.length >= 8) {
 if (cleanHeadPhone.endsWith(recHeadPhone.slice(-8)) || recHeadPhone.endsWith(cleanHeadPhone.slice(-8))) {
 return {
 duplicate: true,
-reason: `Security alert (mobile number mismatch)!
-This contact phone is already listed in the certificate [${rec.code}].`
+reason: `سیکیورٹی الرٹ (موبایل نمبر مماثلت)!
+یہ رابطہ فون پہلے سے سرٹیفکیٹ [${rec.code}] میں درج ہے۔`
 };
 }
 }
@@ -1509,9 +1509,9 @@ clanMatches
 if (exactBioMatch || phoneticBioMatch) {
 return {
 duplicate: true,
-reason: `Security Lock: This identity already exists in the system!
-Previous certificate: [${rec.code}]
-Head: ${rec.head.name} Son of ${rec.head.father}`
+reason: `سیکیورٹی لاک: یہ شناخت پہلے سے سسٹم میں موجود ہے!
+سابقہ سرٹیفکیٹ: [${rec.code}]
+سربراہ: ${rec.head.name} ولد ${rec.head.father}`
 };
 }
 }
@@ -1661,7 +1661,7 @@ break;
 }
 countrySel.innerHTML = '';
 allWorldCountries.forEach(c => {
-const opt ​​= document.createElement('option');
+const opt = document.createElement('option');
 opt.value = c;
 opt.textContent = getCountryLocalizedName(c, currentLang);
 if (c === matchedCountry) opt.selected = true;
@@ -1679,7 +1679,7 @@ populateAdminCountryOptions();
 refreshMemberCardsLanguage();
 const btnAboutUs = document.getElementById('btnAboutUs');
 if (btnAboutUs) {
-btnAboutUs.textContent = lang === 'ur' ? "Intro" : (lang === 'hi' ? "परिचय" : "About Us");
+btnAboutUs.textContent = lang === 'ur' ? "تعارف" : (lang === 'hi' ? "परिचय" : "About Us");
 }
 const aboutTitle = document.getElementById('aboutModalTitle');
 const aboutCloseBtn = document.getElementById('aboutCloseBtn');
@@ -1688,20 +1688,20 @@ const textUr = document.getElementById('aboutTextUr');
 const textHi = document.getElementById('aboutTextHi');
 if (aboutTitle) {
 if (lang === 'ur') {
-aboutTitle.textContent = "About World Chhipa Foundation";
-if (aboutCloseBtn) aboutCloseBtn.textContent = "Close";
+aboutTitle.textContent = "ورلڈ چھیپا فاؤنڈیشن کے بارے میں";
+if (aboutCloseBtn) aboutCloseBtn.textContent = "بند کریں / Close";
 if (textEn) textEn.classList.add('hidden');
 if (textUr) textUr.classList.remove('hidden');
 if (textHi) textHi.classList.add('hidden');
 } else if (lang === 'hi') {
-aboutTitle.textContent = "About the World Cheepa Foundation";
-if (aboutCloseBtn) aboutCloseBtn.textContent = "Close";
+aboutTitle.textContent = "वर्ल्ड छीपा फाउंडेशन के बारे में";
+if (aboutCloseBtn) aboutCloseBtn.textContent = "बंद करें / Close";
 if (textEn) textEn.classList.add('hidden');
 if (textUr) textUr.classList.add('hidden');
 if (textHi) textHi.classList.remove('hidden');
 } else {
 aboutTitle.textContent = "About World Chhippa Foundation";
-if (aboutCloseBtn) aboutCloseBtn.textContent = "Close";
+if (aboutCloseBtn) aboutCloseBtn.textContent = "Close / بند کریں";
 if (textEn) textEn.classList.remove('hidden');
 if (textUr) textUr.classList.add('hidden');
 if (textHi) textHi.classList.add('hidden');
@@ -1724,7 +1724,7 @@ const targetVal = (select.value && select.value !== '') ? select.value : default
 select.innerHTML = '';
 let hasSelected = false;
 Object.entries(optionsObj).forEach(([k, v]) => {
-const opt ​​= document.createElement('option');
+const opt = document.createElement('option');
 opt.value = k;
 opt.textContent = v;
 if (targetVal && k === targetVal) {
@@ -1733,8 +1733,8 @@ hasSelected = true;
 }
 select.appendChild(opt);
 });
-if (!hasSelected && selection.options.length > 0) {
-selected.options[0].selected = true;
+if (!hasSelected && select.options.length > 0) {
+select.options[0].selected = true;
 select.selectedIndex = 0;
 }
 }
@@ -1854,7 +1854,7 @@ if (rec.type === 'family') famCount++;
 totalPop++;
 const hAge = parseInt(rec.head.age) || calculateAge(rec.head.dob);
 if (hAge < 18) minors++;
-else if (rec.head.genderKey === 'Male' || rec.head.gender === 'Male' || rec.head.gender === 'Male' || rec.head.gender === 'Male') males++;
+else if (rec.head.genderKey === 'Male' || rec.head.gender === 'مرد' || rec.head.gender === 'Male' || rec.head.gender === 'पुरुष') males++;
 else females++;
 }
 if (rec.members && Array.isArray(rec.members)) {
@@ -1868,7 +1868,7 @@ if (matchMem) {
 totalPop++;
 const mAge = parseInt(m.age) || calculateAge(m.dob);
 if (mAge < 18) minors++;
-else if (m.genderKey === 'Male' || m.gender === 'Male' || m.gender === 'Male' || m.gender === 'Male') males++;
+else if (m.genderKey === 'Male' || m.gender === 'مرد' || m.gender === 'Male' || m.gender === 'पुरुष') males++;
 else females++;
 }
 });
@@ -1971,7 +1971,7 @@ card.innerHTML = `
 </div>
 <div>
 <label class="block text-[11px] font-semibold text-slate-700 mb-0.5">${dict.lblMemCity} *</label>
-<input type="text" id="memCity_${id}" placeholder="eg Lahore, Jodhpur..." class="w-full border border-slate-300 rounded px-2 py-1 text-xs bg-white">
+<input type="text" id="memCity_${id}" placeholder="e.g. Lahore, Jodhpur..." class="w-full border border-slate-300 rounded px-2 py-1 text-xs bg-white">
 </div>
 <div>
 <label class="block text-[11px] font-semibold text-slate-700 mb-0.5">${dict.lblMemAddress} *</label>
@@ -1991,7 +1991,7 @@ const memCountry = document.getElementById(`memCountry_${id}`);
 if (memCountry) {
 const selC = existingData?.country || 'Pakistan';
 allWorldCountries.forEach(c => {
-const opt ​​= document.createElement('option');
+const opt = document.createElement('option');
 opt.value = c;
 opt.textContent = getCountryLocalizedName(c, currentLang);
 if (c === selC) opt.selected = true;
@@ -2093,7 +2093,7 @@ if (memCountry) {
 const prevMC = memCountry.value || 'Pakistan';
 memCountry.innerHTML = '';
 allWorldCountries.forEach(c => {
-const opt ​​= document.createElement('option');
+const opt = document.createElement('option');
 opt.value = c;
 opt.textContent = getCountryLocalizedName(c, currentLang);
 if (c === prevMC) opt.selected = true;
@@ -2254,7 +2254,7 @@ if (currentRegMode === 'individual' && (refElder || refContact)) {
             const existingElder = (rec.reference.elder || '').trim().toLowerCase();
 
             if (
-                (cleanRefContact.length >= 8 && existingContact.length >= 8 &&
+                (cleanRefContact.length >= 8 && existingContact.length >= 8 && 
                  (existingContact.endsWith(cleanRefContact.slice(-8)) || cleanRefContact.endsWith(existingContact.slice(-8)))) ||
                 (cleanRefName && existingElder && cleanRefName === existingElder) ||
                 (cleanRefContact && rec.code && cleanRefContact.toUpperCase() === rec.code.toUpperCase())
@@ -2271,6 +2271,8 @@ if (currentRegMode === 'individual' && (refElder || refContact)) {
         return;
     }
 }
+const refElder = document.getElementById('refElderName').value.trim();
+const refContact = document.getElementById('refElderContact').value.trim();
 if (currentRegMode === 'individual' && (!refElder || !refContact)) {
 alert("Reference Required: For Individual Adult registration without family unit, providing a verified community reference name and contact is mandatory.");
 submitBtn.disabled = false;
@@ -2409,7 +2411,10 @@ localStorage.setItem('WCF_CENSUS_RECORDS', JSON.stringify(storedFRCRecords));
 } catch (err) {}
 if (isCloudReady && db && isSyncEnabled) {
 try {
-db.collection('census_registrations').doc(certCode).set(record);
+const trialExpiryTime = new Date('2026-11-03T00:00:00').getTime();
+const currentTime = new Date().getTime();
+let targetCol = (currentTime < trialExpiryTime) ? 'trial_census_registrations' : 'census_registrations';
+db.collection(targetCol).doc(certCode).set(record);
 } catch(e) {
 console.warn("Firestore sync queue buffer:", e);
 }
@@ -2580,7 +2585,7 @@ const now = new Date();
 const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
 const dateStr = record.issueDate || now.toLocaleDateString('en-GB');
 const shareMsg =
-*WORLD CHIPPA FOUNDATION - GLOBAL CENSUS*
+`*WORLD CHHIPPA FOUNDATION - GLOBAL CENSUS*
 *Official Document:* ${record.type === 'family' ? 'Family Registration Certificate' : 'Individual Identity Certificate'}
 📋 *Reference No:* ${record.code}
 👤 *Name:* ${record.head.name}
@@ -2757,7 +2762,7 @@ list.innerHTML = '';
 const localList = Object.values(storedFRCRecords);
 const pending = localList.filter(r => r.status === 'Possible Duplicate' || r.status === 'Pending Verification');
 if (pending.length === 0) {
-list.innerHTML = '<p class="text-slate-405 italic">No applications currently pending verification.</p>';
+list.innerHTML = '<p class="text-slate-400 italic">No applications currently pending verification.</p>';
 return;
 }
 pending.forEach(rec => {
@@ -2962,7 +2967,7 @@ const adultsList = [];
 allRecords.forEach(rec => {
 if (rec.members && Array.isArray(rec.members)) {
 rec.members.forEach(m => {
-const isChild = (m.relationKey === 'Son' || m.relationKey === 'Daughter' || m.relation.includes('Son') || m.relation.includes('Daughter') || m.relation.includes('Son') || m.relation.includes('Daughter'));
+const isChild = (m.relationKey === 'Son' || m.relationKey === 'Daughter' || m.relation.includes('بیٹا') || m.relation.includes('بیٹی') || m.relation.includes('बेटा') || m.relation.includes('बेटी'));
 const ageNum = parseInt(m.age) || calculateAge(m.dob);
 const isUnmarried = (m.maritalStatusKey === 'Unmarried' || !m.maritalStatusKey);
 if (isChild && ageNum >= 18 && isUnmarried) {
@@ -3031,8 +3036,8 @@ const nonChhippaList = [];
 allRecords.forEach(rec => {
 if (rec.members && Array.isArray(rec.members)) {
 rec.members.forEach(m => {
-const isWife = (m.relationKey === 'Wife' || m.relation.includes('Wife') || m.relation.includes('Wife'));
-const isNonChhippa = (m.lineageKey === 'NonChhippa' || m.lineage.includes('Non') || m.lineage.includes('Non') || m.lineage.includes('Non'));
+const isWife = (m.relationKey === 'Wife' || m.relation.includes('بیوی') || m.relation.includes('पत्नी'));
+const isNonChhippa = (m.lineageKey === 'NonChhippa' || m.lineage.includes('غیر') || m.lineage.includes('Non') || m.lineage.includes('गैर'));
 if (isWife && isNonChhippa) {
 const fullWifeLoc = `${rec.head.phone} (${m.address || rec.head.address || ''}, ${m.city || rec.head.city || ''}, ${m.country || rec.head.country || ''})`;
 nonChhippaList.push({
@@ -3124,7 +3129,6 @@ const tUr = document.getElementById('memTextUr');
 const tHi = document.getElementById('memTextHi');
 const subTitle = document.getElementById('memCardSubtitle');
 const pName = document.getElementById('memPersonName');
-const memDates = document.getElementById('memDates');
 const btnEnter = document.getElementById('btnMemEnter');
 if (!tEn || !tUr || !tHi) return;
 tEn.classList.add('hidden');
@@ -3132,21 +3136,18 @@ tUr.classList.add('hidden');
 tHi.classList.add('hidden');
 if (lang === 'ur') {
 tUr.classList.remove('hidden');
-if (subTitle) subTitle.textContent = "Memorial and Tribute";
-if (pName) pName.textContent = "Muhammad Sadiq Talk";
-if (memDates) memDates.textContent = "(Nemdewale) • 1931 – 2021";
-if (btnEnter) btnEnter.textContent = "Enter the portal / Amen";
+if (subTitle) subTitle.textContent = "یادِ رفتگاں و خراجِ عقیدت";
+if (pName) pName.textContent = "محمد صادق ٹاک";
+if (btnEnter) btnEnter.textContent = "پورٹل میں داخل ہوں / آمین";
 } else if (lang === 'hi') {
 tHi.classList.remove('hidden');
-if (subTitle) subTitle.textContent = "Immortal memory and best regards";
-if (pName) pName.textContent = "Mohammed Sadiq Tak";
-if (memDates) memDates.textContent = "(Neemed ones) • 1931– 2021";
-if (btnEnter) btnEnter.textContent = "Enter Portal / Amen";
+if (subTitle) subTitle.textContent = "अमर स्मृति एवं सादर श्रद्धांजलि";
+if (pName) pName.textContent = "मोहम्मद सादिक़ टाक";
+if (btnEnter) btnEnter.textContent = "पोर्टल में प्रवेश करें / आमीन";
 } else {
 tEn.classList.remove('hidden');
 if (subTitle) subTitle.textContent = "In Eternal Remembrance";
 if (pName) pName.textContent = "Muhammad Sadiq Tak";
-if (memDates) memDates.textContent = "(Neemray Walay) • 1931 – 2021";
 if (btnEnter) btnEnter.textContent = "Enter Portal / Aameen";
 }
 }
@@ -3163,14 +3164,7 @@ memorialHasBeenClosed = true;
 }
 function initApp() {
 const modal = document.getElementById('frcModal');
-if (modal) {
-    modal.classList.add('hidden');
-    const previewContainer = modal.querySelector('.preview-container, div[class*="overflow"]');
-    if (previewContainer) {
-        previewContainer.style.overflowX = 'auto';
-        previewContainer.style.maxWidth = '100%';
-    }
-}
+if (modal) modal.classList.add('hidden');
 const adminModal = document.getElementById('adminModal');
 if (adminModal) adminModal.classList.add('hidden');
 document.getElementById('langSelect').value = 'en';
