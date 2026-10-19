@@ -143,10 +143,10 @@ height: 0 !important;
 <header class="bandhani-bg text-white shadow-md sticky top-0 z-40 border-b border-amber-500/40">
 <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-3">
 <div class="flex items-center gap-3 cursor-pointer select-none" id="headerLogoArea" title="Official Seal">
-<img src="stamp.png" alt="WCF Official Seal" class="w-12 h-12 rounded-full object-contain shrink-0 shadow-sm border border-amber-400 bg-white hover:opacity-95 transition">
+<img src="stamp.png" alt="WCF Official Seal" class="w-14 h-14 rounded-full object-contain shrink-0 shadow-sm border border-amber-500 bg-white hover:opacity-95 transition">
 <div>
 <h1 id="appTitle" class="text-base md:text-xl font-bold leading-relaxed mb-1 drop-shadow">Chhippa Family Registration Certificate</h1>
-<p id="appSub" class="text-[11px] md:text-xs text-amber-200 leading-normal mt-0.5">World Chhippa Foundation — Global Census Portal (V.6.6.3)</p>
+<p id="appSub" class="text-[11px] md:text-xs text-amber-200 leading-normal mt-0.5">World Chhippa Foundation — Global Census Portal (V.Fnl)</p>
 </div>
 </div>
 <!-- Official Launch Notice Banner -->
@@ -721,25 +721,6 @@ World Chhippa Foundation Global Census Registry
 </div>
 </div>
 </main>
-<!-- FIX: Standardized footer spelling -->
-<footer class="bg-slate-900 text-white py-6 mt-12 border-t-2 border-amber-500 font-latin text-center">
-<div class="max-w-4xl mx-auto px-4 space-y-2">
-<p class="text-amber-400 font-bold text-xs md:text-sm">
-Thank you to all those who laid the foundation of the World Chhippa Foundation:
-</p>
-<p class="text-slate-300 text-xs tracking-wide">
-• Subrati Deen Bhati (Nimbi Jodhan) IND &nbsp;|&nbsp;
-• Mrs. Saleem Rao (Ghachi Pura Walay) PAK &nbsp;|&nbsp;
-• Sufyan Tak / Safwan Tak (Neemray Walay) PAK
-</p>
-<div class="pt-2 border-t border-slate-700 max-w-lg mx-auto">
-<span class="text-[11px] text-slate-400 block">Conceived, Architected & Dedicated to Chhippa Community by:</span>
-<h4 class="text-base md:text-lg font-black text-amber-400 tracking-wider mt-0.5">
-M. WASEEM SADIQ TAK (Neemray Walay)
-</h4>
-</div>
-</div>
-</footer>
 <!-- COMPACT MEMORIAL TRIBUTE POPUP -->
 <div id="memorialModal" onclick="handleMemorialBackdropClick(event)" class="fixed inset-x-0 bottom-0 top-24 bg-black/30 z-40 overflow-y-auto p-4 flex items-center justify-center">
 <div class="relative w-full max-w-sm bg-white rounded-2xl shadow-2xl border-2 border-amber-500/60 p-4 text-center mx-auto" onclick="event.stopPropagation()">
@@ -3207,5 +3188,209 @@ closeAboutUsModal();
 }
 }
 </script>
+</body>
+<!-- ================= PART 1 ================= -->
+<div class="max-w-4xl mx-auto my-8 p-6 bg-white rounded-2xl shadow-xl border border-slate-200 font-latin">
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 border-b pb-4 mb-6">
+        <div>
+            <h2 class="text-xl font-black text-emerald-800 uppercase tracking-wide">Digital Identity Card Portal</h2>
+            <p class="text-xs text-slate-500 mt-1">Enter your Unique Code to generate, preview, and print your official community ID card.</p>
+        </div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 bg-slate-50 p-4 rounded-xl border border-slate-200">
+        <div>
+            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Unique Member ID / Code</label>
+            <div class="flex gap-2">
+                <input type="text" id="searchMemberId" placeholder="e.g. WCF-984210" class="w-full px-3 py-2 text-xs border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none font-mono">
+                <button type="button" onclick="fetchMemberDataForIdCard()" class="bg-emerald-700 hover:bg-emerald-800 text-white px-4 py-2 rounded-lg text-xs font-bold transition">Search</button>
+            </div>
+        </div>
+        <div>
+            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Blood Group</label>
+            <select id="inputBloodGroup" class="w-full px-3 py-2 text-xs border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none bg-white">
+                <option value="A+">A+</option><option value="A-">A-</option><option value="B+">B+</option><option value="B-">B-</option><option value="O+">O+</option><option value="O-">O-</option><option value="AB+">AB+</option><option value="AB-">AB-</option>
+            </select>
+        </div>
+        <div>
+            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Emergency Contact Number</label>
+            <input type="text" id="inputEmergencyContact" placeholder="e.g. 0300-1234567" class="w-full px-3 py-2 text-xs border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none font-mono">
+        </div>
+        <div class="md:col-span-3 flex flex-col sm:flex-row items-center justify-between gap-4 pt-2 border-t border-slate-200">
+            <div>
+                <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Upload Your Photo <span class="text-amber-600 font-normal lowercase">(Optional)</span></label>
+                <input type="file" id="inputUserPhoto" accept="image/*" class="text-xs text-slate-500 file:mr-4 file:py-1.5 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 cursor-pointer">
+            </div>
+            <button type="button" onclick="window.print()" class="w-full sm:w-auto bg-amber-500 hover:bg-amber-600 text-slate-950 font-black px-6 py-2.5 rounded-xl text-xs uppercase tracking-wider shadow-md transition flex items-center justify-center gap-2">
+                🖨️ Print ID Card
+            </button>
+        </div>
+    </div>
+<!-- ================= PART 2 ================= -->
+    <div id="printableIdCardArea" class="flex flex-col md:flex-row gap-6 justify-center items-center py-4">
+        <div class="relative w-[380px] h-[240px] bg-gradient-to-br from-emerald-900 via-emerald-800 to-emerald-950 rounded-2xl shadow-xl p-4 text-white overflow-hidden border-2 border-amber-400 flex flex-col justify-between print:shadow-none">
+            <div class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-10 z-0">
+                <img src="stamp.png" alt="Watermark" class="w-48 h-48 object-contain">
+            </div>
+            <div class="relative z-10 flex items-center justify-between border-b border-amber-400/40 pb-2">
+                <div class="flex items-center gap-2">
+                    <img src="stamp.png" alt="Logo" class="w-7 h-7 rounded-full border border-amber-400 bg-white object-contain">
+                    <div>
+                        <h3 class="text-[10px] font-black tracking-wider uppercase">World Chhippa Foundation</h3>
+                        <p class="text-[7.5px] text-amber-200">Global Census & ID Authority</p>
+                    </div>
+                </div>
+                <span class="text-[8px] bg-amber-500 text-slate-950 px-2 py-0.5 rounded font-bold uppercase">Official ID</span>
+            </div>
+            <div class="relative z-10 flex gap-3 items-center my-auto">
+                <div class="w-20 h-24 bg-white/10 border-2 border-amber-400/80 rounded-lg overflow-hidden shrink-0 flex items-center justify-center relative">
+                    <img id="previewPhotoImg" src="" alt="" class="w-full h-full object-cover hidden">
+                    <span id="previewPhotoPlaceholder" class="text-[8.5px] text-amber-200 text-center px-1">No Photo</span>
+                </div>
+                <div class="space-y-1 text-xs leading-tight w-full overflow-hidden">
+                    <div>
+                        <span class="text-[8px] text-amber-300 block uppercase">Full Name</span>
+                        <strong class="text-xs font-black tracking-wide block truncate" id="previewName">Member Name</strong>
+                    </div>
+                    <div>
+                        <span class="text-[8px] text-amber-300 block uppercase">Father's Name</span>
+                        <span id="previewFather" class="text-[11px] block truncate">Father Name</span>
+                    </div>
+                    <div class="flex gap-4 pt-0.5">
+                        <div>
+                            <span class="text-[7.5px] text-amber-300 block uppercase">Blood Group</span>
+                            <strong class="text-xs text-amber-200" id="previewBlood">O+</strong>
+                        </div>
+                        <div>
+                            <span class="text-[7.5px] text-amber-300 block uppercase">Emergency No</span>
+                            <strong class="text-[10px] text-slate-100 font-mono" id="previewEmergency">---</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="relative z-10 flex justify-between items-end border-t border-amber-400/30 pt-1.5">
+                <div>
+                    <span class="text-[7.5px] text-amber-300 block">Member ID</span>
+                    <span id="previewId" class="text-[11px] font-mono font-bold text-amber-100">WCF-000000</span>
+                </div>
+                <div class="bg-white p-1 rounded w-9 h-9 flex items-center justify-center text-[7px] text-black font-bold">QR</div>
+            </div>
+        </div>
+        <div class="relative w-[380px] h-[240px] bg-slate-900 rounded-2xl shadow-xl p-4 text-white overflow-hidden border-2 border-emerald-600 flex flex-col justify-between print:shadow-none">
+            <div class="border-b border-slate-700 pb-1.5 flex justify-between items-center text-[9px] text-amber-400 font-bold uppercase">
+                <span>Identity Card Guidelines</span><span>WCF Registry</span>
+            </div>
+            <div class="space-y-1.5 text-[9.5px] text-slate-300 my-auto">
+                <p>1. This card is issued by WCF Global Census Directory based on applicant records.</p>
+                <p>2. If found, please return to the nearest regional office.</p>
+                <div>
+                    <span class="text-amber-400 block font-bold text-[9px]">Permanent Residential Address:</span>
+                    <span id="previewAddress" class="text-slate-200 text-[9px] block">Address will appear here automatically...</span>
+                </div>
+            </div>
+            <div class="border-t border-slate-700 pt-1.5 flex justify-between items-end text-[8.5px]">
+                <div>
+                    <span class="text-slate-400 block">Issued Year: 2026</span>
+                    <span class="text-emerald-400 font-bold">Authorized Digital Card</span>
+                </div>
+                <div class="text-center">
+                    <span class="font-signature text-xs text-amber-300">Registrar WCF</span>
+                    <div class="w-20 border-t border-slate-500 mt-0.5"></div>
+                    <span class="text-[6.5px] text-slate-400">Signature & Seal</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+/* ================= PART 3 ================= */
+function fetchMemberDataForIdCard() {
+    const searchId = document.getElementById('searchMemberId').value.trim();
+    if(!searchId) {
+        alert("براہ کرم درست ممبر آئی ڈی یا کوڈ درج کریں!");
+        return;
+    }
+    let foundRec = storedFRCRecords[searchId.toUpperCase()];
+    if(!foundRec) {
+        for(let key in storedFRCRecords) {
+            let rec = storedFRCRecords[key];
+            if(rec.code.toUpperCase() === searchId.toUpperCase() || (rec.head && rec.head.memberId && rec.head.memberId.toUpperCase() === searchId.toUpperCase())) {
+                foundRec = rec;
+                break;
+            }
+        }
+    }
+    if(foundRec && foundRec.head) {
+        document.getElementById('previewId').innerText = foundRec.head.memberId || foundRec.code;
+        document.getElementById('previewName').innerText = foundRec.head.name || 'ممبر کا نام';
+        document.getElementById('previewFather').innerText = foundRec.head.father || 'والد کا نام';
+        document.getElementById('previewAddress').innerText = foundRec.head.address ? `${foundRec.head.address}, ${foundRec.head.city}` : 'پتہ درج نہیں ہے';
+         } else {
+        alert(currentLang === 'en' ? "This member ID or code does not exist!" : "یہ ممبر آئی ڈی یا کوڈ سسٹم میں موجود نہیں ہے!");
+        document.getElementById('previewId').innerText = "";
+        document.getElementById('previewName').innerText = "";
+        document.getElementById('previewFather').innerText = "";
+        document.getElementById('previewAddress').innerText = "";
+        return;
+    }
+    }
+/* ================= PART 4 ================= */
+document.addEventListener('DOMContentLoaded', () => {
+    const bloodSelect = document.getElementById('inputBloodGroup');
+    if(bloodSelect) {
+        bloodSelect.addEventListener('change', function() {
+            document.getElementById('previewBlood').innerText = this.value;
+        });
+    }
+    const emInput = document.getElementById('inputEmergencyContact');
+    if(emInput) {
+        emInput.addEventListener('input', function() {
+            document.getElementById('previewEmergency').innerText = this.value;
+        });
+    }
+    const photoInput = document.getElementById('inputUserPhoto');
+    if(photoInput) {
+        photoInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.getElementById('previewPhotoImg');
+                    img.src = e.target.result;
+                    img.classList.remove('hidden');
+                    document.getElementById('previewPhotoPlaceholder').classList.add('hidden');
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+});
+</script>
+</body>
+<footer class="bg-slate-900 text-white py-6 mt-12 border-t-2 border-amber-500 font-latin text-center">
+<div class="max-w-4xl mx-auto px-4 space-y-2">
+<p class="text-amber-400 font-bold text-xs md:text-sm">
+Thank you to all those who laid the foundation of the World Chhippa Foundation:
+</p>
+<p class="text-slate-300 text-xs tracking-wide">
+• Subrati Deen Bhati (Nimbi Jodhan) IND &nbsp;|&nbsp;
+• Mrs. Saleem Rao (Ghachi Pura Walay) PAK &nbsp;|&nbsp;
+• Sufyan Tak / Safwan Tak (Neemray Walay) PAK
+</p>
+<div class="pt-2 border-t border-slate-700 max-w-lg mx-auto">
+<span class="text-[11px] text-slate-400 block">Conceived, Architected & Dedicated to Chhippa Community by:</span>
+<h4 class="text-base md:text-lg font-black text-amber-400 tracking-wider mt-0.5">
+M. WASEEM SADIQ TAK (Neemray Walay)
+</h4>
+</div>
+</div>
+</footer>
+</body>
+<style>
+@media print {
+  body * { visibility: hidden !important; }
+  #printableIdCardArea, #printableIdCardArea * { visibility: visible !important; }
+  #printableIdCardArea { position: absolute !important; left: 0 !important; top: 0 !important; width: 100% !important; }
+}
+</style>
 </body>
 </html>
