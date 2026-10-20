@@ -55,7 +55,7 @@ body { font-family: 'Inter', sans-serif; }
     <form onsubmit="handleAdminLogin(event)" class="space-y-3 text-left">
       <div>
         <label class="block text-xs font-bold text-slate-700 mb-1">Enter WCF Admin Master PIN:</label>
-        <input type="password" id="adminPinInput" required placeholder="••••••••••••" class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm outline-none focus:ring-2 focus:ring-amber-600 font-mono">
+        <input type="password" id="adminPinInput" required placeholder="тАвтАвтАвтАвтАвтАвтАвтАвтАвтАвтАвтАв" class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm outline-none focus:ring-2 focus:ring-amber-600 font-mono">
       </div>
       <p id="loginErrorMsg" class="text-xs text-red-600 font-bold hidden"></p>
       <button type="submit" class="w-full bandhani-bg bg-amber-800 text-white font-bold py-2.5 rounded-xl shadow-lg text-sm transition cursor-pointer">
@@ -78,10 +78,10 @@ body { font-family: 'Inter', sans-serif; }
       </div>
       <div class="flex items-center gap-2">
         <button onclick="fetchAllRecordsFromFirebase()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3.5 py-2 rounded-lg shadow transition">
-          🔄 Refresh Cloud Data
+          ЁЯФД Refresh Cloud Data
         </button>
         <button onclick="lockAdminSession()" class="bg-red-700 hover:bg-red-600 text-white text-xs font-bold px-3 py-2 rounded-lg shadow transition">
-          🔒 Lock
+          ЁЯФТ Lock
         </button>
       </div>
     </div>
@@ -106,7 +106,7 @@ body { font-family: 'Inter', sans-serif; }
             <option value="both">Both Collections Combined</option>
           </select>
           <button type="button" onclick="syncPendingRecordsToFirebase()" class="px-3 py-1.5 bg-slate-800 text-white font-bold rounded-lg text-xs hover:bg-slate-700">
-            ⬆️ Push Local (<span id="pendingRecordsBadge">0</span>)
+            тмЖя╕П Push Local (<span id="pendingRecordsBadge">0</span>)
           </button>
         </div>
       </div>
@@ -130,7 +130,7 @@ body { font-family: 'Inter', sans-serif; }
       <!-- Master Census Directory PDF -->
       <div class="bg-amber-50/70 border border-amber-200 p-4 rounded-xl space-y-3 text-left">
         <h4 class="text-xs font-bold text-slate-900 flex items-center gap-1.5">
-          <span>📑</span> <span>Master Census Directory PDF:</span>
+          <span>ЁЯУС</span> <span>Master Census Directory PDF:</span>
         </h4>
         <p class="text-[11px] text-slate-600">Select country or city to filter, or leave empty to export the <b>Complete Global Directory</b>.</p>
         <div class="grid grid-cols-1 md:grid-cols-12 gap-2.5">
@@ -149,16 +149,20 @@ body { font-family: 'Inter', sans-serif; }
         <h4 class="text-xs font-bold text-slate-600 uppercase tracking-wider">Additional 1-Click PDF Reports:</h4>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
           <button type="button" onclick="exportPhoneDirectoryPDF()" class="bg-blue-700 hover:bg-blue-800 text-white text-xs font-bold p-3.5 rounded-xl shadow text-center flex flex-col items-center justify-center gap-1 transition cursor-pointer">
-            <span class="text-lg">📱</span>
+            <span class="text-lg">ЁЯУ▒</span>
             <span>Phone Directory PDF</span>
           </button>
           <button type="button" onclick="exportAdultUnmarriedPDF()" class="bg-purple-700 hover:bg-purple-800 text-white text-xs font-bold p-3.5 rounded-xl shadow text-center flex flex-col items-center justify-center gap-1 transition cursor-pointer">
-            <span class="text-lg">🎓</span>
+            <span class="text-lg">ЁЯОУ</span>
             <span>18+ Unmarried Directory PDF</span>
           </button>
           <button type="button" onclick="exportNonChhippaWivesPDF()" class="bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold p-3.5 rounded-xl shadow text-center flex flex-col items-center justify-center gap-1 transition cursor-pointer">
-            <span class="text-lg">🌸</span>
+            <span class="text-lg">ЁЯМ╕</span>
             <span>Non-Chhippa Wives PDF</span>
+          </button>
+          <button type="button" onclick="exportOtherClansPDF()" class="bg-teal-700 hover:bg-teal-800 text-white text-xs font-bold p-3.5 rounded-xl shadow text-center flex flex-col items-center justify-center gap-1 transition cursor-pointer">
+            <span class="text-lg"></span>
+            <span>Other Clans Report PDF</span>
           </button>
         </div>
       </div>
@@ -174,17 +178,17 @@ body { font-family: 'Inter', sans-serif; }
       <!-- Bottom Backup & Reset Controls -->
       <div class="pt-3 border-t border-slate-200 flex flex-wrap gap-2 justify-between items-center text-left">
         <button type="button" onclick="exportCensusJSON()" class="bandhani-bg bg-slate-800 text-white text-xs font-bold px-4 py-2.5 rounded-lg shadow transition cursor-pointer">
-          💾 Download JSON Backup
+          ЁЯТ╛ Download JSON Backup
         </button>
         <button type="button" onclick="clearAllCensusData()" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-4 py-2.5 rounded-lg shadow transition cursor-pointer">
-          ⚠️ Clear Local Test Cache
+          тЪая╕П Clear Local Test Cache
         </button>
       </div>
     </div>
   </main>
 
   <footer class="bg-slate-900 text-white py-4 border-t-2 border-amber-500 text-center text-xs">
-    <p class="text-amber-400 font-bold">World Chhippa Foundation — Master Administration Console</p>
+    <p class="text-amber-400 font-bold">World Chhippa Foundation тАФ Master Administration Console</p>
     <p class="text-[11px] text-slate-400 mt-0.5">Conceived, Architected & Dedicated by: M. WASEEM SADIQ TAK (Neemray Walay)</p>
   </footer>
 </div>
@@ -286,7 +290,7 @@ function handleAdminLogin(e) {
   e.preventDefault();
   const errEl = document.getElementById('loginErrorMsg');
   if (isAdminLockedOut) {
-    errEl.textContent = "سیکیورٹی لاک: 3 غلط کوششوں کی وجہ سے ایڈمن پورٹل 1 منٹ کے لیے بند ہے۔";
+    errEl.textContent = "╪│█М┌й█М┘И╪▒┘╣█М ┘Д╪з┌й: 3 ╪║┘Д╪╖ ┌й┘И╪┤╪┤┘И┌║ ┌й█М ┘И╪м█Б ╪│█Т ╪з█М┌И┘Е┘Ж ┘╛┘И╪▒┘╣┘Д 1 ┘Е┘Ж┘╣ ┌й█Т ┘Д█М█Т ╪и┘Ж╪п █Б█Т█Ф";
     errEl.classList.remove('hidden');
     return;
   }
@@ -306,7 +310,7 @@ function handleAdminLogin(e) {
     adminFailedAttempts++;
     if (adminFailedAttempts >= 3) {
       isAdminLockedOut = true;
-      errEl.textContent = "3 غلط کوششیں! پورٹل 1 منٹ کے لیے لاک ہو گیا ہے۔";
+      errEl.textContent = "3 ╪║┘Д╪╖ ┌й┘И╪┤╪┤█М┌║! ┘╛┘И╪▒┘╣┘Д 1 ┘Е┘Ж┘╣ ┌й█Т ┘Д█М█Т ┘Д╪з┌й █Б┘И ┌п█М╪з █Б█Т█Ф";
       errEl.classList.remove('hidden');
       setTimeout(() => {
         isAdminLockedOut = false;
@@ -314,7 +318,7 @@ function handleAdminLogin(e) {
         errEl.classList.add('hidden');
       }, 60000);
     } else {
-      errEl.textContent = `غلط پاس ورڈ! باقی کوششیں: ${3 - adminFailedAttempts}`;
+      errEl.textContent = `╪║┘Д╪╖ ┘╛╪з╪│ ┘И╪▒┌И! ╪и╪з┘В█М ┌й┘И╪┤╪┤█М┌║: ${3 - adminFailedAttempts}`;
       errEl.classList.remove('hidden');
     }
   }
@@ -522,7 +526,7 @@ function exportCountryCityWisePDF() {
     const allPersons = [{
       uid: h.memberId || `${rec.code}-1`,
       name: `${h.name} (${h.father ? 's/o ' + h.father : 'Head'})`,
-      relClan: `${rec.type === 'family' ? 'Head' : 'Individual'} / ${getEnglishValue('clan', h.clanKey) || h.clan || 'Chhippa'}`,
+      relClan: `${rec.type === 'family' ? 'Head' : 'Individual'} / ${h.clanKey === 'Other' || h.clan === 'Other' || (h.clan && h.clan !== 'Tak' && h.clan !== 'Bhati' && h.clan !== 'Rao' && h.clan !== 'Molani' && h.clan !== 'Lodha' && h.clan !== 'Deora' && h.clan !== 'Chhippa') ? ' ' + (h.clan || 'Other') : (getEnglishValue('clan', h.clanKey) || h.clan || 'Chhippa')}`,
       phone: h.phone || '-',
       eduJob: `${getEnglishValue('education', h.eduKey) || h.edu || '-'} / ${getEnglishValue('job', h.jobKey) || h.job || '-'}`,
       dobAge: `${h.dob || '-'}`,
@@ -620,7 +624,7 @@ function exportAdultUnmarriedPDF() {
   allRecords.forEach(rec => {
     if (rec.members && Array.isArray(rec.members)) {
       rec.members.forEach(m => {
-        const isChild = (m.relationKey === 'Son' || m.relationKey === 'Daughter' || (m.relation && (m.relation.includes('بیٹا') || m.relation.includes('بیٹی') || m.relation.includes('बेटा') || m.relation.includes('बेटी'))));
+        const isChild = (m.relationKey === 'Son' || m.relationKey === 'Daughter' || (m.relation && (m.relation.includes('╪и█М┘╣╪з') || m.relation.includes('╪и█М┘╣█М') || m.relation.includes('рдмреЗрдЯрд╛') || m.relation.includes('рдмреЗрдЯреА'))));
         const ageNum = parseInt(m.age) || calculateAge(m.dob);
         const isUnmarried = (m.maritalStatusKey === 'Unmarried' || !m.maritalStatusKey);
         if (isChild && ageNum >= 18 && isUnmarried) {
@@ -687,8 +691,8 @@ function exportNonChhippaWivesPDF() {
   allRecords.forEach(rec => {
     if (rec.members && Array.isArray(rec.members)) {
       rec.members.forEach(m => {
-        const isWife = (m.relationKey === 'Wife' || (m.relation && (m.relation.includes('بیوی') || m.relation.includes('पत्नी'))));
-        const isNonChhippa = (m.lineageKey === 'NonChhippa' || (m.lineage && (m.lineage.includes('غیر') || m.lineage.includes('Non') || m.lineage.includes('गैर'))));
+        const isWife = (m.relationKey === 'Wife' || (m.relation && (m.relation.includes('╪и█М┘И█М') || m.relation.includes('рдкрддреНрдиреА'))));
+        const isNonChhippa = (m.lineageKey === 'NonChhippa' || (m.lineage && (m.lineage.includes('╪║█М╪▒') || m.lineage.includes('Non') || m.lineage.includes('рдЧреИрд░'))));
         if (isWife && isNonChhippa) {
           const fullWifeLoc = `${rec.head.phone} (${m.address || rec.head.address || ''}, ${m.city || rec.head.city || ''}, ${m.country || rec.head.country || ''})`;
           nonChhippaList.push({
@@ -760,6 +764,78 @@ function clearAllCensusData() {
     updateCensusCounters();
     alert("Local browser cache cleared.");
   }
+}
+function exportOtherClansPDF() {
+  const allRecords = Object.values(storedFRCRecords);
+  const otherList = [];
+  
+  allRecords.forEach(rec => {
+    if (rec.head && (rec.head.clanKey === 'Other' || rec.head.clan === 'Other' || (rec.head.clan && rec.head.clan !== 'Tak' && rec.head.clan !== 'Bhati' && rec.head.clan !== 'Rao' && rec.head.clan !== 'Molani' && rec.head.clan !== 'Lodha' && rec.head.clan !== 'Deora' && rec.head.clan !== 'Chhippa'))) {
+      otherList.push({
+        frcCode: rec.code,
+        name: `${rec.head.name} (Head)`,
+        clan: rec.head.clan || 'Other',
+        phone: rec.head.phone || 'N/A',
+        location: `${rec.head.city || ''}, ${rec.head.country || ''}`
+      });
+    }
+    if (rec.members && Array.isArray(rec.members)) {
+      rec.members.forEach(m => {
+        if (m.clanKey === 'Other' || m.clan === 'Other' || (m.clan && m.clan !== 'Tak' && m.clan !== 'Bhati' && m.clan !== 'Rao' && m.clan !== 'Molani' && m.clan !== 'Lodha' && m.clan !== 'Deora' && m.clan !== 'Chhippa')) {
+          otherList.push({
+            frcCode: rec.code,
+            name: m.name,
+            clan: m.clan || 'Other',
+            phone: rec.head.phone || 'N/A',
+            location: `${rec.head.city || ''}, ${rec.head.country || ''}`
+          });
+        }
+      });
+    }
+  });
+
+  if (otherList.length === 0) {
+    alert("No records found with Other / Custom clans!");
+    return;
+  }
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF('p', 'mm', 'a4');
+  doc.setFontSize(15);
+  doc.setTextColor(13, 148, 136);
+  doc.text("WCF - Other / Custom Clans Directory Report", 14, 15);
+  doc.setFontSize(9);
+  doc.setTextColor(100, 116, 139);
+  doc.text(`Generated: ${new Date().toLocaleDateString('en-GB')} | Total: ${otherList.length}`, 14, 21);
+  
+  let y = 30;
+  doc.setFillColor(204, 251, 241);
+  doc.rect(14, y - 5, 182, 8, 'F');
+  doc.setFontSize(9);
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(0, 0, 0);
+  doc.text("#", 16, y);
+  doc.text("FRC Code", 24, y);
+  doc.text("Member Name", 52, y);
+  doc.text("Custom Clan / Other", 95, y);
+  doc.text("Phone & Location", 135, y);
+  doc.setFont("helvetica", "normal");
+  y += 7;
+
+  otherList.forEach((item, idx) => {
+    if (y > 280) { doc.addPage(); y = 20; }
+    doc.setFontSize(8);
+    doc.text(String(idx + 1), 16, y);
+    doc.text(item.frcCode, 24, y);
+    doc.text(item.name.substring(0, 22), 52, y);
+    doc.text(item.clan.substring(0, 20), 95, y);
+    doc.text(`${item.phone} (${item.location})`.substring(0, 32), 135, y);
+    doc.setDrawColor(226, 232, 240);
+    doc.line(14, y + 2, 196, y + 2);
+    y += 7;
+  });
+
+  doc.save(`WCF_Other_Clans_Directory_${new Date().toISOString().slice(0, 10)}.pdf`);
 }
 </script>
 </body>
