@@ -4302,4 +4302,325 @@ M. WASEEM SADIQ TAK (Neemray Walay)
 </script>
 <!-- ==================== END WCF SAFE FIXER PATCH V3 ==================== -->
 
+
+<!-- ==================== WCF SAFE FIXER PATCH V4 (7 LOCKED FIXES - ZERO DAMAGE GUARANTEE) ==================== -->
+<style id="wcf-v4-seven-fixes-styles">
+  /* FIX 6: CR80 STANDARD CREDIT/DEBIT CARD SIZE (324px x 204px on screen = exact 85.6mm x 54mm ratio) */
+  #printableIdCardArea > div {
+    width: 324px !important;
+    height: 204px !important;
+    min-width: 324px !important;
+    max-width: 324px !important;
+    min-height: 204px !important;
+    max-height: 204px !important;
+    padding: 11px 14px !important;
+    border-radius: 12px !important;
+    box-sizing: border-box !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  /* FIX 3: FRONT SIDE PORTAL GREEN BACKGROUND (EXACT MATCH ON SCREEN & PRINT) */
+  #printableIdCardArea > div:first-child {
+    background: linear-gradient(135deg, #064e3b 0%, #065f46 50%, #022c22 100%) !important;
+    background-color: #064e3b !important;
+    border: 1.5px solid #fbbf24 !important;
+  }
+
+  /* FIX 4: BACK SIDE PROFESSIONAL DARK GREYISH-BLACK (NOT PURE BLACK) */
+  #printableIdCardArea > div:last-child {
+    background: linear-gradient(135deg, #27303f 0%, #1e293b 100%) !important;
+    background-color: #27303f !important;
+    border: 1.5px solid #10b981 !important;
+  }
+
+  /* FIX 1: ID CARD WATERMARK ONLY - LARGER SIZE, ALIGNED TO PHOTO/NAME WIDTH, NO BLACK CORNERS */
+  #printableIdCardArea > div:first-child > .opacity-10 {
+    opacity: 0.22 !important;
+    background: transparent !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  #printableIdCardArea img[alt="Watermark"] {
+    width: 162px !important;
+    height: 162px !important;
+    border-radius: 50% !important;
+    clip-path: circle(49% at 50% 50%) !important;
+    -webkit-clip-path: circle(49% at 50% 50%) !important;
+    object-fit: contain !important;
+    background: transparent !important;
+    mix-blend-mode: screen !important;
+    filter: brightness(1.15) contrast(1.1) !important;
+    opacity: 0.85 !important;
+    box-shadow: none !important;
+  }
+
+  /* COMPACT PHOTO & TEXT ADJUSTMENT TO FIT CR80 SIZE & LEAVE GAP FOR LARGER QR CODE */
+  #printableIdCardArea > div:first-child .w-20.h-24 {
+    width: 64px !important;
+    height: 68px !important;
+  }
+  #printableIdCardArea #previewName {
+    font-size: 11px !important;
+    line-height: 1.15 !important;
+  }
+  #printableIdCardArea #previewFather {
+    font-size: 10px !important;
+    line-height: 1.15 !important;
+  }
+
+  /* FIX 5: QR CODE ENHANCEMENT - LARGER & SCANNABLE USING GAP BELOW BLOOD/EMERGENCY LINE */
+  #idCardQRCode {
+    width: 56px !important;
+    height: 56px !important;
+    min-width: 56px !important;
+    min-height: 56px !important;
+    padding: 3px !important;
+    background-color: #ffffff !important;
+    border-radius: 5px !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3) !important;
+    margin-top: -10px !important;
+    position: relative !important;
+    z-index: 25 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  #idCardQRCode img,
+  #idCardQRCode canvas {
+    width: 50px !important;
+    height: 50px !important;
+    max-width: 50px !important;
+    max-height: 50px !important;
+    image-rendering: -webkit-optimize-contrast !important;
+    image-rendering: crisp-edges !important;
+    image-rendering: pixelated !important;
+    display: block !important;
+  }
+
+  /* FIX 2: ID CARD SEAL & SIGNATURE PURE WHITE (#FFFFFF) ON BACK SIDE ONLY */
+  #printableIdCardArea > div:last-child svg circle,
+  #printableIdCardArea > div:last-child svg line,
+  #printableIdCardArea > div:last-child svg path {
+    stroke: #ffffff !important;
+  }
+  #printableIdCardArea > div:last-child svg text,
+  #printableIdCardArea > div:last-child svg textPath {
+    fill: #ffffff !important;
+  }
+  #printableIdCardArea > div:last-child img[alt="Signature"] {
+    filter: brightness(0) invert(1) drop-shadow(0 0 1px rgba(255,255,255,0.6)) !important;
+    -webkit-filter: brightness(0) invert(1) drop-shadow(0 0 1px rgba(255,255,255,0.6)) !important;
+    opacity: 1 !important;
+  }
+
+  /* EXACT CR80 SIZE & COLOR PRESERVATION WHEN PRINTING ON WHITE CARD OR PAPER */
+  @media print {
+    * {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+      color-adjust: exact !important;
+    }
+    body:not(.printing-frc) #printableIdCardArea {
+      display: flex !important;
+      flex-direction: row !important;
+      flex-wrap: wrap !important;
+      gap: 6mm !important;
+      justify-content: center !important;
+      align-items: center !important;
+      padding: 10mm !important;
+    }
+    body:not(.printing-frc) #printableIdCardArea > div {
+      width: 85.6mm !important;
+      height: 54mm !important;
+      min-width: 85.6mm !important;
+      max-width: 85.6mm !important;
+      min-height: 54mm !important;
+      max-height: 54mm !important;
+      padding: 2.8mm 3.5mm !important;
+      border-radius: 3.18mm !important;
+      page-break-inside: avoid !important;
+      break-inside: avoid !important;
+    }
+    body:not(.printing-frc) #printableIdCardArea > div:first-child {
+      background: linear-gradient(135deg, #064e3b 0%, #065f46 50%, #022c22 100%) !important;
+      background-color: #064e3b !important;
+    }
+    body:not(.printing-frc) #printableIdCardArea > div:last-child {
+      background: linear-gradient(135deg, #27303f 0%, #1e293b 100%) !important;
+      background-color: #27303f !important;
+    }
+    body:not(.printing-frc) #printableIdCardArea img[alt="Watermark"] {
+      width: 42mm !important;
+      height: 42mm !important;
+      opacity: 0.85 !important;
+    }
+    body:not(.printing-frc) #idCardQRCode {
+      width: 14.8mm !important;
+      height: 14.8mm !important;
+      min-width: 14.8mm !important;
+      min-height: 14.8mm !important;
+      padding: 0.8mm !important;
+      background-color: #ffffff !important;
+    }
+    body:not(.printing-frc) #idCardQRCode img,
+    body:not(.printing-frc) #idCardQRCode canvas {
+      width: 13.2mm !important;
+      height: 13.2mm !important;
+      max-width: 13.2mm !important;
+      max-height: 13.2mm !important;
+    }
+  }
+</style>
+
+<script id="wcf-v4-seven-fixes-script">
+(function() {
+  // FIX 2 HELPER: Ensure ID Card Back Seal & Signature are Pure White (#ffffff)
+  function applyPureWhiteIdCardSeal() {
+    const sigSpan = document.getElementById('cardSigSeal');
+    if (!sigSpan) return;
+    const container = sigSpan.parentElement;
+    if (!container) return;
+    const sealWrap = container.querySelector('.relative, .absolute');
+    if (sealWrap) {
+      sealWrap.className = "relative flex items-center justify-center w-24 h-14 ml-auto -mb-2.5 pointer-events-none select-none";
+      sealWrap.innerHTML = `
+        <svg viewBox="0 0 200 200" class="w-14 h-14 transform -rotate-6 opacity-100">
+          <circle cx="100" cy="100" r="95" fill="none" stroke="#ffffff" stroke-width="5.5" />
+          <circle cx="100" cy="100" r="88" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-dasharray="5,2" />
+          <circle cx="100" cy="100" r="62" fill="none" stroke="#ffffff" stroke-width="3" />
+          <path id="idCardCurveTopW" d="M 25,100 A 75,75 0 0,1 175,100" fill="none" />
+          <text fill="#ffffff" font-family="'Inter', sans-serif" font-weight="900" font-size="11.5" letter-spacing="1.2">
+            <textPath href="#idCardCurveTopW" startOffset="50%" text-anchor="middle">★ WORLD CHHIPPA FOUNDATION ★</textPath>
+          </text>
+          <path id="idCardCurveBottomW" d="M 172,100 A 72,72 0 0,1 28,100" fill="none" />
+          <text fill="#ffffff" font-family="'Inter', sans-serif" font-weight="900" font-size="9.5" letter-spacing="1.5">
+            <textPath href="#idCardCurveBottomW" startOffset="50%" text-anchor="middle">GLOBAL CENSUS DIRECTORY</textPath>
+          </text>
+          <text x="100" y="85" fill="#ffffff" font-family="'Inter', sans-serif" font-size="12" text-anchor="middle" font-weight="900">★ ★ ★</text>
+          <text x="100" y="108" fill="#ffffff" font-family="'Inter', sans-serif" font-weight="900" font-size="19" text-anchor="middle" letter-spacing="2">VERIFIED</text>
+          <line x1="38" y1="115" x2="162" y2="115" stroke="#ffffff" stroke-width="2.5" />
+          <text x="100" y="127" fill="#ffffff" font-family="'Inter', sans-serif" font-size="9.5" text-anchor="middle" font-weight="900" letter-spacing="1.5">AUTHENTIC</text>
+        </svg>
+        <img src="https://raw.githubusercontent.com/worldchhippafoundation/Census/refs/heads/main/Signature.png" onerror="this.src='Signature.png'" alt="Signature" class="absolute -top-1 right-0 w-24 h-auto object-contain z-10 transform -rotate-6 scale-125 pointer-events-none" style="filter: brightness(0) invert(1);">
+      `;
+    }
+  }
+
+  // FIX 5 HELPER: Generate High-Resolution Scannable QR Code on ID Card
+  function enhanceIdCardQRCode() {
+    const searchInput = document.getElementById('searchMemberId');
+    if (!searchInput) return;
+    const searchId = searchInput.value.trim().toUpperCase();
+    if (!searchId || typeof storedFRCRecords === 'undefined') return;
+
+    let foundRec = storedFRCRecords[searchId];
+    if (!foundRec) {
+      for (let key in storedFRCRecords) {
+        let rec = storedFRCRecords[key];
+        if (rec && ((rec.code && rec.code.toUpperCase() === searchId) || (rec.head && rec.head.memberId && rec.head.memberId.toUpperCase() === searchId))) {
+          foundRec = rec;
+          break;
+        }
+      }
+    }
+
+    if (foundRec && foundRec.head) {
+      const qrContainer = document.getElementById('idCardQRCode');
+      if (qrContainer && typeof QRCode !== 'undefined') {
+        qrContainer.innerHTML = '';
+        const verifyUrl = `https://worldchhippafoundation.github.io/verify?doc=${encodeURIComponent(foundRec.code)}&id=${encodeURIComponent(foundRec.head.memberId || foundRec.code)}`;
+        new QRCode(qrContainer, {
+          text: verifyUrl,
+          width: 128,
+          height: 128,
+          colorDark: "#000000",
+          colorLight: "#ffffff",
+          correctLevel: QRCode.CorrectLevel ? QRCode.CorrectLevel.M : 0
+        });
+      }
+    }
+  }
+
+  // FIX 7 HELPER: Lock Tribute Popup Hindi Text (Disable Auto-Translate, Keep UR & EN Untouched)
+  function applyExactHindiTributeFix(lang) {
+    const memModal = document.getElementById('memorialModal');
+    if (memModal) {
+      memModal.setAttribute('translate', 'no');
+      memModal.classList.add('notranslate');
+    }
+
+    const tHi = document.getElementById('memTextHi');
+    if (tHi) {
+      tHi.setAttribute('translate', 'no');
+      tHi.classList.add('notranslate');
+      tHi.innerHTML = `
+        <p>"छीपा बिरादरी के लिए बे-लौस ख़िदमत, मोहब्बत और लाज़वाल क़ुर्बानियों की याद में।"</p>
+        <p class="text-[10px] font-semibold text-slate-600">अल्लाह तआला उन्हें जन्नत-उल-फ़िरदौस में आला मक़ाम अता फ़रमाए। आमीन।</p>
+        <p class="text-[10px] font-bold text-amber-900">पेश-कश: टाक फ़ैमिली (नीमड़े वाले)-कराची, पाकिस्तान</p>
+      `;
+    }
+
+    const dateLine = memModal ? memModal.querySelector('p[dir="ltr"]') : null;
+    const subTitle = document.getElementById('memCardSubtitle');
+    const pName = document.getElementById('memPersonName');
+    const btnEnter = document.getElementById('btnMemEnter');
+
+    const activeLang = lang || (typeof currentLang !== 'undefined' ? currentLang : 'en');
+    if (activeLang === 'hi') {
+      if (subTitle) subTitle.textContent = "याद-ए-रफ़्तगाँ व ख़िराज-ए-अक़ीदत";
+      if (pName) pName.textContent = "मोहम्मद सादिक़ टाक";
+      if (dateLine) dateLine.textContent = "(नीमड़े वाले) • 1931– 2021";
+      if (btnEnter) btnEnter.textContent = "पोर्टल में दाख़िल हों";
+    } else if (activeLang === 'ur') {
+      if (dateLine) dateLine.textContent = "(Neemray Walay) • 1931 – 2021";
+    } else {
+      if (dateLine) dateLine.textContent = "(Neemray Walay) • 1931 – 2021";
+    }
+  }
+
+  function initWcfSevenFixesV4() {
+    applyPureWhiteIdCardSeal();
+    applyExactHindiTributeFix(typeof currentLang !== 'undefined' ? currentLang : 'en');
+
+    if (typeof window.updateMemorialPopupLanguage === 'function' && !window.updateMemorialPopupLanguage._v4Patched) {
+      const origUpdateMemorial = window.updateMemorialPopupLanguage;
+      window.updateMemorialPopupLanguage = function(lang) {
+        origUpdateMemorial(lang);
+        applyExactHindiTributeFix(lang);
+      };
+      window.updateMemorialPopupLanguage._v4Patched = true;
+    }
+
+    if (typeof window.changeLanguage === 'function' && !window.changeLanguage._v4Patched) {
+      const origChangeLang = window.changeLanguage;
+      window.changeLanguage = function(lang) {
+        origChangeLang(lang);
+        applyExactHindiTributeFix(lang);
+        applyPureWhiteIdCardSeal();
+      };
+      window.changeLanguage._v4Patched = true;
+    }
+
+    if (typeof window.fetchMemberDataForIdCard === 'function' && !window.fetchMemberDataForIdCard._v4Patched) {
+      const origFetchCard = window.fetchMemberDataForIdCard;
+      window.fetchMemberDataForIdCard = function() {
+        origFetchCard();
+        enhanceIdCardQRCode();
+      };
+      window.fetchMemberDataForIdCard._v4Patched = true;
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initWcfSevenFixesV4);
+  } else {
+    initWcfSevenFixesV4();
+  }
+})();
+</script>
+<!-- ==================== END WCF SAFE FIXER PATCH V4 ==================== -->
+
 </html>
