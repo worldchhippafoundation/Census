@@ -149,7 +149,12 @@ body { font-family: 'Inter', sans-serif; }
             <option value="Kukda">7. Kukda (ککڑا)</option>
             <option value="Jinva">8. Jinva (جنوا)</option>
             <option value="Mangla">9. Mangla (منگلا)</option>
-            <option value="Other">10. Other (دیگر)</option>
+            <option value="Behlim">10. Behlim (بہلیم)</option>
+            <option value="Joiya">11. Joiya (جوئیا)</option>
+            <option value="Bhimpal">12. Bhimpal (بھیم پال)</option>
+            <option value="Chauhan">13. Chauhan (چوہان)</option>
+            <option value="Panwar">14. Panwar (پنوَار)</option>
+            <option value="Other">15. Other (دیگر)</option>
           </select>
           <button type="button" onclick="exportCountryCityWisePDF()" class="md:col-span-3 bandhani-bg bg-amber-800 text-white text-xs font-bold py-2 px-3 rounded-lg shadow transition flex items-center justify-center gap-1 cursor-pointer">
             <span>Download PDF</span>
@@ -259,7 +264,7 @@ const i18n = {
     maritalStatuses: { Married: "Married", Unmarried: "Unmarried", Widowed: "Widowed", Divorced: "Divorced" },
     genders: { Male: "Male", Female: "Female", Other: "Other" },
     lineage: { Chhippa: "Chhippa", NonChhippa: "Non-Chhippa" },
-    clans: { Tak: "Tak", Bhati: "Bhati", Rao: "Rao", Molani: "Molani", Lodha: "Lodha", Deora: "Deora", Kukda: "Kukda", Jinva: "Jinva", Mangla: "Mangla", Other: "Other" },
+    clans: { Tak: "Tak", Bhati: "Bhati", Rao: "Rao", Molani: "Molani", Lodha: "Lodha", Deora: "Deora", Kukda: "Kukda", Jinva: "Jinva", Mangla: "Mangla", Behlim: "Behlim", Joiya: "Joiya", Bhimpal: "Bhimpal", Chauhan: "Chauhan", Panwar: "Panwar", Other: "Other" },
     education: { Matric: "Matriculation (10th)", Intermediate: "Intermediate (12th)", Graduate: "Graduate (Bachelors)", Masters: "Post Graduate (Masters)", Primary: "Primary School", Religious: "Islamic / Religious Scholar", Uneducated: "Uneducated", Other: "Other" },
     jobs: { Business: "Business / Self-Employed", Textile: "Cloth Merchant / Textile", Tailor: "Tailor / Embroidery", PrivateJob: "Private Job", GovtJob: "Government Job", Teacher: "Teacher / Education", Healthcare: "Doctor / Healthcare", EngineerIT: "Engineer / IT Software", Driver: "Driver / Transport", DailyWage: "Artisan / Daily Wage", Student: "Student", Homemaker: "Homemaker / Housewife", Retired: "Retired", Other: "Other" }
   }
@@ -497,7 +502,12 @@ function getNormalizedClanKey(h) {
     "دیوڑا":"Deora", "देवड़ा":"Deora",
     "ککڑا":"Kukda", "कुकड़ा":"Kukda",
     "جنوا":"Jinva", "जिन्वा":"Jinva",
-    "منگلا":"Mangla", "मंगला":"Mangla"
+    "منگلا":"Mangla", "मंगला":"Mangla",
+    "بہلیم":"Behlim", "बेहलीम":"Behlim",
+    "جوئیا":"Joiya", "जोइया":"Joiya",
+    "بھیم پال":"Bhimpal", "भींपाल":"Bhimpal",
+    "چوہان":"Chauhan", "चौहान":"Chauhan",
+    "پنوَار":"Panwar", "پنوار":"Panwar", "पंवार":"Panwar"
   };
   if (mapUrHi[c]) return mapUrHi[c];
   return "Other";
@@ -825,9 +835,11 @@ function clearAllCensusData() {
 function exportOtherClansPDF() {
   const allRecords = Object.values(storedFRCRecords);
   const otherList = [];
-  
+  const standardClans = ['Tak','Bhati','Rao','Molani','Lodha','Deora','Kukda','Jinva','Mangla','Behlim','Joiya','Bhimpal','Chauhan','Panwar','Chhippa'];
+
   allRecords.forEach(rec => {
-    if (rec.head && (rec.head.clanKey === 'Other' || rec.head.clan === 'Other' || (rec.head.clan && rec.head.clan !== 'Tak' && rec.head.clan !== 'Bhati' && rec.head.clan !== 'Rao' && rec.head.clan !== 'Molani' && rec.head.clan !== 'Lodha' && rec.head.clan !== 'Deora' && rec.head.clan !== 'Chhippa'))) {
+    const normHeadClan = getNormalizedClanKey(rec.head);
+    if (rec.head && (rec.head.clanKey === 'Other' || normHeadClan === 'Other') && !standardClans.includes(rec.head.clan)) {
       otherList.push({
         frcCode: rec.code,
         name: `${rec.head.name} (Head)`,
@@ -838,7 +850,7 @@ function exportOtherClansPDF() {
     }
     if (rec.members && Array.isArray(rec.members)) {
       rec.members.forEach(m => {
-        if (m.clanKey === 'Other' || m.clan === 'Other' || (m.clan && m.clan !== 'Tak' && m.clan !== 'Bhati' && m.clan !== 'Rao' && m.clan !== 'Molani' && m.clan !== 'Lodha' && m.clan !== 'Deora' && m.clan !== 'Chhippa')) {
+        if ((m.clanKey === 'Other' || m.clan === 'Other') && !standardClans.includes(m.clan)) {
           otherList.push({
             frcCode: rec.code,
             name: m.name,
