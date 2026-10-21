@@ -55,7 +55,7 @@ body { font-family: 'Inter', sans-serif; }
     <form onsubmit="handleAdminLogin(event)" class="space-y-3 text-left">
       <div>
         <label class="block text-xs font-bold text-slate-700 mb-1">Enter WCF Admin Master PIN:</label>
-        <input type="password" id="adminPinInput" required placeholder="тАвтАвтАвтАвтАвтАвтАвтАвтАвтАвтАвтАв" class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm outline-none focus:ring-2 focus:ring-amber-600 font-mono">
+        <input type="password" id="adminPinInput" required placeholder="••••••••••••" class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm outline-none focus:ring-2 focus:ring-amber-600 font-mono">
       </div>
       <p id="loginErrorMsg" class="text-xs text-red-600 font-bold hidden"></p>
       <button type="submit" class="w-full bandhani-bg bg-amber-800 text-white font-bold py-2.5 rounded-xl shadow-lg text-sm transition cursor-pointer">
@@ -134,10 +134,23 @@ body { font-family: 'Inter', sans-serif; }
         </h4>
         <p class="text-[11px] text-slate-600">Select country or city to filter, or leave empty to export the <b>Complete Global Directory</b>.</p>
         <div class="grid grid-cols-1 md:grid-cols-12 gap-2.5">
-          <select id="adminCountryDropdown" class="md:col-span-5 border border-slate-300 rounded-lg p-2 text-xs font-semibold bg-white outline-none focus:ring-2 focus:ring-amber-600">
+          <select id="adminCountryDropdown" class="md:col-span-3 border border-slate-300 rounded-lg p-2 text-xs font-semibold bg-white outline-none focus:ring-2 focus:ring-amber-600">
             <option value="">-- All Countries (Complete Global) --</option>
           </select>
-          <input type="text" id="adminCityManualInput" placeholder="City (Empty = All Cities)..." class="md:col-span-4 border border-slate-300 rounded-lg px-2.5 py-2 text-xs bg-white outline-none focus:ring-2 focus:ring-amber-600">
+          <input type="text" id="adminCityManualInput" placeholder="City (Empty = All)..." class="md:col-span-3 border border-slate-300 rounded-lg px-2.5 py-2 text-xs bg-white outline-none focus:ring-2 focus:ring-amber-600">
+          <select id="adminClanDropdown" class="md:col-span-3 border border-amber-400 rounded-lg p-2 text-xs font-bold bg-white text-amber-950 outline-none focus:ring-2 focus:ring-amber-600">
+            <option value="">-- All Clans (Series Wise) --</option>
+            <option value="Tak">1. Tak (ٹاک)</option>
+            <option value="Bhati">2. Bhati (بھاٹی)</option>
+            <option value="Rao">3. Rao (راؤ)</option>
+            <option value="Molani">4. Molani (مولانی)</option>
+            <option value="Lodha">5. Lodha (لودھا)</option>
+            <option value="Deora">6. Deora (دیوڑا)</option>
+            <option value="Kukda">7. Kukda (ککڑا)</option>
+            <option value="Jinva">8. Jinva (جنوا)</option>
+            <option value="Mangla">9. Mangla (منگلا)</option>
+            <option value="Other">10. Other (دیگر)</option>
+          </select>
           <button type="button" onclick="exportCountryCityWisePDF()" class="md:col-span-3 bandhani-bg bg-amber-800 text-white text-xs font-bold py-2 px-3 rounded-lg shadow transition flex items-center justify-center gap-1 cursor-pointer">
             <span>Download PDF</span>
           </button>
@@ -161,7 +174,7 @@ body { font-family: 'Inter', sans-serif; }
             <span>Non-Chhippa Wives PDF</span>
           </button>
           <button type="button" onclick="exportOtherClansPDF()" class="bg-teal-700 hover:bg-teal-800 text-white text-xs font-bold p-3.5 rounded-xl shadow text-center flex flex-col items-center justify-center gap-1 transition cursor-pointer">
-            <span class="text-lg"></span>
+            <span class="text-lg"></span>
             <span>Other Clans Report PDF</span>
           </button>
         </div>
@@ -188,7 +201,7 @@ body { font-family: 'Inter', sans-serif; }
   </main>
 
   <footer class="bg-slate-900 text-white py-4 border-t-2 border-amber-500 text-center text-xs">
-    <p class="text-amber-400 font-bold">World Chhippa Foundation тАФ Master Administration Console</p>
+    <p class="text-amber-400 font-bold">World Chhippa Foundation — Master Administration Console</p>
     <p class="text-[11px] text-slate-400 mt-0.5">Conceived, Architected & Dedicated by: M. WASEEM SADIQ TAK (Neemray Walay)</p>
   </footer>
 </div>
@@ -246,7 +259,7 @@ const i18n = {
     maritalStatuses: { Married: "Married", Unmarried: "Unmarried", Widowed: "Widowed", Divorced: "Divorced" },
     genders: { Male: "Male", Female: "Female", Other: "Other" },
     lineage: { Chhippa: "Chhippa", NonChhippa: "Non-Chhippa" },
-    clans: { Tak: "Tak", Bhati: "Bhati", Rao: "Rao", Molani: "Molani", Lodha: "Lodha", Deora: "Deora", Other: "Other" },
+    clans: { Tak: "Tak", Bhati: "Bhati", Rao: "Rao", Molani: "Molani", Lodha: "Lodha", Deora: "Deora", Kukda: "Kukda", Jinva: "Jinva", Mangla: "Mangla", Other: "Other" },
     education: { Matric: "Matriculation (10th)", Intermediate: "Intermediate (12th)", Graduate: "Graduate (Bachelors)", Masters: "Post Graduate (Masters)", Primary: "Primary School", Religious: "Islamic / Religious Scholar", Uneducated: "Uneducated", Other: "Other" },
     jobs: { Business: "Business / Self-Employed", Textile: "Cloth Merchant / Textile", Tailor: "Tailor / Embroidery", PrivateJob: "Private Job", GovtJob: "Government Job", Teacher: "Teacher / Education", Healthcare: "Doctor / Healthcare", EngineerIT: "Engineer / IT Software", Driver: "Driver / Transport", DailyWage: "Artisan / Daily Wage", Student: "Student", Homemaker: "Homemaker / Housewife", Retired: "Retired", Other: "Other" }
   }
@@ -290,7 +303,7 @@ function handleAdminLogin(e) {
   e.preventDefault();
   const errEl = document.getElementById('loginErrorMsg');
   if (isAdminLockedOut) {
-    errEl.textContent = "╪│█М┌й█М┘И╪▒┘╣█М ┘Д╪з┌й: 3 ╪║┘Д╪╖ ┌й┘И╪┤╪┤┘И┌║ ┌й█М ┘И╪м█Б ╪│█Т ╪з█М┌И┘Е┘Ж ┘╛┘И╪▒┘╣┘Д 1 ┘Е┘Ж┘╣ ┌й█Т ┘Д█М█Т ╪и┘Ж╪п █Б█Т█Ф";
+    errEl.textContent = "سیکیورٹی لاک: 3 غلط کوششوں کی وجہ سے ایڈمن پورٹل 1 منٹ کے لیے بند ہے۔";
     errEl.classList.remove('hidden');
     return;
   }
@@ -310,7 +323,7 @@ function handleAdminLogin(e) {
     adminFailedAttempts++;
     if (adminFailedAttempts >= 3) {
       isAdminLockedOut = true;
-      errEl.textContent = "3 ╪║┘Д╪╖ ┌й┘И╪┤╪┤█М┌║! ┘╛┘И╪▒┘╣┘Д 1 ┘Е┘Ж┘╣ ┌й█Т ┘Д█М█Т ┘Д╪з┌й █Б┘И ┌п█М╪з █Б█Т█Ф";
+      errEl.textContent = "3 غلط کوششیں! پورٹل 1 منٹ کے لیے لاک ہو گیا ہے۔";
       errEl.classList.remove('hidden');
       setTimeout(() => {
         isAdminLockedOut = false;
@@ -318,7 +331,7 @@ function handleAdminLogin(e) {
         errEl.classList.add('hidden');
       }, 60000);
     } else {
-      errEl.textContent = `╪║┘Д╪╖ ┘╛╪з╪│ ┘И╪▒┌И! ╪и╪з┘В█М ┌й┘И╪┤╪┤█М┌║: ${3 - adminFailedAttempts}`;
+      errEl.textContent = `غلط پاس ورڈ! باقی کوششیں: ${3 - adminFailedAttempts}`;
       errEl.classList.remove('hidden');
     }
   }
@@ -468,42 +481,75 @@ function getEnglishValue(type, key) {
   return key;
 }
 
+function getNormalizedClanKey(h) {
+  if (!h) return "Other";
+  var k = (h.clanKey || "").trim();
+  var c = (h.clan || "").trim();
+  var known = ["Tak", "Bhati", "Rao", "Molani", "Lodha", "Deora", "Kukda", "Jinva", "Mangla"];
+  if (known.indexOf(k) !== -1) return k;
+  if (known.indexOf(c) !== -1) return c;
+  var mapUrHi = {
+    "ٹاک":"Tak", "टाक":"Tak",
+    "بھاٹی":"Bhati", "भाटी":"Bhati",
+    "راؤ":"Rao", "राव":"Rao",
+    "مولانی":"Molani", "मोलानी":"Molani",
+    "لودھا":"Lodha", "लोधा":"Lodha",
+    "دیوڑا":"Deora", "देवड़ा":"Deora",
+    "ککڑا":"Kukda", "कुकड़ा":"Kukda",
+    "جنوا":"Jinva", "जिन्वा":"Jinva",
+    "منگلا":"Mangla", "मंगला":"Mangla"
+  };
+  if (mapUrHi[c]) return mapUrHi[c];
+  return "Other";
+}
+
 function exportCountryCityWisePDF() {
-  const selectedCountry = document.getElementById('adminCountryDropdown').value.trim();
-  const inputCity = document.getElementById('adminCityManualInput').value.trim();
-  const allRecords = Object.values(storedFRCRecords);
+  var selectedCountry = document.getElementById("adminCountryDropdown").value.trim();
+  var inputCity = document.getElementById("adminCityManualInput").value.trim();
+  var selectedClan = document.getElementById("adminClanDropdown") ? document.getElementById("adminClanDropdown").value.trim() : "";
+  var allRecords = Object.values(storedFRCRecords);
   if (allRecords.length === 0) {
     alert("No records found in database!");
     return;
   }
-  const matchedRecords = allRecords.filter(rec => {
+  var clanOrder = ["Tak", "Bhati", "Rao", "Molani", "Lodha", "Deora", "Kukda", "Jinva", "Mangla", "Other"];
+  var matchedRecords = allRecords.filter(function(rec) {
     if (!rec.head) return false;
-    const country = (rec.head.country || "").toLowerCase();
-    const city = (rec.head.city || "").toLowerCase();
-    const loc = (rec.head.location || "").toLowerCase();
-    let matchCountry = true;
-    let matchCity = true;
-    if (selectedCountry) matchCountry = country.includes(selectedCountry.toLowerCase()) || loc.includes(selectedCountry.toLowerCase());
-    if (inputCity) matchCity = city.includes(inputCity.toLowerCase()) || loc.includes(inputCity.toLowerCase());
-    return matchCountry && matchCity;
+    var country = (rec.head.country || "").toLowerCase();
+    var city = (rec.head.city || "").toLowerCase();
+    var loc = (rec.head.location || "").toLowerCase();
+    var recClanKey = getNormalizedClanKey(rec.head);
+    var matchCountry = true, matchCity = true, matchClan = true;
+    if (selectedCountry) matchCountry = country.indexOf(selectedCountry.toLowerCase()) !== -1 || loc.indexOf(selectedCountry.toLowerCase()) !== -1;
+    if (inputCity) matchCity = city.indexOf(inputCity.toLowerCase()) !== -1 || loc.indexOf(inputCity.toLowerCase()) !== -1;
+    if (selectedClan) matchClan = (recClanKey === selectedClan);
+    return matchCountry && matchCity && matchClan;
   });
   if (matchedRecords.length === 0) {
-    alert(`No records found for ${selectedCountry || 'All'} - ${inputCity || 'All Cities'}!`);
+    alert("No records found for the selected filter!");
     return;
   }
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF('l', 'mm', 'a4');
+  matchedRecords.sort(function(a, b) {
+    var clanA = getNormalizedClanKey(a.head);
+    var clanB = getNormalizedClanKey(b.head);
+    var idxA = clanOrder.indexOf(clanA) !== -1 ? clanOrder.indexOf(clanA) : 99;
+    var idxB = clanOrder.indexOf(clanB) !== -1 ? clanOrder.indexOf(clanB) : 99;
+    if (idxA !== idxB) return idxA - idxB;
+    return (a.head.name || "").localeCompare(b.head.name || "");
+  });
+  var jsPDF = window.jspdf.jsPDF;
+  var doc = new jsPDF("l", "mm", "a4");
   doc.setFontSize(14);
   doc.setTextColor(15, 23, 42);
-  doc.text("World Chhippa Foundation - Master Comprehensive Census Directory", 14, 12);
+  doc.text("World Chhippa Foundation - Master Comprehensive Census Directory (Clan Series Wise)", 14, 12);
   doc.setFontSize(8);
   doc.setTextColor(100, 116, 139);
-  const printDate = new Date().toLocaleDateString('en-GB');
-  doc.text(`Scope: Country: [${selectedCountry || 'All'}] | City: [${inputCity || 'All'}] | Records: ${matchedRecords.length} | Date: ${printDate}`, 14, 17);
-  let y = 25;
-  const drawHeaders = (currY) => {
+  var printDate = new Date().toLocaleDateString("en-GB");
+  doc.text("Scope: Country: [" + (selectedCountry || "All") + "] | City: [" + (inputCity || "All") + "] | Clan: [" + (selectedClan || "All Clans Series Wise") + "] | Records: " + matchedRecords.length + " | Date: " + printDate, 14, 17);
+  var y = 25;
+  var drawHeaders = function(currY) {
     doc.setFillColor(30, 41, 59);
-    doc.rect(14, currY - 4, 270, 7, 'F');
+    doc.rect(14, currY - 4, 270, 7, "F");
     doc.setFont("helvetica", "bold");
     doc.setFontSize(7);
     doc.setTextColor(255, 255, 255);
@@ -520,48 +566,59 @@ function exportCountryCityWisePDF() {
   };
   drawHeaders(y);
   y += 6;
-  let rowCounter = 1;
-  matchedRecords.forEach((rec) => {
-    const h = rec.head;
-    const allPersons = [{
-      uid: h.memberId || `${rec.code}-1`,
-      name: `${h.name} (${h.father ? 's/o ' + h.father : 'Head'})`,
-      relClan: `${rec.type === 'family' ? 'Head' : 'Individual'} / ${h.clanKey === 'Other' || h.clan === 'Other' || (h.clan && h.clan !== 'Tak' && h.clan !== 'Bhati' && h.clan !== 'Rao' && h.clan !== 'Molani' && h.clan !== 'Lodha' && h.clan !== 'Deora' && h.clan !== 'Chhippa') ? ' ' + (h.clan || 'Other') : (getEnglishValue('clan', h.clanKey) || h.clan || 'Chhippa')}`,
-      phone: h.phone || '-',
-      eduJob: `${getEnglishValue('education', h.eduKey) || h.edu || '-'} / ${getEnglishValue('job', h.jobKey) || h.job || '-'}`,
-      dobAge: `${h.dob || '-'}`,
-      address: `${h.address || '-'}, ${h.city || '-'}, ${h.country || '-'}`
+  var rowCounter = 1;
+  var currentGroupClan = null;
+  matchedRecords.forEach(function(rec) {
+    var h = rec.head;
+    var recClanKey = getNormalizedClanKey(h);
+    if (recClanKey !== currentGroupClan) {
+      currentGroupClan = recClanKey;
+      if (y + 10 > 195) { doc.addPage(); y = 15; drawHeaders(y); y += 6; }
+      doc.setFillColor(254, 243, 199);
+      doc.rect(14, y - 3.5, 270, 5.5, "F");
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(8);
+      doc.setTextColor(146, 64, 14);
+      doc.text(">>> CLAN SERIES: " + currentGroupClan.toUpperCase() + " <<<", 16, y);
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(15, 23, 42);
+      y += 5;
+    }
+    var displayClan = recClanKey === "Other" ? ("* " + (h.clan || "Other")) : recClanKey;
+    var allPersons = [{
+      uid: h.memberId || (rec.code + "-1"),
+      name: h.name + " (" + (h.father ? "s/o " + h.father : "Head") + ")",
+      relClan: (rec.type === "family" ? "Head" : "Individual") + " / " + displayClan,
+      phone: h.phone || "-",
+      eduJob: (getEnglishValue("education", h.eduKey) || h.edu || "-") + " / " + (getEnglishValue("job", h.jobKey) || h.job || "-"),
+      dobAge: h.dob || "-",
+      address: (h.address || "-") + ", " + (h.city || "-") + ", " + (h.country || "-")
     }];
     if (rec.members && Array.isArray(rec.members)) {
-      rec.members.forEach((m) => {
+      rec.members.forEach(function(m) {
         allPersons.push({
-          uid: m.memberId || `${rec.code}-M`,
+          uid: m.memberId || (rec.code + "-M"),
           name: m.name,
-          relClan: `${getEnglishValue('relation', m.relationKey) || m.relation} (${m.lineage || 'Chhippa'})`,
-          phone: m.phone || h.phone || '-',
-          eduJob: `${getEnglishValue('education', m.eduKey) || m.edu || '-'} / ${getEnglishValue('job', m.jobKey) || m.job || '-'}`,
-          dobAge: `${m.dob || '-'} (${m.age || 0}y)`,
-          address: `${m.address || h.address || '-'}, ${m.city || h.city || '-'}`
+          relClan: (getEnglishValue("relation", m.relationKey) || m.relation) + " (" + displayClan + ")",
+          phone: m.phone || h.phone || "-",
+          eduJob: (getEnglishValue("education", m.eduKey) || m.edu || "-") + " / " + (getEnglishValue("job", m.jobKey) || h.job || "-"),
+          dobAge: (m.dob || "-") + " (" + (m.age || 0) + "y)",
+          address: (m.address || h.address || "-") + ", " + (m.city || h.city || "-")
         });
       });
     }
-    allPersons.forEach((person) => {
+    allPersons.forEach(function(person) {
       doc.setFontSize(6.5);
-      const addressLines = doc.splitTextToSize(person.address, 55);
-      const rowHeight = Math.max(addressLines.length * 3.5, 5.5);
-      if (y + rowHeight > 195) {
-        doc.addPage();
-        y = 15;
-        drawHeaders(y);
-        y += 6;
-      }
+      var addressLines = doc.splitTextToSize(person.address, 55);
+      var rowHeight = Math.max(addressLines.length * 3.5, 5.5);
+      if (y + rowHeight > 195) { doc.addPage(); y = 15; drawHeaders(y); y += 6; }
       doc.text(String(rowCounter), 16, y);
-      doc.text(person.uid, 22, y);
-      doc.text(person.name.substring(0, 26), 44, y);
-      doc.text(person.relClan.substring(0, 20), 95, y);
-      doc.text(person.phone.substring(0, 16), 132, y);
-      doc.text(person.eduJob.substring(0, 22), 165, y);
-      doc.text(person.dobAge.substring(0, 14), 205, y);
+      doc.text(String(person.uid), 22, y);
+      doc.text(String(person.name).substring(0, 26), 44, y);
+      doc.text(String(person.relClan).substring(0, 20), 95, y);
+      doc.text(String(person.phone).substring(0, 16), 132, y);
+      doc.text(String(person.eduJob).substring(0, 22), 165, y);
+      doc.text(String(person.dobAge).substring(0, 14), 205, y);
       doc.text(addressLines, 226, y);
       doc.setDrawColor(226, 232, 240);
       doc.line(14, y + rowHeight - 1.5, 284, y + rowHeight - 1.5);
@@ -569,8 +626,8 @@ function exportCountryCityWisePDF() {
       rowCounter++;
     });
   });
-  const cleanFileName = ((selectedCountry || 'Global') + '_' + (inputCity || 'AllCities')).replace(/[^a-zA-Z0-9_-]/g, '_');
-  doc.save(`WCF_Master_Census_Directory_${cleanFileName}_${new Date().toISOString().slice(0, 10)}.pdf`);
+  var cleanFileName = ((selectedCountry || "Global") + "_" + (inputCity || "AllCities") + "_" + (selectedClan || "AllClansSeries")).replace(/[^a-zA-Z0-9_-]/g, "_");
+  doc.save("WCF_Master_Census_Directory_" + cleanFileName + "_" + new Date().toISOString().slice(0, 10) + ".pdf");
 }
 
 function exportPhoneDirectoryPDF() {
@@ -624,7 +681,7 @@ function exportAdultUnmarriedPDF() {
   allRecords.forEach(rec => {
     if (rec.members && Array.isArray(rec.members)) {
       rec.members.forEach(m => {
-        const isChild = (m.relationKey === 'Son' || m.relationKey === 'Daughter' || (m.relation && (m.relation.includes('╪и█М┘╣╪з') || m.relation.includes('╪и█М┘╣█М') || m.relation.includes('рдмреЗрдЯрд╛') || m.relation.includes('рдмреЗрдЯреА'))));
+        const isChild = (m.relationKey === 'Son' || m.relationKey === 'Daughter' || (m.relation && (m.relation.includes('بیٹا') || m.relation.includes('بیٹی') || m.relation.includes('बेटा') || m.relation.includes('बेटी'))));
         const ageNum = parseInt(m.age) || calculateAge(m.dob);
         const isUnmarried = (m.maritalStatusKey === 'Unmarried' || !m.maritalStatusKey);
         if (isChild && ageNum >= 18 && isUnmarried) {
@@ -691,8 +748,8 @@ function exportNonChhippaWivesPDF() {
   allRecords.forEach(rec => {
     if (rec.members && Array.isArray(rec.members)) {
       rec.members.forEach(m => {
-        const isWife = (m.relationKey === 'Wife' || (m.relation && (m.relation.includes('╪и█М┘И█М') || m.relation.includes('рдкрддреНрдиреА'))));
-        const isNonChhippa = (m.lineageKey === 'NonChhippa' || (m.lineage && (m.lineage.includes('╪║█М╪▒') || m.lineage.includes('Non') || m.lineage.includes('рдЧреИрд░'))));
+        const isWife = (m.relationKey === 'Wife' || (m.relation && (m.relation.includes('بیوی') || m.relation.includes('पत्नी'))));
+        const isNonChhippa = (m.lineageKey === 'NonChhippa' || (m.lineage && (m.lineage.includes('غیر') || m.lineage.includes('Non') || m.lineage.includes('गैर'))));
         if (isWife && isNonChhippa) {
           const fullWifeLoc = `${rec.head.phone} (${m.address || rec.head.address || ''}, ${m.city || rec.head.city || ''}, ${m.country || rec.head.country || ''})`;
           nonChhippaList.push({
