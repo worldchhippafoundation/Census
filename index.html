@@ -151,7 +151,7 @@ height: 0 !important;
 </div>
 <!-- Official Launch Notice Banner -->
 <div id="launchNoticeBanner" class="hidden bg-amber-700 text-white p-3 rounded-lg shadow-md my-3 flex items-center justify-between text-xs md:text-sm w-full">
-<span>Official Portal Launch on 4th November 2026</span>
+<span>The Official Portal Will be Launched on 4th November 2026</span>
 <button type="button" onclick="dismissLaunchBanner()" class="bg-black/30 hover:bg-black/50 text-amber-200 px-2.5 py-1 rounded transition">Hide</button>
 </div>
 <div class="flex items-center gap-3 flex-wrap">
@@ -371,6 +371,9 @@ Clan / Sub-Caste<span class="text-red-500 font-bold ml-1 mr-1">*</span>
 <option value="Molani">Molani</option>
 <option value="Lodha">Lodha</option>
 <option value="Deora">Deora</option>
+<option value="Kukda">Kukda</option>
+<option value="Jinva">Jinva</option>
+<option value="Mangla">Mangla</option>
 <option value="Other">Other</option>
 </select>
 <div id="headClanOtherWrap" class="hidden mt-2">
@@ -1014,7 +1017,7 @@ Widowed: "بیوہ / رنڈوا", Divorced: "طلاق یافتہ"
 },
 genders: { Male: "مرد", Female: "عورت", Other: "دیگر" },
 lineage: { Chhippa: "چھیپا", NonChhippa: "غیر چھیپا" },
-clans: { Tak: "ٹاک", Bhati: "بھاٹی", Rao: "راؤ", Molani: "مولانی", Lodha: "لودھا", Deora: "دیوڑا", Other: "دیگر" },
+Clans: { Tak: "ٹاک", Bhati: "بھاٹی", Rao: "راؤ", Molani: "مولانی", Lodha: "لودھا", Deora: "دیوڑا", Kukda: "ککڑا", Jinva: "جنوا", Mangla: "منگلا", Other: "دیگر" },
 education: {
 Matric: "میٹرک", Intermediate: "انٹرمیڈیٹ", Graduate: "گریجویشن", Masters: "ماسٹرز",
 Primary: "پرائمری", Religious: "دینی تعلیم / حافظ", Uneducated: "ناخواندہ", Other: "دیگر"
@@ -1155,7 +1158,7 @@ Widowed: "विधवा / विधुर", Divorced: "तलाकशुद�
 },
 genders: { Male: "पुरुष", Female: "महिला", Other: "अन्य" },
 lineage: { Chhippa: "छीपा", NonChhippa: "गैर छीपा" },
-clans: { Tak: "टाक", Bhati: "भाटी", Rao: "राव", Molani: "मोलानी", Lodha: "लोधा", Deora: "देवड़ा", Other: "अन्य" },
+Clans: { Tak: "टाक", Bhati: "भाटी", Rao: "राव", Molani: "मोलानी", Lodha: "लोधा", Deora: "देवड़ा", Kukda: "कुकड़ा", Jinva: "जिन्वा", Mangla: "मंगला", Other: "अन्य" },
 education: {
 Matric: "मैट्रिक (10वीं)", Intermediate: "इंटरमीडिएट (12वीं)", Graduate: "स्नातक", Masters: "स्नातकोत्तर",
 Primary: "प्राथमिक विद्यालय", Religious: "धार्मिक शिक्षा", Uneducated: "अशिक्षित", Other: "अन्य"
@@ -1295,7 +1298,7 @@ Married: "Married", Unmarried: "Unmarried", Widowed: "Widowed", Divorced: "Divor
 },
 genders: { Male: "Male", Female: "Female", Other: "Other" },
 lineage: { Chhippa: "Chhippa", NonChhippa: "Non-Chhippa" },
-clans: { Tak: "Tak", Bhati: "Bhati", Rao: "Rao", Molani: "Molani", Lodha: "Lodha", Deora: "Deora", Other: "Other" },
+Clans: { Tak: "Tak", Bhati: "Bhati", Rao: "Rao", Molani: "Molani", Lodha: "Lodha", Deora: "Deora", Kukda: "Kukda", Jinva: "Jinva", Mangla: "Mangla", Other: "Other" },
 education: {
 Matric: "Matriculation (10th)", Intermediate: "Intermediate (12th)",
 Graduate: "Graduate (Bachelors)", Masters: "Post Graduate (Masters)",
@@ -1413,8 +1416,15 @@ badge.textContent = `Calculated Age: ${age} yrs (Minors under 18 must be registe
 badge.className = "text-[10px] font-semibold text-emerald-600 mt-0.5 block";
 }
 }
-function setRegistrationMode(mode) {
+function setRegistrationMode(mode, skipReset) {
 currentRegMode = mode;
+if (!skipReset && !editingExistingFRCCode) {
+  var fEl = document.getElementById('censusForm'); if (fEl) fEl.reset();
+  var mCont = document.getElementById('membersContainer'); if (mCont) mCont.innerHTML = '';
+  memberCount = 0;
+  ['headClanOtherWrap','headEduOtherWrap','headJobOtherWrap','headCountryOtherWrap'].forEach(function(id){ var el = document.getElementById(id); if(el) el.classList.add('hidden'); });
+  handleHeadDOBValidation();
+}
 const btnFam = document.getElementById('btnModeFamily');
 const btnInd = document.getElementById('btnModeIndividual');
 const famCard = document.getElementById('familyMembersCard');
@@ -1627,7 +1637,7 @@ setText('lblPendingNoticeBody', dict.lblPendingNoticeBody);
 // Head Dropdowns Translation
 populateSelectOptions('headGender', dict.genders, 'Male');
 populateSelectOptions('headMarital', dict.maritalStatuses, 'Married');
-populateSelectOptions('headClan', dict.clans, 'Tak');
+populateSelectOptions('headClan', dict.Clans || dict.clans, 'Tak');
 populateSelectOptions('headEdu', dict.education, 'Matric');
 populateSelectOptions('headJob', dict.jobs, 'Business');
 const countrySel = document.getElementById('headCountry');
@@ -1638,6 +1648,7 @@ for (const c of allWorldCountries) {
 if (c === rawCountry || getCountryLocalizedName(c, 'ur') === rawCountry || getCountryLocalizedName(c, 'hi') === rawCountry) {
 matchedCountry = c;
 break;
+    
 }
 }
 countrySel.innerHTML = '';
@@ -1658,6 +1669,7 @@ toggleManualInput(document.getElementById('headJob'), 'headJobOtherWrap');
 toggleManualInput(document.getElementById('headCountry'), 'headCountryOtherWrap');
 populateAdminCountryOptions();
 refreshMemberCardsLanguage();
+if (typeof updateIdCardLanguage === 'function') { updateIdCardLanguage(lang); }
 const btnAboutUs = document.getElementById('btnAboutUs');
 if (btnAboutUs) {
 btnAboutUs.textContent = lang === 'ur' ? "تعارف" : (lang === 'hi' ? "परिचय" : "About Us");
@@ -2141,7 +2153,7 @@ errEl.classList.add('hidden');
 editingExistingFRCCode = foundRecord.code;
 editingExistingHeadMemberId = foundRecord.head.memberId;
 switchMainTab('new');
-setRegistrationMode('family');
+setRegistrationMode('family', true);
 document.getElementById('updatingFamilyBanner').classList.remove('hidden');
 document.getElementById('updatingFRCCode').textContent = foundRecord.code;
 document.getElementById('btnSubmitForm').textContent = `Update Family (${foundRecord.code})`;
@@ -2220,6 +2232,12 @@ submitBtn.disabled = false;
 submitBtn.textContent = originalBtnText;
 return;
 }
+if (currentRegMode === 'family' && document.querySelectorAll('[id^="memberCard_"]').length < 1) {
+    alert("Family Unit (FRC) registration requires at least 2 members.");
+    submitBtn.disabled = false;
+    submitBtn.textContent = originalBtnText;
+    return;
+}
 const refElder = document.getElementById('refElderName').value.trim();
 const refContact = document.getElementById('refElderContact').value.trim();
 
@@ -2262,7 +2280,7 @@ return;
 const headGenderKey = document.getElementById('headGender').value;
 const headMaritalKey = document.getElementById('headMarital').value;
 const headClanKey = document.getElementById('headClan').value;
-const headClan = headClanKey === 'Other' ? (document.getElementById('headClanOther').value.trim() || dict.clans.Other) : dict.clans[headClanKey];
+const headClan = headClanKey === 'Other' ? (document.getElementById('headClanOther').value.trim() || dict.Clans.Other) : dict.Clans[headClanKey];
 const headEduKey = document.getElementById('headEdu').value;
 const headEdu = headEduKey === 'Other' ? (document.getElementById('headEduOther').value.trim() || dict.education.Other) : dict.education[headEduKey];
 const headJobKey = document.getElementById('headJob').value;
@@ -2776,7 +2794,7 @@ if (type === 'gender') return enDict.genders[key] || key;
 if (type === 'marital') return enDict.maritalStatuses[key] || key;
 if (type === 'education') return enDict.education[key] || key;
 if (type === 'job') return enDict.jobs[key] || key;
-if (type === 'clan') return enDict.clans[key] || key;
+if (type === 'clan') return (enDict.Clans || enDict.clans)[key] || key;
 return key;
 }
 function exportCountryCityWisePDF() {
@@ -3288,17 +3306,18 @@ closeAboutUsModal();
                     <span id="previewAddress" class="text-slate-200 text-[9px] block">Address will appear here automatically...</span>
                 </div>
             </div>
-            <div class="border-t border-slate-700 pt-1.5 flex justify-between items-end text-[8.5px]">
-                <div>
-                    <span id="cardIssuedYear" class="text-slate-400 block">Issued Year: 2026</span>
-                    <span id="cardAuthDigital" class="text-emerald-400 font-bold">Authorized Digital Card</span>
-                </div>
-                <div class="text-center relative pb-1">
-                    <div class="absolute -top-7 left-1/2 -translate-x-1/2 pointer-events-none flex items-center justify-center">
-                        <img src="signature.png" alt="Signature" class="h-9 object-contain opacity-90 z-10">
-                    </div>
-                    <div class="w-24 border-t border-slate-500 mt-4 mx-auto"></div>
-                    <span id="cardSigSeal" class="text-[6.5px] text-slate-400 block mt-0.5">Signature & Seal</span>
+            <div class="border-t border-slate-700 pt-1.5 flex justify-end items-end text-[8.5px] w-full" dir="ltr">
+                <div class="ml-auto text-right">
+                    <div class="text-right relative pb-1">
+    <div class="absolute -top-6 right-2 pointer-events-none flex items-center justify-center">
+        <div class="absolute w-10 h-10 border border-slate-600 rounded-full flex flex-col items-center justify-center opacity-70">
+            <span class="text-[3.5px] font-bold text-slate-700">WCF</span>
+            <span class="text-[4.5px] font-extrabold text-slate-900">VERIFIED</span>
+        </div>
+        <img src="https://raw.githubusercontent.com/worldchhippafoundation/Census/refs/heads/main/Signature.png" onerror="this.src='Signature.png'" alt="Signature" class="h-7 object-contain opacity-90 z-10">
+    </div>
+    <div class="w-24 border-t border-slate-500 mt-4 ml-auto"></div>
+    <span id="cardSigSeal" class="text-[6.5px] text-slate-400 block mt-0.5">Signature & Seal</span>
                 </div>
             </div>
         </div>
@@ -3497,7 +3516,7 @@ Thank you to all those who laid the foundation of the World Chhippa Foundation:
 • Mrs. Saleem Rao (Ghachi Pura Walay) PAK &nbsp;|&nbsp;
 • Sufyan Tak / Safwan Tak (Neemray Walay) PAK
 </p>
-<div class="pt-2 border-t border-slate-700 max-w-lg mx-auto">
+<div class="pt-2 max-w-lg mx-auto">
 <span class="text-[11px] text-slate-400 block">Conceived, Architected & Dedicated to Chhippa Community by:</span>
 <h4 class="text-base md:text-lg font-black text-amber-400 tracking-wider mt-0.5">
 M. WASEEM SADIQ TAK (Neemray Walay)
@@ -3513,5 +3532,112 @@ M. WASEEM SADIQ TAK (Neemray Walay)
   #printableIdCardArea { position: absolute !important; left: 0 !important; top: 0 !important; width: 100% !important; }
 }
 </style>
+<script>
+    function updateIdCardLanguage(lang) {
+  var translations = {
+    en: {
+      idPortalTitle: "Digital Identity Card Portal",
+      idPortalSub: "Enter your Unique Code to generate, preview, and print your official community ID card.",
+      lblIdCode: "Unique Member ID / Code",
+      btnIdSearch: "Search",
+      lblIdBlood: "Blood Group",
+      lblIdEmergency: "Emergency Contact Number",
+      lblIdPhoto: "Upload Your Photo <span class='text-amber-600 font-normal lowercase'>(Optional)</span>",
+      btnPrintCardAction: "🖨️ Print ID Card",
+      cardOrgTitle: "World Chhippa Foundation",
+      cardOrgSub: "Global Census & ID Authority",
+      cardOfficialBadge: "Official ID",
+      previewPhotoPlaceholder: "No Photo",
+      lblCardFullName: "Full Name",
+      lblCardFatherName: "Father's Name",
+      lblCardBlood: "Blood Group",
+      lblCardEmergency: "Emergency No",
+      lblCardMemberId: "Member ID",
+      cardGuidelinesTitle: "Identity Card Guidelines",
+      cardGuidelinesSub: "WCF Registry",
+      cardRule1: "1. This card is issued by WCF Global Census Directory based on applicant records.",
+      cardRule2: "2. If found, please return to the nearest regional office.",
+      lblCardAddress: "Permanent Residential Address:",
+      cardSigSeal: "Signature & Seal"
+    },
+    ur: {
+      idPortalTitle: "ڈیجیٹل شناختی کارڈ پورٹل",
+      idPortalSub: "اپنا آفیشل کمیونٹی شناختی کارڈ تیار کرنے، دیکھنے اور پرنٹ کرنے کے لیے اپنا یونیک کوڈ درج کریں۔",
+      lblIdCode: "یونیک ممبر آئی ڈی / کوڈ",
+      btnIdSearch: "تلاش کریں",
+      lblIdBlood: "بلڈ گروپ",
+      lblIdEmergency: "ہنگامی رابطہ نمبر",
+      lblIdPhoto: "اپنی تصویر اپ لوڈ کریں <span class='text-amber-600 font-normal'>(اختیاری)</span>",
+      btnPrintCardAction: "🖨️ پرنٹ آئی ڈی کارڈ",
+      cardOrgTitle: "ورلڈ چھیپا فاؤنڈیشن",
+      cardOrgSub: "عالمی مردم شماری و شناختی اتھارٹی",
+      cardOfficialBadge: "آفیشل کارڈ",
+      previewPhotoPlaceholder: "تصویر نہیں",
+      lblCardFullName: "مکمل نام",
+      lblCardFatherName: "والد کا نام",
+      lblCardBlood: "بلڈ گروپ",
+      lblCardEmergency: "ہنگامی نمبر",
+      lblCardMemberId: "ممبر آئی ڈی",
+      cardGuidelinesTitle: "شناختی کارڈ کی ہدایات",
+      cardGuidelinesSub: "WCF رجسٹری",
+      cardRule1: "1. یہ کارڈ درخواست گزار کے ریکارڈ کے مطابق ڈبلیو سی ایف گلوبل ڈائریکٹری سے جاری کیا گیا ہے۔",
+      cardRule2: "2. گمشدگی کی صورت میں قریبی علاقائی دفتر میں جمع کروائیں۔",
+      lblCardAddress: "مستقل رہائشی پتہ:",
+      cardSigSeal: "دستخط و مہر"
+    },
+    hi: {
+      idPortalTitle: "डिजिटल पहचान पत्र पोर्टल",
+      idPortalSub: "अपना आधिकारिक सामुदायिक पहचान पत्र बनाने, देखने और प्रिंट करने के लिए अपना यूनिक कोड दर्ज करें।",
+      lblIdCode: "यूनिक मेंबर आईडी / कोड",
+      btnIdSearch: "खोजें",
+      lblIdBlood: "ब्लड ग्रुप",
+      lblIdEmergency: "आपातकालीन संपर्क नंबर",
+      lblIdPhoto: "अपनी फोटो अपलोड करें <span class='text-amber-600 font-normal'>(वैकल्पिक)</span>",
+      btnPrintCardAction: "🖨️ प्रिंट आईडी कार्ड",
+      cardOrgTitle: "वर्ल्ड छीपा फाउंडेशन",
+      cardOrgSub: "वैश्विक जनगणना एवं पहचान प्राधिकरण",
+      cardOfficialBadge: "आधिकारिक आईडी",
+      previewPhotoPlaceholder: "फोटो नहीं",
+      lblCardFullName: "पूरा नाम",
+      lblCardFatherName: "पिता का नाम",
+      lblCardBlood: "ब्लड ग्रुप",
+      lblCardEmergency: "आपातकालीन नंबर",
+      lblCardMemberId: "सदस्य आईडी",
+      cardGuidelinesTitle: "पहचान पत्र दिशा-निर्देश",
+      cardGuidelinesSub: "WCF रजिस्ट्री",
+      cardRule1: "1. यह कार्ड आवेदक के रिकॉर्ड के आधार पर WCF ग्लोबल डायरेक्टरी द्वारा जारी किया गया है।",
+      cardRule2: "2. मिलने पर कृपया नजदीकी क्षेत्रीय कार्यालय में लौटा दें।",
+      lblCardAddress: "स्थायी आवासीय पता:",
+      cardSigSeal: "हस्ताक्षर एवं मुहर"
+    }
+  };
+  var t = translations[lang] || translations.en;
+  var setTxt = function(id, val) { var el = document.getElementById(id); if (el) el.innerText = val; };
+  var setHtm = function(id, val) { var el = document.getElementById(id); if (el) el.innerHTML = val; };
+  setTxt("idPortalTitle", t.idPortalTitle);
+  setTxt("idPortalSub", t.idPortalSub);
+  setTxt("lblIdCode", t.lblIdCode);
+  setTxt("btnIdSearch", t.btnIdSearch);
+  setTxt("lblIdBlood", t.lblIdBlood);
+  setTxt("lblIdEmergency", t.lblIdEmergency);
+  setHtm("lblIdPhoto", t.lblIdPhoto);
+  setHtm("btnPrintCardAction", t.btnPrintCardAction);
+  setTxt("cardOrgTitle", t.cardOrgTitle);
+  setTxt("cardOrgSub", t.cardOrgSub);
+  setTxt("cardOfficialBadge", t.cardOfficialBadge);
+  setTxt("previewPhotoPlaceholder", t.previewPhotoPlaceholder);
+  setTxt("lblCardFullName", t.lblCardFullName);
+  setTxt("lblCardFatherName", t.lblCardFatherName);
+  setTxt("lblCardBlood", t.lblCardBlood);
+  setTxt("lblCardEmergency", t.lblCardEmergency);
+  setTxt("lblCardMemberId", t.lblCardMemberId);
+  setTxt("cardGuidelinesTitle", t.cardGuidelinesTitle);
+  setTxt("cardGuidelinesSub", t.cardGuidelinesSub);
+  setTxt("cardRule1", t.cardRule1);
+  setTxt("cardRule2", t.cardRule2);
+  setTxt("lblCardAddress", t.lblCardAddress);
+  setTxt("cardSigSeal", t.cardSigSeal);
+}
+</script>
 </body>
 </html>
