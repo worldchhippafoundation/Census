@@ -4623,4 +4623,349 @@ M. WASEEM SADIQ TAK (Neemray Walay)
 </script>
 <!-- ==================== END WCF SAFE FIXER PATCH V4 ==================== -->
 
+
+<!-- ==================== WCF SAFE FIXER PATCH V5 ==================== -->
+<style id="wcf-v5-portal-styles">
+  #pendingCheckSection { transition: all 0.2s ease-in-out; }
+</style>
+<script id="wcf-v5-portal-script">
+(function() {
+  const PENDING_I18N = {
+    en: {
+      tabBtn: "⏳ Check Pending Case",
+      title: "Check Pending Case Status (By Mobile Number)",
+      sub: "If your application was placed under Pending Verification (e.g., Other Clan or Individual Mode), enter your registered mobile number below to check if your official WCF Code has been generated.",
+      placeholder: "Enter registered Mobile / WhatsApp number (e.g. 03001234567)...",
+      btnAction: "Check Status",
+      errEmpty: "Please enter your registered mobile number.",
+      msgPending: function(name, clan) { return "⏳ Status: PENDING VERIFICATION\n\nApplicant: " + name + " (Clan: " + clan + ")\nYour application is currently under Admin review. No official WCF Certificate Code has been issued yet. Please check back after Admin approval."; },
+      msgNotFound: "No Pending or Approved record found with this mobile number. Please check the number and try again.",
+      msgApproved: function(code) { return "✅ CONGRATULATIONS! Your application is APPROVED.\nYour Official Certificate Code is: " + code + ". Opening your certificate now..."; },
+      pendingModalNotice: "Your application is currently in the Pending Verification Queue. An official WCF Code & Certificate will only be generated after Admin approval."
+    },
+    ur: {
+      tabBtn: "⏳ پینڈنگ کیس چیک کریں",
+      title: "پینڈنگ کیس کا اسٹیٹس چیک کریں (موبائل نمبر کے ذریعے)",
+      sub: "اگر آپ کی درخواست تصدیق کے مراحل (Pending Verification) میں ہے، تو اپنا رجسٹرڈ موبائل نمبر درج کر کے چیک کریں کہ آپ کا آفیشل کوڈ جاری ہوا ہے یا نہیں۔",
+      placeholder: "اپنا رجسٹرڈ موبائل / واٹس ایپ نمبر درج کریں...",
+      btnAction: "اسٹیٹس چیک کریں",
+      errEmpty: "براہ کرم اپنا رجسٹرڈ موبائل نمبر درج کریں۔",
+      msgPending: function(name, clan) { return "⏳ اسٹیٹس: تصدیق کے مراحل میں (Pending Verification)\n\nنام: " + name + " (اٹک: " + clan + ")\nآپ کی درخواست فی الحال ایڈمن کی منظوری کے لیے زیرِ غور ہے۔ ابھی کوئی آفیشل WCF کوڈ جاری نہیں کیا گیا۔ ایڈمن کی منظوری کے بعد دوبارہ چیک کریں۔"; },
+      msgNotFound: "اس موبائل نمبر سے کوئی پینڈنگ یا منظور شدہ ریکارڈ نہیں ملا۔ براہ کرم نمبر درست لکھیں۔",
+      msgApproved: function(code) { return "✅ مبارک ہو! آپ کی درخواست منظور (Approved) ہو چکی ہے۔\nآپ کا آفیشل سرٹیفکیٹ کوڈ [" + code + "] جاری ہو گیا ہے۔ سرٹیفکیٹ کھولا جا رہا ہے..."; },
+      pendingModalNotice: "آپ کی درخواست تصدیق کے لیے پینڈنگ قطار میں ہے۔ ایڈمن کی منظوری کے بعد ہی آفیشل WCF کوڈ اور سرٹیفکیٹ جاری کیا جائے گا۔"
+    },
+    hi: {
+      tabBtn: "⏳ पेंडिंग केस जांचें",
+      title: "पेंडिंग केस की स्थिति जांचें (मोबाइल नंबर द्वारा)",
+      sub: "यदि आपका आवेदन सत्यापन (Pending Verification) में है, तो अपना पंजीकृत मोबाइल नंबर दर्ज करके जांचें कि आपका आधिकारिक WCF कोड जारी हुआ है या नहीं।",
+      placeholder: "अपना पंजीकृत मोबाइल / व्हाट्सएप नंबर दर्ज करें...",
+      btnAction: "स्थिति जांचें",
+      errEmpty: "कृपया अपना पंजीकृत मोबाइल नंबर दर्ज करें।",
+      msgPending: function(name, clan) { return "⏳ स्थिति: सत्यापन लंबित (Pending Verification)\n\nआवेदक: " + name + " (गोत्र: " + clan + ")\nआपका आवेदन वर्तमान में एडमिन की समीक्षा के अधीन है। अभी कोई आधिकारिक WCF कोड जारी नहीं किया गया है।"; },
+      msgNotFound: "इस मोबाइल नंबर से कोई पेंडिंग या स्वीकृत रिकॉर्ड नहीं मिला।",
+      msgApproved: function(code) { return "✅ बधाई हो! आपका आवेदन स्वीकृत (Approved) हो गया है।\nआपका आधिकारिक कोड [" + code + "] है। प्रमाण पत्र खुल रहा है..."; },
+      pendingModalNotice: "आपका आवेदन सत्यापन कतार में है। एडमिन की मंजूरी के बाद ही आधिकारिक WCF कोड और प्रमाण पत्र जारी किया जाएगा।"
+    }
+  };
+
+  function isRecordApproved(rec) {
+    return rec && rec.status === "Approved" && rec.code && !String(rec.code).startsWith("PEND-");
+  }
+
+  async function syncPortalWithCloud() {
+    if (typeof isCloudReady === "undefined" || !isCloudReady || !db) return;
+    try {
+      const cols = ["census_registrations", "trial_census_registrations", "wcf_pending_queue"];
+      for (const colName of cols) {
+        const snap = await db.collection(colName).get();
+        snap.forEach(function(doc) {
+          const data = doc.data();
+          if (data && data.code) {
+            if (data.status === "Rejected") {
+              delete storedFRCRecords[data.code];
+            } else {
+              storedFRCRecords[data.code] = data;
+            }
+          }
+        });
+      }
+      const allRecs = Object.values(storedFRCRecords);
+      const approvedPhones = new Set();
+      allRecs.forEach(function(r) {
+        if (isRecordApproved(r) && r.head && r.head.phone) {
+          const p = r.head.phone.replace(/[^0-9]/g, "").slice(-8);
+          if (p.length >= 8) approvedPhones.add(p);
+        }
+      });
+      Object.keys(storedFRCRecords).forEach(function(k) {
+        const r = storedFRCRecords[k];
+        if (!r || r.status === "Rejected") {
+          delete storedFRCRecords[k];
+        } else if (String(k).startsWith("PEND-") && r.head && r.head.phone) {
+          const p = r.head.phone.replace(/[^0-9]/g, "").slice(-8);
+          if (p.length >= 8 && approvedPhones.has(p)) {
+            delete storedFRCRecords[k];
+          }
+        }
+      });
+      try { localStorage.setItem("WCF_CENSUS_RECORDS", JSON.stringify(storedFRCRecords)); } catch(e){}
+      if (typeof updateCensusCounters === "function") updateCensusCounters();
+    } catch (e) {
+      console.warn("Cloud check warning:", e);
+    }
+  }
+
+  function injectPendingCaseUI() {
+    const tabCityBtn = document.getElementById("tabCityStats");
+    if (tabCityBtn && !document.getElementById("tabPendingCheck")) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.id = "tabPendingCheck";
+      btn.className = "bg-amber-100 text-amber-900 hover:bg-amber-200 border border-amber-400 px-4 py-2.5 rounded-lg font-bold text-xs md:text-sm transition shadow-sm";
+      btn.onclick = function() { switchMainTab("pending"); };
+      tabCityBtn.parentNode.appendChild(btn);
+    }
+    const searchSec = document.getElementById("searchSection");
+    if (searchSec && !document.getElementById("pendingCheckSection")) {
+      const sec = document.createElement("div");
+      sec.id = "pendingCheckSection";
+      sec.className = "hidden bg-white p-5 md:p-6 rounded-xl border-2 border-amber-300 shadow space-y-4";
+      sec.innerHTML = '<h3 id="pendingCheckTitle" class="font-bold text-base text-amber-900">Check Pending Case Status</h3>' +
+        '<p id="pendingCheckSub" class="text-xs text-slate-600"></p>' +
+        '<div class="flex flex-col md:flex-row gap-3 max-w-xl">' +
+        '<input type="tel" id="pendingPhoneInput" class="border border-slate-300 rounded-lg p-2.5 text-sm font-mono outline-none focus:ring-2 focus:ring-amber-600 flex-1 text-left" dir="ltr">' +
+        '<button type="button" id="btnPendingCheckAction" onclick="checkPendingCaseByMobile()" class="bandhani-bg text-white font-bold px-6 py-2.5 rounded-lg text-sm shadow cursor-pointer">Check Status</button>' +
+        '</div>' +
+        '<div id="pendingCheckResultBox" class="hidden p-4 rounded-xl border text-xs whitespace-pre-line font-semibold leading-relaxed"></div>';
+      searchSec.parentNode.insertBefore(sec, searchSec.nextSibling);
+    }
+    updatePendingUILanguage(typeof currentLang !== "undefined" ? currentLang : "en");
+  }
+
+  function updatePendingUILanguage(lang) {
+    const t = PENDING_I18N[lang] || PENDING_I18N.en;
+    const setTxt = function(id, v) { const el = document.getElementById(id); if (el) el.textContent = v; };
+    setTxt("tabPendingCheck", t.tabBtn);
+    setTxt("pendingCheckTitle", t.title);
+    setTxt("pendingCheckSub", t.sub);
+    setTxt("btnPendingCheckAction", t.btnAction);
+    const inp = document.getElementById("pendingPhoneInput");
+    if (inp) inp.placeholder = t.placeholder;
+  }
+
+  window.checkPendingCaseByMobile = async function() {
+    const lang = (typeof currentLang !== "undefined" && PENDING_I18N[currentLang]) ? currentLang : "en";
+    const t = PENDING_I18N[lang];
+    const inp = document.getElementById("pendingPhoneInput");
+    const resBox = document.getElementById("pendingCheckResultBox");
+    const btn = document.getElementById("btnPendingCheckAction");
+    const rawPhone = (inp ? inp.value : "").trim();
+    const cleanPhone = rawPhone.replace(/[^0-9]/g, "");
+    if (!cleanPhone || cleanPhone.length < 7) {
+      resBox.className = "p-4 rounded-xl border border-red-300 bg-red-50 text-red-700 text-xs font-bold";
+      resBox.textContent = t.errEmpty;
+      resBox.classList.remove("hidden");
+      return;
+    }
+    const origText = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = "...";
+    await syncPortalWithCloud();
+    btn.disabled = false;
+    btn.textContent = origText;
+    const suffix = cleanPhone.slice(-8);
+    const allRecs = Object.values(storedFRCRecords || {});
+    const approvedMatch = allRecs.find(function(r) {
+      if (!isRecordApproved(r) || !r.head || !r.head.phone) return false;
+      return r.head.phone.replace(/[^0-9]/g, "").endsWith(suffix);
+    });
+    if (approvedMatch) {
+      resBox.className = "p-4 rounded-xl border border-emerald-400 bg-emerald-50 text-emerald-900 text-xs font-bold whitespace-pre-line";
+      resBox.textContent = t.msgApproved(approvedMatch.code);
+      resBox.classList.remove("hidden");
+      setTimeout(function() {
+        if (typeof displayCertificateModal === "function") displayCertificateModal(approvedMatch);
+      }, 600);
+      return;
+    }
+    const pendingMatch = allRecs.find(function(r) {
+      if (!r || !r.head || !r.head.phone) return false;
+      return (r.status === "Pending Verification" || r.status === "Possible Duplicate") &&
+             r.head.phone.replace(/[^0-9]/g, "").endsWith(suffix);
+    });
+    if (pendingMatch) {
+      resBox.className = "p-4 rounded-xl border border-amber-400 bg-amber-50 text-amber-900 text-xs font-bold whitespace-pre-line";
+      resBox.textContent = t.msgPending(pendingMatch.head.name || "-", pendingMatch.head.clan || "Other");
+      resBox.classList.remove("hidden");
+      return;
+    }
+    resBox.className = "p-4 rounded-xl border border-red-300 bg-red-50 text-red-800 text-xs font-bold whitespace-pre-line";
+    resBox.textContent = t.msgNotFound;
+    resBox.classList.remove("hidden");
+  };
+
+  function applyPortalSecurityLocks() {
+    injectPendingCaseUI();
+    if (typeof window.switchMainTab === "function" && !window.switchMainTab._v5Patched) {
+      const origSwitch = window.switchMainTab;
+      window.switchMainTab = function(tab) {
+        const pendingSec = document.getElementById("pendingCheckSection");
+        const pendingBtn = document.getElementById("tabPendingCheck");
+        const inactivePendingCls = "bg-amber-100 text-amber-900 hover:bg-amber-200 border border-amber-400 px-4 py-2.5 rounded-lg font-bold text-xs md:text-sm transition shadow-sm";
+        const activeCls = "bandhani-bg text-white px-5 py-2.5 rounded-lg font-bold text-xs md:text-sm shadow border border-amber-400/30";
+        const inactiveCls = "bg-slate-200 text-slate-700 hover:bg-slate-300 px-5 py-2.5 rounded-lg font-bold text-xs md:text-sm";
+        if (tab === "pending") {
+          document.getElementById("censusForm")?.classList.add("hidden");
+          document.getElementById("regTypeSelectorCard")?.classList.add("hidden");
+          document.getElementById("searchSection")?.classList.add("hidden");
+          document.getElementById("cityStatsSection")?.classList.add("hidden");
+          if (pendingSec) pendingSec.classList.remove("hidden");
+          if (document.getElementById("tabNewReg")) document.getElementById("tabNewReg").className = inactiveCls;
+          if (document.getElementById("tabSearchReg")) document.getElementById("tabSearchReg").className = inactiveCls;
+          if (document.getElementById("tabCityStats")) document.getElementById("tabCityStats").className = inactiveCls;
+          if (pendingBtn) pendingBtn.className = activeCls;
+          document.getElementById("pendingPhoneInput")?.focus();
+        } else {
+          if (pendingSec) pendingSec.classList.add("hidden");
+          if (pendingBtn) pendingBtn.className = inactivePendingCls;
+          origSwitch(tab);
+        }
+      };
+      window.switchMainTab._v5Patched = true;
+    }
+    if (typeof window.changeLanguage === "function" && !window.changeLanguage._v5LangPatched) {
+      const origLang = window.changeLanguage;
+      window.changeLanguage = function(lang) {
+        origLang(lang);
+        updatePendingUILanguage(lang);
+      };
+      window.changeLanguage._v5LangPatched = true;
+    }
+    window.updateCensusCounters = function() {
+      const allRecords = Object.values(storedFRCRecords || {});
+      const approvedRecords = allRecords.filter(isRecordApproved);
+      const totalFamilies = approvedRecords.filter(function(r) { return r.type === "family"; }).length;
+      let totalIndividuals = 0;
+      approvedRecords.forEach(function(rec) {
+        totalIndividuals++;
+        if (rec.members && Array.isArray(rec.members)) {
+          totalIndividuals += rec.members.length;
+        }
+      });
+      const famEl = document.getElementById("liveTotalFamilies");
+      const memEl = document.getElementById("liveTotalMembers");
+      if (famEl) famEl.textContent = totalFamilies;
+      if (memEl) memEl.textContent = totalIndividuals;
+      if (typeof populateAdminCountryOptions === "function") populateAdminCountryOptions();
+    };
+    ["searchAndReprintCertificate", "loadFRCForAddingMember", "verifyAndOpenPopulationDashboard", "runPublicPopulationQuery", "fetchMemberDataForIdCard"].forEach(function(fnName) {
+      if (typeof window[fnName] === "function" && !window[fnName]._v5ApprovedOnly) {
+        const origFn = window[fnName];
+        window[fnName] = function() {
+          const backup = window.storedFRCRecords;
+          const approvedMap = {};
+          Object.keys(backup || {}).forEach(function(k) {
+            if (isRecordApproved(backup[k])) approvedMap[k] = backup[k];
+          });
+          window.storedFRCRecords = approvedMap;
+          try {
+            return origFn.apply(this, arguments);
+          } finally {
+            window.storedFRCRecords = backup;
+          }
+        };
+        window[fnName]._v5ApprovedOnly = true;
+      }
+    });
+    if (typeof window.displayCertificateModal === "function" && !window.displayCertificateModal._v5ModalPatched) {
+      const origModal = window.displayCertificateModal;
+      window.displayCertificateModal = function(record) {
+        origModal(record);
+        const isApp = isRecordApproved(record);
+        const frcSheet = document.getElementById("frcCertificateSheet");
+        const iicSheet = document.getElementById("iicCertificateSheet");
+        const waBtn = document.getElementById("btnModalWhatsAppShare");
+        const dlBtn = document.getElementById("btnDownloadAction");
+        const lang = (typeof currentLang !== "undefined" && PENDING_I18N[currentLang]) ? currentLang : "en";
+        const t = PENDING_I18N[lang];
+        if (!isApp) {
+          if (frcSheet) frcSheet.classList.add("hidden");
+          if (iicSheet) iicSheet.classList.add("hidden");
+          if (dlBtn) dlBtn.classList.add("hidden");
+          if (waBtn) waBtn.classList.add("hidden");
+          const noticeBody = document.getElementById("lblPendingNoticeBody");
+          if (noticeBody) noticeBody.textContent = t.pendingModalNotice;
+        } else {
+          if (waBtn) waBtn.classList.remove("hidden");
+        }
+      };
+      window.displayCertificateModal._v5ModalPatched = true;
+    }
+    if (typeof window.handleFormSubmit === "function" && !window.handleFormSubmit._v5SubmitPatched) {
+      const origSubmit = window.handleFormSubmit;
+      window.handleFormSubmit = async function(e) {
+        const clanVal = document.getElementById("headClan")?.value;
+        const isPendingSubmission = (clanVal === "Other" || (typeof currentRegMode !== "undefined" && currentRegMode === "individual"));
+        const prevSync = window.isSyncEnabled;
+        if (isPendingSubmission) window.isSyncEnabled = false;
+        try {
+          await origSubmit(e);
+        } finally {
+          window.isSyncEnabled = prevSync;
+        }
+        if (isPendingSubmission && typeof activeViewingRecord !== "undefined" && activeViewingRecord) {
+          const oldGeneratedCode = activeViewingRecord.code;
+          if (oldGeneratedCode && !String(oldGeneratedCode).startsWith("PEND-")) {
+            delete storedFRCRecords[oldGeneratedCode];
+            if (typeof isCloudReady !== "undefined" && isCloudReady && db) {
+              try { db.collection("census_registrations").doc(oldGeneratedCode).delete(); } catch(err){}
+            }
+          }
+          const tempId = "PEND-" + Math.floor(100000 + Math.random() * 900000);
+          activeViewingRecord.code = tempId;
+          activeViewingRecord.status = "Pending Verification";
+          if (activeViewingRecord.head) {
+            activeViewingRecord.head.memberId = "PENDING";
+            activeViewingRecord.head.uniqueId = "PENDING";
+          }
+          if (Array.isArray(activeViewingRecord.members)) {
+            activeViewingRecord.members.forEach(function(m) {
+              m.memberId = "PENDING";
+              m.uniqueId = "PENDING";
+            });
+          }
+          storedFRCRecords[tempId] = activeViewingRecord;
+          try { localStorage.setItem("WCF_CENSUS_RECORDS", JSON.stringify(storedFRCRecords)); } catch(err){}
+          if (typeof isCloudReady !== "undefined" && isCloudReady && db) {
+            try { await db.collection("wcf_pending_queue").doc(tempId).set(activeViewingRecord); } catch(err){}
+          }
+          updateCensusCounters();
+          displayCertificateModal(activeViewingRecord);
+        } else if (!isPendingSubmission && typeof activeViewingRecord !== "undefined" && activeViewingRecord) {
+          if (typeof isCloudReady !== "undefined" && isCloudReady && db && isSyncEnabled) {
+            try {
+              const isTrial = new Date().getTime() < new Date("2026-11-03T00:00:00").getTime();
+              if (isTrial) {
+                db.collection("trial_census_registrations").doc(activeViewingRecord.code).set(activeViewingRecord);
+              }
+            } catch(err){}
+          }
+          updateCensusCounters();
+        }
+      };
+      window.handleFormSubmit._v5SubmitPatched = true;
+    }
+    updateCensusCounters();
+    syncPortalWithCloud();
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", applyPortalSecurityLocks);
+  } else {
+    applyPortalSecurityLocks();
+  }
+})();
+</script>
+<!-- ==================== END WCF SAFE FIXER PATCH V5 ==================== -->
+
 </html>
