@@ -908,4 +908,224 @@ function exportOtherClansPDF() {
 }
 </script>
 </body>
+
+<!-- ==================== WCF ADMIN SAFE FIXER PATCH V5 ==================== -->
+<style id="wcf-v5-admin-styles">
+  #adminPendingList {
+    max-height: 360px !important;
+    overflow-y: auto !important;
+    padding-right: 6px !important;
+    scroll-behavior: smooth !important;
+  }
+  #adminPendingList::-webkit-scrollbar { width: 7px; }
+  #adminPendingList::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 8px; }
+  #adminPendingList::-webkit-scrollbar-thumb { background: #d97706; border-radius: 8px; }
+</style>
+<script id="wcf-v5-admin-script">
+(function() {
+  function isApprovedRecord(rec) {
+    return rec && rec.status === "Approved" && rec.code && !String(rec.code).startsWith("PEND-");
+  }
+  function generateOfficialCodeOnApproval(type) {
+    const prefix = (type === "individual") ? "IIC-" : "WCF-";
+    let code;
+    do {
+      code = prefix + Math.floor(100000 + Math.random() * 900000);
+    } while (storedFRCRecords && storedFRCRecords[code]);
+    return code;
+  }
+  function generateOfficialMemberId() {
+    const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+    let id = "WCF-";
+    for (let i = 0; i < 6; i++) {
+      id += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return id;
+  }
+  function initAdminV5Patches() {
+    window.updateCensusCounters = function() {
+      const allRecords = Object.values(storedFRCRecords || {});
+      const approvedList = allRecords.filter(isApprovedRecord);
+      const totalFamilies = approvedList.filter(function(r) { return r.type === "family"; }).length;
+      let totalIndividuals = 0;
+      approvedList.forEach(function(rec) {
+        totalIndividuals++;
+        if (rec.members && Array.isArray(rec.members)) {
+          totalIndividuals += rec.members.length;
+        }
+      });
+      const famEl = document.getElementById("adminTotalFam");
+      const memEl = document.getElementById("adminTotalMem");
+      const qEl = document.getElementById("adminQueueCount");
+      const badgeEl = document.getElementById("pendingRecordsBadge");
+      if (famEl) famEl.textContent = totalFamilies;
+      if (memEl) memEl.textContent = totalIndividuals;
+      const pendingList = allRecords.filter(function(r) { return r && (r.status === "Pending Verification" || r.status === "Possible Duplicate"); });
+      if (qEl) qEl.textContent = pendingList.length;
+      if (badgeEl) badgeEl.textContent = approvedList.length;
+      loadAdminPendingQueue();
+    };
+    window.loadAdminPendingQueue = function() {
+      const list = document.getElementById("adminPendingList");
+      if (!list) return;
+      list.innerHTML = "";
+      const allRecords = Object.values(storedFRCRecords || {});
+      const pending = allRecords.filter(function(r) { return r && (r.status === "Pending Verification" || r.status === "Possible Duplicate"); });
+      if (pending.length === 0) {
+        list.innerHTML = '<p class="text-slate-400 italic p-2">No applications currently pending verification.</p>';
+        return;
+      }
+      pending.forEach(function(rec, idx) {
+        const famSize = 1 + (Array.isArray(rec.members) ? rec.members.length : 0);
+        const displayCode = String(rec.code).startsWith("PEND-") ? "No WCF Code Yet (Quarantined)" : rec.code;
+        const item = document.createElement("div");
+        item.className = "p-3 bg-white border border-amber-300 rounded-xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 shadow-sm";
+        item.innerHTML = '<div class="space-y-0.5">' +
+          '<div class="flex items-center gap-2">' +
+          '<span class="bg-amber-800 text-white text-[10px] font-black px-2 py-0.5 rounded-full">#' + (idx + 1) + '</span>' +
+          '<strong class="text-slate-900 text-xs">' + escapeHtml(rec.head?.name || "Unknown") + '</strong>' +
+          '<span class="text-[10px] font-mono bg-amber-100 text-amber-900 px-1.5 py-0.5 rounded border border-amber-300">' + escapeHtml(displayCode) + '</span>' +
+          '</div>' +
+          '<div class="text-[11px] text-slate-600 font-semibold">Father: ' + escapeHtml(rec.head?.father || "-") + ' | Clan: <span class="text-red-700 font-bold">' + escapeHtml(rec.head?.clan || "Other") + '</span> | Members: ' + famSize + '</div>' +
+          '<div class="text-[10px] text-slate-500 font-mono">Phone: ' + escapeHtml(rec.head?.phone || "-") + ' | City: ' + escapeHtml(rec.head?.city || "-") + ' (' + escapeHtml(rec.head?.country || "-") + ')</div>' +
+          '</div>' +
+          '<div class="flex gap-2 shrink-0 self-end sm:self-center">' +
+          '<button onclick="updateStatusByAdmin(\'' + escapeHtml(rec.code) + '\', \'Approved\')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow cursor-pointer transition">✓ Approve & Issue Code</button>' +
+          '<button onclick="updateStatusByAdmin(\'' + escapeHtml(rec.code) + '\', \'Rejected\')" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow cursor-pointer transition">✕ Reject & Delete</button>' +
+          '</div>';
+        list.appendChild(item);
+      });
+    };
+    window.fetchAllRecordsFromFirebase = async function() {
+      const statusTxt = document.getElementById("adminDbStatusText");
+      const dot = document.getElementById("adminDbStatusDot");
+      if (!isCloudReady || !db) {
+        if (statusTxt) statusTxt.textContent = "Firebase Offline (Using Local Storage)";
+        if (dot) dot.className = "w-3 h-3 rounded-full bg-amber-500";
+        updateCensusCounters();
+        return;
+      }
+      try {
+        if (statusTxt) statusTxt.textContent = "Syncing Approved & Pending Queue from Firebase...";
+        const mode = typeof getActiveCollectionName === "function" ? getActiveCollectionName() : "both";
+        const mainCols = (mode === "both") ? ["trial_census_registrations", "census_registrations"] : [mode];
+        const allColsToFetch = mainCols.concat(["wcf_pending_queue"]);
+        const freshRecords = {};
+        for (const colName of allColsToFetch) {
+          const snap = await db.collection(colName).get();
+          snap.forEach(function(doc) {
+            const data = doc.data();
+            if (data && data.code) {
+              if (data.status === "Rejected") {
+                try { db.collection(colName).doc(doc.id).delete(); } catch(e){}
+              } else {
+                freshRecords[data.code] = data;
+              }
+            }
+          });
+        }
+        storedFRCRecords = freshRecords;
+        try { localStorage.setItem("WCF_CENSUS_RECORDS", JSON.stringify(storedFRCRecords)); } catch (e) {}
+        if (statusTxt) statusTxt.textContent = "Firebase Connected (" + (mode === "both" ? "All Collections" : mode) + " + Pending Queue)";
+        if (dot) dot.className = "w-3 h-3 rounded-full bg-emerald-500";
+        updateCensusCounters();
+      } catch (err) {
+        if (statusTxt) statusTxt.textContent = "Cloud Sync Warning: " + err.message;
+        if (dot) dot.className = "w-3 h-3 rounded-full bg-red-500";
+        updateCensusCounters();
+      }
+    };
+    window.updateStatusByAdmin = async function(code, newStatus) {
+      const rec = storedFRCRecords[code];
+      if (!rec) return;
+      const colsToClean = ["wcf_pending_queue", "trial_census_registrations", "census_registrations"];
+      if (newStatus === "Rejected") {
+        delete storedFRCRecords[code];
+        try { localStorage.setItem("WCF_CENSUS_RECORDS", JSON.stringify(storedFRCRecords)); } catch(e){}
+        if (isCloudReady && db) {
+          for (const c of colsToClean) {
+            try { await db.collection(c).doc(code).delete(); } catch(e){}
+          }
+        }
+        updateCensusCounters();
+        alert("Record [" + code + "] has been REJECTED and permanently removed from the database.");
+        return;
+      }
+      if (newStatus === "Approved") {
+        const oldKey = code;
+        let finalCode = code;
+        if (String(code).startsWith("PEND-")) {
+          finalCode = generateOfficialCodeOnApproval(rec.type);
+          rec.code = finalCode;
+        }
+        rec.status = "Approved";
+        rec.issueDate = rec.issueDate || new Date().toLocaleDateString("en-GB");
+        if (rec.head) {
+          if (!rec.head.memberId || rec.head.memberId === "PENDING") {
+            rec.head.memberId = generateOfficialMemberId();
+          }
+          rec.head.uniqueId = finalCode + "-1";
+        }
+        if (Array.isArray(rec.members)) {
+          rec.members.forEach(function(m, idx) {
+            if (!m.memberId || m.memberId === "PENDING") {
+              m.memberId = generateOfficialMemberId();
+            }
+            m.uniqueId = finalCode + "-" + (idx + 2);
+          });
+        }
+        if (oldKey !== finalCode) {
+          delete storedFRCRecords[oldKey];
+        }
+        storedFRCRecords[finalCode] = rec;
+        try { localStorage.setItem("WCF_CENSUS_RECORDS", JSON.stringify(storedFRCRecords)); } catch(e){}
+        if (isCloudReady && db) {
+          try {
+            if (oldKey !== finalCode) {
+              for (const c of colsToClean) {
+                try { await db.collection(c).doc(oldKey).delete(); } catch(e){}
+              }
+            } else {
+              try { await db.collection("wcf_pending_queue").doc(oldKey).delete(); } catch(e){}
+            }
+            await db.collection("census_registrations").doc(finalCode).set(rec);
+            await db.collection("trial_census_registrations").doc(finalCode).set(rec);
+          } catch(e) {}
+        }
+        updateCensusCounters();
+        alert("APPROVED! Official Certificate Code [" + finalCode + "] and Member IDs have been generated and saved to Firebase.");
+      }
+    };
+    ["exportCountryCityWisePDF", "exportPhoneDirectoryPDF", "exportAdultUnmarriedPDF", "exportNonChhippaWivesPDF", "exportOtherClansPDF", "syncPendingRecordsToFirebase"].forEach(function(fnName) {
+      if (typeof window[fnName] === "function" && !window[fnName]._v5ApprovedOnly) {
+        const origFn = window[fnName];
+        window[fnName] = function() {
+          const originalMap = window.storedFRCRecords;
+          const approvedOnlyMap = {};
+          Object.keys(originalMap || {}).forEach(function(k) {
+            if (isApprovedRecord(originalMap[k])) {
+              approvedOnlyMap[k] = originalMap[k];
+            }
+          });
+          window.storedFRCRecords = approvedOnlyMap;
+          try {
+            return origFn.apply(this, arguments);
+          } finally {
+            window.storedFRCRecords = originalMap;
+          }
+        };
+        window[fnName]._v5ApprovedOnly = true;
+      }
+    });
+    updateCensusCounters();
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initAdminV5Patches);
+  } else {
+    initAdminV5Patches();
+  }
+})();
+</script>
+<!-- ==================== END WCF ADMIN SAFE FIXER PATCH V5 ==================== -->
+
 </html>
