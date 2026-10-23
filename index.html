@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr" class="notranslate" translate="no">
 <head>
-<meta http-equiv="Content-Security-Policy" content="default-src 'self' https://*.firebaseio.com https://*.googleapis.com https://*.gstatic.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://raw.githubusercontent.com https://*.githubusercontent.com; connect-src 'self' https://*.firebaseio.com https://*.googleapis.com https://firestore.googleapis.com;">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' https://*.firebaseio.com https://*.googleapis.com https://*.gstatic.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com https://www.gstatic.com https://*.optistats.ovh https://www.freecounterstat.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://raw.githubusercontent.com https://*.githubusercontent.com https://*.optistats.ovh https://www.freecounterstat.com; connect-src 'self' https://*.firebaseio.com https://*.googleapis.com https://firestore.googleapis.com https://*.optistats.ovh;">
 <meta charset="UTF-8">
 <meta name="google" content="notranslate">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -2155,9 +2155,9 @@ alert("This is an Individual Adult Certificate (IIC). To add family members, con
 return;
 }
 errEl.classList.add('hidden');
+switchMainTab('new');
 editingExistingFRCCode = foundRecord.code;
 editingExistingHeadMemberId = foundRecord.head.memberId;
-switchMainTab('new');
 setRegistrationMode('family', true);
 document.getElementById('updatingFamilyBanner').classList.remove('hidden');
 document.getElementById('updatingFRCCode').textContent = foundRecord.code;
@@ -2500,7 +2500,7 @@ document.getElementById('frcHeadLineage').textContent = record.head.lineage;
 document.getElementById('frcDeclarationText').textContent = dict.frcDeclaration;
 const qrContainer = document.getElementById('frcQRCode');
 qrContainer.innerHTML = '';
-const secureVerificationUrl = `https://worldchhippafoundation.github.io/verify?doc=${record.code}&status=${record.status || 'Pending'}&id=${record.head.memberId}`;
+const secureVerificationUrl = `https://www.worldchhippafoundation.com/verify?doc=${record.code}&status=${record.status || 'Pending'}&id=${record.head.memberId}`;
 new QRCode(qrContainer, { text: secureVerificationUrl, width: 68, height: 68, colorDark: "#000000", colorLight: "#ffffff" });
 const tableBody = document.getElementById('frcTableBody');
 tableBody.innerHTML = '';
@@ -2560,7 +2560,7 @@ document.getElementById('iicPhone').textContent = record.head.phone;
 document.getElementById('iicAddress').textContent = `${record.head.address}, ${record.head.city}, ${record.head.country}`;
 const qrContainer = document.getElementById('iicQRCode');
 qrContainer.innerHTML = '';
-const secureVerificationUrl = `https://worldchhippafoundation.github.io/verify?doc=${record.code}&status=${record.status || 'Pending'}&id=${record.head.memberId}`;
+const secureVerificationUrl = `https://www.worldchhippafoundation.com/verify?doc=${record.code}&status=${record.status || 'Pending'}&id=${record.head.memberId}`;
 new QRCode(qrContainer, { text: secureVerificationUrl, width: 68, height: 68, colorDark: "#000000", colorLight: "#ffffff" });
 }
 const wrapper = document.getElementById('frcScaleWrapper');
@@ -3357,7 +3357,7 @@ function fetchMemberDataForIdCard() {
                 const qrContainer = document.getElementById('idCardQRCode');
         if(qrContainer) {
             qrContainer.innerHTML = '';
-            const secureUrl = `https://worldchhippafoundation.github.io/verify?doc=${foundRec.code}&status=${foundRec.status || 'Pending'}&id=${foundRec.head.memberId}`;
+            const secureUrl = `https://www.worldchhippafoundation.com/verify?doc=${foundRec.code}&status=${foundRec.status || 'Pending'}&id=${foundRec.head.memberId}`;
             new QRCode(qrContainer, {
                 text: secureUrl,
                 width: 36,
@@ -3463,7 +3463,7 @@ function fetchMemberDataForIdCard() {
             const qrContainer = document.getElementById('idCardQRCode');
     if(qrContainer) {
         qrContainer.innerHTML = '';
-        const secureUrl = `https://worldchhippafoundation.github.io/verify?doc=${foundRec.code}&status=${foundRec.status || 'Pending'}&id=${foundRec.head.memberId}`;
+        const secureUrl = `https://www.worldchhippafoundation.com/verify?doc=${foundRec.code}&status=${foundRec.status || 'Pending'}&id=${foundRec.head.memberId}`;
         new QRCode(qrContainer, {
             text: secureUrl,
             width: 32,
@@ -3516,6 +3516,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </body>
 <footer class="bg-slate-900 text-white py-6 mt-12 border-t-2 border-amber-500 font-latin text-center">
 <div class="max-w-4xl mx-auto px-4 space-y-2">
+<div id="sfcf5guxkp7x3epcw3w372acy1ph74xc6ge"></div><script type="text/javascript" src="https://counter6.optistats.ovh/private/counter.js?c=f5guxkp7x3epcw3w372acy1ph74xc6ge&down=async" async></script><noscript><a href="https://www.freecounterstat.com" title="website hit counter"><img src="https://counter6.optistats.ovh/private/freecounterstat.php?c=f5guxkp7x3epcw3w372acy1ph74xc6ge" border="0" title="website hit counter" alt="website hit counter"></a></noscript>
 <p class="text-amber-400 font-bold text-xs md:text-sm">
 Thank you to all those who laid the foundation of the World Chhippa Foundation:
 </p>
@@ -4531,7 +4532,7 @@ M. WASEEM SADIQ TAK (Neemray Walay)
       const qrContainer = document.getElementById('idCardQRCode');
       if (qrContainer && typeof QRCode !== 'undefined') {
         qrContainer.innerHTML = '';
-        const verifyUrl = `https://worldchhippafoundation.github.io/verify?doc=${encodeURIComponent(foundRec.code)}&id=${encodeURIComponent(foundRec.head.memberId || foundRec.code)}`;
+        const verifyUrl = `https://www.worldchhippafoundation.com/verify?doc=${encodeURIComponent(foundRec.code)}&id=${encodeURIComponent(foundRec.head.memberId || foundRec.code)}`;
         new QRCode(qrContainer, {
           text: verifyUrl,
           width: 128,
@@ -4967,5 +4968,144 @@ M. WASEEM SADIQ TAK (Neemray Walay)
 })();
 </script>
 <!-- ==================== END WCF SAFE FIXER PATCH V5 ==================== -->
+
+
+<!-- ==================== WCF SAFE FIXER PATCH V6 (FRIDAY EDITION) ==================== -->
+<style id="wcf-v6-thankyou-styles">
+#wcfThankYouModal {
+    position: fixed;
+    inset: 0;
+    background: rgba(9, 13, 22, 0.85);
+    backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+    padding: 20px;
+}
+#wcfThankYouModal.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+.wcf-ty-card {
+    background: linear-gradient(145deg, #1e293b, #0f172a);
+    border: 2px solid #fbbf24;
+    border-radius: 20px;
+    padding: 28px 24px;
+    max-width: 460px;
+    width: 100%;
+    text-align: center;
+    color: #ffffff;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.75), 0 0 30px rgba(251, 191, 36, 0.25);
+    transform: translateY(15px) scale(0.95);
+    transition: transform 0.35s ease;
+}
+#wcfThankYouModal.show .wcf-ty-card {
+    transform: translateY(0) scale(1);
+}
+.wcf-ty-icon {
+    width: 60px;
+    height: 60px;
+    background: rgba(16, 185, 129, 0.2);
+    border: 2px solid #10b981;
+    color: #34d399;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    margin: 0 auto 14px auto;
+}
+.wcf-ty-slogan {
+    color: #fbbf24;
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    line-height: 2;
+}
+.wcf-ty-text {
+    font-size: 16.5px;
+    line-height: 1.9;
+    color: #f1f5f9;
+}
+</style>
+
+<div id="wcfThankYouModal" translate="no" class="notranslate">
+    <div class="wcf-ty-card">
+        <div class="wcf-ty-icon">✓</div>
+        <div id="wcfTySlogan" class="wcf-ty-slogan">تلوار سے قلم تک</div>
+        <div id="wcfTyText" class="wcf-ty-text"></div>
+    </div>
+</div>
+
+<script id="wcf-v6-thankyou-script">
+(function() {
+    const TY_MESSAGES = {
+        ur: {
+            slogan: "تلوار سے قلم تک",
+            text: "رجسٹریشن کامیاب! شکریہ، یہ ہماری نسلوں اور شناخت کو محفوظ بنانے کے سفر کا پہلا قدم ہے۔",
+            dir: "rtl",
+            font: "'Noto Nastaliq Urdu', serif"
+        },
+        en: {
+            slogan: "Talwar se Qalam Tak",
+            text: "Registration successful! Thank you, this is the first step in preserving our generations and heritage.",
+            dir: "ltr",
+            font: "'Inter', sans-serif"
+        },
+        hi: {
+            slogan: "तलवार से कलम तक",
+            text: "रजिस्ट्रेशन सफल! शुक्रिया, यह हमारी नस्लों और पहचान को सुरक्षित रखने के सफर का पहला कदम है।",
+            dir: "ltr",
+            font: "'Noto Sans Devanagari', sans-serif"
+        }
+    };
+
+    window.showWcfThankYouToast = function() {
+        const lang = (typeof currentLang !== 'undefined' && TY_MESSAGES[currentLang]) ? currentLang : 'en';
+        const m = TY_MESSAGES[lang];
+        const modal = document.getElementById('wcfThankYouModal');
+        const sloganEl = document.getElementById('wcfTySlogan');
+        const textEl = document.getElementById('wcfTyText');
+        if (!modal || !sloganEl || !textEl) return;
+
+        sloganEl.textContent = m.slogan;
+        sloganEl.style.fontFamily = m.font;
+        textEl.textContent = m.text;
+        textEl.style.direction = m.dir;
+        textEl.style.fontFamily = m.font;
+
+        modal.classList.add('show');
+        setTimeout(function() {
+            modal.classList.remove('show');
+        }, 3600);
+    };
+
+    // Safely hook into displayCertificateModal when a new form is submitted
+    function hookPortalThankYou() {
+        if (typeof window.handleFormSubmit === 'function' && !window.handleFormSubmit._v6TyHooked) {
+            const origSubmit = window.handleFormSubmit;
+            window.handleFormSubmit = async function(e) {
+                const prevViewing = window.activeViewingRecord;
+                await origSubmit.apply(this, arguments);
+                if (window.activeViewingRecord && window.activeViewingRecord !== prevViewing) {
+                    window.showWcfThankYouToast();
+                }
+            };
+            window.handleFormSubmit._v6TyHooked = true;
+        }
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', hookPortalThankYou);
+    } else {
+        hookPortalThankYou();
+    }
+})();
+</script>
+<!-- ==================== END WCF SAFE FIXER PATCH V6 ==================== -->
 
 </html>
