@@ -1128,4 +1128,39 @@ function exportOtherClansPDF() {
 </script>
 <!-- ==================== END WCF ADMIN SAFE FIXER PATCH V5 ==================== -->
 
+
+<!-- ==================== WCF ADMIN SAFE FIXER PATCH V6 ==================== -->
+<script id="wcf-v6-admin-lock">
+(function() {
+    function applyStrictFirestoreDeleteLock() {
+        if (typeof window.updateStatusByAdmin === 'function' && !window.updateStatusByAdmin._v6Locked) {
+            const origUpdateStatus = window.updateStatusByAdmin;
+            window.updateStatusByAdmin = async function(code, newStatus) {
+                const rec = (typeof storedFRCRecords !== 'undefined') ? storedFRCRecords[code] : null;
+                if (newStatus === 'Rejected') {
+                    // STRICT CHECK: Never allow deleting an already Approved non-pending record
+                    const isAlreadyApproved = rec && rec.status === 'Approved' && !String(code).startsWith('PEND-');
+                    if (isAlreadyApproved) {
+                        alert("سیکیورٹی الرٹ: منظور شدہ (Approved) آفیشل ریکارڈ کو ڈیلیٹ یا ریجیکٹ کرنے کی اجازت نہیں ہے! صرف پینڈنگ یا ڈپلیکیٹ کیسز ہی ہٹائے جا سکتے ہیں۔");
+                        return false;
+                    }
+                    if (!confirm("کیا آپ واقعی اس پینڈنگ / ڈپلیکیٹ درخواست [" + code + "] کو ریجیکٹ اور ڈیلیٹ کرنا چاہتے ہیں؟")) {
+                        return false;
+                    }
+                }
+                return await origUpdateStatus.apply(this, arguments);
+            };
+            window.updateStatusByAdmin._v6Locked = true;
+        }
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', applyStrictFirestoreDeleteLock);
+    } else {
+        applyStrictFirestoreDeleteLock();
+    }
+})();
+</script>
+<!-- ==================== END WCF ADMIN SAFE FIXER PATCH V6 ==================== -->
+
 </html>
