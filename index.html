@@ -3339,24 +3339,84 @@ function fetchMemberDataForIdCard() {
         alert(currentLang === 'ur' ? "براہ کرم درست ممبر آئی ڈی یا کوڈ درج کریں!" : (currentLang === 'hi' ? "कृपया सही सदस्य आईडी या कोड दर्ज करें!" : "Please enter a valid Member ID or code!"));
         return;
     }
-        let foundRec = storedFRCRecords[searchId.toUpperCase()];
+        function fetchMemberDataForIdCard() {
+    const searchId = document.getElementById('searchMemberId').value.trim();
+    if(!searchId) {
+        alert("براہ کرم درست ممبر آئی ڈی یا کوڈ درج کریں!");
+        return;
+    }
+    
+    let foundRec = null;
     let foundMember = null;
 
-    if(!foundRec) {
+    if (storedFRCRecords[searchId.toUpperCase()]) {
+        foundRec = storedFRCRecords[searchId.toUpperCase()];
+        foundMember = foundRec.head;
+    } else {
         for(let key in storedFRCRecords) {
             let rec = storedFRCRecords[key];
             
-            // 1. Check main record code
             if(rec.code && rec.code.toUpperCase() === searchId.toUpperCase()) {
                 foundRec = rec;
+                foundMember = rec.head || rec;
                 break;
             }
-            // 2. Check head member id
-            if(rec.head && rec.head.memberId && rec.head.memberId.toUpperCase() === searchId.toUpperCase()) {
+            
+            if(rec.head && ((rec.head.memberId && rec.head.memberId.toUpperCase() === searchId.toUpperCase()) || (rec.head.code && rec.head.code.toUpperCase() === searchId.toUpperCase()))) {
                 foundRec = rec;
                 foundMember = rec.head;
                 break;
             }
+            
+            if(rec.members && Array.isArray(rec.members)) {
+                let matchedMem = rec.members.find(m => 
+                    (m.code && m.code.toUpperCase() === searchId.toUpperCase()) || 
+                    (m.memberId && m.memberId.toUpperCase() === searchId.toUpperCase()) ||
+                    (m.id && m.id.toUpperCase() === searchId.toUpperCase())
+                );
+                if(matchedMem) {
+                    foundRec = rec;
+                    foundMember = matchedMem;
+                    break;
+                }
+            }
+        }
+    }
+
+    if (foundRec && foundMember) {
+        let targetData = foundMember || foundRec.head || foundRec;
+        
+        document.getElementById('previewId').innerText = targetData.memberId || targetData.code || targetData.id || '';
+        document.getElementById('previewName').innerText = targetData.name || targetData.memberName || 'Member Name';
+        document.getElementById('previewFather').innerText = targetData.father || targetData.fatherName || 'Father Name';
+        
+        let addressText = targetData.address || foundRec.address || '';
+        if(foundRec.city) addressText += `, ${foundRec.city}`;
+        document.getElementById('previewAddress').innerText = addressText || 'Address not specified';
+
+        const qrContainer = document.getElementById('idCardQRCode');
+        if(qrContainer) {
+            qrContainer.innerHTML = '';
+            const codeToUse = targetData.code || targetData.memberId || foundRec.code;
+            const secureUrl = `https://www.worldchhippafoundation.com/verify?doc=${codeToUse}&status=${foundRec.status || 'Pending'}&id=${targetData.memberId || codeToUse}`;
+            new QRCode(qrContainer, {
+                text: secureUrl,
+                width: 36,
+                height: 36,
+                colorDark: "#000000",
+                colorLight: "#ffffff"
+            });
+        }
+    } else {
+        alert("یہ ممبر آئی ڈی یا کوڈ سسٹم میں موجود نہیں ہے!");
+        document.getElementById('previewId').innerText = "";
+        document.getElementById('previewName').innerText = "Member Name";
+        document.getElementById('previewFather').innerText = "Father Name";
+        document.getElementById('previewAddress').innerText = "Address will appear here automatically...";
+        const qrContainer = document.getElementById('idCardQRCode');
+        if(qrContainer) qrContainer.innerHTML = '';
+    }
+}
             // 3. Check inside members array for individual family members
             if(rec.members && Array.isArray(rec.members)) {
                 let matchedMem = rec.members.find(m => 
