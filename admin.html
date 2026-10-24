@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WCF Admin Portal — Secure</title>
+<title>WCF Admin Portal</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, collection, getDocs, doc, setDoc, deleteDoc, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+<!-- YEH WOHI LINES HAIN JO AAPKI PEHLI FILE MEIN THIN -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
-// YEH WO ASLI CHABI HAI JO AAPKI PEHLI FILE MEIN THI
+<script>
 const firebaseConfig = {
   apiKey: "AIzaSyDnhy28IGzf_xLULYBJuiO9HHRz0bIZ0gA",
   authDomain: "chhippa-census.firebaseapp.com",
@@ -22,12 +22,10 @@ const firebaseConfig = {
   appId: "1:285949399557:web:45bdb5ff288fdec0d3026c"
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
 
-window.__auth = auth;
-window.__db = db;
 window.currentAdmin = null;
 window.allRecords = {};
 
@@ -37,7 +35,7 @@ const loginForm = document.getElementById('loginForm');
 const loginError = document.getElementById('loginError');
 const userEmailEl = document.getElementById('currentUserEmail');
 
-loginForm.addEventListener('submit', async (e) => {
+loginForm.addEventListener('submit', (e) => {
   e.preventDefault();
   loginError.textContent = '';
   loginError.classList.add('hidden');
@@ -48,19 +46,21 @@ loginForm.addEventListener('submit', async (e) => {
   submitBtn.disabled = true;
   submitBtn.textContent = 'Signing in...';
 
-  try {
-    await signInWithEmailAndPassword(auth, email, password);
-    document.getElementById('adminPassword').value = '';
-  } catch (err) {
-    loginError.textContent = "Login failed: " + err.message;
-    loginError.classList.remove('hidden');
-  } finally {
-    submitBtn.disabled = false;
-    submitBtn.textContent = origText;
-  }
+  auth.signInWithEmailAndPassword(email, password)
+    .then(() => {
+      document.getElementById('adminPassword').value = '';
+    })
+    .catch((err) => {
+      loginError.textContent = "Login failed: " + err.message;
+      loginError.classList.remove('hidden');
+    })
+    .finally(() => {
+      submitBtn.disabled = false;
+      submitBtn.textContent = origText;
+    });
 });
 
-onAuthStateChanged(auth, (user) => {
+auth.onAuthStateChanged((user) => {
   if (user) {
     loginScreen.classList.add('hidden');
     dashboard.classList.remove('hidden');
@@ -74,7 +74,9 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
-window.logoutAdmin = function() { signOut(auth); };
+window.logoutAdmin = function() {
+  auth.signOut();
+};
 
 window.refreshFromCloud = async function() {
   const statusEl = document.getElementById('dbStatus');
@@ -84,9 +86,9 @@ window.refreshFromCloud = async function() {
 
   try {
     const [censusSnap, trialSnap, pendingSnap] = await Promise.all([
-      getDocs(collection(db, 'census_registrations')),
-      getDocs(collection(db, 'trial_census_registrations')),
-      getDocs(collection(db, 'wcf_pending_queue'))
+      db.collection('census_registrations').get(),
+      db.collection('trial_census_registrations').get(),
+      db.collection('wcf_pending_queue').get()
     ]);
 
     const merged = {};
@@ -168,9 +170,9 @@ window.approveRecord = async function(code) {
     if (updated.head && (!updated.head.memberId || updated.head.memberId === 'PENDING')) {
       updated.head.memberId = 'WCF-' + Math.random().toString(36).substring(2, 8).toUpperCase();
     }
-    await setDoc(doc(db, 'census_registrations', finalCode), updated);
-    await deleteDoc(doc(db, 'wcf_pending_queue', code)).catch(() => {});
-    await deleteDoc(doc(db, 'trial_census_registrations', code)).catch(() => {});
+    await db.collection('census_registrations').doc(finalCode).set(updated);
+    await db.collection('wcf_pending_queue').doc(code).delete().catch(() => {});
+    await db.collection('trial_census_registrations').doc(code).delete().catch(() => {});
     alert(`✅ Approved! Code: ${finalCode}`);
     await refreshFromCloud();
   } catch (err) { alert('Error: ' + err.message); }
@@ -179,14 +181,13 @@ window.approveRecord = async function(code) {
 window.rejectRecord = async function(code) {
   if (!confirm(`Reject record?`)) return;
   try {
-    await deleteDoc(doc(db, 'wcf_pending_queue', code)).catch(() => {});
-    await deleteDoc(doc(db, 'trial_census_registrations', code)).catch(() => {});
+    await db.collection('wcf_pending_queue').doc(code).delete().catch(() => {});
+    await db.collection('trial_census_registrations').doc(code).delete().catch(() => {});
     alert(`✕ Rejected.`);
     await refreshFromCloud();
   } catch (err) { alert('Error: ' + err.message); }
 };
 
-// ================= PDF EXPORTS WITH FILTERS =================
 function getEnglishValue(type, key) {
   if (!key) return '-';
   const dict = { relation: { Wife: 'Wife', Husband: 'Husband', Son: 'Son', Daughter: 'Daughter', Father: 'Father', Mother: 'Mother', Brother: 'Brother', Sister: 'Sister', Other: 'Other' }, gender: { Male: 'Male', Female: 'Female', Other: 'Other' }, education: { Matric: 'Matriculation (10th)', Intermediate: 'Intermediate (12th)', Graduate: 'Graduate (Bachelors)', Masters: 'Post Graduate (Masters)', Primary: 'Primary School', Religious: 'Islamic / Religious Scholar', Uneducated: 'Uneducated', Other: 'Other' }, job: { Business: 'Business', Textile: 'Textile', Tailor: 'Tailor', PrivateJob: 'Private Job', GovtJob: 'Government Job', Teacher: 'Teacher', Healthcare: 'Healthcare', EngineerIT: 'Engineer / IT', Driver: 'Driver', DailyWage: 'Daily Wage', Student: 'Student', Homemaker: 'Homemaker', Retired: 'Retired', Other: 'Other' }, clan: { Tak: 'Tak', Bhati: 'Bhati', Rao: 'Rao', Molani: 'Molani', Lodha: 'Lodha', Deora: 'Deora', Kukda: 'Kukda', Jinva: 'Jinva', Mangla: 'Mangla', Behlim: 'Behlim', Joiya: 'Joiya', Bhimpal: 'Bhimpal', Chauhan: 'Chauhan', Panwar: 'Panwar', Other: 'Other' } };
@@ -344,11 +345,9 @@ window.exportJSONBackup = function() {
   document.body.appendChild(a); a.click(); a.remove();
 };
 
-// ================= EVENT GREETING =================
 window.loadEventGreetingConfig = async function() {
   try {
-    const q = query(collection(db, 'wcf_config'), where('isEventGreetingConfig', '==', true));
-    const snap = await getDocs(q);
+    const snap = await db.collection('wcf_config').where('isEventGreetingConfig', '==', true).get();
     const badge = document.getElementById('eventBadge');
     if (snap.empty) { if (badge) { badge.textContent = '⚪ Not Active'; badge.className = 'text-xs font-bold px-3 py-1 rounded-full bg-slate-200 text-slate-700'; } return; }
     const data = snap.docs[0].data();
@@ -360,12 +359,12 @@ window.loadEventGreetingConfig = async function() {
 window.saveEventGreeting = async function() {
   const ur = document.getElementById('evTextUr').value.trim(); const en = document.getElementById('evTextEn').value.trim(); const hi = document.getElementById('evTextHi').value.trim(); const sec = parseInt(document.getElementById('evSeconds').value) || 7;
   if (!ur && !en && !hi) { alert('Please enter a greeting.'); return; }
-  try { await setDoc(doc(db, 'wcf_config', 'event_greeting'), { isEventGreetingConfig: true, active: true, textUr: ur, textEn: en, textHi: hi, seconds: sec, updatedAt: new Date().toISOString(), updatedBy: window.currentAdmin?.email || 'unknown' }); alert('✅ Event greeting saved.'); loadEventGreetingConfig(); } catch (err) { alert('Save failed: ' + err.message); }
+  try { await db.collection('wcf_config').doc('event_greeting').set({ isEventGreetingConfig: true, active: true, textUr: ur, textEn: en, textHi: hi, seconds: sec, updatedAt: new Date().toISOString(), updatedBy: window.currentAdmin?.email || 'unknown' }); alert('✅ Event greeting saved.'); loadEventGreetingConfig(); } catch (err) { alert('Save failed: ' + err.message); }
 };
 
 window.deleteEventGreeting = async function() {
   if (!confirm('Delete event greeting?')) return;
-  try { await deleteDoc(doc(db, 'wcf_config', 'event_greeting')); document.getElementById('evTextUr').value = ''; document.getElementById('evTextEn').value = ''; document.getElementById('evTextHi').value = ''; alert('🗑️ Deleted.'); loadEventGreetingConfig(); } catch (err) { alert('Delete failed: ' + err.message); }
+  try { await db.collection('wcf_config').doc('event_greeting').delete(); document.getElementById('evTextUr').value = ''; document.getElementById('evTextEn').value = ''; document.getElementById('evTextHi').value = ''; alert('🗑️ Deleted.'); loadEventGreetingConfig(); } catch (err) { alert('Delete failed: ' + err.message); }
 };
 
 function escapeHtml(s) { if (!s) return ''; return String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c])); }
