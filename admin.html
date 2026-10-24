@@ -1395,7 +1395,7 @@ function exportOtherClansPDF() {
 <!-- ==================== END WCF ADMIN SAFE FIXER PATCH V7 ==================== -->
 
 
-<!-- ==================== WCF ADMIN SAFE FIXER PATCH V8 (FIREBASE EMAIL/PASSWORD AUTH) ==================== -->
+<!-- ==================== WCF ADMIN SAFE FIXER PATCH V8 (STRICT NO-PERSISTENCE AUTH) ==================== -->
 <script id="wcf-v8-firebase-auth-patch">
 (function() {
   var DEFAULT_ADMIN_EMAIL = "azizabad549@gmail.com";
@@ -1432,6 +1432,22 @@ function exportOtherClansPDF() {
     if (typeof fetchAllRecordsFromFirebase === "function") fetchAllRecordsFromFirebase();
   }
 
+  function enforceStrictZeroPersistence() {
+    if (!auth) return;
+    // Clear any previously saved browser login immediately on every page load / refresh / new tab
+    try {
+      auth.signOut().catch(function() {});
+      auth.setPersistence(firebase.auth.Auth.Persistence.NONE).catch(function() {});
+    } catch (e) {}
+
+    // Also sign out automatically if the tab is closed or hidden/navigated away
+    window.addEventListener("pagehide", function() {
+      if (auth) {
+        try { auth.signOut(); } catch (e) {}
+      }
+    });
+  }
+
   function overrideAdminAuthFunctions() {
     window.handleAdminLogin = async function(e) {
       if (e && e.preventDefault) e.preventDefault();
@@ -1458,16 +1474,18 @@ function exportOtherClansPDF() {
       if (errEl) errEl.classList.add("hidden");
 
       try {
+        // Memory-only login: never saved to disk, tabs, or refreshes
+        await auth.setPersistence(firebase.auth.Auth.Persistence.NONE);
         await auth.signInWithEmailAndPassword(email, password);
         if (passEl) passEl.value = "";
         unlockDashboardUI();
       } catch (err) {
         console.error("Firebase Admin Login Error:", err);
-        var msg = "Galat Email ya Password! Firebase Authentication mein user check karein.";
+        var msg = "Galat Email ya Password! Dobara check karein.";
         if (err.code === "auth/too-many-requests") {
           msg = "Bohot zyada galat koshishein! Kuch der baad dobara try karein.";
         } else if (err.code === "auth/network-request-failed") {
-          msg = "Network error! Internet connection ya CSP settings check karein.";
+          msg = "Network error! Internet connection check karein.";
         }
         if (errEl) {
           errEl.textContent = msg;
@@ -1493,14 +1511,7 @@ function exportOtherClansPDF() {
       if (loginScr) loginScr.classList.remove("hidden");
     };
 
-    if (auth) {
-      auth.onAuthStateChanged(function(user) {
-        if (user && user.email && user.email.toLowerCase() === DEFAULT_ADMIN_EMAIL.toLowerCase()) {
-          unlockDashboardUI();
-        }
-      });
-    }
-
+    // Sync Event Greeting with public-read wcf_config collection
     if (typeof window.saveWcfLiveEventGreeting === "function" && !window.saveWcfLiveEventGreeting._v8Synced) {
       var origSaveEv = window.saveWcfLiveEventGreeting;
       window.saveWcfLiveEventGreeting = async function() {
@@ -1534,6 +1545,7 @@ function exportOtherClansPDF() {
   }
 
   function initAdminV8() {
+    enforceStrictZeroPersistence();
     upgradeLoginScreenToFirebaseAuth();
     overrideAdminAuthFunctions();
   }
