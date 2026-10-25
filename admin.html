@@ -55,7 +55,7 @@ body { font-family: 'Inter', sans-serif; }
     <form onsubmit="handleAdminLogin(event)" class="space-y-3 text-left">
       <div>
         <label class="block text-xs font-bold text-slate-700 mb-1">Enter WCF Admin Master PIN:</label>
-        <input type="password" id="adminPinInput" required placeholder="••••••••••••" class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm outline-none focus:ring-2 focus:ring-amber-600 font-mono">
+        <input type="password" id="adminPinInput" required placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm outline-none focus:ring-2 focus:ring-amber-600 font-mono">
       </div>
       <p id="loginErrorMsg" class="text-xs text-red-600 font-bold hidden"></p>
       <button type="submit" class="w-full bandhani-bg bg-amber-800 text-white font-bold py-2.5 rounded-xl shadow-lg text-sm transition cursor-pointer">
@@ -76,12 +76,12 @@ body { font-family: 'Inter', sans-serif; }
           <p class="text-[11px] text-amber-200">Global Cloud Database & PDF Reporting Console</p>
         </div>
       </div>
-      <div class="flex items-center gap-2">
+      <div class="flex items-center gap-2 flex-wrap">
         <button onclick="fetchAllRecordsFromFirebase()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3.5 py-2 rounded-lg shadow transition">
            Refresh Cloud Data
         </button>
-        <button onclick="lockAdminSession()" class="bg-red-700 hover:bg-red-600 text-white text-xs font-bold px-3 py-2 rounded-lg shadow transition">
-           Lock
+        <button onclick="lockAdminSession()" class="bg-red-700 hover:bg-red-600 text-white text-xs font-bold px-3.5 py-2 rounded-lg shadow transition flex items-center gap-1.5">
+           ðŸ”’ Logout
         </button>
       </div>
     </div>
@@ -90,22 +90,22 @@ body { font-family: 'Inter', sans-serif; }
   <main class="max-w-4xl w-full mx-auto p-4 md:p-6 space-y-5 flex-1">
     <div class="bg-white rounded-2xl shadow-lg border border-slate-200 p-5 space-y-5">
       <!-- Database Source Selector -->
-      <div class="bg-amber-50 border border-amber-200 rounded-xl p-3.5 flex flex-wrap items-center justify-between gap-3 text-xs">
+      <div class="bg-amber-50 border border-amber-200 rounded-xl p-3.5 space-y-3 text-xs">
         <div class="flex items-center gap-2">
-          <span class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse" id="adminDbStatusDot"></span>
-          <div>
-            <span class="font-bold text-slate-900" id="adminDbStatusText">Firebase Cloud: Connecting...</span>
+          <span class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse shrink-0" id="adminDbStatusDot"></span>
+          <div class="min-w-0">
+            <span class="font-bold text-slate-900 block" id="adminDbStatusText">Firebase Cloud: Connecting...</span>
             <p class="text-[10px] text-slate-600">Auto-routes to Trial Collection before 3 Nov 2026, or select manually:</p>
           </div>
         </div>
-        <div class="flex items-center gap-2">
-          <select id="collectionSelector" onchange="fetchAllRecordsFromFirebase()" class="border border-amber-400 rounded-lg px-2.5 py-1.5 text-xs font-bold bg-white text-slate-800 outline-none">
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+          <select id="collectionSelector" onchange="fetchAllRecordsFromFirebase()" class="flex-1 border border-amber-400 rounded-lg px-2.5 py-2 text-xs font-bold bg-white text-slate-800 outline-none min-w-0">
             <option value="auto">Auto (Time-Based Switch)</option>
             <option value="trial_census_registrations">Trial Collection (trial_census_registrations)</option>
             <option value="census_registrations">Primary Collection (census_registrations)</option>
             <option value="both">Both Collections Combined</option>
           </select>
-          <button type="button" onclick="syncPendingRecordsToFirebase()" class="px-3 py-1.5 bg-slate-800 text-white font-bold rounded-lg text-xs hover:bg-slate-700">
+          <button type="button" onclick="syncPendingRecordsToFirebase()" class="shrink-0 px-4 py-2 bg-slate-800 text-white font-bold rounded-lg text-xs hover:bg-slate-700 whitespace-nowrap">
              Push Local (<span id="pendingRecordsBadge">0</span>)
           </button>
         </div>
@@ -140,21 +140,21 @@ body { font-family: 'Inter', sans-serif; }
           <input type="text" id="adminCityManualInput" placeholder="City (Empty = All)..." class="md:col-span-3 border border-slate-300 rounded-lg px-2.5 py-2 text-xs bg-white outline-none focus:ring-2 focus:ring-amber-600">
           <select id="adminClanDropdown" class="md:col-span-3 border border-amber-400 rounded-lg p-2 text-xs font-bold bg-white text-amber-950 outline-none focus:ring-2 focus:ring-amber-600">
             <option value="">-- All Clans (Series Wise) --</option>
-            <option value="Tak">1. Tak (ٹاک)</option>
-            <option value="Bhati">2. Bhati (بھاٹی)</option>
-            <option value="Rao">3. Rao (راؤ)</option>
-            <option value="Molani">4. Molani (مولانی)</option>
-            <option value="Lodha">5. Lodha (لودھا)</option>
-            <option value="Deora">6. Deora (دیوڑا)</option>
-            <option value="Kukda">7. Kukda (ککڑا)</option>
-            <option value="Jinva">8. Jinva (جنوا)</option>
-            <option value="Mangla">9. Mangla (منگلا)</option>
-            <option value="Behlim">10. Behlim (بہلیم)</option>
-            <option value="Joiya">11. Joiya (جوئیا)</option>
-            <option value="Bhimpal">12. Bhimpal (بھیم پال)</option>
-            <option value="Chauhan">13. Chauhan (چوہان)</option>
-            <option value="Panwar">14. Panwar (پنوَار)</option>
-            <option value="Other">15. Other (دیگر)</option>
+            <option value="Tak">1. Tak (Ù¹Ø§Ú©)</option>
+            <option value="Bhati">2. Bhati (Ø¨Ú¾Ø§Ù¹ÛŒ)</option>
+            <option value="Rao">3. Rao (Ø±Ø§Ø¤)</option>
+            <option value="Molani">4. Molani (Ù…ÙˆÙ„Ø§Ù†ÛŒ)</option>
+            <option value="Lodha">5. Lodha (Ù„ÙˆØ¯Ú¾Ø§)</option>
+            <option value="Deora">6. Deora (Ø¯ÛŒÙˆÚ‘Ø§)</option>
+            <option value="Kukda">7. Kukda (Ú©Ú©Ú‘Ø§)</option>
+            <option value="Jinva">8. Jinva (Ø¬Ù†ÙˆØ§)</option>
+            <option value="Mangla">9. Mangla (Ù…Ù†Ú¯Ù„Ø§)</option>
+            <option value="Behlim">10. Behlim (Ø¨ÛÙ„ÛŒÙ…)</option>
+            <option value="Joiya">11. Joiya (Ø¬ÙˆØ¦ÛŒØ§)</option>
+            <option value="Bhimpal">12. Bhimpal (Ø¨Ú¾ÛŒÙ… Ù¾Ø§Ù„)</option>
+            <option value="Chauhan">13. Chauhan (Ú†ÙˆÛØ§Ù†)</option>
+            <option value="Panwar">14. Panwar (Ù¾Ù†ÙˆÙŽØ§Ø±)</option>
+            <option value="Other">15. Other (Ø¯ÛŒÚ¯Ø±)</option>
           </select>
           <button type="button" onclick="exportCountryCityWisePDF()" class="md:col-span-3 bandhani-bg bg-amber-800 text-white text-xs font-bold py-2 px-3 rounded-lg shadow transition flex items-center justify-center gap-1 cursor-pointer">
             <span>Download PDF</span>
@@ -206,7 +206,7 @@ body { font-family: 'Inter', sans-serif; }
   </main>
 
   <footer class="bg-slate-900 text-white py-4 border-t-2 border-amber-500 text-center text-xs">
-    <p class="text-amber-400 font-bold">World Chhippa Foundation — Master Administration Console</p>
+    <p class="text-amber-400 font-bold">World Chhippa Foundation â€” Master Administration Console</p>
     <p class="text-[11px] text-slate-400 mt-0.5">Conceived, Architected & Dedicated by: M. WASEEM SADIQ TAK (Neemray Walay)</p>
   </footer>
 </div>
@@ -460,20 +460,20 @@ function getNormalizedClanKey(h) {
   if (known.indexOf(k) !== -1) return k;
   if (known.indexOf(c) !== -1) return c;
   var mapUrHi = {
-    "ٹاک":"Tak", "टाक":"Tak",
-    "بھاٹی":"Bhati", "भाटी":"Bhati",
-    "راؤ":"Rao", "राव":"Rao",
-    "مولانی":"Molani", "मोलानी":"Molani",
-    "لودھا":"Lodha", "लोधा":"Lodha",
-    "دیوڑا":"Deora", "देवड़ा":"Deora",
-    "ککڑا":"Kukda", "कुकड़ा":"Kukda",
-    "جنوا":"Jinva", "जिन्वा":"Jinva",
-    "منگلا":"Mangla", "मंगला":"Mangla",
-    "بہلیم":"Behlim", "बेहलीम":"Behlim",
-    "جوئیا":"Joiya", "जोइया":"Joiya",
-    "بھیم پال":"Bhimpal", "भींपाल":"Bhimpal",
-    "چوہان":"Chauhan", "चौहान":"Chauhan",
-    "پنوَار":"Panwar", "پنوار":"Panwar", "पंवार":"Panwar"
+    "Ù¹Ø§Ú©":"Tak", "à¤Ÿà¤¾à¤•":"Tak",
+    "Ø¨Ú¾Ø§Ù¹ÛŒ":"Bhati", "à¤­à¤¾à¤Ÿà¥€":"Bhati",
+    "Ø±Ø§Ø¤":"Rao", "à¤°à¤¾à¤µ":"Rao",
+    "Ù…ÙˆÙ„Ø§Ù†ÛŒ":"Molani", "à¤®à¥‹à¤²à¤¾à¤¨à¥€":"Molani",
+    "Ù„ÙˆØ¯Ú¾Ø§":"Lodha", "à¤²à¥‹à¤§à¤¾":"Lodha",
+    "Ø¯ÛŒÙˆÚ‘Ø§":"Deora", "à¤¦à¥‡à¤µà¤¡à¤¼à¤¾":"Deora",
+    "Ú©Ú©Ú‘Ø§":"Kukda", "à¤•à¥à¤•à¤¡à¤¼à¤¾":"Kukda",
+    "Ø¬Ù†ÙˆØ§":"Jinva", "à¤œà¤¿à¤¨à¥à¤µà¤¾":"Jinva",
+    "Ù…Ù†Ú¯Ù„Ø§":"Mangla", "à¤®à¤‚à¤—à¤²à¤¾":"Mangla",
+    "Ø¨ÛÙ„ÛŒÙ…":"Behlim", "à¤¬à¥‡à¤¹à¤²à¥€à¤®":"Behlim",
+    "Ø¬ÙˆØ¦ÛŒØ§":"Joiya", "à¤œà¥‹à¤‡à¤¯à¤¾":"Joiya",
+    "Ø¨Ú¾ÛŒÙ… Ù¾Ø§Ù„":"Bhimpal", "à¤­à¥€à¤‚à¤ªà¤¾à¤²":"Bhimpal",
+    "Ú†ÙˆÛØ§Ù†":"Chauhan", "à¤šà¥Œà¤¹à¤¾à¤¨":"Chauhan",
+    "Ù¾Ù†ÙˆÙŽØ§Ø±":"Panwar", "Ù¾Ù†ÙˆØ§Ø±":"Panwar", "à¤ªà¤‚à¤µà¤¾à¤°":"Panwar"
   };
   if (mapUrHi[c]) return mapUrHi[c];
   return "Other";
@@ -657,21 +657,21 @@ function exportAdultUnmarriedPDF() {
   allRecords.forEach(rec => {
     if (rec.members && Array.isArray(rec.members)) {
       rec.members.forEach(m => {
-        const isChild = (m.relationKey === 'Son' || m.relationKey === 'Daughter' || (m.relation && (m.relation.includes('بیٹا') || m.relation.includes('بیٹی') || m.relation.includes('बेटा') || m.relation.includes('बेटी'))));
+        const isChild = (m.relationKey === 'Son' || m.relationKey === 'Daughter' || (m.relation && (m.relation.includes('Ø¨ÛŒÙ¹Ø§') || m.relation.includes('Ø¨ÛŒÙ¹ÛŒ') || m.relation.includes('à¤¬à¥‡à¤Ÿà¤¾') || m.relation.includes('à¤¬à¥‡à¤Ÿà¥€'))));
         const ageNum = parseInt(m.age) || calculateAge(m.dob);
         const isUnmarried = (m.maritalStatusKey === 'Unmarried' || !m.maritalStatusKey);
         if (isChild && ageNum >= 18 && isUnmarried) {
           adultsList.push({
             frcCode: rec.code,
-            headName: rec.head.name,
-            headPhone: rec.head.phone,
-            name: m.name,
-            gender: getEnglishValue('gender', m.genderKey) || m.gender,
+            headName: rec.head.name || '',
+            headPhone: rec.head.phone || '',
+            name: m.name || '',
+            gender: getEnglishValue('gender', m.genderKey) || m.gender || '',
             dob: m.dob || 'N/A',
             age: ageNum,
-            edu: getEnglishValue('education', m.eduKey) || m.edu,
-            job: getEnglishValue('job', m.jobKey) || m.job,
-            city: rec.head.location
+            edu: getEnglishValue('education', m.eduKey) || m.edu || '-',
+            job: getEnglishValue('job', m.jobKey) || m.job || '-',
+            city: (rec.head.city || '') + (rec.head.country ? ', ' + rec.head.country : '')
           });
         }
       });
@@ -682,40 +682,67 @@ function exportAdultUnmarriedPDF() {
     return;
   }
   const { jsPDF } = window.jspdf;
-  const doc = new jsPDF('p', 'mm', 'a4');
-  doc.setFontSize(15);
+  // Landscape A4 for wider columns - no overlap
+  const doc = new jsPDF('l', 'mm', 'a4');
+  doc.setFontSize(14);
   doc.setTextColor(88, 28, 135);
-  doc.text("WCF - 18+ Unmarried Boys & Girls Directory", 14, 15);
-  doc.setFontSize(9);
+  doc.text("WCF - 18+ Unmarried Boys & Girls Directory", 14, 12);
+  doc.setFontSize(8);
   doc.setTextColor(100, 116, 139);
-  doc.text(`Generated: ${new Date().toLocaleDateString('en-GB')} | Total Count: ${adultsList.length}`, 14, 21);
-  let y = 30;
+  doc.text("Generated: " + new Date().toLocaleDateString('en-GB') + "  |  Total Count: " + adultsList.length, 14, 18);
+  let y = 26;
   doc.setFillColor(243, 232, 255);
-  doc.rect(14, y - 5, 182, 8, 'F');
-  doc.setFontSize(9);
+  doc.rect(14, y - 4, 270, 7, 'F');
+  doc.setFontSize(7.5);
   doc.setFont("helvetica", "bold");
   doc.setTextColor(0, 0, 0);
   doc.text("#", 16, y);
-  doc.text("Name", 24, y);
-  doc.text("Gender", 60, y);
-  doc.text("Age / DOB", 78, y);
-  doc.text("Education / Job", 102, y);
-  doc.text("Guardian (Phone)", 140, y);
+  doc.text("Full Name", 24, y);
+  doc.text("Gender", 62, y);
+  doc.text("Age / DOB", 80, y);
+  doc.text("Education", 110, y);
+  doc.text("Occupation", 145, y);
+  doc.text("Guardian Name", 180, y);
+  doc.text("Guardian Phone", 220, y);
+  doc.text("City / Country", 250, y);
   doc.setFont("helvetica", "normal");
-  y += 7;
+  y += 6;
   adultsList.forEach((item, idx) => {
-    if (y > 280) { doc.addPage(); y = 20; }
+    if (y > 195) {
+      doc.addPage();
+      y = 15;
+      doc.setFillColor(243, 232, 255);
+      doc.rect(14, y - 4, 270, 7, 'F');
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(7.5);
+      doc.text("#", 16, y);
+      doc.text("Full Name", 24, y);
+      doc.text("Gender", 62, y);
+      doc.text("Age / DOB", 80, y);
+      doc.text("Education", 110, y);
+      doc.text("Occupation", 145, y);
+      doc.text("Guardian Name", 180, y);
+      doc.text("Guardian Phone", 220, y);
+      doc.text("City / Country", 250, y);
+      doc.setFont("helvetica", "normal");
+      y += 6;
+    }
+    doc.setFontSize(7);
     doc.text(String(idx + 1), 16, y);
-    doc.text(item.name.substring(0, 20), 24, y);
-    doc.text(item.gender, 60, y);
-    doc.text(`${item.age} yrs (${item.dob})`.substring(0, 18), 78, y);
-    doc.text(`${item.edu} / ${item.job}`.substring(0, 22), 102, y);
-    doc.text(`${item.headName} (${item.headPhone})`.substring(0, 28), 140, y);
+    doc.text(String(item.name).substring(0, 22), 24, y);
+    doc.text(String(item.gender).substring(0, 10), 62, y);
+    doc.text(item.age + " yrs (" + item.dob + ")", 80, y);
+    doc.text(String(item.edu).substring(0, 18), 110, y);
+    doc.text(String(item.job).substring(0, 18), 145, y);
+    doc.text(String(item.headName).substring(0, 20), 180, y);
+    // Full phone number - no aggressive truncation
+    doc.text(String(item.headPhone), 220, y);
+    doc.text(String(item.city).substring(0, 22), 250, y);
     doc.setDrawColor(226, 232, 240);
-    doc.line(14, y + 2, 196, y + 2);
-    y += 7;
+    doc.line(14, y + 2, 284, y + 2);
+    y += 6.5;
   });
-  doc.save(`WCF_Unmarried_Adults_${new Date().toISOString().slice(0, 10)}.pdf`);
+  doc.save("WCF_Unmarried_Adults_" + new Date().toISOString().slice(0, 10) + ".pdf");
 }
 
 function exportNonChhippaWivesPDF() {
@@ -724,8 +751,8 @@ function exportNonChhippaWivesPDF() {
   allRecords.forEach(rec => {
     if (rec.members && Array.isArray(rec.members)) {
       rec.members.forEach(m => {
-        const isWife = (m.relationKey === 'Wife' || (m.relation && (m.relation.includes('بیوی') || m.relation.includes('पत्नी'))));
-        const isNonChhippa = (m.lineageKey === 'NonChhippa' || (m.lineage && (m.lineage.includes('غیر') || m.lineage.includes('Non') || m.lineage.includes('गैर'))));
+        const isWife = (m.relationKey === 'Wife' || (m.relation && (m.relation.includes('Ø¨ÛŒÙˆÛŒ') || m.relation.includes('à¤ªà¤¤à¥à¤¨à¥€'))));
+        const isNonChhippa = (m.lineageKey === 'NonChhippa' || (m.lineage && (m.lineage.includes('ØºÛŒØ±') || m.lineage.includes('Non') || m.lineage.includes('à¤—à¥ˆà¤°'))));
         if (isWife && isNonChhippa) {
           const fullWifeLoc = `${rec.head.phone} (${m.address || rec.head.address || ''}, ${m.city || rec.head.city || ''}, ${m.country || rec.head.country || ''})`;
           nonChhippaList.push({
@@ -957,8 +984,8 @@ function exportOtherClansPDF() {
           '<div class="text-[10px] text-slate-500 font-mono">Phone: ' + escapeHtml(rec.head?.phone || "-") + ' | City: ' + escapeHtml(rec.head?.city || "-") + ' (' + escapeHtml(rec.head?.country || "-") + ')</div>' +
           '</div>' +
           '<div class="flex gap-2 shrink-0 self-end sm:self-center">' +
-          '<button onclick="updateStatusByAdmin(\'' + escapeHtml(rec.code) + '\', \'Approved\')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow cursor-pointer transition">✓ Approve & Issue Code</button>' +
-          '<button onclick="updateStatusByAdmin(\'' + escapeHtml(rec.code) + '\', \'Rejected\')" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow cursor-pointer transition">✕ Reject & Delete</button>' +
+          '<button onclick="updateStatusByAdmin(\'' + escapeHtml(rec.code) + '\', \'Approved\')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow cursor-pointer transition">âœ“ Approve & Issue Code</button>' +
+          '<button onclick="updateStatusByAdmin(\'' + escapeHtml(rec.code) + '\', \'Rejected\')" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow cursor-pointer transition">âœ• Reject & Delete</button>' +
           '</div>';
         list.appendChild(item);
       });
@@ -1107,10 +1134,10 @@ function exportOtherClansPDF() {
                 if (newStatus === 'Rejected') {
                     const isAlreadyApproved = rec && rec.status === 'Approved' && !String(code).startsWith('PEND-');
                     if (isAlreadyApproved) {
-                        alert("سیکیورٹی الرٹ: منظور شدہ (Approved) آفیشل ریکارڈ کو ڈیلیٹ یا ریجیکٹ کرنے کی اجازت نہیں ہے! صرف پینڈنگ یا ڈپلیکیٹ کیسز ہی ہٹائے جا سکتے ہیں۔");
+                        alert("Ø³ÛŒÚ©ÛŒÙˆØ±Ù¹ÛŒ Ø§Ù„Ø±Ù¹: Ù…Ù†Ø¸ÙˆØ± Ø´Ø¯Û (Approved) Ø¢ÙÛŒØ´Ù„ Ø±ÛŒÚ©Ø§Ø±Úˆ Ú©Ùˆ ÚˆÛŒÙ„ÛŒÙ¹ ÛŒØ§ Ø±ÛŒØ¬ÛŒÚ©Ù¹ Ú©Ø±Ù†Û’ Ú©ÛŒ Ø§Ø¬Ø§Ø²Øª Ù†ÛÛŒÚº ÛÛ’! ØµØ±Ù Ù¾ÛŒÙ†ÚˆÙ†Ú¯ ÛŒØ§ ÚˆÙ¾Ù„ÛŒÚ©ÛŒÙ¹ Ú©ÛŒØ³Ø² ÛÛŒ ÛÙ¹Ø§Ø¦Û’ Ø¬Ø§ Ø³Ú©ØªÛ’ ÛÛŒÚºÛ”");
                         return false;
                     }
-                    if (!confirm("کیا آپ واقعی اس پینڈنگ / ڈپلیکیٹ درخواست [" + code + "] کو ریجیکٹ اور ڈیلیٹ کرنا چاہتے ہیں؟")) {
+                    if (!confirm("Ú©ÛŒØ§ Ø¢Ù¾ ÙˆØ§Ù‚Ø¹ÛŒ Ø§Ø³ Ù¾ÛŒÙ†ÚˆÙ†Ú¯ / ÚˆÙ¾Ù„ÛŒÚ©ÛŒÙ¹ Ø¯Ø±Ø®ÙˆØ§Ø³Øª [" + code + "] Ú©Ùˆ Ø±ÛŒØ¬ÛŒÚ©Ù¹ Ø§ÙˆØ± ÚˆÛŒÙ„ÛŒÙ¹ Ú©Ø±Ù†Ø§ Ú†Ø§ÛØªÛ’ ÛÛŒÚºØŸ")) {
                         return false;
                     }
                 }
@@ -1210,8 +1237,8 @@ function exportOtherClansPDF() {
     wrap.id = "wcfAdminEventDropdownWrap";
     wrap.innerHTML = [
       '<button type="button" class="wcf-ev-toggle-btn" onclick="toggleWcfEventDropdown()">',
-      '  <span>🎉 Event Welcome Popup / Greeting Control (event.html)</span>',
-      '  <span id="wcfEvArrow">▼ Open</span>',
+      '  <span>ðŸŽ‰ Event Welcome Popup / Greeting Control (event.html)</span>',
+      '  <span id="wcfEvArrow">â–¼ Open</span>',
       '</button>',
       '<div id="wcfEvPanelBody" class="wcf-ev-panel space-y-3">',
       '  <div class="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-amber-300">',
@@ -1225,8 +1252,8 @@ function exportOtherClansPDF() {
       '    <div>',
       '      <label class="block text-[11px] font-bold text-slate-800 mb-1">Greeting Mode:</label>',
       '      <select id="wcfEvModeSelect" class="w-full border border-amber-400 rounded-lg p-2 text-xs font-bold bg-white outline-none">',
-      '        <option value="host">Host / Event Name (میزبان یا تقریب کا نام فریم میں دکھائیں)</option>',
-      '        <option value="custom">Full Custom Greeting (اپنا مکمل پیغام لکھیں)</option>',
+      '        <option value="host">Host / Event Name (Ù…ÛŒØ²Ø¨Ø§Ù† ÛŒØ§ ØªÙ‚Ø±ÛŒØ¨ Ú©Ø§ Ù†Ø§Ù… ÙØ±ÛŒÙ… Ù…ÛŒÚº Ø¯Ú©Ú¾Ø§Ø¦ÛŒÚº)</option>',
+      '        <option value="custom">Full Custom Greeting (Ø§Ù¾Ù†Ø§ Ù…Ú©Ù…Ù„ Ù¾ÛŒØºØ§Ù… Ù„Ú©Ú¾ÛŒÚº)</option>',
       '      </select>',
       '    </div>',
       '    <div>',
@@ -1240,21 +1267,21 @@ function exportOtherClansPDF() {
       '  </div>',
       '  <div class="space-y-2.5">',
       '    <div>',
-      '      <label class="block text-[11px] font-bold text-slate-800 mb-1">1. اردو نام یا پیغام (مثال: حاجی محمد سلیم صاحب کے خاندان):</label>',
-      '      <input type="text" id="wcfEvTextUr" dir="rtl" placeholder="یہاں اردو میں میزبان / تقریب کا نام یا پیغام لکھیں..." class="w-full border border-slate-300 rounded-lg px-3 py-2 text-xs bg-white outline-none focus:ring-2 focus:ring-amber-600">',
+      '      <label class="block text-[11px] font-bold text-slate-800 mb-1">1. Ø§Ø±Ø¯Ùˆ Ù†Ø§Ù… ÛŒØ§ Ù¾ÛŒØºØ§Ù… (Ù…Ø«Ø§Ù„: Ø­Ø§Ø¬ÛŒ Ù…Ø­Ù…Ø¯ Ø³Ù„ÛŒÙ… ØµØ§Ø­Ø¨ Ú©Û’ Ø®Ø§Ù†Ø¯Ø§Ù†):</label>',
+      '      <input type="text" id="wcfEvTextUr" dir="rtl" placeholder="ÛŒÛØ§Úº Ø§Ø±Ø¯Ùˆ Ù…ÛŒÚº Ù…ÛŒØ²Ø¨Ø§Ù† / ØªÙ‚Ø±ÛŒØ¨ Ú©Ø§ Ù†Ø§Ù… ÛŒØ§ Ù¾ÛŒØºØ§Ù… Ù„Ú©Ú¾ÛŒÚº..." class="w-full border border-slate-300 rounded-lg px-3 py-2 text-xs bg-white outline-none focus:ring-2 focus:ring-amber-600">',
       '    </div>',
       '    <div>',
-      '      <label class="block text-[11px] font-bold text-slate-800 mb-1">2. English Name / Greeting (Optional — اگر خالی ہو تو اردو والا نام چلے گا):</label>',
+      '      <label class="block text-[11px] font-bold text-slate-800 mb-1">2. English Name / Greeting (Optional â€” Ø§Ú¯Ø± Ø®Ø§Ù„ÛŒ ÛÙˆ ØªÙˆ Ø§Ø±Ø¯Ùˆ ÙˆØ§Ù„Ø§ Ù†Ø§Ù… Ú†Ù„Û’ Ú¯Ø§):</label>',
       '      <input type="text" id="wcfEvTextEn" dir="ltr" placeholder="e.g. Haji Muhammad Saleem Family..." class="w-full border border-slate-300 rounded-lg px-3 py-2 text-xs bg-white outline-none focus:ring-2 focus:ring-amber-600">',
       '    </div>',
       '    <div>',
-      '      <label class="block text-[11px] font-bold text-slate-800 mb-1">3. हिंदी नाम / संदेश (Optional):</label>',
-      '      <input type="text" id="wcfEvTextHi" dir="ltr" placeholder="उदा. हाजी मोहम्मद सलीम परिवार..." class="w-full border border-slate-300 rounded-lg px-3 py-2 text-xs bg-white outline-none focus:ring-2 focus:ring-amber-600">',
+      '      <label class="block text-[11px] font-bold text-slate-800 mb-1">3. à¤¹à¤¿à¤‚à¤¦à¥€ à¤¨à¤¾à¤® / à¤¸à¤‚à¤¦à¥‡à¤¶ (Optional):</label>',
+      '      <input type="text" id="wcfEvTextHi" dir="ltr" placeholder="à¤‰à¤¦à¤¾. à¤¹à¤¾à¤œà¥€ à¤®à¥‹à¤¹à¤®à¥à¤®à¤¦ à¤¸à¤²à¥€à¤® à¤ªà¤°à¤¿à¤µà¤¾à¤°..." class="w-full border border-slate-300 rounded-lg px-3 py-2 text-xs bg-white outline-none focus:ring-2 focus:ring-amber-600">',
       '    </div>',
       '  </div>',
       '  <div class="flex flex-wrap gap-2.5 pt-2">',
-      '    <button type="button" id="btnSaveWcfEv" onclick="saveWcfLiveEventGreeting()" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-4 rounded-xl text-xs shadow cursor-pointer transition">💾 Save & Publish Live Greeting</button>',
-      '    <button type="button" id="btnDeleteWcfEv" onclick="deleteWcfLiveEventGreeting()" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 px-4 rounded-xl text-xs shadow cursor-pointer transition">🗑️ Delete Greeting (ایونٹ ختم ہونے پر ہٹائیں)</button>',
+      '    <button type="button" id="btnSaveWcfEv" onclick="saveWcfLiveEventGreeting()" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-4 rounded-xl text-xs shadow cursor-pointer transition">ðŸ’¾ Save & Publish Live Greeting</button>',
+      '    <button type="button" id="btnDeleteWcfEv" onclick="deleteWcfLiveEventGreeting()" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 px-4 rounded-xl text-xs shadow cursor-pointer transition">ðŸ—‘ï¸ Delete Greeting (Ø§ÛŒÙˆÙ†Ù¹ Ø®ØªÙ… ÛÙˆÙ†Û’ Ù¾Ø± ÛÙ¹Ø§Ø¦ÛŒÚº)</button>',
       '  </div>',
       '</div>'
     ].join("\n");
@@ -1267,7 +1294,7 @@ function exportOtherClansPDF() {
     var arrow = document.getElementById("wcfEvArrow");
     if (!panel) return;
     var isOpen = panel.classList.toggle("open");
-    if (arrow) arrow.textContent = isOpen ? "▲ Close" : "▼ Open";
+    if (arrow) arrow.textContent = isOpen ? "â–² Close" : "â–¼ Open";
     if (isOpen) loadWcfLiveEventGreetingStatus();
   };
 
@@ -1275,7 +1302,7 @@ function exportOtherClansPDF() {
     var badge = document.getElementById("wcfEvLiveBadge");
     if (!badge) return;
     if (typeof isCloudReady === "undefined" || !isCloudReady || !db) {
-      badge.textContent = "⚠️ Firebase Offline";
+      badge.textContent = "âš ï¸ Firebase Offline";
       badge.className = "text-[11px] font-bold px-3 py-1 rounded-full bg-amber-200 text-amber-900";
       return;
     }
@@ -1289,12 +1316,12 @@ function exportOtherClansPDF() {
           document.getElementById("wcfEvTextUr").value = d.textUr || "";
           document.getElementById("wcfEvTextEn").value = d.textEn || "";
           document.getElementById("wcfEvTextHi").value = d.textHi || "";
-          badge.textContent = "🟢 Live Active: " + (d.textUr || d.textEn || d.textHi).substring(0, 28);
+          badge.textContent = "ðŸŸ¢ Live Active: " + (d.textUr || d.textEn || d.textHi).substring(0, 28);
           badge.className = "text-[11px] font-bold px-3 py-1 rounded-full bg-emerald-100 text-emerald-900 border border-emerald-400";
           return;
         }
       }
-      badge.textContent = "⚪ Default Mode (کوئی ایونٹ گریٹنگ نہیں لگی)";
+      badge.textContent = "âšª Default Mode (Ú©ÙˆØ¦ÛŒ Ø§ÛŒÙˆÙ†Ù¹ Ú¯Ø±ÛŒÙ¹Ù†Ú¯ Ù†ÛÛŒÚº Ù„Ú¯ÛŒ)";
       badge.className = "text-[11px] font-bold px-3 py-1 rounded-full bg-slate-200 text-slate-700";
     } catch (err) {
       badge.textContent = "Cloud Read Warning";
@@ -1303,7 +1330,7 @@ function exportOtherClansPDF() {
 
   window.saveWcfLiveEventGreeting = async function() {
     if (typeof isCloudReady === "undefined" || !isCloudReady || !db) {
-      alert("فائر بیس کلاؤڈ کنیکٹ نہیں ہے!");
+      alert("ÙØ§Ø¦Ø± Ø¨ÛŒØ³ Ú©Ù„Ø§Ø¤Úˆ Ú©Ù†ÛŒÚ©Ù¹ Ù†ÛÛŒÚº ÛÛ’!");
       return;
     }
     var mode = document.getElementById("wcfEvModeSelect").value || "host";
@@ -1313,7 +1340,7 @@ function exportOtherClansPDF() {
     var hi = document.getElementById("wcfEvTextHi").value.trim();
 
     if (!ur && !en && !hi) {
-      alert("براہ کرم کم از کم ایک خانے میں میزبان یا تقریب کا نام / پیغام ضرور لکھیں!");
+      alert("Ø¨Ø±Ø§Û Ú©Ø±Ù… Ú©Ù… Ø§Ø² Ú©Ù… Ø§ÛŒÚ© Ø®Ø§Ù†Û’ Ù…ÛŒÚº Ù…ÛŒØ²Ø¨Ø§Ù† ÛŒØ§ ØªÙ‚Ø±ÛŒØ¨ Ú©Ø§ Ù†Ø§Ù… / Ù¾ÛŒØºØ§Ù… Ø¶Ø±ÙˆØ± Ù„Ú©Ú¾ÛŒÚº!");
       document.getElementById("wcfEvTextUr").focus();
       return;
     }
@@ -1335,9 +1362,9 @@ function exportOtherClansPDF() {
       };
       await db.collection(EVENT_DOC_COLLECTION).doc(EVENT_DOC_ID).set(payload);
       await loadWcfLiveEventGreetingStatus();
-      alert("✅ مبارک ہو! ایونٹ گریٹنگ لائیو سیو ہو گئی ہے۔ اب جو بھی کیو آر کوڈ اسکین کرے گا اسے event.html پر یہی پیغام نظر آئے گا۔");
+      alert("âœ… Ù…Ø¨Ø§Ø±Ú© ÛÙˆ! Ø§ÛŒÙˆÙ†Ù¹ Ú¯Ø±ÛŒÙ¹Ù†Ú¯ Ù„Ø§Ø¦ÛŒÙˆ Ø³ÛŒÙˆ ÛÙˆ Ú¯Ø¦ÛŒ ÛÛ’Û” Ø§Ø¨ Ø¬Ùˆ Ø¨Ú¾ÛŒ Ú©ÛŒÙˆ Ø¢Ø± Ú©ÙˆÚˆ Ø§Ø³Ú©ÛŒÙ† Ú©Ø±Û’ Ú¯Ø§ Ø§Ø³Û’ event.html Ù¾Ø± ÛŒÛÛŒ Ù¾ÛŒØºØ§Ù… Ù†Ø¸Ø± Ø¢Ø¦Û’ Ú¯Ø§Û”");
     } catch (err) {
-      alert("سیو کرنے میں مسئلہ آیا: " + err.message);
+      alert("Ø³ÛŒÙˆ Ú©Ø±Ù†Û’ Ù…ÛŒÚº Ù…Ø³Ø¦Ù„Û Ø¢ÛŒØ§: " + err.message);
     } finally {
       btn.disabled = false;
       btn.textContent = origTxt;
@@ -1346,10 +1373,10 @@ function exportOtherClansPDF() {
 
   window.deleteWcfLiveEventGreeting = async function() {
     if (typeof isCloudReady === "undefined" || !isCloudReady || !db) {
-      alert("فائر بیس کلاؤڈ کنیکٹ نہیں ہے!");
+      alert("ÙØ§Ø¦Ø± Ø¨ÛŒØ³ Ú©Ù„Ø§Ø¤Úˆ Ú©Ù†ÛŒÚ©Ù¹ Ù†ÛÛŒÚº ÛÛ’!");
       return;
     }
-    if (!confirm("کیا آپ واقعی یہ ایونٹ گریٹنگ ڈیلیٹ کرنا چاہتے ہیں؟ ڈیلیٹ کرنے کے بعد event.html پر عام خوش آمدید پیغام چلے گا۔")) {
+    if (!confirm("Ú©ÛŒØ§ Ø¢Ù¾ ÙˆØ§Ù‚Ø¹ÛŒ ÛŒÛ Ø§ÛŒÙˆÙ†Ù¹ Ú¯Ø±ÛŒÙ¹Ù†Ú¯ ÚˆÛŒÙ„ÛŒÙ¹ Ú©Ø±Ù†Ø§ Ú†Ø§ÛØªÛ’ ÛÛŒÚºØŸ ÚˆÛŒÙ„ÛŒÙ¹ Ú©Ø±Ù†Û’ Ú©Û’ Ø¨Ø¹Ø¯ event.html Ù¾Ø± Ø¹Ø§Ù… Ø®ÙˆØ´ Ø¢Ù…Ø¯ÛŒØ¯ Ù¾ÛŒØºØ§Ù… Ú†Ù„Û’ Ú¯Ø§Û”")) {
       return;
     }
     var btn = document.getElementById("btnDeleteWcfEv");
@@ -1362,9 +1389,9 @@ function exportOtherClansPDF() {
       document.getElementById("wcfEvTextEn").value = "";
       document.getElementById("wcfEvTextHi").value = "";
       await loadWcfLiveEventGreetingStatus();
-      alert("🗑️ ایونٹ گریٹنگ کامیابی سے ڈیلیٹ کر دی گئی ہے! اب event.html نارمل موڈ پر واپس آ گیا ہے۔");
+      alert("ðŸ—‘ï¸ Ø§ÛŒÙˆÙ†Ù¹ Ú¯Ø±ÛŒÙ¹Ù†Ú¯ Ú©Ø§Ù…ÛŒØ§Ø¨ÛŒ Ø³Û’ ÚˆÛŒÙ„ÛŒÙ¹ Ú©Ø± Ø¯ÛŒ Ú¯Ø¦ÛŒ ÛÛ’! Ø§Ø¨ event.html Ù†Ø§Ø±Ù…Ù„ Ù…ÙˆÚˆ Ù¾Ø± ÙˆØ§Ù¾Ø³ Ø¢ Ú¯ÛŒØ§ ÛÛ’Û”");
     } catch (err) {
-      alert("ڈیلیٹ کرنے میں مسئلہ آیا: " + err.message);
+      alert("ÚˆÛŒÙ„ÛŒÙ¹ Ú©Ø±Ù†Û’ Ù…ÛŒÚº Ù…Ø³Ø¦Ù„Û Ø¢ÛŒØ§: " + err.message);
     } finally {
       btn.disabled = false;
       btn.textContent = origTxt;
@@ -1558,4 +1585,193 @@ function exportOtherClansPDF() {
 })();
 </script>
 <!-- ==================== END WCF ADMIN SAFE FIXER PATCH V8 ==================== -->
+
+<!-- ==================== WCF ADMIN FINAL STRICT LOCK V9 (Pending never in PDF/JSON) ==================== -->
+<script id="wcf-admin-v9-strict-lock">
+(function() {
+  function isStrictApproved(rec) {
+    if (!rec || typeof rec !== "object") return false;
+    if (rec.isEventGreetingConfig) return false;
+    var code = String(rec.code || "").trim();
+    if (!code || code.indexOf("PEND-") === 0) return false;
+    return rec.status === "Approved";
+  }
+
+  function getOnlyApprovedMap() {
+    var out = {};
+    var src = (typeof storedFRCRecords !== "undefined" && storedFRCRecords) ? storedFRCRecords : {};
+    Object.keys(src).forEach(function(k) {
+      if (isStrictApproved(src[k])) out[k] = src[k];
+    });
+    return out;
+  }
+
+  function wrapExportStrict(fnName) {
+    if (typeof window[fnName] !== "function") return;
+    if (window[fnName]._v9Strict) return;
+    var orig = window[fnName];
+    window[fnName] = function() {
+      var backup = window.storedFRCRecords;
+      window.storedFRCRecords = getOnlyApprovedMap();
+      try {
+        return orig.apply(this, arguments);
+      } finally {
+        window.storedFRCRecords = backup;
+      }
+    };
+    window[fnName]._v9Strict = true;
+  }
+
+  // Force all PDF + JSON exports to use only Approved records
+  ["exportCountryCityWisePDF", "exportPhoneDirectoryPDF", "exportAdultUnmarriedPDF",
+   "exportNonChhippaWivesPDF", "exportOtherClansPDF", "exportCensusJSON",
+   "syncPendingRecordsToFirebase"].forEach(wrapExportStrict);
+
+  // Make exportCensusJSON explicitly approved-only even if someone calls raw
+  window.exportCensusJSON = function() {
+    var approved = getOnlyApprovedMap();
+    var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(approved, null, 2));
+    var dlAnchor = document.createElement("a");
+    dlAnchor.setAttribute("href", dataStr);
+    dlAnchor.setAttribute("download", "WCF_Census_Backup_ApprovedOnly_" + new Date().toISOString().slice(0, 10) + ".json");
+    document.body.appendChild(dlAnchor);
+    dlAnchor.click();
+    dlAnchor.remove();
+  };
+
+  // Strengthen updateStatusByAdmin so Approve always issues real code + member IDs
+  if (typeof window.updateStatusByAdmin === "function" && !window.updateStatusByAdmin._v9CodeFix) {
+    var origUpdate = window.updateStatusByAdmin;
+    window.updateStatusByAdmin = async function(code, newStatus) {
+      var rec = (typeof storedFRCRecords !== "undefined") ? storedFRCRecords[code] : null;
+      if (!rec) {
+        alert("Record not found: " + code);
+        return;
+      }
+
+      if (newStatus === "Rejected") {
+        var isAlreadyApproved = rec.status === "Approved" && String(code).indexOf("PEND-") !== 0;
+        if (isAlreadyApproved) {
+          alert("Ø³ÛŒÚ©ÛŒÙˆØ±Ù¹ÛŒ Ø§Ù„Ø±Ù¹: Ù…Ù†Ø¸ÙˆØ± Ø´Ø¯Û (Approved) Ø¢ÙÛŒØ´Ù„ Ø±ÛŒÚ©Ø§Ø±Úˆ Ú©Ùˆ ÚˆÛŒÙ„ÛŒÙ¹ ÛŒØ§ Ø±ÛŒØ¬ÛŒÚ©Ù¹ Ú©Ø±Ù†Û’ Ú©ÛŒ Ø§Ø¬Ø§Ø²Øª Ù†ÛÛŒÚº ÛÛ’!");
+          return false;
+        }
+        if (!confirm("Ú©ÛŒØ§ Ø¢Ù¾ ÙˆØ§Ù‚Ø¹ÛŒ Ø§Ø³ Ù¾ÛŒÙ†ÚˆÙ†Ú¯ / ÚˆÙ¾Ù„ÛŒÚ©ÛŒÙ¹ Ø¯Ø±Ø®ÙˆØ§Ø³Øª [" + code + "] Ú©Ùˆ Ø±ÛŒØ¬ÛŒÚ©Ù¹ Ø§ÙˆØ± ÚˆÛŒÙ„ÛŒÙ¹ Ú©Ø±Ù†Ø§ Ú†Ø§ÛØªÛ’ ÛÛŒÚºØŸ")) {
+          return false;
+        }
+        delete storedFRCRecords[code];
+        try { localStorage.setItem("WCF_CENSUS_RECORDS", JSON.stringify(storedFRCRecords)); } catch(e){}
+        if (typeof isCloudReady !== "undefined" && isCloudReady && db) {
+          var cols = ["wcf_pending_queue", "trial_census_registrations", "census_registrations"];
+          for (var i = 0; i < cols.length; i++) {
+            try { await db.collection(cols[i]).doc(code).delete(); } catch(e){}
+          }
+        }
+        if (typeof updateCensusCounters === "function") updateCensusCounters();
+        alert("Record [" + code + "] has been REJECTED and removed.");
+        return;
+      }
+
+      if (newStatus === "Approved") {
+        var oldKey = code;
+        var finalCode = code;
+
+        // Always generate official code if it is still PEND- or missing proper prefix
+        if (String(code).indexOf("PEND-") === 0 || !code || code === "PENDING") {
+          var prefix = (rec.type === "individual") ? "IIC-" : "WCF-";
+          do {
+            finalCode = prefix + Math.floor(100000 + Math.random() * 900000);
+          } while (storedFRCRecords[finalCode]);
+          rec.code = finalCode;
+        }
+
+        rec.status = "Approved";
+        rec.issueDate = rec.issueDate || new Date().toLocaleDateString("en-GB");
+
+        function genMemberId() {
+          var chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+          var id = "WCF-";
+          for (var i = 0; i < 6; i++) id += chars.charAt(Math.floor(Math.random() * chars.length));
+          return id;
+        }
+
+        if (rec.head) {
+          if (!rec.head.memberId || rec.head.memberId === "PENDING" || String(rec.head.memberId).indexOf("PEND") === 0) {
+            rec.head.memberId = genMemberId();
+          }
+          rec.head.uniqueId = finalCode + "-1";
+        }
+        if (Array.isArray(rec.members)) {
+          rec.members.forEach(function(m, idx) {
+            if (!m.memberId || m.memberId === "PENDING" || String(m.memberId).indexOf("PEND") === 0) {
+              m.memberId = genMemberId();
+            }
+            m.uniqueId = finalCode + "-" + (idx + 2);
+          });
+        }
+
+        if (oldKey !== finalCode) {
+          delete storedFRCRecords[oldKey];
+        }
+        storedFRCRecords[finalCode] = rec;
+        try { localStorage.setItem("WCF_CENSUS_RECORDS", JSON.stringify(storedFRCRecords)); } catch(e){}
+
+        if (typeof isCloudReady !== "undefined" && isCloudReady && db) {
+          try {
+            if (oldKey !== finalCode) {
+              ["wcf_pending_queue", "trial_census_registrations", "census_registrations"].forEach(function(c) {
+                try { db.collection(c).doc(oldKey).delete(); } catch(e){}
+              });
+            } else {
+              try { db.collection("wcf_pending_queue").doc(oldKey).delete(); } catch(e){}
+            }
+            await db.collection("census_registrations").doc(finalCode).set(rec);
+            await db.collection("trial_census_registrations").doc(finalCode).set(rec);
+          } catch(e) {
+            console.warn("Cloud write on approve:", e);
+          }
+        }
+
+        if (typeof updateCensusCounters === "function") updateCensusCounters();
+        alert("APPROVED! Official Code [" + finalCode + "] and Member IDs have been issued and saved.");
+        return;
+      }
+
+      // Fallback to original for any other status
+      return await origUpdate.apply(this, arguments);
+    };
+    window.updateStatusByAdmin._v9CodeFix = true;
+  }
+
+  // Stats must count only Approved
+  if (typeof window.updateCensusCounters === "function" && !window.updateCensusCounters._v9Stats) {
+    var origCounters = window.updateCensusCounters;
+    window.updateCensusCounters = function() {
+      var all = Object.values(storedFRCRecords || {});
+      var approved = all.filter(isStrictApproved);
+      var totalFamilies = approved.filter(function(r) { return r.type === "family"; }).length;
+      var totalIndividuals = 0;
+      approved.forEach(function(rec) {
+        totalIndividuals++;
+        if (rec.members && Array.isArray(rec.members)) totalIndividuals += rec.members.length;
+      });
+      var famEl = document.getElementById("adminTotalFam");
+      var memEl = document.getElementById("adminTotalMem");
+      var qEl = document.getElementById("adminQueueCount");
+      var badgeEl = document.getElementById("pendingRecordsBadge");
+      if (famEl) famEl.textContent = totalFamilies;
+      if (memEl) memEl.textContent = totalIndividuals;
+      var pendingList = all.filter(function(r) {
+        return r && (r.status === "Pending Verification" || r.status === "Possible Duplicate");
+      });
+      if (qEl) qEl.textContent = pendingList.length;
+      if (badgeEl) badgeEl.textContent = approved.length;
+      if (typeof loadAdminPendingQueue === "function") loadAdminPendingQueue();
+    };
+    window.updateCensusCounters._v9Stats = true;
+  }
+
+  console.log("WCF Admin V9 Strict Lock active: Pending records will never appear in PDF/JSON downloads.");
+})();
+</script>
+<!-- ==================== END WCF ADMIN FINAL STRICT LOCK V9 ==================== -->
 </html>
