@@ -5947,5 +5947,76 @@ html[dir="rtl"] button {
   setTimeout(bindSelect, 1000);
 })();
 </script>
+<!-- ==================== WCF CLEAN REAL-RECORD PATCH ==================== -->
+<script>
+(function() {
+  window.isStrictApproved = function(rec) {
+    if (!rec || typeof rec !== "object") return false;
+    if (rec.isEventGreetingConfig) return false;
+    var code = String(rec.code || "").trim();
+    if (!code) return false;
+    return rec.status !== "Rejected";
+  };
 
+  function getCleanRecords() {
+    var records = {};
+    try {
+      var raw = localStorage.getItem('WCF_CENSUS_RECORDS');
+      if (raw) records = JSON.parse(raw);
+    } catch(e) {}
+    
+    if ((!records || Object.keys(records).length === 0) && typeof storedFRCRecords !== 'undefined') {
+      records = storedFRCRecords;
+    }
+    return records;
+  }
+
+  window.updateCensusCounters = function() {
+    var records = getCleanRecords();
+    window.storedFRCRecords = records;
+    
+    var allRecords = Object.values(records);
+    var validRecords = allRecords.filter(function(r) {
+      return r && r.status !== "Rejected" && !r.isEventGreetingConfig;
+    });
+
+    var totalFamilies = validRecords.filter(function(r) { return r.type === 'family'; }).length;
+    var totalIndividuals = 0;
+    
+    validRecords.forEach(function(rec) {
+      totalIndividuals++;
+      if (rec.members && Array.isArray(rec.members)) {
+        totalIndividuals += rec.members.length;
+      }
+    });
+
+    var famEl = document.getElementById('liveTotalFamilies');
+    var memEl = document.getElementById('liveTotalMembers');
+    if (famEl) famEl.textContent = totalFamilies;
+    if (memEl) memEl.textContent = totalIndividuals;
+  };
+
+  ['searchAndReprintCertificate', 'fetchMemberDataForIdCard', 'loadFRCForAddingMember', 'handleFormSubmit'].forEach(function(fnName) {
+    if (typeof window[fnName] === 'function' && !window[fnName]._cleanPatched) {
+      var orig = window[fnName];
+      window[fnName] = function() {
+        window.storedFRCRecords = getCleanRecords();
+        var res = orig.apply(this, arguments);
+        try {
+          localStorage.setItem('WCF_CENSUS_RECORDS', JSON.stringify(window.storedFRCRecords));
+        } catch(e) {}
+        return res;
+      };
+      window[fnName]._cleanPatched = true;
+    }
+  });
+
+  window.addEventListener('DOMContentLoaded', function() {
+    setTimeout(window.updateCensusCounters, 200);
+  });
+  setTimeout(window.updateCensusCounters, 100);
+})();
+</script>
+</body>
 </html>
+
