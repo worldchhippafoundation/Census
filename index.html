@@ -758,17 +758,17 @@ World Chhippa Foundation Global Census Registry
 <p class="text-[10px] font-bold text-amber-900">پیش کش: ٹاک فیملی (نیمڑے والے)</p>
 </div>
 <!-- Hindi Text -->
-<div id="memTextHi" class="hidden text-slate-700 text-xs leading-relaxed space-y-1.5 font-devanagari">
-<p>"छीपा बिरादरी के लिए निस्वार्थ सेवा, समर्पण और अटूट प्रेम को समर्पित।"</p>
-<p class="text-[10px] font-semibold text-slate-500">अल्लाह उन्हें जन्नत-उल-फ़िरदौस में आला मक़ाम अता फरमाए। आमीन।</p>
-<p class="text-[10px] font-bold text-amber-900">समर्पित: टाक परिवार (नीमड़े वाले)</p>
+<div id="memTextHi" class="hidden text-slate-700 text-xs leading-relaxed space-y-1.5 font-devanagari notranslate" translate="no">
+<p>"छीपा बिरादरी के लिए बे-लौस ख़िदमत, मोहब्बत और लाज़वाल क़ुर्बानियों की याद में।"</p>
+<p class="text-[10px] font-semibold text-slate-600">अल्लाह तआला उन्हें जन्नत-उल-फ़िरदौस में आला मक़ाम अता फ़रमाए। आमीन।</p>
+<p class="text-[10px] font-bold text-amber-900">पेश-कश: टाक फ़ैमिली (नीमड़े वाले)-कराची, पाकिस्तान</p>
 </div>
 <!-- Enter Button -->
 <div class="mt-3 pt-2 border-t border-slate-100">
 <button type="button" id="btnMemEnter" onclick="closeMemorialModal()" class="w-full py-1.5 bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white text-xs font-bold rounded-xl shadow transition transform active:scale-95 cursor-pointer">
 Enter Portal 
 </button>
-<p class="text-[9px] text-slate-400 mt-1">Closes automatically in 10 seconds or click Enter</p>
+<p id="memAutoCloseNote" class="text-[9px] text-slate-400 mt-1">Closes automatically in 10 seconds or click Enter</p>
 </div>
 </div>
 </div>
@@ -3123,43 +3123,57 @@ closeMemorialModal();
 }, 10000);
 }
 function updateMemorialPopupLanguage(lang) {
-const tEn = document.getElementById('memTextEn');
-const tUr = document.getElementById('memTextUr');
-const tHi = document.getElementById('memTextHi');
-const subTitle = document.getElementById('memCardSubtitle');
-const pName = document.getElementById('memPersonName');
-const btnEnter = document.getElementById('btnMemEnter');
-if (!tEn || !tUr || !tHi) return;
-tEn.classList.add('hidden');
-tUr.classList.add('hidden');
-tHi.classList.add('hidden');
-if (lang === 'ur') {
-tUr.classList.remove('hidden');
-if (subTitle) subTitle.textContent = "یادِ رفتگاں و خراجِ عقیدت";
-if (pName) pName.textContent = "محمد صادق ٹاک";
-if (btnEnter) btnEnter.textContent = "پورٹل میں داخل ہوں ";
-} else if (lang === 'hi') {
-tHi.classList.remove('hidden');
-if (subTitle) subTitle.textContent = "अमर स्मृति एवं सादर श्रद्धांजलि";
-if (pName) pName.textContent = "मोहम्मद सादिक़ टाक";
-if (btnEnter) btnEnter.textContent = "पोर्टल में प्रवेश करें ";
-} else {
-tEn.classList.remove('hidden');
-if (subTitle) subTitle.textContent = "In Eternal Remembrance";
-if (pName) pName.textContent = "Muhammad Sadiq Tak";
-if (btnEnter) btnEnter.textContent = "Enter Portal ";
-}
+  const tEn = document.getElementById('memTextEn');
+  const tUr = document.getElementById('memTextUr');
+  const tHi = document.getElementById('memTextHi');
+  const subTitle = document.getElementById('memCardSubtitle');
+  const pName = document.getElementById('memPersonName');
+  const btnEnter = document.getElementById('btnMemEnter');
+  const dateLine = document.querySelector('#memorialModal p[dir="ltr"]');
+  const autoNote = document.getElementById('memAutoCloseNote');
+  if (!tEn || !tUr || !tHi) return;
+  tEn.classList.add('hidden');
+  tUr.classList.add('hidden');
+  tHi.classList.add('hidden');
+  if (lang === 'ur') {
+    tUr.classList.remove('hidden');
+    if (subTitle) subTitle.textContent = "یادِ رفتگاں و خراجِ عقیدت";
+    if (pName) pName.textContent = "محمد صادق ٹاک";
+    if (dateLine) dateLine.textContent = "(Neemray Walay) • 1931 – 2021";
+    if (btnEnter) btnEnter.textContent = "پورٹل میں داخل ہوں";
+    if (autoNote) autoNote.textContent = "۱۰ سیکنڈ بعد خود بند ہو جائے گا یا اوپر بٹن دبائیں";
+  } else if (lang === 'hi') {
+    tHi.classList.remove('hidden');
+    if (subTitle) subTitle.textContent = "याद-ए-रफ़्तगाँ व ख़िराज-ए-अक़ीदत";
+    if (pName) pName.textContent = "मोहम्मद सादिक़ टाक";
+    if (dateLine) dateLine.textContent = "(नीमड़े वाले) • 1931– 2021";
+    if (btnEnter) btnEnter.textContent = "पोर्टल में दाख़िल हों";
+    if (autoNote) autoNote.textContent = "१० सेकंड में अपने आप बंद हो जाएगा या ऊपर बटन दबाएँ";
+  } else {
+    tEn.classList.remove('hidden');
+    if (subTitle) subTitle.textContent = "In Eternal Remembrance";
+    if (pName) pName.textContent = "Muhammad Sadiq Tak";
+    if (dateLine) dateLine.textContent = "(Neemray Walay) • 1931 – 2021";
+    if (btnEnter) btnEnter.textContent = "Enter Portal";
+    if (autoNote) autoNote.textContent = "Closes automatically in 10 seconds or click Enter";
+  }
 }
 function handleMemorialBackdropClick(e) {
-if (e.target && e.target.id === 'memorialModal') {
-closeMemorialModal();
-}
+  if (e.target && e.target.id === 'memorialModal') {
+    closeMemorialModal();
+  }
 }
 function closeMemorialModal() {
-const modal = document.getElementById('memorialModal');
-if (modal) modal.classList.add('hidden');
-if (memorialTimer) clearTimeout(memorialTimer);
-memorialHasBeenClosed = true;
+  const modal = document.getElementById('memorialModal');
+  if (modal) {
+    modal.classList.add('hidden');
+    modal.style.display = 'none';
+  }
+  if (typeof memorialTimer !== 'undefined' && memorialTimer) {
+    clearTimeout(memorialTimer);
+    memorialTimer = null;
+  }
+  memorialHasBeenClosed = true;
 }
 function initApp() {
 const modal = document.getElementById('frcModal');
@@ -3603,19 +3617,19 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 </body>
-<footer class="bg-slate-900 text-white py-6 mt-12 border-t-2 border-amber-500 font-latin text-center">
+<footer id="wcfMainFooter" class="bg-slate-900 text-white py-6 mt-12 border-t-2 border-amber-500 font-latin text-center">
 <div class="max-w-4xl mx-auto px-4 space-y-2">
-<p class="text-amber-400 font-bold text-xs md:text-sm">
+<p id="footerThanks" class="text-amber-400 font-bold text-xs md:text-sm">
 Thank you to all those who laid the foundation of the World Chhippa Foundation:
 </p>
-<p class="text-slate-300 text-xs tracking-wide">
+<p id="footerNames" class="text-slate-300 text-xs tracking-wide">
 • Subrati Deen Bhati (Nimbi Jodhan) IND &nbsp;|&nbsp;
 • Mrs. Saleem Rao (Ghachi Pura Walay) PAK &nbsp;|&nbsp;
 • Sufyan Tak / Safwan Tak (Neemray Walay) PAK
 </p>
 <div class="pt-2 max-w-lg mx-auto">
-<span class="text-[11px] text-slate-400 block">Conceived, Architected & Dedicated to Chhippa Community by:</span>
-<h4 class="text-base md:text-lg font-black text-amber-400 tracking-wider mt-0.5">
+<span id="footerConceived" class="text-[11px] text-slate-400 block">Conceived, Architected & Dedicated to Chhippa Community by:</span>
+<h4 id="footerAuthor" class="text-base md:text-lg font-black text-amber-400 tracking-wider mt-0.5">
 M. WASEEM SADIQ TAK (Neemray Walay)
 </h4>
 </div>
@@ -4640,33 +4654,13 @@ M. WASEEM SADIQ TAK (Neemray Walay)
       memModal.setAttribute('translate', 'no');
       memModal.classList.add('notranslate');
     }
-
     const tHi = document.getElementById('memTextHi');
     if (tHi) {
       tHi.setAttribute('translate', 'no');
       tHi.classList.add('notranslate');
-      tHi.innerHTML = `
-        <p>"छीपा बिरादरी के लिए बे-लौस ख़िदमत, मोहब्बत और लाज़वाल क़ुर्बानियों की याद में।"</p>
-        <p class="text-[10px] font-semibold text-slate-600">अल्लाह तआला उन्हें जन्नत-उल-फ़िरदौस में आला मक़ाम अता फ़रमाए। आमीन।</p>
-        <p class="text-[10px] font-bold text-amber-900">पेश-कश: टाक फ़ैमिली (नीमड़े वाले)-कराची, पाकिस्तान</p>
-      `;
     }
-
-    const dateLine = memModal ? memModal.querySelector('p[dir="ltr"]') : null;
-    const subTitle = document.getElementById('memCardSubtitle');
-    const pName = document.getElementById('memPersonName');
-    const btnEnter = document.getElementById('btnMemEnter');
-
-    const activeLang = lang || (typeof currentLang !== 'undefined' ? currentLang : 'en');
-    if (activeLang === 'hi') {
-      if (subTitle) subTitle.textContent = "याद-ए-रफ़्तगाँ व ख़िराज-ए-अक़ीदत";
-      if (pName) pName.textContent = "मोहम्मद सादिक़ टाक";
-      if (dateLine) dateLine.textContent = "(नीमड़े वाले) • 1931– 2021";
-      if (btnEnter) btnEnter.textContent = "पोर्टल में दाख़िल हों";
-    } else if (activeLang === 'ur') {
-      if (dateLine) dateLine.textContent = "(Neemray Walay) • 1931 – 2021";
-    } else {
-      if (dateLine) dateLine.textContent = "(Neemray Walay) • 1931 – 2021";
+    if (typeof updateMemorialPopupLanguage === 'function') {
+      updateMemorialPopupLanguage(lang || (typeof currentLang !== 'undefined' ? currentLang : 'en'));
     }
   }
 
@@ -5279,4 +5273,679 @@ M. WASEEM SADIQ TAK (Neemray Walay)
 })();
 </script>
 <!-- ==================== END WCF SAFE FIXER PATCH V7 ==================== -->
+<!-- ==================== WCF CLIENT FINAL STRICT LOCK V9 (Pending never visible / downloadable) ==================== -->
+<script id="wcf-client-v9-strict-lock">
+(function() {
+  function isStrictApproved(rec) {
+    if (!rec || typeof rec !== "object") return false;
+    if (rec.isEventGreetingConfig) return false;
+    var code = String(rec.code || "").trim();
+    if (!code || code.indexOf("PEND-") === 0) return false;
+    return rec.status === "Approved";
+  }
+
+  function wrapApprovedOnly(fnName) {
+    if (typeof window[fnName] !== "function" || window[fnName]._v9ClientStrict) return;
+    var orig = window[fnName];
+    window[fnName] = function() {
+      var backup = window.storedFRCRecords;
+      var approvedMap = {};
+      if (backup) {
+        Object.keys(backup).forEach(function(k) {
+          if (isStrictApproved(backup[k])) approvedMap[k] = backup[k];
+        });
+      }
+      window.storedFRCRecords = approvedMap;
+      try {
+        return orig.apply(this, arguments);
+      } finally {
+        window.storedFRCRecords = backup;
+      }
+    };
+    window[fnName]._v9ClientStrict = true;
+  }
+
+  // These functions must NEVER see Pending records
+  [
+    "searchAndReprintCertificate",
+    "loadFRCForAddingMember",
+    "verifyAndOpenPopulationDashboard",
+    "runPublicPopulationQuery",
+    "fetchMemberDataForIdCard",
+    "displayCertificateModal"
+  ].forEach(wrapApprovedOnly);
+
+  // Also protect updateCensusCounters on client so live counters only count Approved
+  if (typeof window.updateCensusCounters === "function" && !window.updateCensusCounters._v9ClientStats) {
+    var origCounters = window.updateCensusCounters;
+    window.updateCensusCounters = function() {
+      var backup = window.storedFRCRecords;
+      var approvedMap = {};
+      if (backup) {
+        Object.keys(backup).forEach(function(k) {
+          if (isStrictApproved(backup[k])) approvedMap[k] = backup[k];
+        });
+      }
+      window.storedFRCRecords = approvedMap;
+      try {
+        return origCounters.apply(this, arguments);
+      } finally {
+        window.storedFRCRecords = backup;
+      }
+    };
+    window.updateCensusCounters._v9ClientStats = true;
+  }
+
+  console.log("WCF Client V9 Strict Lock active: Pending records hidden from search, population, certificates & ID card.");
+})();
+</script>
+<!-- ==================== END WCF CLIENT FINAL STRICT LOCK V9 ==================== -->
+
+<!-- ==================== WCF CLIENT LAYOUT & LANGUAGE FIXES V10 ==================== -->
+<style id="wcf-v10-layout-fixes">
+/* Urdu buttons - prevent cramped letters */
+[dir="rtl"] button,
+button[dir="rtl"],
+html[dir="rtl"] button {
+  line-height: 1.9 !important;
+  word-spacing: 0.12em !important;
+  letter-spacing: 0.01em !important;
+  white-space: normal !important;
+}
+
+/* Memorial / About / ThankYou popups - center ONLY when visible (never force display) */
+#memorialModal:not(.hidden),
+#aboutUsModal:not(.hidden),
+#wcfThankYouModal.show {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  padding: 16px !important;
+  overflow-y: auto !important;
+}
+#memorialModal > div,
+#aboutUsModal > div,
+#wcfThankYouModal .wcf-ty-card {
+  margin: auto !important;
+  max-width: 100% !important;
+}
+/* Ensure hidden class still wins when modal should be closed */
+#aboutUsModal.hidden,
+#frcModal.hidden,
+#memorialModal.hidden {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* Tab row - responsive grid so Pending button aligns cleanly */
+.wcf-main-tabs {
+  display: grid !important;
+  grid-template-columns: 1fr;
+  gap: 0.5rem;
+}
+@media (min-width: 640px) {
+  .wcf-main-tabs {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (min-width: 900px) {
+  .wcf-main-tabs {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+.wcf-main-tabs button {
+  width: 100%;
+  text-align: center;
+  white-space: normal;
+  line-height: 1.45;
+}
+</style>
+<script id="wcf-v10-layout-script">
+(function() {
+  // Wrap the main tab container with responsive class
+  function fixTabLayout() {
+    var tabNew = document.getElementById("tabNewReg");
+    if (!tabNew) return;
+    var row = tabNew.parentElement;
+    if (row && !row.classList.contains("wcf-main-tabs")) {
+      row.classList.add("wcf-main-tabs");
+      row.classList.remove("flex", "gap-3");
+    }
+  }
+
+  // Keep memorial modal truly centered (remove top-24 offset)
+  function fixMemorialCentering() {
+    var m = document.getElementById("memorialModal");
+    if (m) {
+      m.style.top = "0";
+      m.style.bottom = "0";
+      m.classList.remove("top-24");
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function() {
+      fixTabLayout();
+      fixMemorialCentering();
+    });
+  } else {
+    fixTabLayout();
+    fixMemorialCentering();
+  }
+})();
+</script>
+<!-- ==================== END WCF CLIENT LAYOUT FIXES V10 ==================== -->
+
+
+<script id="wcf-v10-idcard-unified">
+(function() {
+  // Unified robust Member ID Card lookup - works for FRC code, IIC code, Head Member ID, or Family Member ID
+  window.fetchMemberDataForIdCard = function() {
+    var searchInput = document.getElementById("searchMemberId");
+    if (!searchInput) return;
+    var searchId = (searchInput.value || "").trim().toUpperCase();
+    if (!searchId) {
+      alert(typeof currentLang !== "undefined" && currentLang === "ur"
+        ? "براہ کرم درست ممبر آئی ڈی یا کوڈ درج کریں!"
+        : (currentLang === "hi" ? "कृपया सही सदस्य आईडी या कोड दर्ज करें!" : "Please enter a valid Member ID or Code!"));
+      return;
+    }
+
+    var foundRec = null;
+    var foundMember = null;
+    var records = (typeof storedFRCRecords !== "undefined" && storedFRCRecords) ? storedFRCRecords : {};
+
+    // 1. Direct key match
+    if (records[searchId]) {
+      foundRec = records[searchId];
+      foundMember = foundRec.head || null;
+    }
+
+    // 2. Scan all records
+    if (!foundRec) {
+      for (var key in records) {
+        var rec = records[key];
+        if (!rec) continue;
+        var code = (rec.code || "").toUpperCase();
+        var headId = (rec.head && rec.head.memberId) ? String(rec.head.memberId).toUpperCase() : "";
+        if (code === searchId || headId === searchId) {
+          foundRec = rec;
+          foundMember = rec.head || null;
+          break;
+        }
+        if (rec.members && Array.isArray(rec.members)) {
+          for (var i = 0; i < rec.members.length; i++) {
+            var m = rec.members[i];
+            var mid = (m.memberId || m.code || "").toUpperCase();
+            if (mid === searchId) {
+              foundRec = rec;
+              foundMember = m;
+              break;
+            }
+          }
+        }
+        if (foundRec) break;
+      }
+    }
+
+    if (foundRec && foundMember) {
+      var setTxt = function(id, val) {
+        var el = document.getElementById(id);
+        if (el) el.innerText = val || "";
+      };
+      setTxt("previewId", foundMember.memberId || foundRec.code || searchId);
+      setTxt("previewName", foundMember.name || foundRec.head?.name || "Member Name");
+      setTxt("previewFather", foundMember.father || foundRec.head?.father || "Father Name");
+      var addr = foundMember.address || foundRec.head?.address || "";
+      var city = foundMember.city || foundRec.head?.city || "";
+      setTxt("previewAddress", addr + (city ? ", " + city : ""));
+
+      var qrContainer = document.getElementById("idCardQRCode");
+      if (qrContainer && typeof QRCode !== "undefined") {
+        qrContainer.innerHTML = "";
+        var verifyUrl = "https://www.worldchhippafoundation.com/verify?doc=" +
+          encodeURIComponent(foundRec.code) +
+          "&id=" + encodeURIComponent(foundMember.memberId || foundRec.code);
+        new QRCode(qrContainer, {
+          text: verifyUrl,
+          width: 128,
+          height: 128,
+          colorDark: "#000000",
+          colorLight: "#ffffff"
+        });
+      }
+    } else {
+      alert(typeof currentLang !== "undefined" && currentLang === "ur"
+        ? "یہ ممبر آئی ڈی یا کوڈ سسٹم میں موجود نہیں ہے!"
+        : (currentLang === "hi" ? "यह सदस्य आईडी या कोड सिस्टम में मौजूद नहीं है!" : "This member ID or code does not exist in the system!"));
+      var setTxt = function(id, val) {
+        var el = document.getElementById(id);
+        if (el) el.innerText = val || "";
+      };
+      setTxt("previewId", "");
+      setTxt("previewName", "Member Name");
+      setTxt("previewFather", "Father Name");
+      setTxt("previewAddress", "Address will appear here automatically...");
+      var qrContainer = document.getElementById("idCardQRCode");
+      if (qrContainer) qrContainer.innerHTML = "";
+    }
+  };
+  console.log("WCF V10 unified ID Card search ready");
+})();
+</script>
+
+
+<script id="wcf-memorial-close-fix">
+(function() {
+  function forceCloseMemorial() {
+    var modal = document.getElementById('memorialModal');
+    if (!modal) return;
+    modal.classList.add('hidden');
+    modal.style.display = 'none';
+    modal.style.visibility = 'hidden';
+    modal.style.pointerEvents = 'none';
+    if (typeof window.memorialTimer !== 'undefined' && window.memorialTimer) {
+      clearTimeout(window.memorialTimer);
+      window.memorialTimer = null;
+    }
+    if (typeof memorialTimer !== 'undefined' && memorialTimer) {
+      try { clearTimeout(memorialTimer); } catch(e) {}
+    }
+    window.memorialHasBeenClosed = true;
+    try { memorialHasBeenClosed = true; } catch(e) {}
+  }
+
+  window.closeMemorialModal = forceCloseMemorial;
+
+  function bindMemorialButtons() {
+    var cross = document.getElementById('memCloseCross');
+    var enter = document.getElementById('btnMemEnter');
+    if (cross) {
+      cross.onclick = function(e) {
+        if (e) { e.preventDefault(); e.stopPropagation(); }
+        forceCloseMemorial();
+      };
+    }
+    if (enter) {
+      enter.onclick = function(e) {
+        if (e) { e.preventDefault(); e.stopPropagation(); }
+        forceCloseMemorial();
+      };
+    }
+    var modal = document.getElementById('memorialModal');
+    if (modal) {
+      modal.onclick = function(e) {
+        if (e.target && e.target.id === 'memorialModal') forceCloseMemorial();
+      };
+    }
+  }
+
+  function startMemorialTimer() {
+    if (window.memorialHasBeenClosed || (typeof memorialHasBeenClosed !== 'undefined' && memorialHasBeenClosed)) return;
+    if (window.memorialTimer) clearTimeout(window.memorialTimer);
+    window.memorialTimer = setTimeout(function() {
+      forceCloseMemorial();
+    }, 10000);
+  }
+
+  function init() {
+    bindMemorialButtons();
+    var modal = document.getElementById('memorialModal');
+    if (modal && !modal.classList.contains('hidden') && modal.style.display !== 'none') {
+      startMemorialTimer();
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+  // Re-bind after a short delay in case other patches overwrite onclick
+  setTimeout(bindMemorialButtons, 500);
+  setTimeout(bindMemorialButtons, 1500);
+})();
+</script>
+
+
+<script id="wcf-small-ui-fixes">
+(function() {
+  // Live countdown on memorial + footer + pending button i18n + FRC mobile preview
+
+  var FOOTER_I18N = {
+    en: {
+      thanks: "Thank you to all those who laid the foundation of the World Chhippa Foundation:",
+      names: "• Subrati Deen Bhati (Nimbi Jodhan) IND  |  • Mrs. Saleem Rao (Ghachi Pura Walay) PAK  |  • Sufyan Tak / Safwan Tak (Neemray Walay) PAK",
+      conceived: "Conceived, Architected & Dedicated to Chhippa Community by:",
+      author: "M. WASEEM SADIQ TAK (Neemray Walay)",
+      pendingTab: "⏳ Check Pending Case"
+    },
+    ur: {
+      thanks: "ان تمام شخصیات کا شکریہ جنہوں نے ورلڈ چھیپا فاؤنڈیشن کی بنیاد رکھی:",
+      names: "• شبراتی دین بھاٹی (نمبی جودھاں) انڈیا  |  • مسز سلیم راؤ (گھاچی پورہ والے) پاکستان  |  • سفیان ٹاک / صفوان ٹاک (نیمڑے والے) پاکستان",
+      conceived: "تخلیق، ڈیزائن اور چھیپا برادری کے نام معنون:",
+      author: "محمد وسیم صادق ٹاک (نیمڑے والے)",
+      pendingTab: "⏳ پینڈنگ کیس چیک کریں"
+    },
+    hi: {
+      thanks: "उन सभी का धन्यवाद जिन्होंने वर्ल्ड छीपा फाउंडेशन की नींव रखी:",
+      names: "• सुबराती दीन भाटी (निम्बी जोधां) भारत  |  • श्रीमती सलीम राव (घाची पुरा वाले) पाक  |  • सुफियान टाक / सफवान टाक (नीमड़े वाले) पाक",
+      conceived: "संकल्पना, निर्माण एवं छीपा समुदाय को समर्पित:",
+      author: "एम. वसीम सादिक टाक (नीमड़े वाले)",
+      pendingTab: "⏳ पेंडिंग केस जांचें"
+    }
+  };
+
+  function applyFooterAndPendingLang(lang) {
+    var t = FOOTER_I18N[lang] || FOOTER_I18N.en;
+    var footer = document.querySelector('footer');
+    if (footer) {
+      var pList = footer.querySelectorAll('p');
+      var spanEl = footer.querySelector('span');
+      var h4El = footer.querySelector('h4');
+      if (pList[0]) pList[0].textContent = t.thanks;
+      if (pList[1]) pList[1].textContent = t.names;
+      if (spanEl) spanEl.textContent = t.conceived;
+      if (h4El) h4El.textContent = t.author;
+    }
+    var pendBtn = document.getElementById('tabPendingCheck');
+    if (pendBtn) pendBtn.textContent = t.pendingTab;
+  }
+
+  // Hook changeLanguage
+  if (typeof window.changeLanguage === 'function' && !window.changeLanguage._smallUiFix) {
+    var orig = window.changeLanguage;
+    window.changeLanguage = function(lang) {
+      orig.apply(this, arguments);
+      applyFooterAndPendingLang(lang);
+    };
+    window.changeLanguage._smallUiFix = true;
+  }
+
+  // Live countdown for memorial
+  var countdownInterval = null;
+  function startLiveCountdown() {
+    var note = document.getElementById('memAutoCloseNote');
+    var modal = document.getElementById('memorialModal');
+    if (!modal || modal.classList.contains('hidden') || modal.style.display === 'none') return;
+    var sec = 10;
+    if (countdownInterval) clearInterval(countdownInterval);
+    function tick() {
+      var lang = (typeof currentLang !== 'undefined') ? currentLang : 'en';
+      if (note) {
+        if (lang === 'ur') note.textContent = sec + " سیکنڈ بعد خود بند ہو جائے گا یا اوپر بٹن دبائیں";
+        else if (lang === 'hi') note.textContent = sec + " सेकंड में अपने आप बंद हो जाएगा या ऊपर बटन दबाएँ";
+        else note.textContent = "Closes automatically in " + sec + " seconds or click Enter";
+      }
+      sec--;
+      if (sec < 0) {
+        clearInterval(countdownInterval);
+        countdownInterval = null;
+        if (typeof closeMemorialModal === 'function') closeMemorialModal();
+      }
+    }
+    tick();
+    countdownInterval = setInterval(tick, 1000);
+  }
+
+  // Override close to clear countdown
+  var prevClose = window.closeMemorialModal;
+  window.closeMemorialModal = function() {
+    if (countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
+    if (typeof prevClose === 'function') prevClose();
+    else {
+      var modal = document.getElementById('memorialModal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.style.display = 'none';
+      }
+    }
+  };
+
+  // FRC mobile preview - scale to fit width
+  var style = document.createElement('style');
+  style.id = 'wcf-frc-mobile-preview';
+  style.textContent = [
+    '@media (max-width: 820px) {',
+    '  #frcModal .overflow-x-auto {',
+    '    justify-content: flex-start !important;',
+    '    overflow-x: auto !important;',
+    '    -webkit-overflow-scrolling: touch !important;',
+    '    padding-bottom: 12px !important;',
+    '  }',
+    '  #frcScaleWrapper {',
+    '    transform-origin: top left !important;',
+    '    width: 794px !important;',
+    '  }',
+    '  #frcCertificateSheet, #iicCertificateSheet {',
+    '    width: 794px !important;',
+    '    min-width: 794px !important;',
+    '  }',
+    '}',
+    '/* Scale certificate to viewport width on small screens */',
+    '@media (max-width: 820px) {',
+    '  #frcScaleWrapper {',
+    '    transform: scale(calc((100vw - 24px) / 794)) !important;',
+    '    margin-bottom: calc((1050px * ((100vw - 24px) / 794)) - 1050px) !important;',
+    '  }',
+    '}'
+  ].join('\\n');
+  document.head.appendChild(style);
+
+  function boot() {
+    var lang = (typeof currentLang !== 'undefined') ? currentLang : 'en';
+    applyFooterAndPendingLang(lang);
+    setTimeout(startLiveCountdown, 300);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+  setTimeout(boot, 800);
+})();
+</script>
+
+
+<script id="wcf-final-user-fixes">
+(function() {
+  var FOOTER = {
+    en: {
+      thanks: "Thank you to all those who laid the foundation of the World Chhippa Foundation:",
+      names: "• Subrati Deen Bhati (Nimbi Jodhan) IND  |  • Mrs. Saleem Rao (Ghachi Pura Walay) PAK  |  • Sufyan Tak / Safwan Tak (Neemray Walay) PAK",
+      conceived: "Conceived, Architected & Dedicated to Chhippa Community by:",
+      author: "M. WASEEM SADIQ TAK (Neemray Walay)",
+      pending: "⏳ Check Pending Case"
+    },
+    ur: {
+      thanks: "ان تمام شخصیات کا شکریہ جنہوں نے ورلڈ چھیپا فاؤنڈیشن کی بنیاد رکھی:",
+      names: "• شبراتی دین بھاٹی (نمبی جودھاں) انڈیا  |  • مسز سلیم راؤ (گھاچی پورہ والے) پاکستان  |  • سفیان ٹاک / صفوان ٹاک (نیمڑے والے) پاکستان",
+      conceived: "تخلیق، ڈیزائن اور چھیپا برادری کے نام معنون:",
+      author: "محمد وسیم صادق ٹاک (نیمڑے والے)",
+      pending: "⏳ پینڈنگ کیس چیک کریں"
+    },
+    hi: {
+      thanks: "उन सभी का धन्यवाद जिन्होंने वर्ल्ड छीपा फाउंडेशन की नींव रखी:",
+      names: "• सुबराती दीन भाटी (निम्बी जोधां) भारत  |  • श्रीमती सलीम राव (घाची पुरा वाले) पाक  |  • सुफियान टाक / सफवान टाक (नीमड़े वाले) पाक",
+      conceived: "संकल्पना, निर्माण एवं छीपा समुदाय को समर्पित:",
+      author: "एम. वसीम सादिक टाक (नीमड़े वाले)",
+      pending: "⏳ पेंडिंग केस जांचें"
+    }
+  };
+
+  function applyFooter(lang) {
+    var t = FOOTER[lang] || FOOTER.en;
+    var a = document.getElementById("footerThanks");
+    var b = document.getElementById("footerNames");
+    var c = document.getElementById("footerConceived");
+    var d = document.getElementById("footerAuthor");
+    if (a) a.textContent = t.thanks;
+    if (b) b.textContent = t.names;
+    if (c) c.textContent = t.conceived;
+    if (d) d.textContent = t.author;
+    // fallback without ids
+    var footer = document.getElementById("wcfMainFooter") || document.querySelector("footer");
+    if (footer && !a) {
+      var ps = footer.querySelectorAll("p");
+      if (ps[0]) ps[0].textContent = t.thanks;
+      if (ps[1]) ps[1].textContent = t.names;
+      var sp = footer.querySelector("span");
+      if (sp) sp.textContent = t.conceived;
+      var h4 = footer.querySelector("h4");
+      if (h4) h4.textContent = t.author;
+    }
+    var pb = document.getElementById("tabPendingCheck");
+    if (pb) pb.textContent = t.pending;
+    // dir for footer
+    if (footer) {
+      if (lang === "ur") { footer.setAttribute("dir", "rtl"); footer.style.fontFamily = "'Noto Nastaliq Urdu', serif"; }
+      else if (lang === "hi") { footer.setAttribute("dir", "ltr"); footer.style.fontFamily = "'Noto Sans Devanagari', sans-serif"; }
+      else { footer.setAttribute("dir", "ltr"); footer.style.fontFamily = ""; }
+    }
+  }
+
+  function showMemorialInLang(lang) {
+    var modal = document.getElementById("memorialModal");
+    if (!modal) return;
+    modal.classList.remove("hidden");
+    modal.style.cssText = "display:flex !important; visibility:visible !important; pointer-events:auto !important; position:fixed; inset:0; z-index:40; align-items:center; justify-content:center; background:rgba(0,0,0,0.3);";
+
+    var tEn = document.getElementById("memTextEn");
+    var tUr = document.getElementById("memTextUr");
+    var tHi = document.getElementById("memTextHi");
+    var sub = document.getElementById("memCardSubtitle");
+    var name = document.getElementById("memPersonName");
+    var btn = document.getElementById("btnMemEnter");
+    var dateLine = document.querySelector("#memorialModal p[dir='ltr']");
+    var note = document.getElementById("memAutoCloseNote");
+
+    if (tEn) tEn.classList.add("hidden");
+    if (tUr) tUr.classList.add("hidden");
+    if (tHi) tHi.classList.add("hidden");
+
+    if (lang === "hi") {
+      if (tHi) {
+        tHi.classList.remove("hidden");
+        tHi.setAttribute("translate", "no");
+        tHi.innerHTML =
+          '<p>"छीपा बिरादरी के लिए बे-लौस ख़िदमत, मोहब्बत और लाज़वाल क़ुर्बानियों की याद में।"</p>' +
+          '<p class="text-[10px] font-semibold text-slate-600">अल्लाह तआला उन्हें जन्नत-उल-फ़िरदौस में आला मक़ाम अता फ़रमाए। आमीन।</p>' +
+          '<p class="text-[10px] font-bold text-amber-900">पेश-कश: टाक फ़ैमिली (नीमड़े वाले)-कराची, पाकिस्तान</p>';
+      }
+      if (sub) sub.textContent = "याद-ए-रफ़्तगाँ व ख़िराज-ए-अक़ीदत";
+      if (name) name.textContent = "मोहम्मद सादिक़ टाक";
+      if (dateLine) dateLine.textContent = "(नीमड़े वाले) • 1931– 2021";
+      if (btn) btn.textContent = "पोर्टल में दाख़िल हों";
+    } else if (lang === "ur") {
+      if (tUr) tUr.classList.remove("hidden");
+      if (sub) sub.textContent = "یادِ رفتگاں و خراجِ عقیدت";
+      if (name) name.textContent = "محمد صادق ٹاک";
+      if (dateLine) dateLine.textContent = "(Neemray Walay) • 1931 – 2021";
+      if (btn) btn.textContent = "پورٹل میں داخل ہوں";
+    } else {
+      if (tEn) tEn.classList.remove("hidden");
+      if (sub) sub.textContent = "In Eternal Remembrance";
+      if (name) name.textContent = "Muhammad Sadiq Tak";
+      if (dateLine) dateLine.textContent = "(Neemray Walay) • 1931 – 2021";
+      if (btn) btn.textContent = "Enter Portal";
+    }
+
+    try { window.memorialHasBeenClosed = false; memorialHasBeenClosed = false; } catch(e) {}
+
+    if (window._memCd) { clearInterval(window._memCd); window._memCd = null; }
+    var sec = 10;
+    function tick() {
+      if (note) {
+        if (lang === "hi") note.textContent = sec + " सेकंड में अपने आप बंद हो जाएगा या ऊपर बटन दबाएँ";
+        else if (lang === "ur") note.textContent = sec + " سیکنڈ بعد خود بند ہو جائے گا یا اوپر بٹن دبائیں";
+        else note.textContent = "Closes automatically in " + sec + " seconds or click Enter";
+      }
+      if (sec < 0) {
+        clearInterval(window._memCd);
+        window._memCd = null;
+        modal.classList.add("hidden");
+        modal.style.display = "none";
+        try { memorialHasBeenClosed = true; } catch(e) {}
+      }
+      sec--;
+    }
+    tick();
+    window._memCd = setInterval(tick, 1000);
+
+    // bind close buttons again
+    var cross = document.getElementById("memCloseCross");
+    var enter = document.getElementById("btnMemEnter");
+    function forceClose() {
+      if (window._memCd) { clearInterval(window._memCd); window._memCd = null; }
+      modal.classList.add("hidden");
+      modal.style.display = "none";
+      try { memorialHasBeenClosed = true; } catch(e) {}
+    }
+    if (cross) cross.onclick = function(e) { e.stopPropagation(); forceClose(); };
+    if (enter) enter.onclick = function(e) { e.stopPropagation(); forceClose(); };
+  }
+
+  // Hook language select + changeLanguage
+  function onLang(lang) {
+    applyFooter(lang);
+    // delay so other changeLanguage side-effects finish first
+    setTimeout(function() { showMemorialInLang(lang); }, 150);
+  }
+
+  if (typeof window.changeLanguage === "function") {
+    var orig = window.changeLanguage;
+    window.changeLanguage = function(lang) {
+      orig.apply(this, arguments);
+      onLang(lang);
+    };
+  }
+
+  // Also listen directly on select
+  function bindSelect() {
+    var sel = document.getElementById("langSelect");
+    if (sel && !sel._wcfFinalBound) {
+      sel.addEventListener("change", function() {
+        onLang(sel.value);
+      });
+      sel._wcfFinalBound = true;
+    }
+  }
+
+  async function syncClientFromCloud() {
+    if (typeof isCloudReady === "undefined" || !isCloudReady || typeof db === "undefined" || !db) return;
+    try {
+      var cols = ["trial_census_registrations", "census_registrations", "wcf_pending_queue"];
+      var fresh = {};
+      for (var i = 0; i < cols.length; i++) {
+        try {
+          var snap = await db.collection(cols[i]).get();
+          snap.forEach(function(doc) {
+            var d = doc.data();
+            if (d && d.code && !d.isEventGreetingConfig && d.status !== "Rejected") fresh[d.code] = d;
+          });
+        } catch (e) {}
+      }
+      if (typeof storedFRCRecords !== "undefined") {
+        Object.keys(storedFRCRecords).forEach(function(k) { delete storedFRCRecords[k]; });
+        Object.keys(fresh).forEach(function(k) { storedFRCRecords[k] = fresh[k]; });
+      }
+      try { localStorage.setItem("WCF_CENSUS_RECORDS", JSON.stringify(storedFRCRecords || fresh)); } catch (e) {}
+      if (typeof updateCensusCounters === "function") updateCensusCounters();
+    } catch (e) {}
+  }
+
+  function boot() {
+    bindSelect();
+    applyFooter(typeof currentLang !== "undefined" ? currentLang : "en");
+    syncClientFromCloud();
+    setTimeout(syncClientFromCloud, 2500);
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
+  else boot();
+  setTimeout(bindSelect, 1000);
+})();
+</script>
+
 </html>
