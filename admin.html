@@ -76,12 +76,12 @@ body { font-family: 'Inter', sans-serif; }
           <p class="text-[11px] text-amber-200">Global Cloud Database & PDF Reporting Console</p>
         </div>
       </div>
-      <div class="flex items-center gap-2">
+      <div id="adminHeaderActions" class="flex items-center gap-2">
         <button onclick="fetchAllRecordsFromFirebase()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3.5 py-2 rounded-lg shadow transition">
            Refresh Cloud Data
         </button>
-        <button onclick="lockAdminSession()" class="bg-red-700 hover:bg-red-600 text-white text-xs font-bold px-3 py-2 rounded-lg shadow transition">
-           Lock
+        <button type="button" id="btnSecureLogout" onclick="lockAdminSession()" title="Sign out and lock the admin panel" class="bg-red-600 hover:bg-red-500 text-white text-xs md:text-sm font-black px-4 py-2 rounded-lg shadow-lg border-2 border-red-300 transition flex items-center gap-1.5 cursor-pointer">
+           <span aria-hidden="true">&#128274;</span> <span>Secure Logout</span>
         </button>
       </div>
     </div>
@@ -90,7 +90,7 @@ body { font-family: 'Inter', sans-serif; }
   <main class="max-w-4xl w-full mx-auto p-4 md:p-6 space-y-5 flex-1">
     <div class="bg-white rounded-2xl shadow-lg border border-slate-200 p-5 space-y-5">
       <!-- Database Source Selector -->
-      <div class="bg-amber-50 border border-amber-200 rounded-xl p-3.5 flex flex-wrap items-center justify-between gap-3 text-xs">
+      <div id="adminDbSelectorBar" class="bg-amber-50 border border-amber-200 rounded-xl p-3.5 flex flex-wrap items-center justify-between gap-3 text-xs">
         <div class="flex items-center gap-2">
           <span class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse" id="adminDbStatusDot"></span>
           <div>
@@ -98,7 +98,7 @@ body { font-family: 'Inter', sans-serif; }
             <p class="text-[10px] text-slate-600">Auto-routes to Trial Collection before 3 Nov 2026, or select manually:</p>
           </div>
         </div>
-        <div class="flex items-center gap-2">
+        <div id="adminDbControls" class="flex items-center gap-2">
           <select id="collectionSelector" onchange="fetchAllRecordsFromFirebase()" class="border border-amber-400 rounded-lg px-2.5 py-1.5 text-xs font-bold bg-white text-slate-800 outline-none">
             <option value="auto">Auto (Time-Based Switch)</option>
             <option value="trial_census_registrations">Trial Collection (trial_census_registrations)</option>
@@ -191,6 +191,28 @@ body { font-family: 'Inter', sans-serif; }
         <div id="adminPendingList" class="max-h-56 overflow-y-auto space-y-2 border border-slate-200 rounded-xl p-3 bg-slate-50 text-xs">
           <p class="text-slate-400 italic">No applications currently pending verification.</p>
         </div>
+      </div>
+
+      <!-- Duplicate Finder (same phone number) -->
+      <div class="space-y-2 text-left" id="adminDupSection">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <h4 class="text-xs font-bold text-slate-800 uppercase">Duplicate Finder (Same Phone Number)</h4>
+          <button type="button" id="btnFindDuplicates" onclick="wcfScanDuplicates()" class="bg-indigo-700 hover:bg-indigo-800 text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow cursor-pointer">Scan Duplicates</button>
+        </div>
+        <div id="adminDupList" class="max-h-96 overflow-y-auto space-y-3 border border-slate-200 rounded-xl p-3 bg-slate-50 text-xs">
+          <p class="text-slate-400 italic">Press "Scan Duplicates" to list families registered more than once with the same phone number.</p>
+        </div>
+        <p class="text-[10px] text-slate-500">Reject hides a record (kept in Firebase). Delete from Firebase removes it permanently after a backup download.</p>
+      </div>
+
+      <!-- Record Inspector -->
+      <div class="space-y-2 text-left" id="adminInspectSection">
+        <h4 class="text-xs font-bold text-slate-800 uppercase">Record Inspector (Phone / WCF Code / Member ID)</h4>
+        <div class="flex flex-col sm:flex-row gap-2">
+          <input type="text" id="adminInspectInput" value="WCF-373580" placeholder="e.g. +923132070380 or WCF-373580" class="flex-1 border border-slate-300 rounded-lg p-2 text-xs font-mono outline-none" dir="ltr">
+          <button type="button" onclick="wcfInspectRecord()" class="bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold px-3 py-2 rounded-lg shadow cursor-pointer">Inspect</button>
+        </div>
+        <div id="adminInspectOut" class="space-y-2 text-xs"></div>
       </div>
 
       <!-- Bottom Backup & Reset Controls -->
@@ -479,6 +501,16 @@ function getNormalizedClanKey(h) {
   return "Other";
 }
 
+
+// ===== FIX 8: pending / unverified applications never appear in clan PDF reports =====
+function wcfIsExportableRecord(rec) {
+  if (!rec || !rec.head) return false;
+  var s = String(rec.status || '').trim().toLowerCase();
+  if (s === 'pending verification' || s === 'possible duplicate' || s === 'pending' || s === 'rejected') return false;
+  if (String(rec.code || '').indexOf('PEND-') === 0) return false;
+  return true;
+}
+
 function exportCountryCityWisePDF() {
   var selectedCountry = document.getElementById("adminCountryDropdown").value.trim();
   var inputCity = document.getElementById("adminCityManualInput").value.trim();
@@ -491,6 +523,7 @@ function exportCountryCityWisePDF() {
   var clanOrder = ["Tak", "Bhati", "Rao", "Molani", "Lodha", "Deora", "Kukda", "Jinva", "Mangla", "Other"];
   var matchedRecords = allRecords.filter(function(rec) {
     if (!rec.head) return false;
+    if (!wcfIsExportableRecord(rec)) return false; // FIX 8: skip pending/unverified
     var country = (rec.head.country || "").toLowerCase();
     var city = (rec.head.city || "").toLowerCase();
     var loc = (rec.head.location || "").toLowerCase();
@@ -657,7 +690,7 @@ function exportAdultUnmarriedPDF() {
   allRecords.forEach(rec => {
     if (rec.members && Array.isArray(rec.members)) {
       rec.members.forEach(m => {
-        const isChild = (m.relationKey === 'Son' || m.relationKey === 'Daughter' || (m.relation && (m.relation.includes('بیٹا') || m.relation.includes('بیٹی') || m.relation.includes('बेटा') || m.relation.includes('बेटी'))));
+        const isChild = (m.relationKey === 'Son' || m.relationKey === 'Daughter' || (m.relation && ((m.relation || '').includes('بیٹا') || (m.relation || '').includes('بیٹی') || (m.relation || '').includes('बेटा') || (m.relation || '').includes('बेटी'))));
         const ageNum = parseInt(m.age) || calculateAge(m.dob);
         const isUnmarried = (m.maritalStatusKey === 'Unmarried' || !m.maritalStatusKey);
         if (isChild && ageNum >= 18 && isUnmarried) {
@@ -689,31 +722,58 @@ function exportAdultUnmarriedPDF() {
   doc.setFontSize(9);
   doc.setTextColor(100, 116, 139);
   doc.text(`Generated: ${new Date().toLocaleDateString('en-GB')} | Total Count: ${adultsList.length}`, 14, 21);
+  // FIX 1: fixed column grid (x positions + wrap widths) so columns never overlap and phone is never cut
+  const colX = { num: 15.5, name: 22, gender: 61, age: 79, eduJob: 105, guardian: 147 };
+  const colW = { name: 36, gender: 16, age: 24, eduJob: 38, guardian: 48 };
+  const drawUnmarriedHead = (yy) => {
+    doc.setFillColor(243, 232, 255);
+    doc.rect(14, yy - 5, 182, 8, 'F');
+    doc.setFontSize(8.5);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(0, 0, 0);
+    doc.text("#", colX.num, yy);
+    doc.text("Name", colX.name, yy);
+    doc.text("Gender", colX.gender, yy);
+    doc.text("Age / DOB", colX.age, yy);
+    doc.text("Education / Job", colX.eduJob, yy);
+    doc.text("Guardian (Phone)", colX.guardian, yy);
+    doc.setFont("helvetica", "normal");
+  };
   let y = 30;
-  doc.setFillColor(243, 232, 255);
-  doc.rect(14, y - 5, 182, 8, 'F');
-  doc.setFontSize(9);
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor(0, 0, 0);
-  doc.text("#", 16, y);
-  doc.text("Name", 24, y);
-  doc.text("Gender", 60, y);
-  doc.text("Age / DOB", 78, y);
-  doc.text("Education / Job", 102, y);
-  doc.text("Guardian (Phone)", 140, y);
-  doc.setFont("helvetica", "normal");
+  drawUnmarriedHead(y);
   y += 7;
+  const LH = 3.7;
   adultsList.forEach((item, idx) => {
-    if (y > 280) { doc.addPage(); y = 20; }
-    doc.text(String(idx + 1), 16, y);
-    doc.text(item.name.substring(0, 20), 24, y);
-    doc.text(item.gender, 60, y);
-    doc.text(`${item.age} yrs (${item.dob})`.substring(0, 18), 78, y);
-    doc.text(`${item.edu} / ${item.job}`.substring(0, 22), 102, y);
-    doc.text(`${item.headName} (${item.headPhone})`.substring(0, 28), 140, y);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(7.5);
+    doc.setTextColor(15, 23, 42);
+    const nameL = doc.splitTextToSize(String(item.name || '-'), colW.name);
+    const genderL = doc.splitTextToSize(String(item.gender || '-'), colW.gender);
+    const ageL = [`${item.age} yrs`].concat(doc.splitTextToSize(String(item.dob || 'N/A'), colW.age));
+    const eduJobL = doc.splitTextToSize(`${item.edu || '-'} / ${item.job || '-'}`, colW.eduJob);
+    const guardL = doc.splitTextToSize(String(item.headName || '-'), colW.guardian)
+      .concat(doc.splitTextToSize(`Ph: ${item.headPhone || '-'}`, colW.guardian));
+    const lines = Math.max(nameL.length, genderL.length, ageL.length, eduJobL.length, guardL.length);
+    const blockH = (lines - 1) * LH + 5;
+    if (y + blockH > 285) {
+      doc.addPage();
+      y = 20;
+      drawUnmarriedHead(y);
+      y += 7;
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(7.5);
+      doc.setTextColor(15, 23, 42);
+    }
+    doc.text(String(idx + 1), colX.num, y);
+    doc.text(nameL, colX.name, y);
+    doc.text(genderL, colX.gender, y);
+    doc.text(ageL, colX.age, y);
+    doc.text(eduJobL, colX.eduJob, y);
+    doc.text(guardL, colX.guardian, y);
+    const rowBottom = y + (lines - 1) * LH + 2.2;
     doc.setDrawColor(226, 232, 240);
-    doc.line(14, y + 2, 196, y + 2);
-    y += 7;
+    doc.line(14, rowBottom, 196, rowBottom);
+    y = rowBottom + 5;
   });
   doc.save(`WCF_Unmarried_Adults_${new Date().toISOString().slice(0, 10)}.pdf`);
 }
@@ -800,7 +860,7 @@ function clearAllCensusData() {
 }
 
 function exportOtherClansPDF() {
-  const allRecords = Object.values(storedFRCRecords);
+  const allRecords = Object.values(storedFRCRecords).filter(wcfIsExportableRecord); // FIX 8: skip pending/unverified
   const otherList = [];
   const standardClans = ['Tak','Bhati','Rao','Molani','Lodha','Deora','Kukda','Jinva','Mangla','Behlim','Joiya','Bhimpal','Chauhan','Panwar','Chhippa'];
 
@@ -1558,4 +1618,226 @@ function exportOtherClansPDF() {
 })();
 </script>
 <!-- ==================== END WCF ADMIN SAFE FIXER PATCH V8 ==================== -->
+
+<!-- ==================== WCF FIX PACK V9 (admin) ==================== -->
+<style id="wcf-v9-admin-fixes">
+  html, body { max-width: 100%; overflow-x: hidden; }
+  #adminHeaderActions { flex-wrap: wrap; }
+  @media (max-width: 640px) {
+    #adminHeaderActions { width: 100%; }
+    #adminHeaderActions > button { flex: 1 1 auto; justify-content: center; }
+    #btnSecureLogout { flex: 1 1 100%; padding-top: 0.65rem; padding-bottom: 0.65rem; }
+    #adminDbSelectorBar { flex-direction: column; align-items: stretch; }
+    #adminDbSelectorBar > div { width: 100%; min-width: 0; }
+    #adminDbControls { flex-direction: column; align-items: stretch; gap: 0.5rem; }
+    #adminDbControls select, #adminDbControls button { width: 100%; max-width: 100%; min-width: 0; text-overflow: ellipsis; }
+  }
+</style>
+<!-- ==================== END WCF FIX PACK V9 (admin) ==================== -->
+
+<!-- ==================== WCF FIX PACK V9b (admin duplicate finder) ==================== -->
+<script id="wcf-v9b-dup-finder">
+(function() {
+  function digits(s) { return String(s || '').replace(/[^0-9]/g, ''); }
+  function esc(s) { return (typeof escapeHtml === 'function') ? escapeHtml(String(s == null ? '' : s)) : String(s == null ? '' : s).replace(/[&<>"']/g, function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+
+  window.wcfScanDuplicates = function() {
+    var box = document.getElementById('adminDupList');
+    if (!box) return;
+    var recs = Object.values(storedFRCRecords || {}).filter(function(r) {
+      return r && r.head && r.status !== 'Rejected' && digits(r.head.phone).length >= 8;
+    });
+    var groups = {};
+    recs.forEach(function(r) {
+      var key = digits(r.head.phone).slice(-8);
+      (groups[key] = groups[key] || []).push(r);
+    });
+    var dupKeys = Object.keys(groups).filter(function(k) { return groups[k].length > 1; });
+    if (!dupKeys.length) {
+      box.innerHTML = '<p class="text-emerald-700 font-bold">&#10003; No duplicate phone numbers found among ' + recs.length + ' active records.</p>';
+      return;
+    }
+    var html = '<p class="text-amber-800 font-bold">' + dupKeys.length + ' phone number(s) used by more than one record:</p>';
+    dupKeys.forEach(function(k) {
+      var list = groups[k].slice().sort(function(a, b) {
+        return ((b.members || []).length) - ((a.members || []).length);
+      });
+      html += '<div class="border border-amber-300 rounded-lg bg-white p-2 space-y-1.5">';
+      html += '<div class="font-mono text-[11px] text-slate-600">Phone ends with ' + esc(k) + ' &mdash; ' + list.length + ' records</div>';
+      list.forEach(function(r, i) {
+        html += '<div class="flex flex-wrap items-center justify-between gap-2 p-2 rounded border border-slate-200 bg-slate-50">' +
+          '<div class="min-w-0">' +
+            '<strong>' + esc(r.head.name) + '</strong> ' + (i === 0 ? '<span class="text-[10px] bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded font-bold">most members</span>' : '') +
+            '<div class="text-[10px] text-slate-600 break-all">Code: ' + esc(r.code) + ' | Member ID: ' + esc(r.head.memberId) + '</div>' +
+            '<div class="text-[10px] text-slate-600">Status: ' + esc(r.status || 'n/a') + ' | Members: ' + ((r.members || []).length + 1) + ' | Phone: ' + esc(r.head.phone) + '</div>' +
+          '</div>' +
+          '<div class="flex flex-wrap gap-1.5">' +
+          '<button type="button" data-wcf-reject="' + esc(r.code) + '" class="bg-red-600 hover:bg-red-700 text-white px-2.5 py-1 rounded text-[10px] font-bold cursor-pointer">Reject (keep in Firebase)</button>' +
+          '<button type="button" data-wcf-delete="' + esc(r.code) + '" class="bg-slate-900 hover:bg-black text-white px-2.5 py-1 rounded text-[10px] font-bold cursor-pointer">Delete from Firebase</button>' +
+          '</div>' +
+        '</div>';
+      });
+      html += '</div>';
+    });
+    box.innerHTML = html;
+  };
+
+  async function rejectDuplicate(code) {
+    var rec = storedFRCRecords[code];
+    if (!rec) { alert('Record not found locally. Press Refresh Cloud Data and try again.'); return; }
+    if (!confirm('Reject record ' + code + ' (' + (rec.head && rec.head.name) + ')?\n\nIt will be hidden from the portal and PDF reports. Nothing is deleted from Firebase.')) return;
+    var cloudNote = '';
+    if (typeof isCloudReady !== 'undefined' && isCloudReady && typeof db !== 'undefined' && db) {
+      var touched = [];
+      var cols = ['trial_census_registrations', 'census_registrations', 'wcf_pending_queue'];
+      for (var i = 0; i < cols.length; i++) {
+        try {
+          var ref = db.collection(cols[i]).doc(code);
+          var snap = await ref.get();
+          if (snap.exists) {
+            await ref.set({ status: 'Rejected', rejectedReason: 'Duplicate phone number', rejectedAt: new Date().toISOString() }, { merge: true });
+            touched.push(cols[i]);
+          }
+        } catch (e) {
+          alert('Firebase write failed for ' + cols[i] + ': ' + e.message + '\nNothing was changed there.');
+          return;
+        }
+      }
+      cloudNote = touched.length ? ('Updated in: ' + touched.join(', ')) : 'Not found in Firebase (local copy only).';
+    } else {
+      cloudNote = 'Firebase offline - changed locally only.';
+    }
+    rec.status = 'Rejected';
+    try { localStorage.setItem('WCF_CENSUS_RECORDS', JSON.stringify(storedFRCRecords)); } catch (e) {}
+    if (typeof updateCensusCounters === 'function') updateCensusCounters();
+    window.wcfScanDuplicates();
+    alert('Record ' + code + ' rejected.\n' + cloudNote);
+  }
+
+  async function deleteDuplicate(code) {
+    var rec = storedFRCRecords[code];
+    if (!rec) { alert('Record not found locally. Press Refresh Cloud Data and try again.'); return; }
+    var name = rec.head && rec.head.name;
+    var approved = rec.status === 'Approved' && String(code).indexOf('PEND-') !== 0;
+    if (!confirm('PERMANENTLY DELETE ' + code + ' (' + name + ') from ALL Firebase collections?\n\nThis cannot be undone. A JSON backup will download first.')) return;
+    if (approved) {
+      var typed = prompt('This is an APPROVED record. To confirm, type its code exactly:\n' + code);
+      if (typed === null || typed.trim().toUpperCase() !== String(code).toUpperCase()) { alert('Code did not match. Nothing was deleted.'); return; }
+    }
+    if (typeof isCloudReady === 'undefined' || !isCloudReady || typeof db === 'undefined' || !db) {
+      alert('Firebase is offline. Nothing was deleted.');
+      return;
+    }
+    try { if (typeof exportCensusJSON === 'function') exportCensusJSON(); } catch (e) {}
+    var cols = ['trial_census_registrations', 'census_registrations', 'wcf_pending_queue'];
+    var report = [], stillThere = false, anyError = false;
+    for (var i = 0; i < cols.length; i++) {
+      var col = cols[i];
+      try {
+        var ref = db.collection(col).doc(code);
+        var snap = await ref.get();
+        var hadDoc = snap.exists;
+        if (hadDoc) await ref.delete();
+        var extra = 0;
+        var q = await db.collection(col).where('code', '==', code).get();
+        for (var j = 0; j < q.docs.length; j++) { await q.docs[j].ref.delete(); extra++; }
+        var check = await ref.get();
+        var q2 = await db.collection(col).where('code', '==', code).get();
+        if (check.exists || !q2.empty) { stillThere = true; report.push(col + ': STILL THERE after delete'); }
+        else if (hadDoc || extra) report.push(col + ': deleted OK');
+        else report.push(col + ': not present');
+      } catch (e) {
+        anyError = true; stillThere = true;
+        report.push(col + ': FAILED - ' + (e.code || '') + ' ' + e.message);
+      }
+    }
+    if (!stillThere) {
+      delete storedFRCRecords[code];
+      try { localStorage.setItem('WCF_CENSUS_RECORDS', JSON.stringify(storedFRCRecords)); } catch (e) {}
+      if (typeof updateCensusCounters === 'function') updateCensusCounters();
+      window.wcfScanDuplicates();
+    }
+    var msg = (stillThere ? 'NOT fully deleted: ' : 'Deleted: ') + code + '\n\n' + report.join('\n');
+    if (anyError) msg += '\n\nA "permission" error means your Firestore security rules block deletes. Delete the document in the Firebase console, or allow delete for the admin in the rules.';
+    alert(msg);
+  }
+
+  document.addEventListener('click', function(ev) {
+    var b = ev.target && ev.target.closest ? ev.target.closest('[data-wcf-reject]') : null;
+    if (b) { rejectDuplicate(b.getAttribute('data-wcf-reject')); return; }
+    var d = ev.target && ev.target.closest ? ev.target.closest('[data-wcf-delete]') : null;
+    if (d) deleteDuplicate(d.getAttribute('data-wcf-delete'));
+  });
+})();
+</script>
+<!-- ==================== END WCF FIX PACK V9b ==================== -->
+
+<!-- ==================== WCF FIX PACK V9c (admin record inspector) ==================== -->
+<script id="wcf-v9c-inspector">
+(function() {
+  function digits(s) { return String(s || '').replace(/[^0-9]/g, ''); }
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+  var COLS = ['census_registrations', 'trial_census_registrations', 'wcf_pending_queue'];
+
+  async function cloudLookup(id) {
+    var out = [];
+    if (typeof isCloudReady === 'undefined' || !isCloudReady || typeof db === 'undefined' || !db) return ['Firebase offline'];
+    for (var i = 0; i < COLS.length; i++) {
+      try {
+        var s = await db.collection(COLS[i]).doc(id).get();
+        out.push(COLS[i] + ': ' + (s.exists ? ('status = ' + ((s.data() || {}).status || 'n/a')) : 'not found'));
+      } catch (e) { out.push(COLS[i] + ': error (' + e.message + ')'); }
+    }
+    return out;
+  }
+  async function cloudByCode(code) {
+    var found = [];
+    if (typeof isCloudReady === 'undefined' || !isCloudReady || typeof db === 'undefined' || !db) return found;
+    for (var i = 0; i < COLS.length; i++) {
+      try {
+        var q = await db.collection(COLS[i]).where('code', '==', code).get();
+        q.forEach(function(d) { var x = d.data() || {}; found.push({ col: COLS[i], id: d.id, status: x.status, name: x.head && x.head.name, phone: x.head && x.head.phone }); });
+      } catch (e) {}
+    }
+    return found;
+  }
+
+  window.wcfInspectRecord = async function() {
+    var box = document.getElementById('adminInspectOut');
+    var q = (document.getElementById('adminInspectInput').value || '').trim();
+    if (!q) { box.innerHTML = '<p class="text-red-600">Type a phone number or code.</p>'; return; }
+    box.innerHTML = '<p class="text-slate-500">Checking...</p>';
+    var U = q.toUpperCase(), d = digits(q);
+    var matches = [];
+    Object.keys(storedFRCRecords || {}).forEach(function(k) {
+      var r = storedFRCRecords[k]; if (!r) return;
+      var h = r.head || {};
+      var hit = String(k).toUpperCase() === U || String(r.code || '').toUpperCase() === U || String(h.memberId || '').toUpperCase() === U ||
+        (d.length >= 7 && digits(h.phone).slice(-8) === d.slice(-8)) ||
+        (Array.isArray(r.members) && r.members.some(function(m) { return m && String(m.memberId || '').toUpperCase() === U; }));
+      if (hit) matches.push({ key: k, rec: r });
+    });
+    var html = '';
+    if (!matches.length) {
+      html += '<p class="text-amber-700 font-bold">Not in the admin\'s loaded list. Press Refresh Cloud Data first, then retry.</p>';
+      if (U.indexOf('WCF-') === 0 || U.indexOf('PEND-') === 0) {
+        var cf = await cloudByCode(U);
+        if (cf.length) cf.forEach(function(f) { html += '<div class="p-2 border border-red-300 bg-red-50 rounded">Found in Firebase <b>' + esc(f.col) + '</b> (doc ' + esc(f.id) + '): status <b>' + esc(f.status) + '</b>, ' + esc(f.name) + ', ' + esc(f.phone) + '</div>'; });
+      }
+      box.innerHTML = html; return;
+    }
+    for (var i = 0; i < matches.length; i++) {
+      var m = matches[i], r = m.rec, h = r.head || {};
+      var cloud = await cloudLookup(m.key);
+      html += '<div class="p-2 border border-slate-300 rounded-lg bg-white space-y-0.5">' +
+        '<div><b>' + esc(h.name) + '</b> &mdash; key/code: <span class="font-mono">' + esc(m.key) + ' / ' + esc(r.code) + '</span></div>' +
+        '<div>Local status: <b>' + esc(r.status || 'n/a') + '</b> | Member ID: ' + esc(h.memberId) + ' | Members: ' + (r.members || []).length + ' | Phone: ' + esc(h.phone) + '</div>' +
+        '<div class="text-[11px] text-slate-600">Firebase &rarr; ' + cloud.map(esc).join(' &nbsp;|&nbsp; ') + '</div>' +
+        '</div>';
+    }
+    box.innerHTML = html;
+  };
+})();
+</script>
+<!-- ==================== END WCF FIX PACK V9c ==================== -->
 </html>
