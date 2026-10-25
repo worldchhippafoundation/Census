@@ -186,7 +186,7 @@ About Us
 </div>
 </header>
 <main class="max-w-5xl mx-auto p-4 md:p-6 space-y-6">
-<div class="flex gap-3 border-b border-slate-200 pb-3">
+<div id="mainTabBar" class="flex flex-wrap gap-3 border-b border-slate-200 pb-3">
 <button type="button" id="tabNewReg" onclick="switchMainTab('new')" class="bandhani-bg text-white px-5 py-2.5 rounded-lg font-bold text-xs md:text-sm shadow border border-amber-400/30">
 + New Census Registration
 </button>
@@ -2802,6 +2802,16 @@ if (type === 'job') return enDict.jobs[key] || key;
 if (type === 'clan') return (enDict.Clans || enDict.clans)[key] || key;
 return key;
 }
+
+// ===== FIX 8: pending / unverified applications never appear in clan PDF reports =====
+function wcfIsExportableRecord(rec) {
+  if (!rec || !rec.head) return false;
+  var s = String(rec.status || '').trim().toLowerCase();
+  if (s === 'pending verification' || s === 'possible duplicate' || s === 'pending' || s === 'rejected') return false;
+  if (String(rec.code || '').indexOf('PEND-') === 0) return false;
+  return true;
+}
+
 function exportCountryCityWisePDF() {
 const selectedCountry = document.getElementById('adminCountryDropdown').value.trim();
 const inputCity = document.getElementById('adminCityManualInput').value.trim();
@@ -2812,6 +2822,7 @@ return;
 }
 const matchedRecords = allRecords.filter(rec => {
 if (!rec.head) return false;
+if (!wcfIsExportableRecord(rec)) return false; // FIX 8
 const country = (rec.head.country || "").toLowerCase();
 const city = (rec.head.city || "").toLowerCase();
 const loc = (rec.head.location || "").toLowerCase();
@@ -2966,7 +2977,7 @@ const adultsList = [];
 allRecords.forEach(rec => {
 if (rec.members && Array.isArray(rec.members)) {
 rec.members.forEach(m => {
-const isChild = (m.relationKey === 'Son' || m.relationKey === 'Daughter' || m.relation.includes('بیٹا') || m.relation.includes('بیٹی') || m.relation.includes('बेटा') || m.relation.includes('बेटी'));
+const isChild = (m.relationKey === 'Son' || m.relationKey === 'Daughter' || (m.relation || '').includes('بیٹا') || (m.relation || '').includes('بیٹی') || (m.relation || '').includes('बेटा') || (m.relation || '').includes('बेटी'));
 const ageNum = parseInt(m.age) || calculateAge(m.dob);
 const isUnmarried = (m.maritalStatusKey === 'Unmarried' || !m.maritalStatusKey);
 if (isChild && ageNum >= 18 && isUnmarried) {
@@ -2991,43 +3002,67 @@ alert("No 18+ unmarried members found!");
 return;
 }
 const { jsPDF } = window.jspdf;
-const doc = new jsPDF('p', 'mm', 'a4');
-doc.setFontSize(15);
-doc.setTextColor(88, 28, 135);
-doc.text("WCF - 18+ Unmarried Boys & Girls Directory", 14, 15);
-doc.setFontSize(9);
-doc.setTextColor(100, 116, 139);
-doc.text(`Generated: ${new Date().toLocaleDateString('en-GB')} | Total Count: ${adultsList.length}`, 14, 21);
-let y = 30;
-doc.setFillColor(243, 232, 255);
-doc.rect(14, y - 5, 182, 8, 'F');
-doc.setFontSize(9);
-doc.setFont("helvetica", "bold");
-doc.setTextColor(0, 0, 0);
-doc.text("#", 16, y);
-doc.text("Name", 24, y);
-doc.text("Gender", 60, y);
-doc.text("Age / DOB", 78, y);
-doc.text("Education / Job", 102, y);
-doc.text("Guardian (Phone)", 140, y);
-doc.setFont("helvetica", "normal");
-y += 7;
-adultsList.forEach((item, idx) => {
-if (y > 280) {
-doc.addPage();
-y = 20;
-}
-doc.text(String(idx + 1), 16, y);
-doc.text(item.name.substring(0, 20), 24, y);
-doc.text(item.gender, 60, y);
-doc.text(`${item.age} yrs (${item.dob})`.substring(0, 18), 78, y);
-doc.text(`${item.edu} / ${item.job}`.substring(0, 22), 102, y);
-doc.text(`${item.headName} (${item.headPhone})`.substring(0, 28), 140, y);
-doc.setDrawColor(226, 232, 240);
-doc.line(14, y + 2, 196, y + 2);
-y += 7;
-});
-doc.save(`WCF_Unmarried_Adults_${new Date().toISOString().slice(0, 10)}.pdf`);
+  const doc = new jsPDF('p', 'mm', 'a4');
+  doc.setFontSize(15);
+  doc.setTextColor(88, 28, 135);
+  doc.text("WCF - 18+ Unmarried Boys & Girls Directory", 14, 15);
+  doc.setFontSize(9);
+  doc.setTextColor(100, 116, 139);
+  doc.text(`Generated: ${new Date().toLocaleDateString('en-GB')} | Total Count: ${adultsList.length}`, 14, 21);
+  // FIX 1: fixed column grid (x positions + wrap widths) so columns never overlap and phone is never cut
+  const colX = { num: 15.5, name: 22, gender: 61, age: 79, eduJob: 105, guardian: 147 };
+  const colW = { name: 36, gender: 16, age: 24, eduJob: 38, guardian: 48 };
+  const drawUnmarriedHead = (yy) => {
+    doc.setFillColor(243, 232, 255);
+    doc.rect(14, yy - 5, 182, 8, 'F');
+    doc.setFontSize(8.5);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(0, 0, 0);
+    doc.text("#", colX.num, yy);
+    doc.text("Name", colX.name, yy);
+    doc.text("Gender", colX.gender, yy);
+    doc.text("Age / DOB", colX.age, yy);
+    doc.text("Education / Job", colX.eduJob, yy);
+    doc.text("Guardian (Phone)", colX.guardian, yy);
+    doc.setFont("helvetica", "normal");
+  };
+  let y = 30;
+  drawUnmarriedHead(y);
+  y += 7;
+  const LH = 3.7;
+  adultsList.forEach((item, idx) => {
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(7.5);
+    doc.setTextColor(15, 23, 42);
+    const nameL = doc.splitTextToSize(String(item.name || '-'), colW.name);
+    const genderL = doc.splitTextToSize(String(item.gender || '-'), colW.gender);
+    const ageL = [`${item.age} yrs`].concat(doc.splitTextToSize(String(item.dob || 'N/A'), colW.age));
+    const eduJobL = doc.splitTextToSize(`${item.edu || '-'} / ${item.job || '-'}`, colW.eduJob);
+    const guardL = doc.splitTextToSize(String(item.headName || '-'), colW.guardian)
+      .concat(doc.splitTextToSize(`Ph: ${item.headPhone || '-'}`, colW.guardian));
+    const lines = Math.max(nameL.length, genderL.length, ageL.length, eduJobL.length, guardL.length);
+    const blockH = (lines - 1) * LH + 5;
+    if (y + blockH > 285) {
+      doc.addPage();
+      y = 20;
+      drawUnmarriedHead(y);
+      y += 7;
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(7.5);
+      doc.setTextColor(15, 23, 42);
+    }
+    doc.text(String(idx + 1), colX.num, y);
+    doc.text(nameL, colX.name, y);
+    doc.text(genderL, colX.gender, y);
+    doc.text(ageL, colX.age, y);
+    doc.text(eduJobL, colX.eduJob, y);
+    doc.text(guardL, colX.guardian, y);
+    const rowBottom = y + (lines - 1) * LH + 2.2;
+    doc.setDrawColor(226, 232, 240);
+    doc.line(14, rowBottom, 196, rowBottom);
+    y = rowBottom + 5;
+  });
+  doc.save(`WCF_Unmarried_Adults_${new Date().toISOString().slice(0, 10)}.pdf`);
 }
 function exportNonChhippaWivesPDF() {
 const allRecords = Object.values(storedFRCRecords);
@@ -3528,48 +3563,79 @@ function applyPortalLanguage() {
     }
 }
 
-function fetchMemberDataForIdCard() {
-    const searchId = document.getElementById('searchMemberId').value.trim();
-    if(!searchId) {
-        alert("براہ کرم درست ممبر آئی ڈی یا کوڈ درج کریں!");
-        return;
-    }
-    let foundRec = storedFRCRecords[searchId.toUpperCase()];
-    if(!foundRec) {
-        for(let key in storedFRCRecords) {
-            let rec = storedFRCRecords[key];
-            if(rec.code.toUpperCase() === searchId.toUpperCase() || (rec.head && rec.head.memberId && rec.head.memberId.toUpperCase() === searchId.toUpperCase())) {
-                foundRec = rec;
-                break;
-            }    
+/* ===== FIX 2: one unified search for ID cards (head + family members, any ID field) ===== */
+function wcfFindIdCardTarget(rawId) {
+    const q = String(rawId || '').trim().toUpperCase();
+    if (!q || typeof storedFRCRecords === 'undefined' || !storedFRCRecords) return null;
+    const eq = v => v !== undefined && v !== null && String(v).trim().toUpperCase() === q;
+    const recs = Object.keys(storedFRCRecords).map(k => ({ key: k, rec: storedFRCRecords[k] })).filter(x => x.rec);
+    // 1) a person's own ID (head or member) wins first
+    for (const { rec } of recs) {
+        const h = rec.head;
+        if (h && (eq(h.memberId) || eq(h.code) || eq(h.id))) return { rec: rec, person: h, isHead: true };
+        if (Array.isArray(rec.members)) {
+            const m = rec.members.find(mm => mm && (eq(mm.memberId) || eq(mm.code) || eq(mm.id)));
+            if (m) return { rec: rec, person: m, isHead: false };
         }
     }
-    if(foundRec && foundRec.head) {
-        document.getElementById('previewId').innerText = foundRec.head.memberId || foundRec.code;
-        document.getElementById('previewName').innerText = foundRec.head.name || 'ممبر کا نام';
-        document.getElementById('previewFather').innerText = foundRec.head.father || 'والد کا نام';
-        document.getElementById('previewAddress').innerText = foundRec.head.address ? `${foundRec.head.address}, ${foundRec.head.city}` : 'پتہ درج نہیں ہے';
-            const qrContainer = document.getElementById('idCardQRCode');
-    if(qrContainer) {
-        qrContainer.innerHTML = '';
-        const secureUrl = `https://www.worldchhippafoundation.com/verify?doc=${foundRec.code}&status=${foundRec.status || 'Pending'}&id=${foundRec.head.memberId}`;
-        new QRCode(qrContainer, {
-            text: secureUrl,
-            width: 32,
-            height: 32,
-            colorDark: "#000000",
-            colorLight: "#ffffff"
-        });
+    // 2) family / certificate code => head's card
+    for (const { key, rec } of recs) {
+        if (eq(key) || eq(rec.code)) return { rec: rec, person: rec.head || rec, isHead: true };
     }
-         } else {
-        alert(currentLang === 'en' ? "This member ID or code does not exist!" : "یہ ممبر آئی ڈی یا کوڈ سسٹم میں موجود نہیں ہے!");
-        document.getElementById('previewId').innerText = "";
-        document.getElementById('previewName').innerText = "";
-        document.getElementById('previewFather').innerText = "";
-        document.getElementById('previewAddress').innerText = "";
+    return null;
+}
+function wcfIdCardFatherName(t) {
+    const p = t.person || {};
+    const head = (t.rec && t.rec.head) || {};
+    if (p.father || p.fatherName) return p.father || p.fatherName;
+    if (!t.isHead) {
+        const rel = String(p.relationKey || p.relation || '');
+        if (/^(Son|Daughter)$/i.test(rel) || /بیٹا|بیٹی|बेटा|बेटी/.test(rel)) return head.name || '';
+    }
+    return '';
+}
+function wcfIdCardAddress(t) {
+    const p = t.person || {};
+    const head = (t.rec && t.rec.head) || {};
+    const addr = p.address || head.address || t.rec.address || '';
+    const city = p.city || head.city || t.rec.city || '';
+    return [addr, city].filter(Boolean).join(', ');
+}
+function wcfIdCardVerifyUrl(t) {
+    const p = t.person || {};
+    const head = (t.rec && t.rec.head) || {};
+    const personId = p.memberId || p.code || t.rec.code;
+    return `https://www.worldchhippafoundation.com/verify?doc=${encodeURIComponent(t.rec.code)}&status=${encodeURIComponent(t.rec.status || 'Pending')}&id=${encodeURIComponent(personId || head.memberId || t.rec.code)}`;
+}
+function fetchMemberDataForIdCard() {
+    const searchId = document.getElementById('searchMemberId').value.trim();
+    const lang = (typeof currentLang !== 'undefined') ? currentLang : 'en';
+    if (!searchId) {
+        alert(lang === 'ur' ? "براہ کرم درست ممبر آئی ڈی یا کوڈ درج کریں!" : (lang === 'hi' ? "कृपया सही सदस्य आईडी या कोड दर्ज करें!" : "Please enter a valid Member ID or code!"));
         return;
     }
+    const t = wcfFindIdCardTarget(searchId);
+    const qrContainer = document.getElementById('idCardQRCode');
+    if (t) {
+        const p = t.person || {};
+        document.getElementById('previewId').innerText = p.memberId || p.code || p.id || t.rec.code || '';
+        document.getElementById('previewName').innerText = p.name || p.memberName || 'Member Name';
+        document.getElementById('previewFather').innerText = wcfIdCardFatherName(t) || 'Father Name';
+        document.getElementById('previewAddress').innerText = wcfIdCardAddress(t) || 'Address not specified';
+        if (qrContainer && typeof QRCode !== 'undefined') {
+            qrContainer.innerHTML = '';
+            new QRCode(qrContainer, { text: wcfIdCardVerifyUrl(t), width: 36, height: 36, colorDark: "#000000", colorLight: "#ffffff" });
+        }
+    } else {
+        alert(lang === 'ur' ? "یہ ممبر آئی ڈی یا کوڈ سسٹم میں موجود نہیں ہے!" : (lang === 'hi' ? "यह सदस्य आईडी या कोड सिस्टम में मौजूद नहीं है!" : "This member ID or code does not exist in the system!"));
+        document.getElementById('previewId').innerText = "";
+        document.getElementById('previewName').innerText = "Member Name";
+        document.getElementById('previewFather').innerText = "Father Name";
+        document.getElementById('previewAddress').innerText = "Address will appear here automatically...";
+        if (qrContainer) qrContainer.innerHTML = '';
     }
+}
+
 /* ================= PART 4 ================= */
 document.addEventListener('DOMContentLoaded', () => {
     const bloodSelect = document.getElementById('inputBloodGroup');
@@ -3619,6 +3685,9 @@ Thank you to all those who laid the foundation of the World Chhippa Foundation:
 M. WASEEM SADIQ TAK (Neemray Walay)
 </h4>
 </div>
+<p class="pt-3 mt-2 border-t border-slate-700 text-xs text-slate-300" id="footerContactEmail">
+&#9993; Contact: <a href="mailto:info@worldchhippafoundation.com" class="text-amber-400 font-bold hover:underline" dir="ltr" style="unicode-bidi:isolate;">info@worldchhippafoundation.com</a>
+</p>
 </div>
 </footer>
 </body>
@@ -4287,19 +4356,7 @@ M. WASEEM SADIQ TAK (Neemray Walay)
     if (searchMemberInp) {
       searchMemberInp.addEventListener('input', function() {
         const val = this.value.trim().toUpperCase();
-        let exists = false;
-        if (val && typeof storedFRCRecords !== 'undefined') {
-          if (storedFRCRecords[val]) exists = true;
-          else {
-            for (let k in storedFRCRecords) {
-              const r = storedFRCRecords[k];
-              if (r && ((r.code && r.code.toUpperCase() === val) || (r.head && r.head.memberId && r.head.memberId.toUpperCase() === val))) {
-                exists = true;
-                break;
-              }
-            }
-          }
-        }
+        let exists = !!(val && typeof wcfFindIdCardTarget === 'function' && wcfFindIdCardTarget(val));
         if (exists) {
           fetchMemberDataForIdCard();
         } else if (!val) {
@@ -4602,34 +4659,21 @@ M. WASEEM SADIQ TAK (Neemray Walay)
   function enhanceIdCardQRCode() {
     const searchInput = document.getElementById('searchMemberId');
     if (!searchInput) return;
-    const searchId = searchInput.value.trim().toUpperCase();
-    if (!searchId || typeof storedFRCRecords === 'undefined') return;
-
-    let foundRec = storedFRCRecords[searchId];
-    if (!foundRec) {
-      for (let key in storedFRCRecords) {
-        let rec = storedFRCRecords[key];
-        if (rec && ((rec.code && rec.code.toUpperCase() === searchId) || (rec.head && rec.head.memberId && rec.head.memberId.toUpperCase() === searchId))) {
-          foundRec = rec;
-          break;
-        }
-      }
-    }
-
-    if (foundRec && foundRec.head) {
-      const qrContainer = document.getElementById('idCardQRCode');
-      if (qrContainer && typeof QRCode !== 'undefined') {
-        qrContainer.innerHTML = '';
-        const verifyUrl = `https://www.worldchhippafoundation.com/verify?doc=${encodeURIComponent(foundRec.code)}&id=${encodeURIComponent(foundRec.head.memberId || foundRec.code)}`;
-        new QRCode(qrContainer, {
-          text: verifyUrl,
-          width: 128,
-          height: 128,
-          colorDark: "#000000",
-          colorLight: "#ffffff",
-          correctLevel: QRCode.CorrectLevel ? QRCode.CorrectLevel.M : 0
-        });
-      }
+    const t = (typeof wcfFindIdCardTarget === 'function') ? wcfFindIdCardTarget(searchInput.value) : null;
+    if (!t) return;
+    const qrContainer = document.getElementById('idCardQRCode');
+    if (qrContainer && typeof QRCode !== 'undefined') {
+      qrContainer.innerHTML = '';
+      const p = t.person || {};
+      const verifyUrl = `https://www.worldchhippafoundation.com/verify?doc=${encodeURIComponent(t.rec.code)}&id=${encodeURIComponent(p.memberId || p.code || t.rec.code)}`;
+      new QRCode(qrContainer, {
+        text: verifyUrl,
+        width: 128,
+        height: 128,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel ? QRCode.CorrectLevel.M : 0
+      });
     }
   }
 
@@ -4766,11 +4810,13 @@ M. WASEEM SADIQ TAK (Neemray Walay)
     if (typeof isCloudReady === "undefined" || !isCloudReady || !db) return;
     try {
       const cols = ["census_registrations", "trial_census_registrations", "wcf_pending_queue"];
+      const cloudStatusMap = {}; // FIX: remember what Firebase itself says about each code
       for (const colName of cols) {
         const snap = await db.collection(colName).get();
         snap.forEach(function(doc) {
           const data = doc.data();
           if (data && data.code) {
+            cloudStatusMap[data.code] = data.status;
             if (data.status === "Rejected") {
               delete storedFRCRecords[data.code];
             } else {
@@ -4779,6 +4825,7 @@ M. WASEEM SADIQ TAK (Neemray Walay)
           }
         });
       }
+      window.__wcfCloudStatus = cloudStatusMap;
       const allRecs = Object.values(storedFRCRecords);
       const approvedPhones = new Set();
       allRecs.forEach(function(r) {
@@ -4867,6 +4914,8 @@ M. WASEEM SADIQ TAK (Neemray Walay)
     const allRecs = Object.values(storedFRCRecords || {});
     const approvedMatch = allRecs.find(function(r) {
       if (!isRecordApproved(r) || !r.head || !r.head.phone) return false;
+      // FIX: when Firebase was reachable, only trust "Approved" if the cloud says so too (ignores stale local test copies)
+      if (window.__wcfCloudStatus && window.__wcfCloudStatus[r.code] !== "Approved") return false;
       return r.head.phone.replace(/[^0-9]/g, "").endsWith(suffix);
     });
     if (approvedMatch) {
@@ -5279,4 +5328,32 @@ M. WASEEM SADIQ TAK (Neemray Walay)
 })();
 </script>
 <!-- ==================== END WCF SAFE FIXER PATCH V7 ==================== -->
+
+<!-- ==================== WCF FIX PACK V9 (portal) ==================== -->
+<style id="wcf-v9-portal-fixes">
+  /* FIX 4: stop horizontal overflow from widening the layout viewport (popups drifted right on mobile) */
+  html, body { max-width: 100%; overflow-x: hidden; }
+  div.fixed.inset-0 { left: 0 !important; right: 0 !important; width: 100% !important; max-width: 100vw !important; box-sizing: border-box; }
+  #memorialModal { position: fixed; left: 0; right: 0; top: 6rem; bottom: 0; width: 100%; max-width: 100vw; padding: 1rem; display: flex; align-items: center; justify-content: center; box-sizing: border-box; }
+  #memorialModal.hidden { display: none !important; }
+  #memorialModal > div { width: 100%; max-width: 24rem; margin-left: auto !important; margin-right: auto !important; left: auto; right: auto; }
+  #memorialModal > div, #memorialModal * { box-sizing: border-box; }
+  #memorialModal p, #memorialModal h1, #memorialModal h2 { overflow-wrap: anywhere; }
+  /* FIX 5: responsive nav-tab grid (incl. injected Pending tab) */
+  #mainTabBar > button { line-height: 1.6; }
+  @media (max-width: 767px) {
+    #mainTabBar { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+    #mainTabBar > button { width: 100%; min-height: 46px; padding: 0.55rem 0.5rem; white-space: normal; text-align: center; display: flex; align-items: center; justify-content: center; }
+    #tabNewReg, #tabPendingCheck { grid-column: 1 / -1; }
+  }
+  /* FIX 6: Urdu (Nastaliq) button text - proper spacing & height so words never stick together */
+  html[dir="rtl"] button, html[dir="rtl"] .btn, html[dir="rtl"] a[role="button"] {
+    font-family: 'Noto Nastaliq Urdu', 'Inter', sans-serif;
+    word-spacing: 0.35em !important;
+    letter-spacing: 0 !important;
+    line-height: 2.2 !important;
+  }
+  html[dir="rtl"] #tabPendingCheck, html[dir="rtl"] #mainTabBar > button { white-space: normal; word-spacing: 0.4em !important; }
+</style>
+<!-- ==================== END WCF FIX PACK V9 (portal) ==================== -->
 </html>
