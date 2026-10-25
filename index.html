@@ -3175,13 +3175,35 @@ function closeMemorialModal() {
   }
   memorialHasBeenClosed = true;
 }
-function initApp() {
+async function initApp() {
 const modal = document.getElementById('frcModal');
 if (modal) modal.classList.add('hidden');
 const adminModal = document.getElementById('adminModal');
 if (adminModal) adminModal.classList.add('hidden');
 document.getElementById('langSelect').value = 'en';
 changeLanguage('en');
+
+if (typeof isCloudReady !== 'undefined' && isCloudReady && typeof db !== 'undefined' && db) {
+    try {
+        const snapshot = await db.collection('census_registrations').get();
+        const cloudRecords = {};
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            if (data && data.code) {
+                cloudRecords[data.code] = data;
+            }
+        });
+        if (Object.keys(cloudRecords).length > 0) {
+            storedFRCRecords = cloudRecords;
+            try {
+                localStorage.setItem('WCF_CENSUS_RECORDS', JSON.stringify(storedFRCRecords));
+            } catch (e) {}
+        }
+    } catch (err) {
+        console.warn("Could not fetch records from Firebase on startup:", err);
+    }
+}
+
 updateCensusCounters();
 initMemorialPopup();
 handleHeadDOBValidation();
@@ -5947,37 +5969,69 @@ html[dir="rtl"] button {
   setTimeout(bindSelect, 1000);
 })();
 </script>
-<!-- ==================== WCF CLEAN REAL-RECORD PATCH ==================== -->
+<!-- ==================== WCF DEFINITIVE PRODUCTION FIX ==================== -->
+<style>
+/* Urdu text overlap fix for ID cards and UI elements */
+html[dir="rtl"], [dir="rtl"] {
+  line-height: 2.2 !important;
+}
+html[dir="rtl"] #printableIdCardArea div, 
+html[dir="rtl"] #printableIdCardArea span, 
+html[dir="rtl"] #printableIdCardArea strong {
+  line-height: 1.4 !important;
+  letter-spacing: normal !important;
+  word-spacing: normal !important;
+}
+</style>
 <script>
-(function() {
+(async function() {
   window.isStrictApproved = function(rec) {
     if (!rec || typeof rec !== "object") return false;
     if (rec.isEventGreetingConfig) return false;
     var code = String(rec.code || "").trim();
-    if (!code) return false;
-    return rec.status !== "Rejected";
+    if (!code || code.indexOf("PEND-") === 0) return false;
+    return rec.status === "Approved";
   };
 
-  function getCleanRecords() {
-    var records = {};
-    try {
-      var raw = localStorage.getItem('WCF_CENSUS_RECORDS');
-      if (raw) records = JSON.parse(raw);
-    } catch(e) {}
-    
-    if ((!records || Object.keys(records).length === 0) && typeof storedFRCRecords !== 'undefined') {
-      records = storedFRCRecords;
+  // 1. Load records from localStorage immediately
+  try {
+    var raw = localStorage.getItem('WCF_CENSUS_RECORDS');
+    if (raw) {
+      var parsed = JSON.parse(raw);
+      if (parsed && typeof parsed === 'object') {
+        window.storedFRCRecords = parsed;
+      }
     }
-    return records;
+  } catch(e) {}
+
+  // 2. Fetch fresh records from Firebase Firestore asynchronously and update counters
+  if (typeof isCloudReady !== 'undefined' && isCloudReady && typeof db !== 'undefined' && db) {
+    try {
+      const snapshot = await db.collection('census_registrations').get();
+      const cloudRecords = {};
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        if (data && data.code && data.status !== 'Rejected') {
+          cloudRecords[data.code] = data;
+        }
+      });
+      if (Object.keys(cloudRecords).length > 0) {
+        window.storedFRCRecords = cloudRecords;
+        try {
+          localStorage.setItem('WCF_CENSUS_RECORDS', JSON.stringify(window.storedFRCRecords));
+        } catch (e) {}
+      }
+    } catch (err) {
+      console.warn("Cloud sync load error:", err);
+    }
   }
 
+  // 3. Definitive updateCensusCounters function
   window.updateCensusCounters = function() {
-    var records = getCleanRecords();
-    window.storedFRCRecords = records;
-    
+    var records = (typeof window.storedFRCRecords !== 'undefined') ? window.storedFRCRecords : {};
     var allRecords = Object.values(records);
     var validRecords = allRecords.filter(function(r) {
-      return r && r.status !== "Rejected" && !r.isEventGreetingConfig;
+      return r && r.status === "Approved" && !r.isEventGreetingConfig && (!r.code || String(r.code).indexOf("PEND-") !== 0);
     });
 
     var totalFamilies = validRecords.filter(function(r) { return r.type === 'family'; }).length;
@@ -5996,25 +6050,20 @@ html[dir="rtl"] button {
     if (memEl) memEl.textContent = totalIndividuals;
   };
 
-  ['searchAndReprintCertificate', 'fetchMemberDataForIdCard', 'loadFRCForAddingMember', 'handleFormSubmit'].forEach(function(fnName) {
-    if (typeof window[fnName] === 'function' && !window[fnName]._cleanPatched) {
-      var orig = window[fnName];
-      window[fnName] = function() {
-        window.storedFRCRecords = getCleanRecords();
-        var res = orig.apply(this, arguments);
-        try {
-          localStorage.setItem('WCF_CENSUS_RECORDS', JSON.stringify(window.storedFRCRecords));
-        } catch(e) {}
-        return res;
-      };
-      window[fnName]._cleanPatched = true;
-    }
-  });
+  // 4. Definitive initApp override
+  window.initApp = async function() {
+    const modal = document.getElementById('frcModal');
+    if (modal) modal.classList.add('hidden');
+    const adminModal = document.getElementById('adminModal');
+    if (adminModal) adminModal.classList.add('hidden');
+    
+    if (typeof updateCensusCounters === 'function') updateCensusCounters();
+    if (typeof initMemorialPopup === 'function') initMemorialPopup();
+    if (typeof handleHeadDOBValidation === 'function') handleHeadDOBValidation();
+  };
 
-  window.addEventListener('DOMContentLoaded', function() {
-    setTimeout(window.updateCensusCounters, 200);
-  });
-  setTimeout(window.updateCensusCounters, 100);
+  // Immediate execution trigger
+  if (typeof updateCensusCounters === 'function') updateCensusCounters();
 })();
 </script>
 </body>
