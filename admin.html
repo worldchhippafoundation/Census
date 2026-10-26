@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="google" content="notranslate">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WCF Admin Census & Directory Manager (V.6.6.3)</title>
+<title>WCF Admin Census & Directory Manager (V.4.11.26)</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -95,15 +95,13 @@ body { font-family: 'Inter', sans-serif; }
           <span class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse" id="adminDbStatusDot"></span>
           <div>
             <span class="font-bold text-slate-900" id="adminDbStatusText">Firebase Cloud: Connecting...</span>
-            <p class="text-[10px] text-slate-600">Auto-routes to Trial Collection before 3 Nov 2026, or select manually:</p>
+            <p class="text-[10px] text-slate-600">Trial collection until 3 Nov 2026 11:59 PM IST; Primary collection from 4 Nov 2026 12:00 AM IST:</p>
           </div>
         </div>
         <div id="adminDbControls" class="flex items-center gap-2">
           <select id="collectionSelector" onchange="fetchAllRecordsFromFirebase()" class="border border-amber-400 rounded-lg px-2.5 py-1.5 text-xs font-bold bg-white text-slate-800 outline-none">
-            <option value="auto">Auto (Time-Based Switch)</option>
-            <option value="trial_census_registrations">Trial Collection (trial_census_registrations)</option>
-            <option value="census_registrations">Primary Collection (census_registrations)</option>
-            <option value="both">Both Collections Combined</option>
+            <option value="trial_census_registrations">Trial Collection (until 3 Nov 2026)</option>
+            <option value="census_registrations">Primary Collection (from 4 Nov 2026)</option>
           </select>
           <button type="button" onclick="syncPendingRecordsToFirebase()" class="px-3 py-1.5 bg-slate-800 text-white font-bold rounded-lg text-xs hover:bg-slate-700">
              Push Local (<span id="pendingRecordsBadge">0</span>)
@@ -193,6 +191,15 @@ body { font-family: 'Inter', sans-serif; }
         </div>
       </div>
 
+      <!-- Portal data publisher -->
+      <div class="space-y-2 text-left" id="adminPublishSection">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <h4 class="text-xs font-bold text-slate-800 uppercase">Portal Data (Public Counts &amp; Lookup Keys)</h4>
+          <button type="button" id="btnPublishPortalData" onclick="wcfPublishPortalData(true)" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow cursor-pointer">Publish Portal Data</button>
+        </div>
+        <p id="adminPublishStatus" class="text-[11px] font-bold text-slate-600">Runs automatically after Refresh Cloud Data. Publishes only counts (no names, phones or addresses).</p>
+      </div>
+
       <!-- Duplicate Finder (same phone number) -->
       <div class="space-y-2 text-left" id="adminDupSection">
         <div class="flex flex-wrap items-center justify-between gap-2">
@@ -261,7 +268,6 @@ try {
 }
 
 // Original Master Admin Password Hash preserved
-const MASTER_ADMIN_PIN_B64 = "V0NGI1Rha0A5ODQyIVNhZndhbg==";
 let adminFailedAttempts = 0;
 let isAdminLockedOut = false;
 
@@ -316,14 +322,35 @@ function calculateAge(dobString) {
   return age >= 0 ? age : 0;
 }
 
+
+/* ===== Lookup keys used by the portal (phone key + all member IDs of a family) ===== */
+function wcfDigits(s) { return String(s == null ? '' : s).replace(/[^0-9]/g, ''); }
+function wcfDeriveKeys(rec) {
+  var h = (rec && rec.head) || {};
+  var pd = wcfDigits(h.phone);
+  var ids = [];
+  function add(v) { v = String(v == null ? '' : v).trim().toUpperCase(); if (v && v !== 'PENDING' && ids.indexOf(v) < 0) ids.push(v); }
+  add(h.memberId);
+  var ms = Array.isArray(rec && rec.members) ? rec.members : [];
+  ms.forEach(function (m, i) {
+    if (!m) return;
+    add(m.memberId);
+    add(m.uniqueId);
+    if (!m.memberId && rec.code) add(rec.code + '-' + (i + 2));
+  });
+  return { phoneKey: pd.length >= 7 ? pd.slice(-10) : '', memberIds: ids };
+}
+function wcfDecorateRecord(rec) {
+  try { var k = wcfDeriveKeys(rec); rec.phoneKey = k.phoneKey; rec.memberIds = k.memberIds; } catch (e) {}
+  return rec;
+}
+
 function getActiveCollectionName() {
   const sel = document.getElementById('collectionSelector') ? document.getElementById('collectionSelector').value : 'auto';
-  if (sel === 'auto') {
-    const trialExpiryTime = new Date('2026-11-03T00:00:00').getTime();
-    const currentTime = new Date().getTime();
-    return (currentTime < trialExpiryTime) ? 'trial_census_registrations' : 'census_registrations';
-  }
-  return sel;
+  if (sel === 'trial_census_registrations' || sel === 'census_registrations') return sel;
+  // Trial until 3 Nov 2026 11:59 PM IST, Primary from 4 Nov 2026 12:00 AM IST
+  const trialExpiryTime = new Date('2026-11-04T00:00:00+05:30').getTime();
+  return (new Date().getTime() < trialExpiryTime) ? 'trial_census_registrations' : 'census_registrations';
 }
 
 function handleAdminLogin(e) {
@@ -1115,8 +1142,7 @@ function exportOtherClansPDF() {
             } else {
               try { await db.collection("wcf_pending_queue").doc(oldKey).delete(); } catch(e){}
             }
-            await db.collection("census_registrations").doc(finalCode).set(rec);
-            await db.collection("trial_census_registrations").doc(finalCode).set(rec);
+            await db.collection(getActiveCollectionName()).doc(finalCode).set(wcfDecorateRecord(rec));
           } catch(e) {}
         }
         updateCensusCounters();
@@ -1458,7 +1484,7 @@ function exportOtherClansPDF() {
 <!-- ==================== WCF ADMIN SAFE FIXER PATCH V8 (STRICT NO-PERSISTENCE AUTH) ==================== -->
 <script id="wcf-v8-firebase-auth-patch">
 (function() {
-  var DEFAULT_ADMIN_EMAIL = "azizabad549@gmail.com";
+  var DEFAULT_ADMIN_EMAIL = "";
 
   function upgradeLoginScreenToFirebaseAuth() {
     var pinInput = document.getElementById("adminPinInput");
@@ -1475,7 +1501,7 @@ function exportOtherClansPDF() {
     emailWrapper.className = "mb-3";
     emailWrapper.innerHTML =
       '<label class="block text-xs font-bold text-slate-700 mb-1">Admin Email Address:</label>' +
-      '<input type="email" id="adminEmailInput" required value="' + DEFAULT_ADMIN_EMAIL + '" placeholder="admin@example.com" class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm outline-none focus:ring-2 focus:ring-amber-600 bg-slate-50 font-semibold text-slate-800">';
+      '<input type="email" id="adminEmailInput" required value="" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="Type admin email" class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm outline-none focus:ring-2 focus:ring-amber-600 bg-slate-50 font-semibold text-slate-800">';
 
     pinWrapper.parentNode.insertBefore(emailWrapper, pinWrapper);
   }
@@ -1619,6 +1645,15 @@ function exportOtherClansPDF() {
 </script>
 <!-- ==================== END WCF ADMIN SAFE FIXER PATCH V8 ==================== -->
 
+<!-- ==================== WCF FIX PACK V10 (admin: default collection by date) ==================== -->
+<script id="wcf-v10-default-collection">
+(function() {
+  var sel = document.getElementById('collectionSelector');
+  if (!sel) return;
+  var trialActive = new Date().getTime() < new Date('2026-11-04T00:00:00+05:30').getTime();
+  sel.value = trialActive ? 'trial_census_registrations' : 'census_registrations';
+})();
+</script>
 <!-- ==================== WCF FIX PACK V9 (admin) ==================== -->
 <style id="wcf-v9-admin-fixes">
   html, body { max-width: 100%; overflow-x: hidden; }
@@ -1711,6 +1746,7 @@ function exportOtherClansPDF() {
     try { localStorage.setItem('WCF_CENSUS_RECORDS', JSON.stringify(storedFRCRecords)); } catch (e) {}
     if (typeof updateCensusCounters === 'function') updateCensusCounters();
     window.wcfScanDuplicates();
+    try { wcfPublishPortalData(false); } catch (e) {}
     alert('Record ' + code + ' rejected.\n' + cloudNote);
   }
 
@@ -1756,6 +1792,7 @@ function exportOtherClansPDF() {
       try { localStorage.setItem('WCF_CENSUS_RECORDS', JSON.stringify(storedFRCRecords)); } catch (e) {}
       if (typeof updateCensusCounters === 'function') updateCensusCounters();
       window.wcfScanDuplicates();
+      try { wcfPublishPortalData(false); } catch (e) {}
     }
     var msg = (stillThere ? 'NOT fully deleted: ' : 'Deleted: ') + code + '\n\n' + report.join('\n');
     if (anyError) msg += '\n\nA "permission" error means your Firestore security rules block deletes. Delete the document in the Firebase console, or allow delete for the admin in the rules.';
@@ -1828,8 +1865,13 @@ function exportOtherClansPDF() {
     }
     for (var i = 0; i < matches.length; i++) {
       var m = matches[i], r = m.rec, h = r.head || {};
+      var who = '';
+      var hitM = (Array.isArray(r.members) ? r.members : []).find(function (mm) { return mm && String(mm.memberId || '').toUpperCase() === U; });
+      if (hitM) who = 'MATCHED MEMBER: ' + (hitM.name || '') + ' (' + (hitM.relationKey || hitM.relation || '') + ') - ID ' + hitM.memberId + ' - in family of head: ' + (h.name || '');
+      else if (String(h.memberId || '').toUpperCase() === U) who = 'MATCHED HEAD OF FAMILY: ' + (h.name || '') + ' - ID ' + h.memberId;
       var cloud = await cloudLookup(m.key);
       html += '<div class="p-2 border border-slate-300 rounded-lg bg-white space-y-0.5">' +
+        (who ? '<div class="font-bold text-indigo-800 bg-indigo-50 rounded px-2 py-1">' + esc(who) + '</div>' : '') +
         '<div><b>' + esc(h.name) + '</b> &mdash; key/code: <span class="font-mono">' + esc(m.key) + ' / ' + esc(r.code) + '</span></div>' +
         '<div>Local status: <b>' + esc(r.status || 'n/a') + '</b> | Member ID: ' + esc(h.memberId) + ' | Members: ' + (r.members || []).length + ' | Phone: ' + esc(h.phone) + '</div>' +
         '<div class="text-[11px] text-slate-600">Firebase &rarr; ' + cloud.map(esc).join(' &nbsp;|&nbsp; ') + '</div>' +
@@ -1840,4 +1882,139 @@ function exportOtherClansPDF() {
 })();
 </script>
 <!-- ==================== END WCF FIX PACK V9c ==================== -->
+<!-- ==================== WCF FIX PACK V11 (admin) ==================== -->
+<script id="wcf-v11-admin">
+(function () {
+  function isApproved(r) { return !!(r && r.status === 'Approved' && r.code && String(r.code).indexOf('PEND-') !== 0 && !r.isEventGreetingConfig); }
+  function timeActiveCollection() {
+    return (new Date().getTime() < new Date('2026-11-04T00:00:00+05:30').getTime()) ? 'trial_census_registrations' : 'census_registrations';
+  }
+  function setStatus(msg, ok) {
+    var el = document.getElementById('adminPublishStatus');
+    if (el) { el.textContent = msg; el.className = 'text-[11px] font-bold ' + (ok ? 'text-emerald-700' : 'text-slate-600'); }
+  }
+  function isMale(p) { return !!p && (p.genderKey === 'Male' || p.gender === 'مرد' || p.gender === 'Male' || p.gender === 'पुरुष'); }
+
+  window.wcfPublishPortalData = async function (manual) {
+    try {
+      if (typeof isCloudReady === 'undefined' || !isCloudReady || !db || !auth || !auth.currentUser) {
+        if (manual) alert('Pehle admin login karein aur Firebase connected hone dein.');
+        return;
+      }
+      var col = timeActiveCollection();
+      var recs = [];
+      if (getActiveCollectionName() === col) {
+        recs = Object.keys(storedFRCRecords).map(function (k) { return storedFRCRecords[k]; }).filter(isApproved);
+      } else {
+        var snap = await db.collection(col).get();
+        snap.forEach(function (d) { var x = d.data(); if (isApproved(x)) recs.push(x); });
+      }
+      /* 1) keys the portal uses for lookups (phoneKey + memberIds) */
+      var fixed = 0, batch = db.batch(), inBatch = 0;
+      for (var i = 0; i < recs.length; i++) {
+        var rec = recs[i], k = wcfDeriveKeys(rec);
+        if (rec.phoneKey !== k.phoneKey || JSON.stringify(rec.memberIds || []) !== JSON.stringify(k.memberIds)) {
+          batch.set(db.collection(col).doc(rec.code), k, { merge: true });
+          rec.phoneKey = k.phoneKey; rec.memberIds = k.memberIds;
+          fixed++; inBatch++;
+          if (inBatch >= 400) { await batch.commit(); batch = db.batch(); inBatch = 0; }
+        }
+      }
+      if (inBatch) await batch.commit();
+      /* 2) public counts (no names, phones or addresses) */
+      var groups = {}, fam = 0, ind = 0;
+      function bucket(c, ci) {
+        var key = String(c || '').trim() + '|' + String(ci || '').trim();
+        return groups[key] || (groups[key] = { c: String(c || '').trim(), ci: String(ci || '').trim(), f: 0, p: 0, m: 0, w: 0, n: 0 });
+      }
+      recs.forEach(function (rec) {
+        var h = rec.head || {}, hc = h.country || '', hci = h.city || '';
+        var b = bucket(hc, hci);
+        if (rec.type === 'family') { b.f++; fam++; }
+        b.p++; ind++;
+        var hAge = parseInt(h.age) || calculateAge(h.dob);
+        if (hAge < 18) b.n++; else if (isMale(h)) b.m++; else b.w++;
+        (Array.isArray(rec.members) ? rec.members : []).forEach(function (m) {
+          if (!m) return;
+          var mb = bucket(m.country || hc, m.city || hci);
+          mb.p++; ind++;
+          var mAge = parseInt(m.age) || calculateAge(m.dob);
+          if (mAge < 18) mb.n++; else if (isMale(m)) mb.m++; else mb.w++;
+        });
+      });
+      await db.collection('wcf_config').doc('wcf_public_stats').set({
+        families: fam, individuals: ind, groups: Object.keys(groups).map(function (k) { return groups[k]; }),
+        collection: col, updatedAt: new Date().toISOString()
+      });
+      var msg = 'Published: ' + fam + ' families, ' + ind + ' individuals (' + col + '). Lookup keys updated: ' + fixed + '.';
+      setStatus(msg, true);
+      if (manual) alert(msg);
+    } catch (e) {
+      setStatus('Publish failed: ' + e.message, false);
+      if (manual) alert('Publish failed: ' + e.message);
+    }
+  };
+
+  /* auto-publish after refresh/approve (max once per 10 minutes, to save Firestore reads) */
+  var lastAuto = 0;
+  function autoPublish() {
+    if (Date.now() - lastAuto < 10 * 60 * 1000) return;
+    lastAuto = Date.now();
+    window.wcfPublishPortalData(false);
+  }
+  function wrapFn(name, make) {
+    var prev = window[name];
+    if (typeof prev !== 'function') return;
+    var fn = make(prev);
+    try { Object.keys(prev).forEach(function (k) { fn[k] = prev[k]; }); } catch (e) {}
+    window[name] = fn;
+  }
+  function install() {
+    if (window.__wcfV11AdminInstalled) return;
+    window.__wcfV11AdminInstalled = true;
+    wrapFn('fetchAllRecordsFromFirebase', function (prev) {
+      return async function () { var r = await prev.apply(this, arguments); try { autoPublish(); } catch (e) {} return r; };
+    });
+    wrapFn('updateStatusByAdmin', function (prev) {
+      return async function () { var r = await prev.apply(this, arguments); try { lastAuto = 0; autoPublish(); } catch (e) {} return r; };
+    });
+  }
+  if (document.readyState === 'complete') setTimeout(install, 900);
+  else window.addEventListener('load', function () { setTimeout(install, 900); });
+})();
+</script>
+<script id="wcf-v11-login-clean">
+(function () {
+  function clearLogin() {
+    ['adminEmailInput', 'adminPinInput'].forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el) { el.value = ''; el.setAttribute('autocomplete', id === 'adminPinInput' ? 'new-password' : 'off'); }
+    });
+  }
+  function hook() { clearLogin(); setTimeout(clearLogin, 300); setTimeout(clearLogin, 1200); }
+  window.addEventListener('load', hook);
+  window.addEventListener('pageshow', hook);
+  document.addEventListener('visibilitychange', function () {
+    var scr = document.getElementById('adminLoginScreen');
+    if (scr && !scr.classList.contains('hidden')) clearLogin();
+  });
+  function wrap(name, after) {
+    var prev = window[name];
+    if (typeof prev !== 'function') return;
+    var fn = function () { var r = prev.apply(this, arguments); Promise.resolve(r).then(after, after); return r; };
+    try { Object.keys(prev).forEach(function (k) { fn[k] = prev[k]; }); } catch (e) {}
+    window[name] = fn;
+  }
+  function install() {
+    wrap('lockAdminSession', function () { setTimeout(clearLogin, 50); setTimeout(clearLogin, 700); });
+    wrap('handleAdminLogin', function () {
+      var scr = document.getElementById('adminLoginScreen');
+      if (scr && scr.classList.contains('hidden')) clearLogin();   /* logged in: wipe the typed password from the page */
+    });
+  }
+  if (document.readyState === 'complete') setTimeout(install, 900);
+  else window.addEventListener('load', function () { setTimeout(install, 900); });
+})();
+</script>
+<!-- ==================== END WCF FIX PACK V11 (admin) ==================== -->
 </html>
