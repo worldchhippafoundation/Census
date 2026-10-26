@@ -13,7 +13,6 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             min-height: 100vh;
-            background: radial-gradient(circle at top, #1e293b 0%, #090d16 75%, #05070c 100%);
             color: #f8fafc;
             display: flex;
             flex-direction: column;
@@ -22,6 +21,12 @@
             padding: 18px;
             font-family: 'Poppins', sans-serif;
             overflow-x: hidden;
+        }
+        .bandhani-bg {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.75)), url('bandhani.jpg') !important;
+            background-size: cover !important;
+            background-position: center !important;
+            background-repeat: no-repeat !important;
         }
         .lang-bar {
             display: flex;
@@ -116,7 +121,7 @@
         }
     </style>
 </head>
-<body translate="no" class="notranslate">
+<body translate="no" class="notranslate bandhani-bg">
     <div class="lang-bar notranslate" translate="no">
         <button class="lang-btn active" onclick="setEventLang('ur')" id="btn-ur" translate="no">اردو</button>
         <button class="lang-btn" onclick="setEventLang('en')" id="btn-en" translate="no">English</button>
@@ -263,7 +268,6 @@
             if (typeof firebase !== "undefined") {
                 if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
                 var db = firebase.firestore();
-                // Reads from public-safe wcf_config collection (matches updated Firebase Security Rules)
                 var docRef = db.collection("wcf_config").doc("WCF_LIVE_EVENT_CONFIG");
                 var snap = await docRef.get({ source: "server" }).catch(function() { return docRef.get(); });
                 if (snap && snap.exists) {
@@ -272,7 +276,6 @@
                         liveEventConfig = d;
                         if (d.seconds && Number(d.seconds) >= 3) redirectSeconds = Number(d.seconds);
 
-                        // Auto-select tab if admin filled only English or only Hindi
                         if (!userManuallySwitchedLang) {
                             if (!d.textUr && d.textEn) {
                                 currentLang = "en";
