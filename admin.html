@@ -191,6 +191,18 @@ body { font-family: 'Inter', sans-serif; }
         </div>
       </div>
 
+      <!-- Update requests (new members for existing families) -->
+      <div class="space-y-2 text-left" id="adminUpdReqSection">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <h4 class="text-xs font-bold text-slate-800 uppercase">Update Requests (new members) <span id="adminUpdReqCount" class="ml-1 bg-amber-500 text-white text-[10px] px-2 py-0.5 rounded-full">0</span></h4>
+          <button type="button" onclick="wcfLoadUpdateRequests(true)" class="bg-amber-700 hover:bg-amber-800 text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow cursor-pointer">Load Requests</button>
+        </div>
+        <div id="adminUpdReqList" class="max-h-96 overflow-y-auto space-y-3 border border-amber-200 rounded-xl p-3 bg-amber-50 text-xs">
+          <p class="text-slate-400 italic">Press "Load Requests" (also loads after Refresh Cloud Data).</p>
+        </div>
+        <p class="text-[10px] text-slate-500">Approve adds only the NEW members to the existing family. Existing members and the head are never changed by a request.</p>
+      </div>
+
       <!-- Portal data publisher -->
       <div class="space-y-2 text-left" id="adminPublishSection">
         <div class="flex flex-wrap items-center justify-between gap-2">
@@ -1307,6 +1319,15 @@ function exportOtherClansPDF() {
       '    </div>',
       '    <span id="wcfEvLiveBadge" class="text-[11px] font-bold px-3 py-1 rounded-full bg-slate-200 text-slate-700">Checking Status...</span>',
       '  </div>',
+      '  <div class="p-2.5 rounded-xl bg-white border-2 border-indigo-300 space-y-1.5">',
+      '    <label class="block text-[11px] font-black text-indigo-900">Which event page are you editing?</label>',
+      '    <select id="wcfEventSelector" onchange="wcfSwitchEvent(this.value)" class="w-full border border-indigo-400 rounded-lg p-2 text-xs font-bold bg-white outline-none">',
+      '      <option value="WCF_LIVE_EVENT_CONFIG">event.html (Event 1)</option>',
+      '      <option value="WCF_LIVE_EVENT_CONFIG_E1">event1.html (Event 2)</option>',
+      '    </select>',
+      '    <div class="flex flex-wrap items-center gap-2"><span id="wcfEventLinkText" class="text-[11px] font-mono text-slate-700 break-all">https://www.worldchhippafoundation.com/event.html</span><button type="button" onclick="wcfCopyEventLink()" class="bg-slate-800 text-white text-[10px] font-bold px-2 py-1 rounded cursor-pointer">Copy link</button></div>',
+      '    <p class="text-[10px] text-slate-500">Each event page has its own greeting. Save, Delete and Auto-translate below apply only to the page chosen here.</p>',
+      '  </div>',
       '  <div class="grid grid-cols-1 md:grid-cols-2 gap-3">',
       '    <div>',
       '      <label class="block text-[11px] font-bold text-slate-800 mb-1">Greeting Mode:</label>',
@@ -1338,7 +1359,29 @@ function exportOtherClansPDF() {
       '      <input type="text" id="wcfEvTextHi" dir="ltr" placeholder="उदा. हाजी मोहम्मद सलीम परिवार..." class="w-full border border-slate-300 rounded-lg px-3 py-2 text-xs bg-white outline-none focus:ring-2 focus:ring-amber-600">',
       '    </div>',
       '  </div>',
-      '  <div class="flex flex-wrap gap-2.5 pt-2">',
+      '  <div class="p-3 rounded-xl bg-white border-2 border-amber-300 space-y-3">',
+'    <p class="text-[11px] font-black text-amber-950">GREETING BOX (optional): Event Name on top, then the Greeting Line, then From + names. Fill any language. If all of this is empty, the single-line greeting above is used as before.</p>',
+'    <div class="flex flex-wrap items-center gap-2"><button type="button" onclick="wcfEvTranslateNow(true)" class="bg-indigo-700 hover:bg-indigo-800 text-white text-[11px] font-bold px-3 py-1.5 rounded-lg shadow cursor-pointer">Auto-translate empty languages</button><span id="wcfEvTransStatus" class="text-[11px] font-bold text-slate-600">Write in any ONE language, then tap this (it also runs when you Save).</span></div>',
+'    <div class="space-y-1.5">',
+'      <p class="text-[11px] font-black text-slate-800">URDU / اردو</p>',
+'      <input type="text" id="wcfEvNameUr" dir="rtl" placeholder="1. Event name (top)" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-xs bg-white outline-none focus:ring-2 focus:ring-amber-600">',
+'      <input type="text" id="wcfEvGreetUr" dir="rtl" placeholder="2. Greeting line" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-xs bg-white outline-none focus:ring-2 focus:ring-amber-600">',
+'      <textarea id="wcfEvFromUr" rows="2" dir="rtl" placeholder="3. From / names (one name per line)" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-xs bg-white outline-none focus:ring-2 focus:ring-amber-600"></textarea>',
+'    </div>',
+'    <div class="space-y-1.5">',
+'      <p class="text-[11px] font-black text-slate-800">ENGLISH</p>',
+'      <input type="text" id="wcfEvNameEn" dir="ltr" placeholder="1. Event name (top)" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-xs bg-white outline-none focus:ring-2 focus:ring-amber-600">',
+'      <input type="text" id="wcfEvGreetEn" dir="ltr" placeholder="2. Greeting line" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-xs bg-white outline-none focus:ring-2 focus:ring-amber-600">',
+'      <textarea id="wcfEvFromEn" rows="2" dir="ltr" placeholder="3. From / names (one name per line)" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-xs bg-white outline-none focus:ring-2 focus:ring-amber-600"></textarea>',
+'    </div>',
+'    <div class="space-y-1.5">',
+'      <p class="text-[11px] font-black text-slate-800">HINDI / हिंदी</p>',
+'      <input type="text" id="wcfEvNameHi" dir="ltr" placeholder="1. Event name (top)" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-xs bg-white outline-none focus:ring-2 focus:ring-amber-600">',
+'      <input type="text" id="wcfEvGreetHi" dir="ltr" placeholder="2. Greeting line" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-xs bg-white outline-none focus:ring-2 focus:ring-amber-600">',
+'      <textarea id="wcfEvFromHi" rows="2" dir="ltr" placeholder="3. From / names (one name per line)" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-xs bg-white outline-none focus:ring-2 focus:ring-amber-600"></textarea>',
+'    </div>',
+'  </div>',
+'  <div class="flex flex-wrap gap-2.5 pt-2">',
       '    <button type="button" id="btnSaveWcfEv" onclick="saveWcfLiveEventGreeting()" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-4 rounded-xl text-xs shadow cursor-pointer transition">💾 Save & Publish Live Greeting</button>',
       '    <button type="button" id="btnDeleteWcfEv" onclick="deleteWcfLiveEventGreeting()" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 px-4 rounded-xl text-xs shadow cursor-pointer transition">🗑️ Delete Greeting (ایونٹ ختم ہونے پر ہٹائیں)</button>',
       '  </div>',
@@ -1366,16 +1409,25 @@ function exportOtherClansPDF() {
       return;
     }
     try {
-      var docSnap = await db.collection(EVENT_DOC_COLLECTION).doc(EVENT_DOC_ID).get();
+      var docSnap = await db.collection(EVENT_DOC_COLLECTION).doc(wcfCurEventId()).get();
       if (docSnap.exists) {
         var d = docSnap.data() || {};
-        if (d.active && (d.textUr || d.textEn || d.textHi)) {
+        if (d.active && (d.textUr || d.textEn || d.textHi || wcfEvHasNewFields(d))) {
           document.getElementById("wcfEvModeSelect").value = d.mode || "host";
           document.getElementById("wcfEvSecondsSelect").value = String(d.seconds || 7);
           document.getElementById("wcfEvTextUr").value = d.textUr || "";
           document.getElementById("wcfEvTextEn").value = d.textEn || "";
           document.getElementById("wcfEvTextHi").value = d.textHi || "";
-          badge.textContent = "🟢 Live Active: " + (d.textUr || d.textEn || d.textHi).substring(0, 28);
+document.getElementById("wcfEvNameUr").value = d.eventNameUr || "";
+document.getElementById("wcfEvNameEn").value = d.eventNameEn || "";
+document.getElementById("wcfEvNameHi").value = d.eventNameHi || "";
+document.getElementById("wcfEvGreetUr").value = d.greetUr || "";
+document.getElementById("wcfEvGreetEn").value = d.greetEn || "";
+document.getElementById("wcfEvGreetHi").value = d.greetHi || "";
+document.getElementById("wcfEvFromUr").value = d.fromUr || "";
+document.getElementById("wcfEvFromEn").value = d.fromEn || "";
+document.getElementById("wcfEvFromHi").value = d.fromHi || "";
+          badge.textContent = "🟢 Live Active: " + (d.eventNameUr || d.eventNameEn || d.eventNameHi || d.textUr || d.textEn || d.textHi || "").substring(0, 28);
           badge.className = "text-[11px] font-bold px-3 py-1 rounded-full bg-emerald-100 text-emerald-900 border border-emerald-400";
           return;
         }
@@ -1398,7 +1450,7 @@ function exportOtherClansPDF() {
     var en = document.getElementById("wcfEvTextEn").value.trim();
     var hi = document.getElementById("wcfEvTextHi").value.trim();
 
-    if (!ur && !en && !hi) {
+    if (!ur && !en && !hi && !wcfEvHasNewFields()) {
       alert("براہ کرم کم از کم ایک خانے میں میزبان یا تقریب کا نام / پیغام ضرور لکھیں!");
       document.getElementById("wcfEvTextUr").focus();
       return;
@@ -1417,9 +1469,18 @@ function exportOtherClansPDF() {
         textUr: ur,
         textEn: en,
         textHi: hi,
+eventNameUr: wcfEvVal("wcfEvNameUr"),
+eventNameEn: wcfEvVal("wcfEvNameEn"),
+eventNameHi: wcfEvVal("wcfEvNameHi"),
+greetUr: wcfEvVal("wcfEvGreetUr"),
+greetEn: wcfEvVal("wcfEvGreetEn"),
+greetHi: wcfEvVal("wcfEvGreetHi"),
+fromUr: wcfEvVal("wcfEvFromUr"),
+fromEn: wcfEvVal("wcfEvFromEn"),
+fromHi: wcfEvVal("wcfEvFromHi"),
         updatedAt: new Date().toISOString()
       };
-      await db.collection(EVENT_DOC_COLLECTION).doc(EVENT_DOC_ID).set(payload);
+      await db.collection(EVENT_DOC_COLLECTION).doc(wcfCurEventId()).set(payload);
       await loadWcfLiveEventGreetingStatus();
       alert("✅ مبارک ہو! ایونٹ گریٹنگ لائیو سیو ہو گئی ہے۔ اب جو بھی کیو آر کوڈ اسکین کرے گا اسے event.html پر یہی پیغام نظر آئے گا۔");
     } catch (err) {
@@ -1443,10 +1504,19 @@ function exportOtherClansPDF() {
     btn.disabled = true;
     btn.textContent = "Deleting...";
     try {
-      await db.collection(EVENT_DOC_COLLECTION).doc(EVENT_DOC_ID).delete();
+      await db.collection(EVENT_DOC_COLLECTION).doc(wcfCurEventId()).delete();
       document.getElementById("wcfEvTextUr").value = "";
       document.getElementById("wcfEvTextEn").value = "";
       document.getElementById("wcfEvTextHi").value = "";
+document.getElementById("wcfEvNameUr").value = "";
+document.getElementById("wcfEvNameEn").value = "";
+document.getElementById("wcfEvNameHi").value = "";
+document.getElementById("wcfEvGreetUr").value = "";
+document.getElementById("wcfEvGreetEn").value = "";
+document.getElementById("wcfEvGreetHi").value = "";
+document.getElementById("wcfEvFromUr").value = "";
+document.getElementById("wcfEvFromEn").value = "";
+document.getElementById("wcfEvFromHi").value = "";
       await loadWcfLiveEventGreetingStatus();
       alert("🗑️ ایونٹ گریٹنگ کامیابی سے ڈیلیٹ کر دی گئی ہے! اب event.html نارمل موڈ پر واپس آ گیا ہے۔");
     } catch (err) {
@@ -1604,9 +1674,9 @@ function exportOtherClansPDF() {
         var res = await origSaveEv.apply(this, arguments);
         try {
           if (db) {
-            var snap = await db.collection("wcf_pending_queue").doc("WCF_LIVE_EVENT_CONFIG").get();
+            var snap = await db.collection("wcf_pending_queue").doc(wcfCurEventId()).get();
             if (snap.exists) {
-              await db.collection("wcf_config").doc("WCF_LIVE_EVENT_CONFIG").set(snap.data());
+              await db.collection("wcf_config").doc(wcfCurEventId()).set(snap.data());
             }
           }
         } catch (e) {}
@@ -1621,7 +1691,7 @@ function exportOtherClansPDF() {
         var res = await origDelEv.apply(this, arguments);
         try {
           if (db) {
-            await db.collection("wcf_config").doc("WCF_LIVE_EVENT_CONFIG").delete();
+            await db.collection("wcf_config").doc(wcfCurEventId()).delete();
           }
         } catch (e) {}
         return res;
@@ -2017,4 +2087,214 @@ function exportOtherClansPDF() {
 })();
 </script>
 <!-- ==================== END WCF FIX PACK V11 (admin) ==================== -->
+
+<!-- ==================== WCF FIX PACK V12 (admin greeting box helpers) ==================== -->
+<script id="wcf-v12-greeting-helpers">
+function wcfEvVal(id) { var el = document.getElementById(id); return el ? String(el.value || '').trim() : ''; }
+function wcfEvHasNewFields(d) {
+  var bases = { eventName: 'wcfEvName', greet: 'wcfEvGreet', from: 'wcfEvFrom' };
+  var suf = ['Ur', 'En', 'Hi'];
+  for (var k in bases) {
+    for (var i = 0; i < suf.length; i++) {
+      var v = d ? d[k + suf[i]] : wcfEvVal(bases[k] + suf[i]);
+      if (v && String(v).trim()) return true;
+    }
+  }
+  return false;
+}
+
+var WCF_EV_GROUPS = [
+  ['wcfEvTextUr', 'wcfEvTextEn', 'wcfEvTextHi'],
+  ['wcfEvNameUr', 'wcfEvNameEn', 'wcfEvNameHi'],
+  ['wcfEvGreetUr', 'wcfEvGreetEn', 'wcfEvGreetHi'],
+  ['wcfEvFromUr', 'wcfEvFromEn', 'wcfEvFromHi']
+];
+var WCF_EV_LANGS = ['ur', 'en', 'hi'];
+function wcfScriptLang(t) {
+  if (/[\u0600-\u06FF]/.test(t)) return 'ur';
+  if (/[\u0900-\u097F]/.test(t)) return 'hi';
+  return 'en';
+}
+async function wcfTranslateLine(text, from, to) {
+  if (!text.trim() || from === to) return text;
+  var url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=' + from + '&tl=' + to + '&dt=t&q=' + encodeURIComponent(text);
+  var r = await fetch(url);
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+  var j = await r.json();
+  var out = (j && j[0] ? j[0] : []).map(function (x) { return x && x[0] ? x[0] : ''; }).join('').trim();
+  if (!out) throw new Error('empty result');
+  return out;
+}
+async function wcfTranslateText(text, from, to) {
+  var lines = String(text).split(/\n/);
+  var res = await Promise.all(lines.map(function (ln) { return wcfTranslateLine(ln, from, to); }));
+  return res.join('\n');
+}
+/* fills ONLY the empty language boxes; never overwrites what you typed */
+window.wcfEvTranslateNow = async function (manual) {
+  var st = document.getElementById('wcfEvTransStatus');
+  function say(m, ok) { if (st) { st.textContent = m; st.className = 'text-[11px] font-bold ' + (ok ? 'text-emerald-700' : 'text-red-600'); } }
+  var filledCount = 0, failed = 0;
+  try {
+    say('Translating...', true);
+    for (var g = 0; g < WCF_EV_GROUPS.length; g++) {
+      var ids = WCF_EV_GROUPS[g];
+      var vals = ids.map(function (id) { var el = document.getElementById(id); return el ? String(el.value || '').trim() : ''; });
+      var srcIdx = -1;
+      for (var i = 0; i < 3; i++) { if (vals[i]) { srcIdx = i; break; } }
+      if (srcIdx < 0) continue;
+      var srcText = vals[srcIdx];
+      var srcLang = wcfScriptLang(srcText);
+      for (var t = 0; t < 3; t++) {
+        if (vals[t]) continue;
+        var toLang = WCF_EV_LANGS[t];
+        try {
+          var out = (srcLang === toLang) ? srcText : await wcfTranslateText(srcText, srcLang, toLang);
+          document.getElementById(ids[t]).value = out;
+          filledCount++;
+        } catch (e) { failed++; }
+      }
+    }
+    if (failed && !filledCount) say('Translation service not reachable. Please type the other languages by hand.', false);
+    else if (failed) say('Partly translated (' + filledCount + ' filled, ' + failed + ' failed). Please check and complete by hand.', false);
+    else say(filledCount ? ('Done: ' + filledCount + ' box(es) translated. Please read them once before saving.') : 'Nothing to translate (all languages already filled, or all empty).', true);
+  } catch (e) { say('Translation failed: ' + e.message, false); }
+};
+(function () {
+  function install() {
+    var prev = window.saveWcfLiveEventGreeting;
+    if (typeof prev !== 'function' || prev._wcfTranslated) return;
+    var fn = async function () {
+      try { await window.wcfEvTranslateNow(false); } catch (e) {}
+      return prev.apply(this, arguments);
+    };
+    try { Object.keys(prev).forEach(function (k) { fn[k] = prev[k]; }); } catch (e) {}
+    fn._wcfTranslated = true;
+    window.saveWcfLiveEventGreeting = fn;
+  }
+  if (document.readyState === 'complete') setTimeout(install, 900);
+  else window.addEventListener('load', function () { setTimeout(install, 900); });
+})();
+
+function wcfCurEventId() { return window.__wcfEventDocId || 'WCF_LIVE_EVENT_CONFIG'; }
+function wcfEventFile() { return wcfCurEventId() === 'WCF_LIVE_EVENT_CONFIG_E1' ? 'event1.html' : 'event.html'; }
+window.wcfCopyEventLink = function () {
+  var url = 'https://www.worldchhippafoundation.com/' + wcfEventFile();
+  var done = function () { alert('Link copied:\n' + url); };
+  if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(url).then(done, function () { prompt('Copy this link:', url); }); }
+  else { prompt('Copy this link:', url); }
+};
+window.wcfSwitchEvent = async function (docId) {
+  window.__wcfEventDocId = (docId === 'WCF_LIVE_EVENT_CONFIG_E1') ? 'WCF_LIVE_EVENT_CONFIG_E1' : 'WCF_LIVE_EVENT_CONFIG';
+  var lt = document.getElementById('wcfEventLinkText');
+  if (lt) lt.textContent = 'https://www.worldchhippafoundation.com/' + wcfEventFile();
+  var ids = [];
+  WCF_EV_GROUPS.forEach(function (g) { g.forEach(function (id) { ids.push(id); }); });
+  ids.forEach(function (id) { var el = document.getElementById(id); if (el) el.value = ''; });
+  var m = document.getElementById('wcfEvModeSelect'); if (m) m.value = 'host';
+  var s = document.getElementById('wcfEvSecondsSelect'); if (s) s.value = '7';
+  var st = document.getElementById('wcfEvTransStatus'); if (st) st.textContent = 'Write in any ONE language, then tap this (it also runs when you Save).';
+  try { if (typeof window.loadWcfLiveEventGreetingStatus === 'function') await window.loadWcfLiveEventGreetingStatus(); } catch (e) {}
+};
+</script>
+<!-- ==================== END WCF FIX PACK V12 ==================== -->
+
+<!-- ==================== WCF FIX PACK V13 (admin update requests) ==================== -->
+<script id="wcf-v13-update-requests">
+(function () {
+  var cache = {};
+  function digits(s) { return String(s == null ? '' : s).replace(/[^0-9]/g, ''); }
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function ready() { return typeof isCloudReady !== 'undefined' && isCloudReady && typeof db !== 'undefined' && db && typeof auth !== 'undefined' && auth && auth.currentUser; }
+  function memKey(m) { return String((m && (m.memberId || m.uniqueId)) || ''); }
+
+  window.wcfLoadUpdateRequests = async function (manual) {
+    var box = document.getElementById('adminUpdReqList');
+    var cnt = document.getElementById('adminUpdReqCount');
+    if (!box) return;
+    if (!ready()) { if (manual) alert('Pehle admin login karein aur Firebase connected hone dein.'); return; }
+    try {
+      var snap = await db.collection('wcf_pending_queue').where('isUpdateRequest', '==', true).get();
+      cache = {};
+      var html = '', n = 0;
+      snap.forEach(function (d) {
+        var x = d.data(); cache[d.id] = x; n++;
+        var ms = (x.newMembers || []).map(function (m) {
+          return '<li>' + esc(m.name) + ' <span class="text-slate-500">(' + esc(m.relationKey || m.relation || '') + (m.age ? ', ' + esc(m.age) + ' yrs' : '') + ')</span> <span class="font-mono text-[10px] text-slate-500">' + esc(m.memberId || '') + '</span></li>';
+        }).join('');
+        html += '<div class="p-2.5 border border-amber-300 rounded-lg bg-white space-y-1.5">' +
+          '<div><b>' + esc(x.head && x.head.name) + '</b> <span class="font-mono text-[11px] text-slate-600">family ' + esc(x.updateFor) + '</span></div>' +
+          '<div class="text-[10px] text-slate-600">Head phone: ' + esc(x.head && x.head.phone) + ' | Requested: ' + esc(String(x.requestedAt || '').slice(0, 16).replace('T', ' ')) + '</div>' +
+          '<ul class="list-disc pl-5 space-y-0.5">' + ms + '</ul>' +
+          '<div class="flex flex-wrap gap-1.5 pt-1">' +
+          '<button type="button" data-upd-approve="' + esc(d.id) + '" class="bg-emerald-600 hover:bg-emerald-700 text-white px-2.5 py-1 rounded text-[10px] font-bold cursor-pointer">Approve (add to family)</button>' +
+          '<button type="button" data-upd-reject="' + esc(d.id) + '" class="bg-red-600 hover:bg-red-700 text-white px-2.5 py-1 rounded text-[10px] font-bold cursor-pointer">Reject (delete request)</button>' +
+          '</div></div>';
+      });
+      if (cnt) cnt.textContent = n;
+      box.innerHTML = n ? html : '<p class="text-slate-400 italic">No update requests.</p>';
+    } catch (e) { box.innerHTML = '<p class="text-red-600">Could not load: ' + esc(e.message) + '</p>'; }
+  };
+
+  async function approve(id) {
+    var req = cache[id];
+    if (!req) return;
+    try {
+      var code = req.updateFor, found = null, colFound = null;
+      var act = getActiveCollectionName();
+      var cols = [act, act === 'census_registrations' ? 'trial_census_registrations' : 'census_registrations'];
+      for (var i = 0; i < cols.length && !found; i++) {
+        var s = await db.collection(cols[i]).doc(code).get();
+        if (s.exists) { found = s.data(); colFound = cols[i]; }
+      }
+      if (!found) { alert('Family record ' + code + ' was not found in Firebase.'); return; }
+      var a = digits(found.head && found.head.phone).slice(-8), b = digits(req.head && req.head.phone).slice(-8);
+      if (a && b && a !== b) { alert('Head phone does not match the family record. Not approved.'); return; }
+      var have = {};
+      (found.members || []).forEach(function (m) { var k = memKey(m); if (k) have[k] = 1; });
+      var add = (req.newMembers || []).filter(function (m) { var k = memKey(m); return m && (k === '' || !have[k]); });
+      if (!add.length) {
+        if (confirm('These members are already in the family. Delete this request?')) { await db.collection('wcf_pending_queue').doc(id).delete(); window.wcfLoadUpdateRequests(false); }
+        return;
+      }
+      if (!confirm('Add ' + add.length + ' new member(s) to family ' + code + ' (' + (found.head && found.head.name) + ')?')) return;
+      found.members = (found.members || []).concat(add);
+      found.updatedAt = new Date().toISOString();
+      wcfDecorateRecord(found);
+      await db.collection(colFound).doc(code).set(found);
+      await db.collection('wcf_pending_queue').doc(id).delete();
+      storedFRCRecords[code] = found;
+      try { localStorage.setItem('WCF_CENSUS_RECORDS', JSON.stringify(storedFRCRecords)); } catch (e) {}
+      if (typeof updateCensusCounters === 'function') updateCensusCounters();
+      window.wcfLoadUpdateRequests(false);
+      try { wcfPublishPortalData(false); } catch (e) {}
+      alert('Done: ' + add.length + ' member(s) added to family ' + code + ' (' + colFound + ').');
+    } catch (e) { alert('Approve failed: ' + e.message); }
+  }
+  async function reject(id) {
+    if (!confirm('Delete this update request? The family record stays unchanged.')) return;
+    try { await db.collection('wcf_pending_queue').doc(id).delete(); window.wcfLoadUpdateRequests(false); }
+    catch (e) { alert('Delete failed: ' + e.message); }
+  }
+  document.addEventListener('click', function (ev) {
+    var t = ev.target && ev.target.closest ? ev.target : null;
+    if (!t) return;
+    var ap = t.closest('[data-upd-approve]');
+    if (ap) { approve(ap.getAttribute('data-upd-approve')); return; }
+    var rj = t.closest('[data-upd-reject]');
+    if (rj) reject(rj.getAttribute('data-upd-reject'));
+  });
+  function install() {
+    var prev = window.fetchAllRecordsFromFirebase;
+    if (typeof prev !== 'function' || prev._wcfUpd) return;
+    var fn = async function () { var r = await prev.apply(this, arguments); try { window.wcfLoadUpdateRequests(false); } catch (e) {} return r; };
+    try { Object.keys(prev).forEach(function (k) { fn[k] = prev[k]; }); } catch (e) {}
+    fn._wcfUpd = true;
+    window.fetchAllRecordsFromFirebase = fn;
+  }
+  if (document.readyState === 'complete') setTimeout(install, 1300);
+  else window.addEventListener('load', function () { setTimeout(install, 1300); });
+})();
+</script>
+<!-- ==================== END WCF FIX PACK V13 ==================== -->
 </html>
