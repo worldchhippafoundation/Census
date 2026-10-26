@@ -29,29 +29,3 @@ self.addEventListener('fetch', function (e) {
 
   if (req.mode === 'navigate') {
     /* page: always try the network first (so updates reach people), fall back to the saved copy */
-    e.respondWith(
-      fetch(req).then(function (res) {
-        var copy = res.clone();
-        caches.open(CACHE).then(function (c) { c.put(req, copy); });
-        return res;
-      }).catch(function () {
-        return caches.match(req).then(function (m) { return m || caches.match('index.html') || caches.match('./'); });
-      })
-    );
-    return;
-  }
-
-  /* scripts, fonts, images: use the saved copy, refresh it in the background */
-  e.respondWith(
-    caches.match(req).then(function (hit) {
-      var net = fetch(req).then(function (res) {
-        if (res && (res.status === 200 || res.type === 'opaque')) {
-          var copy = res.clone();
-          caches.open(CACHE).then(function (c) { c.put(req, copy); });
-        }
-        return res;
-      }).catch(function () { return hit; });
-      return hit || net;
-    })
-  );
-});
