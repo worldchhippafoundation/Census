@@ -6,7 +6,7 @@
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://*.firebaseio.com https://*.googleapis.com https://*.gstatic.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://*.firebaseio.com https://*.googleapis.com https://firestore.googleapis.com;">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title translate="no">تلوار سے قلم تک — خوش آمدید (Event 1)</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&family=Cinzel:wght@600;800&family=Noto+Sans+Devanagari:wght@500;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&family=Cinzel:wght@600;800&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
     <style>
@@ -27,35 +27,6 @@
             background-size: cover !important;
             background-position: center !important;
             background-repeat: no-repeat !important;
-        }
-        .lang-bar {
-            display: flex;
-            gap: 8px;
-            background: rgba(15, 23, 42, 0.9);
-            padding: 7px 12px;
-            border-radius: 50px;
-            border: 1.5px solid rgba(251, 191, 36, 0.5);
-            margin-bottom: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.6);
-            z-index: 10;
-            direction: ltr;
-        }
-        .lang-btn {
-            background: transparent;
-            border: none;
-            color: #cbd5e1;
-            padding: 8px 20px;
-            border-radius: 30px;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .lang-btn.active {
-            background: linear-gradient(135deg, #fbbf24, #d97706);
-            color: #090d16;
-            box-shadow: 0 4px 15px rgba(251, 191, 36, 0.45);
-            transform: scale(1.03);
         }
         .event-card {
             background: linear-gradient(165deg, rgba(30, 41, 59, 0.96), rgba(11, 17, 32, 0.99));
@@ -81,10 +52,10 @@
             margin-bottom: 18px;
             padding-bottom: 16px;
             border-bottom: 1px solid rgba(251, 191, 36, 0.28);
+            font-family: 'Noto Nastaliq Urdu', serif;
+            font-size: 32px;
+            line-height: 2;
         }
-        .calligraphy-title.lang-ur { font-family: 'Noto Nastaliq Urdu', serif; font-size: 40px; line-height: 2.25; direction: rtl; }
-        .calligraphy-title.lang-en { font-family: 'Cinzel', serif; font-size: 27px; font-weight: 800; letter-spacing: 1.5px; line-height: 1.45; direction: ltr; }
-        .calligraphy-title.lang-hi { font-family: 'Noto Sans Devanagari', sans-serif; font-size: 32px; font-weight: 700; line-height: 1.6; direction: ltr; }
         .welcome-badge {
             display: inline-block;
             background: rgba(16, 185, 129, 0.18);
@@ -100,14 +71,11 @@
             color: #fde68a;
             font-weight: 700;
             display: block;
-            margin: 10px 0;
-            font-size: 1.18em;
+            margin-top: 15px;
+            font-size: 1.15em;
             text-shadow: 0 2px 8px rgba(251, 191, 36, 0.3);
         }
-        .greeting-body { color: #f8fafc; margin-bottom: 26px; padding: 0 4px; }
-        .greeting-body.lang-ur { font-family: 'Noto Nastaliq Urdu', serif; font-size: 20px; line-height: 2.35; direction: rtl; }
-        .greeting-body.lang-en { font-family: 'Poppins', sans-serif; font-size: 16.5px; line-height: 1.75; direction: ltr; }
-        .greeting-body.lang-hi { font-family: 'Noto Sans Devanagari', sans-serif; font-size: 18px; line-height: 1.85; direction: ltr; }
+        .greeting-body { color: #f8fafc; margin-bottom: 26px; padding: 0 4px; font-family: 'Noto Nastaliq Urdu', serif; font-size: 19px; line-height: 2.25; }
         .progress-wrapper {
             width: 100%; height: 7px; background: #090d16; border-radius: 10px;
             overflow: hidden; margin-bottom: 12px; border: 1px solid rgba(251, 191, 36, 0.25);
@@ -122,116 +90,62 @@
     </style>
 </head>
 <body translate="no" class="notranslate bandhani-bg">
-    <div class="lang-bar notranslate" translate="no">
-        <button class="lang-btn active" onclick="setEventLang('ur')" id="btn-ur" translate="no">اردو</button>
-        <button class="lang-btn" onclick="setEventLang('en')" id="btn-en" translate="no">English</button>
-        <button class="lang-btn" onclick="setEventLang('hi')" id="btn-hi" translate="no">हिंदी</button>
-    </div>
     <div class="event-card notranslate" translate="no">
         <div class="inner-royal-border">
             <div class="heritage-ornament">✦ ❖ ✦</div>
-            <div id="sloganTitle" class="calligraphy-title lang-ur" translate="no">تلوار سے قلم تک</div>
+            <div id="eventTitle" class="calligraphy-title" translate="no">تلوار سے قلم تک</div>
             <div id="welcomeBadge" class="welcome-badge" translate="no">خوش آمدید!</div>
-            <div id="greetingBody" class="greeting-body lang-ur" translate="no"></div>
+            <div id="greetingBody" class="greeting-body" translate="no"></div>
             <div class="progress-wrapper"><div id="progressBar" class="progress-bar"></div></div>
             <div id="redirectNote" class="redirect-note" translate="no"></div>
-            <button id="skipBtn" class="skip-btn" onclick="goToMainPortal()" translate="no"></button>
+            <button id="skipBtn" class="skip-btn" onclick="goToMainPortal()" translate="no">ابھی پورٹل پر جائیں ←</button>
         </div>
     </div>
 <script>
     var MAIN_PORTAL_URL = "https://www.worldchhippafoundation.com/";
     var redirectSeconds = 7;
-    var currentLang = "ur";
     var elapsed = 0;
     var timerRef = null;
-    var userManuallySwitchedLang = false;
-    var liveEventConfig = { active: false, mode: "host", eventName: "", greeting: "", hostName: "", textUr: "", textEn: "", textHi: "" };
+    var liveEventConfig = { active: false, eventName: "", greeting: "", hostName: "" };
 
     function escapeSafe(s) {
         return String(s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     }
 
-    var translations = {
-        ur: {
-            slogan: "تلوار سے قلم تک",
-            badge: "خوش آمدید!",
-            defaultMsg: "آپ کا اس شاندار محفل میں خیرمقدم ہے۔ آپ ان لاکھوں چھیپا افراد میں سے ہیں جو اپنی نسلوں اور شناخت کو ڈیجیٹل بنا رہے ہیں!",
-            redirectText: function(sec) { return sec + " سیکنڈ میں مین پورٹل کھل رہا ہے..."; },
-            skipBtn: "ابھی پورٹل پر جائیں ←"
-        },
-        en: {
-            slogan: "Talwar se Qalam Tak",
-            badge: "Welcome!",
-            defaultMsg: "We warmly welcome you to this grand gathering. You are among the millions of Chhippa individuals digitizing their generations and identity!",
-            redirectText: function(sec) { return "Opening Main Portal in " + sec + " seconds..."; },
-            skipBtn: "Go to Portal Now →"
-        },
-        hi: {
-            slogan: "तलवार से कलम तक",
-            badge: "खुशामदीद / स्वागत है!",
-            defaultMsg: "इस शानदार महफ़िल में आपका ख़ैरमक़दम है। आप उन लाखों छीपा लोगों में से हैं जो अपनी नस्लों और पहचान को डिजिटल बना रहे हैं!",
-            redirectText: function(sec) { return sec + " सेकंड में मेन पोर्टल खुल रहा है..."; },
-            skipBtn: "अभी पोर्टल पर जाएं →"
-        }
-    };
-
-    function applyLangButtonsUI(lang) {
-        ["ur", "en", "hi"].forEach(function(k) {
-            var btn = document.getElementById("btn-" + k);
-            if (btn) btn.classList.toggle("active", k === lang);
-        });
-    }
-
-    function renderCurrentLanguageUI() {
-        var data = translations[currentLang];
-        var sloganEl = document.getElementById("sloganTitle");
-        var badgeEl = document.getElementById("welcomeBadge");
+    function renderEventUI() {
+        var titleEl = document.getElementById("eventTitle");
         var bodyEl = document.getElementById("greetingBody");
-        var skipEl = document.getElementById("skipBtn");
+        var defaultGreeting = "آپ کا اس شاندار محفل میں خیرمقدم ہے۔ آپ ان لاکھوں چھیپا افراد میں سے ہیں جو اپنی نسلوں اور شناخت کو ڈیجیٹل بنا رہے ہیں!";
 
-        sloganEl.className = "calligraphy-title lang-" + currentLang;
-        sloganEl.innerText = data.slogan;
-        badgeEl.innerText = data.badge;
-        bodyEl.className = "greeting-body lang-" + currentLang;
-
-        if (liveEventConfig && liveEventConfig.active && (liveEventConfig.eventName || liveEventConfig.greeting || liveEventConfig.hostName || liveEventConfig.textUr)) {
-            var evName = liveEventConfig.eventName || "";
-            var greeting = liveEventConfig.greeting || liveEventConfig.textUr || "";
-            var host = liveEventConfig.hostName || "";
+        if (liveEventConfig && liveEventConfig.active && (liveEventConfig.eventName || liveEventConfig.greeting || liveEventConfig.hostName)) {
+            if (liveEventConfig.eventName) {
+                titleEl.innerText = liveEventConfig.eventName;
+                titleEl.style.display = "block";
+            } else {
+                titleEl.innerText = "تلوار سے قلم تک";
+            }
 
             var htmlContent = "";
-            if (evName) {
-                htmlContent += "<div style='font-size:1.15em; font-weight:700; color:#fbbf24; margin-bottom:8px;'>" + escapeSafe(evName) + "</div>";
+            if (liveEventConfig.greeting) {
+                htmlContent += "<div>" + escapeSafe(liveEventConfig.greeting).replace(/\n/g, "<br>") + "</div>";
+            } else {
+                htmlContent += "<div>" + defaultGreeting + "</div>";
             }
-            if (greeting) {
-                htmlContent += "<div style='margin-bottom:8px;'>" + escapeSafe(greeting).replace(/\n/g, "<br>") + "</div>";
-            }
-            if (host) {
-                htmlContent += "<div class='host-highlight'>میزبان: " + escapeSafe(host) + "</div>";
-            }
-            if (!htmlContent) {
-                htmlContent = data.defaultMsg;
+
+            if (liveEventConfig.hostName) {
+                htmlContent += "<div class='host-highlight'>" + escapeSafe(liveEventConfig.hostName) + "</div>";
             }
             bodyEl.innerHTML = htmlContent;
         } else {
-            bodyEl.innerHTML = data.defaultMsg;
+            titleEl.innerText = "تلوار سے قلم تک";
+            bodyEl.innerHTML = "<div>" + defaultGreeting + "</div>";
         }
-        skipEl.innerText = data.skipBtn;
         updateCountdownLabel();
-    }
-
-    function setEventLang(lang) {
-        userManuallySwitchedLang = true;
-        currentLang = lang;
-        elapsed = 0;
-        document.getElementById("progressBar").style.width = "0%";
-        applyLangButtonsUI(lang);
-        renderCurrentLanguageUI();
     }
 
     function updateCountdownLabel() {
         var remaining = Math.max(Math.ceil(redirectSeconds - (elapsed / 1000)), 1);
-        document.getElementById("redirectNote").innerText = translations[currentLang].redirectText(remaining);
+        document.getElementById("redirectNote").innerText = remaining + " سیکنڈ میں مین پورٹل کھل رہا ہے...";
     }
 
     function goToMainPortal() {
@@ -282,11 +196,11 @@
         } catch (e) {
             console.warn("Event cloud fetch fallback:", e);
         }
-        renderCurrentLanguageUI();
+        renderEventUI();
         startRedirectCountdown();
     }
 
-    renderCurrentLanguageUI();
+    renderEventUI();
     fetchLiveGreetingFromAdminCloud();
 </script>
 </body>
