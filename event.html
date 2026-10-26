@@ -13,6 +13,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             min-height: 100vh;
+            background: radial-gradient(circle at top, #1e293b 0%, #090d16 75%, #05070c 100%);
             color: #f8fafc;
             display: flex;
             flex-direction: column;
@@ -21,12 +22,6 @@
             padding: 18px;
             font-family: 'Poppins', sans-serif;
             overflow-x: hidden;
-        }
-        .bandhani-bg {
-            background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.75)), url('bandhani.jpg') !important;
-            background-size: cover !important;
-            background-position: center !important;
-            background-repeat: no-repeat !important;
         }
         .lang-bar {
             display: flex;
@@ -119,9 +114,18 @@
             border: 1.5px solid #fbbf24; color: #fde68a; padding: 9px 24px;
             border-radius: 25px; font-size: 14px; font-weight: 600; cursor: pointer;
         }
+        /* Greeting box: Event name (top) / Greeting line / From + names */
+        .calligraphy-title { word-break: break-word; }
+        .calligraphy-title.long.lang-ur { font-size: 31px; line-height: 2.1; }
+        .calligraphy-title.long.lang-en { font-size: 21px; }
+        .calligraphy-title.long.lang-hi { font-size: 25px; }
+        .greet-line { color: #f8fafc; margin-bottom: 16px; }
+        .from-block { margin-top: 4px; padding-top: 14px; border-top: 1px dashed rgba(251, 191, 36, 0.35); }
+        .from-label { color: #34d399; font-weight: 700; font-size: 0.85em; letter-spacing: 0.5px; margin-bottom: 6px; }
+        .from-name { display: block; color: #fde68a; font-weight: 700; font-size: 1.12em; margin: 4px 0; text-shadow: 0 2px 8px rgba(251, 191, 36, 0.3); }
     </style>
 </head>
-<body translate="no" class="notranslate bandhani-bg">
+<body translate="no" class="notranslate">
     <div class="lang-bar notranslate" translate="no">
         <button class="lang-btn active" onclick="setEventLang('ur')" id="btn-ur" translate="no">اردو</button>
         <button class="lang-btn" onclick="setEventLang('en')" id="btn-en" translate="no">English</button>
@@ -158,7 +162,9 @@
             withHost: function(name) { return "آپ کا <span class=\"host-highlight\">" + escapeSafe(name) + "</span> کی اس شاندار محفل میں خیرمقدم ہے۔<br>آپ ان لاکھوں چھیپا افراد میں سے ہیں جو اپنی نسلوں اور شناخت کو ڈیجیٹل بنا رہے ہیں!"; },
             withoutHost: function() { return "آپ کا اس شاندار محفل میں خیرمقدم ہے۔<br>آپ ان لاکھوں چھیپا افراد میں سے ہیں جو اپنی نسلوں اور شناخت کو ڈیجیٹل بنا رہے ہیں!"; },
             redirectText: function(sec) { return sec + " سیکنڈ میں مین پورٹل کھل رہا ہے..."; },
-            skipBtn: "ابھی پورٹل پر جائیں ←"
+            skipBtn: "ابھی پورٹل پر جائیں ←",
+            defaultGreeting: "آپ کا اس شاندار محفل میں خیرمقدم ہے۔",
+            fromLabel: "منجانب"
         },
         en: {
             slogan: "Talwar se Qalam Tak",
@@ -166,7 +172,9 @@
             withHost: function(name) { return "We warmly welcome you to this grand gathering of <span class=\"host-highlight\">" + escapeSafe(name) + "</span>.<br>You are among the millions of Chhippa individuals digitizing their generations and identity!"; },
             withoutHost: function() { return "We warmly welcome you to this grand gathering.<br>You are among the millions of Chhippa individuals digitizing their generations and identity!"; },
             redirectText: function(sec) { return "Opening Main Portal in " + sec + " seconds..."; },
-            skipBtn: "Go to Portal Now →"
+            skipBtn: "Go to Portal Now →",
+            defaultGreeting: "We warmly welcome you to this grand gathering.",
+            fromLabel: "From"
         },
         hi: {
             slogan: "तलवार से कलम तक",
@@ -174,7 +182,9 @@
             withHost: function(name) { return "<span class=\"host-highlight\">" + escapeSafe(name) + "</span> की इस शानदार महफ़िल में आपका ख़ैरमक़दम है।<br>आप उन लाखों छीपा लोगों में से हैं जो अपनी नस्लों और पहचान को डिजिटल बना रहे हैं!"; },
             withoutHost: function() { return "इस शानदार महफ़िल में आपका ख़ैरमक़दम है।<br>आप उन लाखों छीपा लोगों में से हैं जो अपनी नस्लों और पहचान को डिजिटल बना रहे हैं!"; },
             redirectText: function(sec) { return sec + " सेकंड में मेन पोर्टल खुल रहा है..."; },
-            skipBtn: "अभी पोर्टल पर जाएं →"
+            skipBtn: "अभी पोर्टल पर जाएं →",
+            defaultGreeting: "इस शानदार महफ़िल में आपका ख़ैरमक़दम है।",
+            fromLabel: "की ओर से"
         }
     };
 
@@ -184,6 +194,36 @@
         if (lang === "en") return liveEventConfig.textEn || liveEventConfig.textUr || liveEventConfig.textHi || "";
         if (lang === "hi") return liveEventConfig.textHi || liveEventConfig.textUr || liveEventConfig.textEn || "";
         return "";
+    }
+
+    var LANG_SUFFIX = { ur: "Ur", en: "En", hi: "Hi" };
+    function cfgOwn(d, base, lang) {
+        var v = d[base + LANG_SUFFIX[lang]];
+        return (v && String(v).trim()) ? String(v).trim() : "";
+    }
+    function cfgAny(d, base, lang) {
+        var order = lang === "ur" ? ["ur", "en", "hi"] : (lang === "en" ? ["en", "ur", "hi"] : ["hi", "ur", "en"]);
+        for (var i = 0; i < order.length; i++) {
+            var v = cfgOwn(d, base, order[i]);
+            if (v) return v;
+        }
+        return "";
+    }
+    function hasNewLayout(d) {
+        if (!d) return false;
+        var bases = ["eventName", "greet", "from"];
+        for (var i = 0; i < bases.length; i++) {
+            for (var k in LANG_SUFFIX) { if (cfgOwn(d, bases[i], k)) return true; }
+        }
+        return false;
+    }
+    function hasLangContent(d, suffix) {
+        var keys = ["text", "eventName", "greet", "from"];
+        for (var i = 0; i < keys.length; i++) {
+            var v = d[keys[i] + suffix];
+            if (v && String(v).trim()) return true;
+        }
+        return false;
     }
 
     function applyLangButtonsUI(lang) {
@@ -200,20 +240,40 @@
         var bodyEl = document.getElementById("greetingBody");
         var skipEl = document.getElementById("skipBtn");
 
-        sloganEl.className = "calligraphy-title lang-" + currentLang;
-        sloganEl.innerText = data.slogan;
-        badgeEl.innerText = data.badge;
+        var useNew = !!(liveEventConfig && liveEventConfig.active && hasNewLayout(liveEventConfig));
         bodyEl.className = "greeting-body lang-" + currentLang;
 
-        var liveTxt = getActiveLangGreetingText(currentLang).trim();
-        if (liveTxt.length > 0) {
-            if (liveEventConfig.mode === "custom") {
-                bodyEl.innerHTML = escapeSafe(liveTxt).replace(/\n/g, "<br>");
-            } else {
-                bodyEl.innerHTML = data.withHost(liveTxt);
+        if (useNew) {
+            /* 1) Event name (top)  2) Greeting line  3) From + names */
+            var evName = cfgAny(liveEventConfig, "eventName", currentLang);
+            var greet = cfgOwn(liveEventConfig, "greet", currentLang) || data.defaultGreeting;
+            var fromTxt = cfgAny(liveEventConfig, "from", currentLang);
+            var titleText = evName || data.slogan;
+            sloganEl.className = "calligraphy-title lang-" + currentLang + (titleText.length > 26 ? " long" : "");
+            sloganEl.innerText = titleText;
+            badgeEl.style.display = "none";
+            var html = '<div class="greet-line">' + escapeSafe(greet).replace(/\n/g, "<br>") + '</div>';
+            if (fromTxt) {
+                var names = fromTxt.split(/\n+/).map(function(x) { return x.trim(); }).filter(Boolean);
+                html += '<div class="from-block"><div class="from-label">' + data.fromLabel + '</div>' +
+                    names.map(function(x) { return '<span class="from-name">' + escapeSafe(x) + '</span>'; }).join("") + '</div>';
             }
+            bodyEl.innerHTML = html;
         } else {
-            bodyEl.innerHTML = data.withoutHost();
+            sloganEl.className = "calligraphy-title lang-" + currentLang;
+            sloganEl.innerText = data.slogan;
+            badgeEl.style.display = "";
+            badgeEl.innerText = data.badge;
+            var liveTxt = getActiveLangGreetingText(currentLang).trim();
+            if (liveTxt.length > 0) {
+                if (liveEventConfig.mode === "custom") {
+                    bodyEl.innerHTML = escapeSafe(liveTxt).replace(/\n/g, "<br>");
+                } else {
+                    bodyEl.innerHTML = data.withHost(liveTxt);
+                }
+            } else {
+                bodyEl.innerHTML = data.withoutHost();
+            }
         }
         skipEl.innerText = data.skipBtn;
         updateCountdownLabel();
@@ -268,19 +328,21 @@
             if (typeof firebase !== "undefined") {
                 if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
                 var db = firebase.firestore();
+                // Reads from public-safe wcf_config collection (matches updated Firebase Security Rules)
                 var docRef = db.collection("wcf_config").doc("WCF_LIVE_EVENT_CONFIG");
                 var snap = await docRef.get({ source: "server" }).catch(function() { return docRef.get(); });
                 if (snap && snap.exists) {
                     var d = snap.data() || {};
-                    if (d.active && (d.textUr || d.textEn || d.textHi)) {
+                    if (d.active && (d.textUr || d.textEn || d.textHi || hasNewLayout(d))) {
                         liveEventConfig = d;
                         if (d.seconds && Number(d.seconds) >= 3) redirectSeconds = Number(d.seconds);
 
+                        // Auto-select tab if admin filled only English or only Hindi
                         if (!userManuallySwitchedLang) {
-                            if (!d.textUr && d.textEn) {
+                            if (!hasLangContent(d, "Ur") && hasLangContent(d, "En")) {
                                 currentLang = "en";
                                 applyLangButtonsUI("en");
-                            } else if (!d.textUr && !d.textEn && d.textHi) {
+                            } else if (!hasLangContent(d, "Ur") && !hasLangContent(d, "En") && hasLangContent(d, "Hi")) {
                                 currentLang = "hi";
                                 applyLangButtonsUI("hi");
                             }
