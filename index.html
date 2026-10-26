@@ -5656,6 +5656,37 @@ M. WASEEM SADIQ TAK (Neemray Walay)
     relabel();
   }
 
+  /* ---------- Add members to an existing family: sent to admin as an UPDATE REQUEST ---------- */
+  function showToast(msg) {
+    try {
+      var t = document.createElement('div');
+      t.style.cssText = 'position:fixed;left:50%;bottom:18px;transform:translateX(-50%);max-width:92vw;z-index:99999;background:#064e3b;color:#fff;padding:12px 16px;border-radius:12px;font-size:13px;font-weight:700;line-height:1.9;box-shadow:0 8px 24px rgba(0,0,0,.35);text-align:center';
+      t.setAttribute('dir', lang() === 'ur' ? 'rtl' : 'ltr');
+      t.textContent = msg;
+      document.body.appendChild(t);
+      setTimeout(function () { if (t.parentNode) t.parentNode.removeChild(t); }, 9000);
+    } catch (e) {}
+  }
+  function sendUpdateRequest(code, prior) {
+    var cur = storedFRCRecords[code];
+    if (!cur || !cur.head) return;
+    var had = {};
+    (prior.members || []).forEach(function (m) { if (m) had[String(m.memberId || m.uniqueId || '')] = 1; });
+    var newM = (cur.members || []).filter(function (m) { var k = String((m && (m.memberId || m.uniqueId)) || ''); return m && (k === '' || !had[k]); });
+    if (!newM.length) return;
+    showToast(T('Update sent for admin approval. This certificate is updated here; other devices will show it after approval.',
+      'اپڈیٹ ایڈمن کی منظوری کے لیے بھیج دی گئی ہے۔ یہ سرٹیفکیٹ یہاں اپڈیٹ ہے، دوسرے فونز پر منظوری کے بعد نظر آئے گا۔',
+      'अपडेट एडमिन की मंज़ूरी के लिए भेज दिया गया है। यह सर्टिफ़िकेट यहाँ अपडेट है, दूसरे फ़ोन पर मंज़ूरी के बाद दिखेगा।'));
+    if (typeof db === 'undefined' || !db) return;
+    var id = 'UPD-' + code + '-' + Date.now();
+    /* no "code" field on purpose: the admin record list ignores request documents */
+    db.collection('wcf_pending_queue').doc(id).set({
+      isUpdateRequest: true, status: 'Update Request', updateFor: code,
+      head: { name: String(cur.head.name || ''), phone: String(cur.head.phone || '') },
+      newMembers: JSON.parse(JSON.stringify(newM)), requestedAt: new Date().toISOString()
+    }).catch(function (e) { console.warn('update request:', e); });
+  }
+
   /* ---------- Install (after the older patches have finished) ---------- */
   function install() {
     if (window.__wcfV11Installed) return;
@@ -5744,8 +5775,22 @@ M. WASEEM SADIQ TAK (Neemray Walay)
     wrapFn('handleFormSubmit', function (prev) {
       return async function () {
         var before = Object.keys(storedFRCRecords).length;
+        var editCode = (typeof editingExistingFRCCode !== 'undefined') ? editingExistingFRCCode : null;
+        var prior = null, priorCount = 0;
+        try {
+          if (editCode && storedFRCRecords[editCode]) {
+            prior = JSON.parse(JSON.stringify(storedFRCRecords[editCode]));
+            priorCount = (prior.members || []).length;
+          }
+        } catch (e) {}
         var r = await prev.apply(this, arguments);
-        try { if (Object.keys(storedFRCRecords).length > before) clearDraft(); } catch (e) {}
+        try {
+          if (Object.keys(storedFRCRecords).length > before) clearDraft();
+          if (editCode && prior && storedFRCRecords[editCode] && (storedFRCRecords[editCode].members || []).length > priorCount) {
+            clearDraft();
+            sendUpdateRequest(editCode, prior);
+          }
+        } catch (e) {}
         return r;
       };
     });
