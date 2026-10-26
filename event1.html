@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ur" dir="rtl" translate="no" class="notranslate">
 <head>
@@ -6,7 +5,7 @@
     <meta name="google" content="notranslate">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://*.firebaseio.com https://*.googleapis.com https://*.gstatic.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://*.firebaseio.com https://*.googleapis.com https://firestore.googleapis.com;">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title translate="no">تلوار سے قلم تک — خوش آمدید</title>
+    <title translate="no">تلوار سے قلم تک — خوش آمدید (Event 1)</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&family=Cinzel:wght@600;800&family=Noto+Sans+Devanagari:wght@500;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -269,7 +268,8 @@
             if (typeof firebase !== "undefined") {
                 if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
                 var db = firebase.firestore();
-                var docRef = db.collection("wcf_config").doc("WCF_LIVE_EVENT_CONFIG");
+                // **تبدیلی یہاں کی گئی ہے: event1 کے لیے الگ ڈاکیومেন্ট آئی ڈی**
+                var docRef = db.collection("wcf_pending_queue").doc("WCF_LIVE_EVENT1_CONFIG");
                 var snap = await docRef.get({ source: "server" }).catch(function() { return docRef.get(); });
                 if (snap && snap.exists) {
                     var d = snap.data() || {};
