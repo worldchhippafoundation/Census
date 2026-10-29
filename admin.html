@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr" class="notranslate" translate="no">
 <head>
-<meta http-equiv="Content-Security-Policy" content="default-src 'self' https://*.firebaseio.com https://*.googleapis.com https://*.gstatic.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://*.firebaseio.com https://*.googleapis.com https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com;">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' https://*.firebaseio.com https://*.googleapis.com https://*.gstatic.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://i.ytimg.com https://img.youtube.com; connect-src 'self' https://*.firebaseio.com https://*.googleapis.com https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com;">
 <meta charset="UTF-8">
 <meta name="google" content="notranslate">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>WCF Admin Census & Directory Manager (V.4.11.26)</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;700&family=Noto+Sans+Devanagari:wght@400;700&display=swap" rel="stylesheet">
 <style>
 body { font-family: 'Inter', sans-serif; }
 .bandhani-bg {
@@ -2005,7 +2007,7 @@ document.getElementById("wcfEvFromHi").value = "";
         var hAge = parseInt(h.age) || calculateAge(h.dob);
         if (hAge < 18) b.n++; else if (isMale(h)) b.m++; else b.w++;
         (Array.isArray(rec.members) ? rec.members : []).forEach(function (m) {
-          if (!m) return;
+          if (!m || m.status === 'Revoked') return;
           var mb = bucket(m.country || hc, m.city || hci);
           mb.p++; ind++;
           var mAge = parseInt(m.age) || calculateAge(m.dob);
@@ -2580,6 +2582,7 @@ function wcfCheckReference(refId, app, records, excludeCode) {
   var COLS = ['trial_census_registrations', 'census_registrations', 'wcf_pending_queue'];
   function cloudOK() { return typeof isCloudReady !== 'undefined' && isCloudReady && typeof db !== 'undefined' && db; }
   function revokeUi() {
+    return; /* admin22: replaced by universal Revoke/Restore/Delete */
     if (el('adminRevokeSection')) return;
     var anchor = el('adminDupSection');
     if (!anchor) return;
@@ -2727,4 +2730,516 @@ function wcfCheckReference(refId, app, records, excludeCode) {
 })();
 </script>
 <!-- ==================== END WCF ADMIN FIX PACK V12 ==================== -->
+
+<!-- ==================== WCF admin22: universal Revoke -> Restore / Delete + Media manager ==================== -->
+<script id="wcf-v22-admin">
+(function () {
+  var COLS = ['trial_census_registrations', 'census_registrations', 'wcf_pending_queue'];
+  var MEDIA = 'wcf_media';
+  function el(id) { return document.getElementById(id); }
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function cloudOK() { return typeof isCloudReady !== 'undefined' && isCloudReady && typeof db !== 'undefined' && db; }
+  function an(s) { return String(s == null ? '' : s).toUpperCase().replace(/[^A-Z0-9]/g, ''); }
+  function saveLocal() { try { localStorage.setItem('WCF_CENSUS_RECORDS', JSON.stringify(storedFRCRecords)); } catch (e) {} }
+  function allRecs() { return Object.keys(storedFRCRecords || {}).map(function (k) { return storedFRCRecords[k]; }).filter(function (r) { return r && r.code && !r.isEventGreetingConfig; }); }
+  function idMatch(id, q) {
+    var a = an(id); if (!a || !q) return false;
+    if (a === q) return true;
+    if (/^[0-9]+$/.test(q)) return a.replace(/^[A-Z]+/, '') === q;   /* "8655" finds WCF-8655 */
+    return false;
+  }
+  function who(role, rec, m) { return role === 'member' ? m : (rec.head || {}); }
+
+  /* ---------- find by ANY code: family code, head/member WCF id, IIC/FRC code; local first, then Firebase ---------- */
+  function localFind(raw) {
+    var q = an(raw), hits = [];
+    allRecs().forEach(function (rec) {
+      var h = rec.head || {};
+      if (idMatch(rec.code, q)) { hits.push({ rec: rec, role: 'record' }); return; }
+      if (idMatch(h.memberId, q) || idMatch(h.code, q) || idMatch(h.id, q)) hits.push({ rec: rec, role: 'record', via: 'head' });
+      (Array.isArray(rec.members) ? rec.members : []).forEach(function (m, ix) {
+        if (m && (idMatch(m.memberId, q) || idMatch(m.uniqueId, q) || idMatch(m.code, q))) hits.push({ rec: rec, role: 'member', idx: ix });
+      });
+    });
+    return hits;
+  }
+  async function cloudFind(raw) {
+    if (!cloudOK()) return;
+    var U = String(raw || '').trim().toUpperCase(), q = an(raw), cands = [U];
+    var m1 = q.match(/^([A-Z]+)([0-9]+)$/);
+    if (m1) cands.push(m1[1] + '-' + m1[2]);
+    if (/^[0-9]+$/.test(q)) ['WCF', 'FRC', 'IIC'].forEach(function (p) { cands.push(p + '-' + q); });
+    cands = cands.filter(function (v, i) { return v && cands.indexOf(v) === i; });
+    var jobs = [];
+    COLS.forEach(function (col) {
+      cands.forEach(function (c) {
+        jobs.push(db.collection(col).doc(c).get().then(function (s) { if (s.exists) stash(s.data()); }).catch(function () {}));
+        jobs.push(db.collection(col).where('code', '==', c).get().then(function (s) { s.forEach(function (d) { stash(d.data()); }); }).catch(function () {}));
+        jobs.push(db.collection(col).where('memberIds', 'array-contains', c).get().then(function (s) { s.forEach(function (d) { stash(d.data()); }); }).catch(function () {}));
+      });
+    });
+    await Promise.all(jobs);
+  }
+  function stash(rec) { if (rec && rec.code && !rec.isEventGreetingConfig) storedFRCRecords[rec.code] = rec; }
+
+  /* ---------- UI ---------- */
+  function ui() {
+    if (el('adminUniversalRevoke')) return;
+    var anchor = el('adminDupSection'); if (!anchor) return;
+    var old = el('adminRevokeSection'); if (old) old.remove();
+    var sec = document.createElement('div');
+    sec.id = 'adminUniversalRevoke'; sec.className = 'space-y-2 text-left';
+    sec.innerHTML =
+      '<h4 class="text-xs font-bold text-slate-800 uppercase">Revoke / Restore / Delete any ID</h4>' +
+      '<p class="text-[10px] text-slate-500">Search ANY code: WCF member ID (e.g. WCF-8655 or just 8655), FRC code or IIC code. Step 1: <b>Revoke</b> (record stays in Firebase). Step 2: after checking, <b>Restore</b> it if the member is confirmed, otherwise <b>Delete</b> permanently (Delete only works on a revoked record).</p>' +
+      '<div class="flex flex-col sm:flex-row gap-2"><input type="text" id="uvCode" placeholder="e.g. WCF-8655 / FRC-123456 / IIC-123456" class="flex-1 border border-slate-300 rounded-lg p-2 text-xs font-mono outline-none">' +
+      '<button type="button" id="uvFind" class="bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold px-3 py-2 rounded-lg shadow cursor-pointer">Search</button>' +
+      '<button type="button" id="uvList" class="bg-indigo-700 hover:bg-indigo-800 text-white text-xs font-bold px-3 py-2 rounded-lg shadow cursor-pointer">Show revoked</button></div>' +
+      '<div id="uvBox" class="space-y-2 border border-slate-200 rounded-xl p-3 bg-slate-50 text-xs"><p class="text-slate-400 italic">Type any code and press Search.</p></div>';
+    anchor.insertAdjacentElement('afterend', sec);
+    el('uvFind').addEventListener('click', function () { search(el('uvCode').value); });
+    el('uvCode').addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); search(el('uvCode').value); } });
+    el('uvList').addEventListener('click', showRevoked);
+    el('uvBox').addEventListener('click', function (ev) {
+      var b = ev.target.closest ? ev.target.closest('[data-uv]') : null; if (!b) return;
+      var act = b.getAttribute('data-uv'), code = b.getAttribute('data-code'), role = b.getAttribute('data-role'), idx = parseInt(b.getAttribute('data-idx'), 10);
+      if (act === 'open') { el('uvCode').value = code; search(code); }
+      else if (act === 'revoke') doRevoke(code, role, idx);
+      else if (act === 'restore') doRestore(code, role, idx);
+      else if (act === 'delete') doDelete(code, role, idx);
+    });
+  }
+  function card(h) {
+    var rec = h.rec, p = who(h.role, rec, (rec.members || [])[h.idx]) || {}, isM = h.role === 'member';
+    var st = isM ? (p.status || 'Approved') : (rec.status || '-');
+    var revoked = st === 'Revoked';
+    var info = isM ? 'Member of family <b>' + esc(rec.code) + '</b> (head: ' + esc(rec.head && rec.head.name) + ')'
+      : (rec.type === 'family' ? 'Family record with ' + ((rec.members || []).length) + ' member(s) &mdash; actions apply to the WHOLE family' : 'Individual record');
+    var attr = ' data-code="' + esc(rec.code) + '" data-role="' + h.role + '" data-idx="' + (h.idx == null ? '' : h.idx) + '"';
+    var btns = revoked
+      ? '<button type="button" data-uv="restore"' + attr + ' class="bg-emerald-700 text-white text-[11px] font-bold px-3 py-1.5 rounded-lg cursor-pointer">Restore (member confirmed)</button> ' +
+        '<button type="button" data-uv="delete"' + attr + ' class="bg-black text-white text-[11px] font-bold px-3 py-1.5 rounded-lg cursor-pointer">Delete permanently</button>'
+      : '<button type="button" data-uv="revoke"' + attr + ' class="bg-red-700 hover:bg-red-800 text-white text-[11px] font-bold px-3 py-1.5 rounded-lg cursor-pointer">Revoke</button>';
+    return '<div class="p-2 bg-white border ' + (revoked ? 'border-red-300' : 'border-slate-300') + ' rounded-lg space-y-1">' +
+      '<div><b>' + esc(p.name) + '</b> &mdash; <span class="font-mono">' + esc(isM ? (p.memberId || p.uniqueId || '') : rec.code) + '</span> <span class="text-[10px] px-1.5 py-0.5 rounded ' + (revoked ? 'bg-red-100 text-red-800' : 'bg-slate-200') + '">' + esc(rec.type) + ' / ' + esc(st) + '</span></div>' +
+      '<div class="text-[10px] text-slate-600">' + info + '<br>Member ID: ' + esc(p.memberId) + ' | Father: ' + esc(p.father) + ' | DOB: ' + esc(p.dob) + ' | Phone: ' + esc(p.phone) + '</div>' +
+      (revoked && (p.revokedReason || rec.revokedReason) ? '<div class="text-[10px] text-red-700">Revoked' + ((p.revokedAt || rec.revokedAt) ? ' on ' + esc(p.revokedAt || rec.revokedAt) : '') + ' &mdash; ' + esc(p.revokedReason || rec.revokedReason) + '</div>' : '') +
+      '<div class="flex flex-wrap gap-2 pt-1">' + btns + '</div></div>';
+  }
+  async function search(raw) {
+    var box = el('uvBox'), q = String(raw || '').trim();
+    if (!q) { box.innerHTML = '<p class="text-red-700 font-bold">Enter a code first.</p>'; return; }
+    box.innerHTML = '<p class="text-slate-500">Searching…</p>';
+    var hits = localFind(q);
+    if (!hits.length) { await cloudFind(q); hits = localFind(q); }
+    if (!hits.length) { box.innerHTML = '<p class="text-red-700 font-bold">No record found for "' + esc(q) + '" (checked loaded data and Firebase). Try the full code, e.g. WCF-8655.</p>'; return; }
+    box.innerHTML = hits.map(card).join('');
+  }
+  function showRevoked() {
+    var rows = [];
+    allRecs().forEach(function (rec) {
+      if (rec.status === 'Revoked') rows.push({ rec: rec, role: 'record' });
+      (rec.members || []).forEach(function (m, ix) { if (m && m.status === 'Revoked') rows.push({ rec: rec, role: 'member', idx: ix }); });
+    });
+    el('uvBox').innerHTML = rows.length ? '<div class="font-bold text-slate-700">Revoked (' + rows.length + ')</div>' + rows.map(card).join('') : '<p class="text-emerald-700 font-bold">No revoked records loaded. Press Refresh Cloud Data if needed.</p>';
+  }
+
+  /* ---------- writes ---------- */
+  async function writeAll(code, fields) {
+    var report = [];
+    if (!cloudOK()) return { ok: true, report: ['Firebase offline - changed on this device only'] };
+    for (var i = 0; i < COLS.length; i++) {
+      try {
+        var ref = db.collection(COLS[i]).doc(code), snap = await ref.get();
+        if (snap.exists) { await ref.set(fields, { merge: true }); report.push(COLS[i] + ': updated'); } else report.push(COLS[i] + ': not present');
+      } catch (e) { report.push(COLS[i] + ': FAILED - ' + (e.code || '') + ' ' + (e.message || '')); return { ok: false, report: report }; }
+    }
+    return { ok: true, report: report };
+  }
+  function me() { try { return (firebase.auth().currentUser && firebase.auth().currentUser.email) || 'admin'; } catch (e) { return 'admin'; } }
+  function after(code) {
+    saveLocal();
+    try { updateCensusCounters(); } catch (e) {}
+    try { wcfPublishPortalData(false); } catch (e) {}
+    el('uvCode').value = code; search(code);
+  }
+  function nameOf(rec, role, idx) { return ((role === 'member' ? (rec.members || [])[idx] : rec.head) || {}).name || ''; }
+  async function doRevoke(code, role, idx) {
+    var rec = storedFRCRecords[code]; if (!rec) return;
+    var reason = prompt('Why is this being revoked? (required, saved with the record)\n\n' + nameOf(rec, role, idx) + ' (' + code + ')');
+    if (reason === null || reason.trim().length < 3) { alert('A reason of at least 3 characters is required. Nothing changed.'); return; }
+    var typed = prompt('To confirm, type the record code exactly:\n' + code);
+    if (typed === null || typed.trim().toUpperCase() !== String(code).toUpperCase()) { alert('Code did not match. Nothing changed.'); return; }
+    var now = new Date().toISOString(), r;
+    if (role === 'member') {
+      var ms = JSON.parse(JSON.stringify(rec.members || []));
+      ms[idx].revokedFrom = ms[idx].status || 'Approved'; ms[idx].status = 'Revoked'; ms[idx].revokedReason = reason.trim(); ms[idx].revokedAt = now; ms[idx].revokedBy = me();
+      r = await writeAll(code, { members: ms });
+      if (!r.ok) { alert('Revoke FAILED - nothing changed locally.\n\n' + r.report.join('\n')); return; }
+      rec.members = ms;
+    } else {
+      var f = { status: 'Revoked', revokedFrom: rec.status || 'Approved', revokedReason: reason.trim(), revokedAt: now, revokedBy: me() };
+      r = await writeAll(code, f);
+      if (!r.ok) { alert('Revoke FAILED - nothing changed locally.\n\n' + r.report.join('\n') + '\n\n"permission" error = Firestore rules block this write.'); return; }
+      Object.keys(f).forEach(function (k) { rec[k] = f[k]; });
+    }
+    alert('REVOKED (not deleted). Restore it if the member is confirmed, otherwise delete it.\n\n' + r.report.join('\n'));
+    after(code);
+  }
+  async function doRestore(code, role, idx) {
+    var rec = storedFRCRecords[code]; if (!rec) return;
+    if (!confirm('Restore ' + nameOf(rec, role, idx) + ' (' + code + ')?')) return;
+    var r;
+    if (role === 'member') {
+      var ms = JSON.parse(JSON.stringify(rec.members || []));
+      ms[idx].status = ms[idx].revokedFrom || 'Approved'; ms[idx].restoredAt = new Date().toISOString();
+      r = await writeAll(code, { members: ms });
+      if (!r.ok) { alert('Restore FAILED.\n\n' + r.report.join('\n')); return; }
+      rec.members = ms;
+    } else {
+      var f = { status: rec.revokedFrom || 'Approved', restoredAt: new Date().toISOString() };
+      r = await writeAll(code, f);
+      if (!r.ok) { alert('Restore FAILED.\n\n' + r.report.join('\n')); return; }
+      Object.keys(f).forEach(function (k) { rec[k] = f[k]; });
+    }
+    alert('Restored.\n\n' + r.report.join('\n'));
+    after(code);
+  }
+  async function doDelete(code, role, idx) {
+    var rec = storedFRCRecords[code]; if (!rec) return;
+    var revoked = role === 'member' ? (rec.members[idx] && rec.members[idx].status === 'Revoked') : rec.status === 'Revoked';
+    if (!revoked) { alert('Revoke first. Only a revoked record can be deleted.'); return; }
+    var nm = nameOf(rec, role, idx);
+    if (!confirm('PERMANENTLY DELETE ' + nm + ' (' + code + ')?\n\nThis cannot be undone. A JSON backup downloads first.')) return;
+    var typed = prompt('Type the record code exactly to delete:\n' + code);
+    if (typed === null || typed.trim().toUpperCase() !== String(code).toUpperCase()) { alert('Code did not match. Nothing deleted.'); return; }
+    if (!cloudOK()) { alert('Firebase is offline. Nothing was deleted.'); return; }
+    try { if (typeof exportCensusJSON === 'function') exportCensusJSON(); } catch (e) {}
+    var report = [], bad = false;
+    if (role === 'member') {
+      var ms = (rec.members || []).filter(function (m, i) { return i !== idx; });
+      var keys = {}; try { keys = wcfDeriveKeys(Object.assign({}, rec, { members: ms })); } catch (e) {}
+      var upd = { members: ms }; if (keys && keys.memberIds) upd.memberIds = keys.memberIds;
+      var r = await writeAll(code, upd);
+      report = r.report; bad = !r.ok;
+      if (!bad) { rec.members = ms; if (upd.memberIds) rec.memberIds = upd.memberIds; }
+    } else {
+      for (var i = 0; i < COLS.length; i++) {
+        try {
+          var ref = db.collection(COLS[i]).doc(code), snap = await ref.get(), had = snap.exists;
+          if (had) await ref.delete();
+          var q = await db.collection(COLS[i]).where('code', '==', code).get();
+          for (var j = 0; j < q.docs.length; j++) { await q.docs[j].ref.delete(); had = true; }
+          report.push(COLS[i] + (had ? ': deleted OK' : ': not present'));
+        } catch (e) { bad = true; report.push(COLS[i] + ': FAILED - ' + (e.code || '') + ' ' + e.message); }
+      }
+      if (!bad) delete storedFRCRecords[code];
+    }
+    alert((bad ? 'NOT fully deleted:\n\n' : 'Deleted.\n\n') + report.join('\n') + (bad ? '\n\nA "permission" error means Firestore rules block deletes.' : ''));
+    saveLocal();
+    try { updateCensusCounters(); } catch (e) {}
+    try { wcfPublishPortalData(false); } catch (e) {}
+    if (!bad) { el('uvBox').innerHTML = '<p class="text-emerald-700 font-bold">Deleted ' + esc(code) + '.</p>'; } else search(code);
+  }
+
+  /* ================= MEDIA MANAGER (YouTube links, meeting photos, news) ================= */
+  function ytId(u) {
+    var m = String(u || '').trim().match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/|v\/))([A-Za-z0-9_-]{11})/);
+    return m ? m[1] : '';
+  }
+  function compress(file, maxW, cb) {
+    var fr = new FileReader();
+    fr.onerror = function () { cb(null); };
+    fr.onload = function () {
+      var im = new Image();
+      im.onerror = function () { cb(null); };
+      im.onload = function () {
+        var k = Math.min(1, maxW / Math.max(im.width, im.height)), w = Math.round(im.width * k), h = Math.round(im.height * k);
+        var c = document.createElement('canvas'); c.width = w; c.height = h;
+        var x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, w, h); x.drawImage(im, 0, 0, w, h);
+        var q = 0.72, out = c.toDataURL('image/jpeg', q);
+        while (out.length > 600000 && q > 0.35) { q -= 0.08; out = c.toDataURL('image/jpeg', q); }
+        cb(out.length > 900000 ? null : out);
+      };
+      im.src = fr.result;
+    };
+    fr.readAsDataURL(file);
+  }
+  function mediaUi() {
+    if (el('adminMediaSection')) return;
+    var anchor = el('adminUniversalRevoke') || el('adminDupSection'); if (!anchor) return;
+    var sec = document.createElement('div');
+    sec.id = 'adminMediaSection'; sec.className = 'space-y-2 text-left bg-white border border-slate-200 rounded-xl p-4 shadow';
+    sec.innerHTML =
+      '<h4 class="text-xs font-bold text-slate-800 uppercase">📺 Media Manager (shown in the portal “Media” tab)</h4>' +
+      '<p class="text-[10px] text-slate-500">YouTube videos are only a link (video stays on YouTube). Photos are compressed in your browser before saving to Firebase.</p>' +
+      '<div class="grid grid-cols-1 sm:grid-cols-3 gap-2">' +
+      '<select id="mmKind" class="border border-slate-300 rounded-lg p-2 text-xs"><option value="video">YouTube video</option><option value="image">Meeting photo(s)</option><option value="news">News</option></select>' +
+      '<input id="mmTitle" type="text" placeholder="Title" class="sm:col-span-2 border border-slate-300 rounded-lg p-2 text-xs"></div>' +
+      '<input id="mmUrl" type="text" placeholder="YouTube link (https://youtu.be/… or youtube.com/watch?v=…)" class="w-full border border-slate-300 rounded-lg p-2 text-xs font-mono">' +
+      '<textarea id="mmText" rows="3" placeholder="News text" class="hidden w-full border border-slate-300 rounded-lg p-2 text-xs"></textarea>' +
+      '<input id="mmFile" type="file" accept="image/*" multiple class="hidden text-xs">' +
+      '<div class="flex flex-wrap gap-2 items-center"><button type="button" id="mmAdd" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold px-4 py-2 rounded-lg cursor-pointer">Upload / Add</button>' +
+      '<button type="button" id="mmReload" class="bg-slate-800 text-white text-xs font-bold px-3 py-2 rounded-lg cursor-pointer">Reload list</button><span id="mmStatus" class="text-[11px] font-bold"></span></div>' +
+      '<div id="mmList" class="space-y-2"></div>';
+    anchor.insertAdjacentElement('afterend', sec);
+    el('mmKind').addEventListener('change', mmSync);
+    el('mmAdd').addEventListener('click', mmAdd);
+    el('mmReload').addEventListener('click', mmLoad);
+    el('mmList').addEventListener('click', function (ev) {
+      var b = ev.target.closest ? ev.target.closest('[data-mm-del]') : null; if (b) mmDel(b.getAttribute('data-mm-del'), b.getAttribute('data-t'));
+    });
+    mmSync();
+    var hb = el('adminHeaderActions');
+    if (hb && !el('btnMediaJump')) {
+      var j = document.createElement('button'); j.type = 'button'; j.id = 'btnMediaJump';
+      j.className = 'bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold px-3.5 py-2 rounded-lg shadow transition';
+      j.textContent = '📺 Media';
+      j.addEventListener('click', function () { sec.scrollIntoView({ behavior: 'smooth', block: 'start' }); mmLoad(); });
+      hb.insertBefore(j, hb.firstChild);
+    }
+  }
+  function mmStatus(m, ok) { var s = el('mmStatus'); if (s) { s.textContent = m; s.className = 'text-[11px] font-bold ' + (ok ? 'text-emerald-700' : 'text-red-600'); } }
+  function mmSync() {
+    var k = el('mmKind').value;
+    el('mmUrl').classList.toggle('hidden', k !== 'video');
+    el('mmText').classList.toggle('hidden', k !== 'news');
+    el('mmFile').classList.toggle('hidden', k === 'video');
+  }
+  async function mmAdd() {
+    if (!cloudOK() || !auth || !auth.currentUser) { mmStatus('Sign in as admin and wait for Firebase first.', false); return; }
+    var k = el('mmKind').value, title = el('mmTitle').value.trim();
+    if (!title) { mmStatus('Title is required.', false); return; }
+    var base = { kind: k, title: title, ts: Date.now(), createdAt: new Date().toISOString(), by: me() };
+    try {
+      el('mmAdd').disabled = true;
+      if (k === 'video') {
+        var url = el('mmUrl').value.trim(), id = ytId(url);
+        if (!id) { mmStatus('Not a valid YouTube link.', false); return; }
+        base.url = url; base.videoId = id;
+        await db.collection(MEDIA).add(base);
+      } else {
+        var files = Array.prototype.slice.call(el('mmFile').files || []);
+        if (k === 'image' && !files.length) { mmStatus('Choose at least one photo.', false); return; }
+        if (k === 'news') {
+          var tx = el('mmText').value.trim(); if (!tx) { mmStatus('News text is required.', false); return; }
+          base.text = tx.slice(0, 5000);
+          if (files[0]) { mmStatus('Compressing photo…', true); var im0 = await new Promise(function (r) { compress(files[0], 1100, r); }); if (!im0) { mmStatus('Photo could not be compressed.', false); return; } base.img = im0; }
+          await db.collection(MEDIA).add(base);
+        } else {
+          for (var i = 0; i < files.length; i++) {
+            mmStatus('Compressing & uploading ' + (i + 1) + '/' + files.length + '…', true);
+            var img = await new Promise(function (r) { compress(files[i], 1100, r); });
+            if (!img) { mmStatus('Photo ' + (i + 1) + ' skipped (too large / invalid).', false); continue; }
+            var d = Object.assign({}, base, { img: img, ts: Date.now() + i, title: files.length > 1 ? title + ' (' + (i + 1) + ')' : title });
+            await db.collection(MEDIA).add(d);
+          }
+        }
+      }
+      mmStatus('Saved ✓', true);
+      el('mmTitle').value = ''; el('mmUrl').value = ''; el('mmText').value = ''; el('mmFile').value = '';
+      mmLoad();
+    } catch (e) {
+      mmStatus('FAILED: ' + (e.code || '') + ' ' + (e.message || '') + ' (check Firestore rules for wcf_media)', false);
+    } finally { el('mmAdd').disabled = false; }
+  }
+  async function mmLoad() {
+    var box = el('mmList'); if (!box || !cloudOK()) return;
+    try {
+      var snap = await db.collection(MEDIA).orderBy('ts', 'desc').limit(100).get(), html = '';
+      snap.forEach(function (d) {
+        var x = d.data(), th = x.kind === 'video' ? 'https://i.ytimg.com/vi/' + encodeURIComponent(x.videoId) + '/default.jpg' : (x.img || '');
+        html += '<div class="flex items-center gap-3 p-2 border border-slate-200 rounded-lg bg-slate-50">' +
+          (th ? '<img src="' + esc(th) + '" alt="" class="w-16 h-12 object-cover rounded">' : '<div class="w-16 h-12 rounded bg-amber-100 flex items-center justify-center text-[10px]">NEWS</div>') +
+          '<div class="flex-1 min-w-0"><div class="font-bold text-xs truncate">' + esc(x.title) + '</div><div class="text-[10px] text-slate-500">' + esc(x.kind) + ' · ' + esc((x.createdAt || '').slice(0, 10)) + '</div></div>' +
+          '<button type="button" data-mm-del="' + esc(d.id) + '" data-t="' + esc(x.title) + '" class="bg-red-600 hover:bg-red-700 text-white text-[10px] font-bold px-2.5 py-1.5 rounded cursor-pointer">Delete</button></div>';
+      });
+      box.innerHTML = html || '<p class="text-slate-400 italic text-xs">No media yet.</p>';
+    } catch (e) { box.innerHTML = '<p class="text-red-600 text-xs font-bold">Could not load: ' + esc((e.code || '') + ' ' + (e.message || '')) + '</p>'; }
+  }
+  async function mmDel(id, title) {
+    if (!confirm('Delete "' + title + '" from the portal Media tab?')) return;
+    try { await db.collection(MEDIA).doc(id).delete(); mmStatus('Deleted ✓', true); mmLoad(); }
+    catch (e) { mmStatus('Delete FAILED: ' + (e.code || '') + ' ' + (e.message || ''), false); }
+  }
+
+  function install() {
+    ui(); mediaUi();
+    if (!el('adminUniversalRevoke') || !el('adminMediaSection')) return false;
+    mmLoad(); return true;
+  }
+  var tries = 0;
+  (function wait() { if (install() || ++tries > 40) return; setTimeout(wait, 700); })();
+  /* reload media list once the admin has signed in / data refreshed */
+  document.addEventListener('click', function (ev) { var b = ev.target && ev.target.closest ? ev.target.closest('button') : null; if (b && /Refresh Cloud Data/.test(b.textContent || '')) setTimeout(mmLoad, 2500); });
+})();
+</script>
+<!-- ==================== END WCF admin22 additions ==================== -->
+
+<!-- ==================== WCF admin23: PDF reports in Urdu / Hindi / English ==================== -->
+<script id="wcf-v23-pdf">
+/* admin23: every admin PDF report is drawn by the browser (real Urdu / Hindi / English text) and placed in the PDF as page images.
+   The existing report code is NOT changed: its jsPDF calls are recorded while it runs, then redrawn as HTML. */
+(function () {
+  var NAMES = ['exportCountryCityWisePDF', 'exportPhoneDirectoryPDF', 'exportAdultUnmarriedPDF', 'exportNonChhippaWivesPDF', 'exportOtherClansPDF'];
+  var FONT = "'Inter','Noto Naskh Arabic','Noto Sans Devanagari','Segoe UI',Tahoma,Arial,sans-serif";
+  var PT = 0.352778; /* mm per point */
+  var mctx = null;
+  function measureMM(str, fs, bold) {
+    try {
+      if (!mctx) mctx = document.createElement('canvas').getContext('2d');
+      mctx.font = (bold ? 'bold ' : '') + '100px ' + FONT;
+      return mctx.measureText(String(str)).width / 100 * fs * PT;
+    } catch (e) { return String(str).length * fs * PT * 0.5; }
+  }
+  function col(a) {
+    if (a.length === 1 && typeof a[0] === 'string') return a[0];
+    if (a.length === 1 && typeof a[0] === 'number') { var g = Math.round(a[0]); return 'rgb(' + g + ',' + g + ',' + g + ')'; }
+    if (a.length === 3) return 'rgb(' + Math.round(a[0]) + ',' + Math.round(a[1]) + ',' + Math.round(a[2]) + ')';
+    return 'rgb(0,0,0)';
+  }
+  function toast(msg) {
+    var t = document.getElementById('wcfPdfToast');
+    if (!msg) { if (t) t.remove(); return; }
+    if (!t) { t = document.createElement('div'); t.id = 'wcfPdfToast'; t.style.cssText = 'position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#0f172a;color:#fff;padding:10px 18px;border-radius:12px;font:700 12px Inter,sans-serif;z-index:99999;box-shadow:0 4px 14px rgba(0,0,0,.4)'; document.body.appendChild(t); }
+    t.textContent = msg;
+  }
+  function waitFonts() {
+    if (!document.fonts || !document.fonts.load) return Promise.resolve();
+    var p = Promise.all([
+      document.fonts.load('12px "Noto Naskh Arabic"', 'اردو'), document.fonts.load('bold 12px "Noto Naskh Arabic"', 'اردو'),
+      document.fonts.load('12px "Noto Sans Devanagari"', 'हिंदी'), document.fonts.load('bold 12px "Noto Sans Devanagari"', 'हिंदी'),
+      document.fonts.load('12px Inter'), document.fonts.load('bold 12px Inter')
+    ]).then(function () { return document.fonts.ready; }).catch(function () {});
+    return Promise.race([p, new Promise(function (r) { setTimeout(r, 5000); })]);
+  }
+  function el(tag, css) { var e = document.createElement(tag); e.style.cssText = css; return e; }
+
+  function buildPage(ops, pw, ph) {
+    var page = el('div', 'position:relative;width:' + pw + 'mm;height:' + ph + 'mm;background:#fff;overflow:hidden;box-sizing:border-box;');
+    ops.forEach(function (o) {
+      if (o.k === 't') {
+        var lines = Array.isArray(o.t) ? o.t.map(String) : [String(o.t)];
+        var fsmm = o.fs * PT;
+        var css = 'position:absolute;margin:0;white-space:pre;line-height:1.15;unicode-bidi:plaintext;font-family:' + FONT + ';font-size:' + o.fs + 'pt;color:' + o.c + ';' +
+          'font-weight:' + (o.bold ? 700 : 400) + ';font-style:' + (o.italic ? 'italic' : 'normal') + ';left:' + o.x + 'mm;top:' + (o.y - fsmm * 0.88) + 'mm;';
+        if (o.align === 'center') css += 'transform:translateX(-50%);text-align:center;';
+        else if (o.align === 'right') css += 'transform:translateX(-100%);text-align:right;';
+        var s = el('div', css); s.setAttribute('dir', 'auto'); s.textContent = lines.join('\n');
+        page.appendChild(s);
+      } else if (o.k === 'r') {
+        var st = o.style || 'S', fill = /F/i.test(st), stroke = /S|D/i.test(st) || !st;
+        var css2 = 'position:absolute;box-sizing:border-box;left:' + o.x + 'mm;top:' + o.y + 'mm;width:' + o.w + 'mm;height:' + o.h + 'mm;';
+        if (fill) css2 += 'background:' + o.fc + ';';
+        if (stroke) css2 += 'border:' + Math.max(o.lw, 0.1) + 'mm solid ' + o.dc + ';';
+        if (o.rx) css2 += 'border-radius:' + o.rx + 'mm;';
+        page.appendChild(el('div', css2));
+      } else if (o.k === 'l') {
+        var dx = o.x2 - o.x1, dy = o.y2 - o.y1, len = Math.sqrt(dx * dx + dy * dy), ang = Math.atan2(dy, dx) * 180 / Math.PI, th = Math.max(o.lw, 0.1);
+        page.appendChild(el('div', 'position:absolute;left:' + o.x1 + 'mm;top:' + (o.y1 - th / 2) + 'mm;width:' + len + 'mm;height:' + th + 'mm;background:' + o.dc + ';transform-origin:0 50%;transform:rotate(' + ang + 'deg);'));
+      }
+    });
+    return page;
+  }
+
+  async function renderPDF(Real, init, pages, pw, ph, name) {
+    toast('Preparing PDF…');
+    var holder = el('div', 'position:fixed;left:-20000px;top:0;');
+    document.body.appendChild(holder);
+    try {
+      await waitFonts();
+      var pdf = new Real(init.o, 'mm', init.f);
+      for (var i = 0; i < pages.length; i++) {
+        var pg = buildPage(pages[i], pw, ph);
+        holder.innerHTML = ''; holder.appendChild(pg);
+        toast('Preparing PDF… page ' + (i + 1) + '/' + pages.length);
+        var canvas = await html2canvas(pg, { scale: 2.2, backgroundColor: '#ffffff', useCORS: true, logging: false });
+        if (i > 0) pdf.addPage(init.f, init.o);
+        pdf.addImage(canvas.toDataURL('image/jpeg', 0.93), 'JPEG', 0, 0, pw, ph);
+      }
+      pdf.save(name);
+      return true;
+    } finally { holder.remove(); toast(''); }
+  }
+
+  function makeRecorder(Real, o, u, f) {
+    var real = new Real(o, u, f);
+    var pw = real.internal.pageSize.getWidth(), ph = real.internal.pageSize.getHeight();
+    var st = { fs: 16, bold: false, italic: false, tc: 'rgb(0,0,0)', fc: 'rgb(0,0,0)', dc: 'rgb(0,0,0)', lw: 0.2 };
+    var pages = [[]], cur = 0, proxy;
+    function fwd(name, args) { try { return real[name].apply(real, args); } catch (e) {} }
+    var ov = {
+      setFontSize: function (n) { st.fs = +n || st.fs; fwd('setFontSize', arguments); return proxy; },
+      setFont: function (n, s) { st.bold = /bold/i.test(String(s || '')) || /bold/i.test(String(n || '')); st.italic = /italic|oblique/i.test(String(s || '')); fwd('setFont', arguments); return proxy; },
+      setTextColor: function () { st.tc = col(arguments); fwd('setTextColor', arguments); return proxy; },
+      setFillColor: function () { st.fc = col(arguments); fwd('setFillColor', arguments); return proxy; },
+      setDrawColor: function () { st.dc = col(arguments); fwd('setDrawColor', arguments); return proxy; },
+      setLineWidth: function (w) { st.lw = +w || st.lw; fwd('setLineWidth', arguments); return proxy; },
+      text: function (t, x, y, opt) {
+        pages[cur].push({ k: 't', t: t, x: x, y: y, fs: st.fs, bold: st.bold, italic: st.italic, c: st.tc, align: opt && opt.align });
+        fwd('text', arguments); return proxy;
+      },
+      rect: function (x, y, w, h, style) { pages[cur].push({ k: 'r', x: x, y: y, w: w, h: h, style: style, fc: st.fc, dc: st.dc, lw: st.lw }); fwd('rect', arguments); return proxy; },
+      roundedRect: function (x, y, w, h, rx, ry, style) { pages[cur].push({ k: 'r', x: x, y: y, w: w, h: h, rx: rx, style: style, fc: st.fc, dc: st.dc, lw: st.lw }); fwd('roundedRect', arguments); return proxy; },
+      line: function (x1, y1, x2, y2) { pages[cur].push({ k: 'l', x1: x1, y1: y1, x2: x2, y2: y2, dc: st.dc, lw: st.lw }); fwd('line', arguments); return proxy; },
+      addPage: function () { pages.push([]); cur = pages.length - 1; fwd('addPage', arguments); return proxy; },
+      setPage: function (n) { if (n >= 1 && n <= pages.length) cur = n - 1; fwd('setPage', arguments); return proxy; },
+      getNumberOfPages: function () { return pages.length; },
+      getTextWidth: function (s) { return measureMM(s, st.fs, st.bold); },
+      splitTextToSize: function (text, max) {
+        var out = [];
+        String(text == null ? '' : text).split('\n').forEach(function (para) {
+          var words = para.split(/\s+/), line = '';
+          words.forEach(function (w) {
+            var tryL = line ? line + ' ' + w : w;
+            if (line && measureMM(tryL, st.fs, st.bold) > max) { out.push(line); line = w; } else line = tryL;
+          });
+          out.push(line);
+        });
+        return out;
+      },
+      save: function (name) {
+        renderPDF(Real, { o: o, f: f }, pages, pw, ph, name).catch(function (e) {
+          console.warn('Image-based PDF failed, saving plain PDF:', e);
+          try { real.save(name); } catch (e2) {}
+        });
+      }
+    };
+    proxy = new Proxy(real, {
+      get: function (t, p) {
+        if (Object.prototype.hasOwnProperty.call(ov, p)) return ov[p];
+        var v = t[p];
+        if (typeof v === 'function') return function () { var r = v.apply(t, arguments); return r === t ? proxy : r; };
+        return v;
+      }
+    });
+    return proxy;
+  }
+
+  function install() {
+    if (typeof html2canvas === 'undefined' || !window.jspdf) return false;
+    NAMES.forEach(function (name) {
+      var prev = window[name];
+      if (typeof prev !== 'function' || prev._v23) return;
+      var fn = function () {
+        var lib = window.jspdf;
+        if (window.__wcfRecActive || !lib || !lib.jsPDF || typeof html2canvas === 'undefined') return prev.apply(this, arguments);
+        var Orig = lib.jsPDF;
+        window.__wcfRecActive = true;
+        lib.jsPDF = function (o, u, f) { return makeRecorder(Orig, o, u, f); };
+        try { return prev.apply(this, arguments); }
+        finally { lib.jsPDF = Orig; window.__wcfRecActive = false; }
+      };
+      try { Object.keys(prev).forEach(function (k) { fn[k] = prev[k]; }); } catch (e) {}
+      fn._v23 = true; window[name] = fn;
+    });
+    return true;
+  }
+  var n = 0;
+  (function wait() { if (install() || ++n > 30) return; setTimeout(wait, 700); })();
+  window.addEventListener('load', function () { setTimeout(install, 3500); setTimeout(install, 9000); });
+  window.__wcfPdfRecorder = { makeRecorder: makeRecorder, buildPage: buildPage };
+})();
+
+</script>
 </html>
