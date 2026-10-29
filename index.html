@@ -487,6 +487,11 @@ Full Residential Address<span class="text-red-500 font-bold ml-1 mr-1">*</span>
 <label id="lblRefContact" class="ref-label text-xs font-semibold text-slate-700">Reference Phone / Foundation Member ID:</label>
 <input type="text" id="refElderContact" placeholder="Phone or WCF Member ID..." class="w-full border border-slate-300 rounded-lg px-3 py-1.5 text-xs outline-none">
 </div>
+<div class="md:col-span-2">
+<label id="lblRefMemberId" class="ref-label text-xs font-semibold text-slate-700">Reference Member ID (family Head's WCF Member ID preferred):</label>
+<input type="text" id="refMemberId" autocomplete="off" placeholder="WCF-123456" class="w-full border border-slate-300 rounded-lg px-3 py-1.5 text-xs outline-none font-mono uppercase">
+<p id="lblRefMemberIdHint" class="text-[10px] text-slate-500 mt-1">Member ID of an approved adult (18+). A family Head is preferred; any other adult reference needs extra admin verification.</p>
+</div>
 </div>
 </div>
 <!-- Submit Action Bar -->
@@ -661,8 +666,6 @@ Thank you to all those who laid the foundation of the World Chhippa Foundation:
 <p class="text-[10px] text-slate-500">Official Non-Governmental Community Registry Document</p>
 </div>
 <div class="col-span-3"></div>
-</div>
-</div>
 </div>
 <div class="bg-amber-50/60 border border-amber-200 rounded-xl p-6 space-y-4 text-xs relative z-10">
 <div class="grid grid-cols-2 gap-4 pb-3 border-b border-amber-200">
@@ -1395,11 +1398,14 @@ function generateUniqueCertCode(mode) {
 }
 function normalizeCleanString(str) {
 if (!str) return '';
-return String(str)
-.toLowerCase()
-.replace(/^(mohammad|muhammad|mohd|md|mian|syed|محمد|سید|میان)\s+/g, '')
-.replace(/[^\p{L}\p{N}]/gu, '')
-.trim();
+// WCF v12: order-insensitive (Muhammad Waseem Sadiq == Sadiq Waseem Muhammad); honorifics dropped anywhere in the name
+var HON = /^(mohammad|muhammad|mohammed|muhammed|mohamad|muhamad|mohd|md|mian|syed|sayed|sayyed|محمد|سید|میان|मोहम्मद|मुहम्मद|सैयद|मियां|मियाँ)$/;
+var t = String(str).toLowerCase();
+try { t = t.normalize('NFKD').replace(/\p{M}/gu, ''); } catch (e) {}
+var toks = t.split(/[^\p{L}\p{N}]+/u).filter(Boolean);
+var kept = toks.filter(function (w) { return !HON.test(w); });
+if (!kept.length) kept = toks;
+return kept.sort().join('');
 }
 function getPhoneticSoundex(s) {
 if (!s) return "";
@@ -1457,6 +1463,10 @@ badge.className = "text-[10px] font-semibold text-emerald-600 mt-0.5 block";
 }
 }
 function setRegistrationMode(mode, skipReset) {
+if (typeof editingExistingFRCCode !== 'undefined' && editingExistingFRCCode && mode !== 'family') {
+  alert(currentLang === 'ur' ? 'خاندان کی اپڈیٹ جاری ہے۔ انفرادی رجسٹریشن پر جانے سے پہلے اسے مکمل کریں یا منسوخ کریں۔' : (currentLang === 'hi' ? 'परिवार का अपडेट जारी है। व्यक्तिगत पंजीकरण पर जाने से पहले उसे पूरा करें या रद्द करें।' : 'A family update is in progress. Please finish or cancel it before switching to Individual registration.'));
+  return;
+}
 currentRegMode = mode;
 if (!skipReset && !editingExistingFRCCode) {
   var fEl = document.getElementById('censusForm'); if (fEl) fEl.reset();
@@ -1471,6 +1481,7 @@ const famCard = document.getElementById('familyMembersCard');
 const refCard = document.getElementById('communityRefCard');
 const refElderInput = document.getElementById('refElderName');
 const refContactInput = document.getElementById('refElderContact');
+const refMemberIdInput = document.getElementById('refMemberId');
 const dict = i18n[currentLang];
 if (mode === 'family') {
 btnFam.className = "bandhani-bg text-white px-4 py-2 rounded-lg text-xs font-bold shadow";
@@ -1481,6 +1492,7 @@ document.getElementById('headCardTitle').textContent = dict.headCardTitle;
 document.getElementById('headBadge').textContent = dict.headBadge;
 refElderInput.required = false;
 refContactInput.required = false;
+if (refMemberIdInput) { refMemberIdInput.required = false; refMemberIdInput.value = ''; }
 refElderInput.value = '';
 refContactInput.value = '';
 document.getElementById('lblRefName').innerHTML = `${dict.lblRefName}`;
@@ -1494,6 +1506,7 @@ document.getElementById('headCardTitle').textContent = dict.headCardTitleInd;
 document.getElementById('headBadge').textContent = dict.headBadgeInd;
 refElderInput.required = true;
 refContactInput.required = true;
+if (refMemberIdInput) refMemberIdInput.required = true;
 document.getElementById('lblRefName').innerHTML = `${dict.lblRefName} <span class="text-red-500 font-bold ml-1">*</span>`;
 document.getElementById('lblRefContact').innerHTML = `${dict.lblRefContact} <span class="text-red-500 font-bold ml-1">*</span>`;
 }
@@ -1947,6 +1960,7 @@ card.innerHTML = `
 <div>
 <label class="block text-xs font-semibold text-slate-700 lbl-mem-rel">${dict.lblMemRel} *</label>
 <select id="memRel_${id}" onchange="handleRelationChange(${id})" class="w-full border border-slate-300 rounded-lg px-3 text-xs focus:ring-2 focus:ring-amber-500 outline-none bg-white"></select>
+<input type="text" id="memRelOther_${id}" maxlength="40" placeholder="${typeof wcfRelOtherPH === 'function' ? wcfRelOtherPH() : ''}" class="hidden mt-2 w-full border border-amber-400 rounded-lg px-3 text-xs bg-amber-50 outline-none">
 </div>
 <div>
 <label class="block text-xs font-semibold text-slate-700 lbl-mem-name">${dict.lblMemName} *</label>
@@ -2036,6 +2050,7 @@ memCountry.selectedIndex = 0;
 }
 if (existingData) {
 document.getElementById(`memName_${id}`).value = existingData.name || '';
+if (existingData.relationKey === 'Other' && existingData.relationOther) { const __ro = document.getElementById(`memRelOther_${id}`); if (__ro) __ro.value = existingData.relationOther; }
 document.getElementById(`memAge_${id}`).value = existingData.age || '';
 if (existingData.phone) document.getElementById(`memPhone_${id}`).value = existingData.phone;
 if (existingData.dob) document.getElementById(`memDOB_${id}`).value = existingData.dob;
@@ -2054,6 +2069,8 @@ if (card) card.remove();
 }
 function handleRelationChange(id, resetMarital = true) {
 const rel = document.getElementById(`memRel_${id}`).value;
+const relOtherEl = document.getElementById(`memRelOther_${id}`);
+if (relOtherEl) { if (rel === 'Other') { relOtherEl.classList.remove('hidden'); relOtherEl.required = true; } else { relOtherEl.classList.add('hidden'); relOtherEl.required = false; } }
 const genderSelect = document.getElementById(`memGender_${id}`);
 const maritalSelect = document.getElementById(`memMarital_${id}`);
 const wifeLineageWrap = document.getElementById(`memWifeLineageWrap_${id}`);
@@ -2339,6 +2356,7 @@ const cards = document.querySelectorAll('[id^="memberCard_"]');
 cards.forEach((card, idx) => {
 const id = card.id.split('_')[1];
 const mRelKey = document.getElementById(`memRel_${id}`).value;
+const mRelOther = mRelKey === 'Other' ? ((document.getElementById(`memRelOther_${id}`) || {}).value || '').trim() : '';
 const mName = document.getElementById(`memName_${id}`).value.trim();
 const mDOB = document.getElementById(`memDOB_${id}`).value;
 const mGenderKey = document.getElementById(`memGender_${id}`).value;
@@ -2370,7 +2388,8 @@ members.push({
 memberId: finalMemberId,
 uniqueId: `${certCode}-${idx + 2}`,
 name: mName,
-relation: dict.relations[mRelKey],
+relation: mRelOther || dict.relations[mRelKey],
+relationOther: mRelOther,
 relationKey: mRelKey,
 gender: dict.genders[mGenderKey],
 genderKey: mGenderKey,
@@ -2437,10 +2456,16 @@ location: `${headCity}, ${getCountryLocalizedName(headCountry, currentLang)}`,
 address: headAddress
 },
 members: members,
-reference: {
+reference: Object.assign({
 elder: refElder,
 contact: refContact
-}
+}, (currentRegMode === 'individual') ? {
+memberId: ((document.getElementById('refMemberId') || {}).value || '').trim().toUpperCase(),
+refType: (window.__wcfRefCheck && window.__wcfRefCheck.refType) || 'unverified',
+verified: !!(window.__wcfRefCheck && window.__wcfRefCheck.verified),
+refRecord: (window.__wcfRefCheck && window.__wcfRefCheck.refRecord) || '',
+submittedAt: (window.__wcfRefCheck && window.__wcfRefCheck.submittedAt) || new Date().toISOString()
+} : {})
 };
 storedFRCRecords[certCode] = record;
 try {
@@ -2686,7 +2711,7 @@ const pdf = new jsPDF('p', 'mm', 'a4');
 const pdfWidth = pdf.internal.pageSize.getWidth();
 const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight > 297 ? 297 : pdfHeight);
-pdf.save(`Official_Certificate_${activeViewingRecord ? activeViewingRecord.code : 'Doc'}.pdf`);
+pdf.save((typeof wcfDocFileName === 'function' ? wcfDocFileName(activeViewingRecord) : null) || `Official_Certificate_${activeViewingRecord ? activeViewingRecord.code : 'Doc'}.pdf`);
 btn.textContent = originalText;
 btn.disabled = false;
 }
@@ -3315,9 +3340,12 @@ closeAboutUsModal();
                 <label id="lblIdPhoto" class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Upload Your Photo <span class="text-amber-600 font-normal lowercase">(Optional)</span></label>
                 <input type="file" id="inputUserPhoto" accept="image/*" class="text-xs text-slate-500 file:mr-4 file:py-1.5 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 cursor-pointer">
             </div>
+            <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+            <button type="button" id="btnDownloadIdCardPdf" onclick="wcfDownloadIdCardPDF()" class="w-full sm:w-auto bg-emerald-700 hover:bg-emerald-800 text-white font-black px-6 py-2.5 rounded-xl text-xs uppercase tracking-wider shadow-md transition flex items-center justify-center gap-2">⬇️ Download ID Card PDF</button>
             <button type="button" id="btnPrintCardAction" onclick="window.print();" class="w-full sm:w-auto bg-amber-500 hover:bg-amber-600 text-slate-950 font-black px-6 py-2.5 rounded-xl text-xs uppercase tracking-wider shadow-md transition flex items-center justify-center gap-2">
                 🖨️ Print ID Card
             </button>
+            </div>
         </div>
     </div>
     <!-- ID Card Preview Area -->
@@ -3602,7 +3630,7 @@ function wcfFindIdCardTarget(rawId) {
     const q = String(rawId || '').trim().toUpperCase();
     if (!q || typeof storedFRCRecords === 'undefined' || !storedFRCRecords) return null;
     const eq = v => v !== undefined && v !== null && String(v).trim().toUpperCase() === q;
-    const recs = Object.keys(storedFRCRecords).map(k => ({ key: k, rec: storedFRCRecords[k] })).filter(x => x.rec);
+    const recs = Object.keys(storedFRCRecords).map(k => ({ key: k, rec: storedFRCRecords[k] })).filter(x => x.rec && x.rec.status !== 'Revoked' && x.rec.status !== 'Rejected');
     // 1) a person's own ID (head or member) wins first
     for (const { rec } of recs) {
         const h = rec.head;
@@ -3633,7 +3661,15 @@ function wcfIdCardAddress(t) {
     const head = (t.rec && t.rec.head) || {};
     const addr = p.address || head.address || t.rec.address || '';
     const city = p.city || head.city || t.rec.city || '';
-    return [addr, city].filter(Boolean).join(', ');
+    const countryRaw = p.country || head.country || t.rec.country || '';
+    let country = countryRaw;
+    try { if (countryRaw && typeof getCountryLocalizedName === 'function') country = getCountryLocalizedName(countryRaw, (typeof currentLang !== 'undefined' ? currentLang : 'en')) || countryRaw; } catch (e) {}
+    const out = [];
+    [addr, city, country].filter(Boolean).forEach(function (x) {
+        const low = String(x).toLowerCase();
+        if (!out.some(function (y) { return String(y).toLowerCase().indexOf(low) >= 0; })) out.push(x);
+    });
+    return out.join(', ');
 }
 function wcfIdCardVerifyUrl(t) {
     const p = t.person || {};
@@ -3744,6 +3780,7 @@ M. WASEEM SADIQ TAK (Neemray Walay)
       lblIdEmergency: "Emergency Contact Number",
       lblIdPhoto: "Upload Your Photo <span class='text-amber-600 font-normal lowercase'>(Optional)</span>",
       btnPrintCardAction: "🖨️ Print ID Card",
+      btnDownloadIdCardPdf: "⬇️ Download ID Card PDF",
       cardOrgTitle: "World Chhippa Foundation",
       cardOrgSub: "Global Census & ID Authority",
       cardOfficialBadge: "Official ID",
@@ -3769,6 +3806,7 @@ M. WASEEM SADIQ TAK (Neemray Walay)
       lblIdEmergency: "ہنگامی رابطہ نمبر",
       lblIdPhoto: "اپنی تصویر اپ لوڈ کریں <span class='text-amber-600 font-normal'>(اختیاری)</span>",
       btnPrintCardAction: "🖨️ پرنٹ آئی ڈی کارڈ",
+      btnDownloadIdCardPdf: "⬇️ آئی ڈی کارڈ پی ڈی ایف ڈاؤن لوڈ کریں",
       cardOrgTitle: "ورلڈ چھیپا فاؤنڈیشن",
       cardOrgSub: "عالمی مردم شماری و شناختی اتھارٹی",
       cardOfficialBadge: "آفیشل کارڈ",
@@ -3794,6 +3832,7 @@ M. WASEEM SADIQ TAK (Neemray Walay)
       lblIdEmergency: "आपातकालीन संपर्क नंबर",
       lblIdPhoto: "अपनी फोटो अपलोड करें <span class='text-amber-600 font-normal'>(वैकल्पिक)</span>",
       btnPrintCardAction: "🖨️ प्रिंट आईडी कार्ड",
+      btnDownloadIdCardPdf: "⬇️ आईडी कार्ड PDF डाउनलोड करें",
       cardOrgTitle: "वर्ल्ड छीपा फाउंडेशन",
       cardOrgSub: "वैश्विक जनगणना एवं पहचान प्राधिकरण",
       cardOfficialBadge: "आधिकारिक आईडी",
@@ -3822,6 +3861,7 @@ M. WASEEM SADIQ TAK (Neemray Walay)
   setTxt("lblIdEmergency", t.lblIdEmergency);
   setHtm("lblIdPhoto", t.lblIdPhoto);
   setHtm("btnPrintCardAction", t.btnPrintCardAction);
+  if (t.btnDownloadIdCardPdf) setHtm("btnDownloadIdCardPdf", t.btnDownloadIdCardPdf);
   setTxt("cardOrgTitle", t.cardOrgTitle);
   setTxt("cardOrgSub", t.cardOrgSub);
   setTxt("cardOfficialBadge", t.cardOfficialBadge);
@@ -3921,7 +3961,21 @@ M. WASEEM SADIQ TAK (Neemray Walay)
     body.printing-frc #frcScaleWrapper {
       transform: none !important;
       margin: 0 !important;
+      width: 100% !important;
+      max-width: none !important;
+      justify-content: flex-start !important;
+      overflow: visible !important;
     }
+    /* v12: 794px sheet must fit inside A4 minus default print margins */
+    body.printing-frc #frcCertificateSheet,
+    body.printing-frc #iicCertificateSheet {
+      zoom: 0.88;
+      box-shadow: none !important;
+    }
+    /* v12: visibility:hidden keeps the page height, which printed blank extra pages; collapse everything except the certificate */
+    body.printing-frc > *:not(main):not(script):not(style):not(link) { display: none !important; }
+    body.printing-frc main > *:not(#frcModal) { display: none !important; }
+    body.printing-frc, body.printing-frc main { height: auto !important; min-height: 0 !important; overflow: visible !important; margin: 0 !important; padding: 0 !important; }
     #printableIdCardArea img[alt="Watermark"] {
       width: 100px !important;
       height: 100px !important;
@@ -4343,10 +4397,12 @@ M. WASEEM SADIQ TAK (Neemray Walay)
           return;
         }
         const selectedClanKey = document.getElementById('headClan')?.value;
+        const __wcfPrevRecV3 = (typeof activeViewingRecord !== 'undefined') ? activeViewingRecord : null;
         await origHandleFormSubmit(e);
 
         // Rule 2 Post-Check: If Clan was 'Other', quarantine record status to 'Pending Verification'
-        if (selectedClanKey === 'Other' && typeof activeViewingRecord !== 'undefined' && activeViewingRecord) {
+        // (v12: only when this submit really produced a NEW record, never a stale one left over from an earlier submit)
+        if (selectedClanKey === 'Other' && typeof activeViewingRecord !== 'undefined' && activeViewingRecord && activeViewingRecord !== __wcfPrevRecV3) {
           activeViewingRecord.status = 'Pending Verification';
           if (typeof storedFRCRecords !== 'undefined' && storedFRCRecords[activeViewingRecord.code]) {
             storedFRCRecords[activeViewingRecord.code].status = 'Pending Verification';
@@ -5080,13 +5136,16 @@ M. WASEEM SADIQ TAK (Neemray Walay)
         const clanVal = document.getElementById("headClan")?.value;
         const isPendingSubmission = (clanVal === "Other" || (typeof currentRegMode !== "undefined" && currentRegMode === "individual"));
         const prevSync = isSyncEnabled;
+        const __wcfPrevRecV5 = (typeof activeViewingRecord !== "undefined") ? activeViewingRecord : null;
         if (isPendingSubmission) isSyncEnabled = false; // really blocks the Firebase write of a real WCF code
         try {
           await origSubmit(e);
         } finally {
           isSyncEnabled = prevSync;
         }
-        if (isPendingSubmission && typeof activeViewingRecord !== "undefined" && activeViewingRecord) {
+        // v12: a rejected/blocked submit leaves the PREVIOUS record in activeViewingRecord; never re-queue or re-show it
+        const __wcfNewRecV5 = (typeof activeViewingRecord !== "undefined") && activeViewingRecord && activeViewingRecord !== __wcfPrevRecV5;
+        if (isPendingSubmission && __wcfNewRecV5) {
           const oldGeneratedCode = activeViewingRecord.code;
           if (oldGeneratedCode && !String(oldGeneratedCode).startsWith("PEND-")) {
             delete storedFRCRecords[oldGeneratedCode];
@@ -5114,7 +5173,7 @@ M. WASEEM SADIQ TAK (Neemray Walay)
           }
           updateCensusCounters();
           displayCertificateModal(activeViewingRecord);
-        } else if (!isPendingSubmission && typeof activeViewingRecord !== "undefined" && activeViewingRecord) {
+        } else if (!isPendingSubmission && __wcfNewRecV5) {
           if (typeof isCloudReady !== "undefined" && isCloudReady && db && isSyncEnabled) {
             try {
               const isTrial = new Date().getTime() < new Date("2026-11-04T00:00:00+05:30").getTime();
@@ -5836,4 +5895,456 @@ M. WASEEM SADIQ TAK (Neemray Walay)
   #wcfDraftDiscard { background: #e2e8f0; color: #334155; }
 </style>
 <!-- ==================== END WCF FIX PACK V11 (portal) ==================== -->
+<!-- ==================== WCF FIX PACK V12 (portal) ==================== -->
+<script id="wcf-v12-portal">
+(function () {
+'use strict';
+/* ===== WCF identity & reference engine (v12) - shared by portal and admin =====
+   Pure functions only: no Firebase, no DOM. Works on the existing record shape:
+   { code, type, status, head:{...}, members:[...], reference:{elder,contact,memberId?} } */
+var WCF_HON_RE = /^(mohammad|muhammad|mohammed|muhammed|mohamad|muhamad|mohd|md|mian|syed|sayed|sayyed|محمد|سید|میان|मोहम्मद|मुहम्मद|सैयद|मियां|मियाँ)$/;
+
+function wcfNameTokens(s) {
+  var t = String(s == null ? '' : s).toLowerCase();
+  try { t = t.normalize('NFKD'); } catch (e) {}
+  try { t = t.replace(/\p{M}/gu, ''); } catch (e) {}
+  var toks;
+  try { toks = t.split(/[^\p{L}\p{N}]+/u).filter(Boolean); }
+  catch (e) { toks = t.split(/[^a-z0-9\u0600-\u06ff\u0900-\u097f]+/).filter(Boolean); }
+  var kept = toks.filter(function (x) { return !WCF_HON_RE.test(x); });
+  return kept.length ? kept : toks;
+}
+
+function wcfPhoneticKey(t) {
+  if (!/^[a-z0-9]+$/.test(t)) return t;
+  var x = t.replace(/ph/g, 'f').replace(/kh/g, 'k').replace(/gh/g, 'g').replace(/sh/g, 's')
+    .replace(/ch/g, 'c').replace(/th/g, 't').replace(/dh/g, 'd').replace(/ck/g, 'k')
+    .replace(/q/g, 'k').replace(/w/g, 'v').replace(/z/g, 's').replace(/x/g, 'ks');
+  var rest = x.slice(1).replace(/[aeiouyh]/g, '');
+  return (x.charAt(0) + rest).replace(/(.)\1+/g, '$1');
+}
+
+/* level 3 = same words (any order), 2 = same sounds (any order), 1 = one name fully inside the other (2+ words), 0 = different */
+function wcfNameMatch(a, b) {
+  var ta = wcfNameTokens(a), tb = wcfNameTokens(b);
+  if (!ta.length || !tb.length) return { level: 0 };
+  if (ta.slice().sort().join(' ') === tb.slice().sort().join(' ')) {
+    return { level: 3, kind: ta.join(' ') === tb.join(' ') ? 'same' : 'reordered' };
+  }
+  var pa = ta.map(wcfPhoneticKey), pb = tb.map(wcfPhoneticKey);
+  var okLen = pa.every(function (k) { return k.length >= 2; }) && pb.every(function (k) { return k.length >= 2; });
+  if (okLen && pa.slice().sort().join(' ') === pb.slice().sort().join(' ')) return { level: 2, kind: 'phonetic' };
+  var small = pa.length <= pb.length ? pa : pb, big = (small === pa ? pb : pa).slice(), common = 0;
+  small.forEach(function (k) { var i = big.indexOf(k); if (i >= 0) { common++; big.splice(i, 1); } });
+  if (small.length >= 2 && common === small.length) return { level: 1, kind: 'partial' };
+  return { level: 0 };
+}
+
+function wcfDig(s) { return String(s == null ? '' : s).replace(/[^0-9]/g, ''); }
+function wcfAgeOf(dob) {
+  if (typeof calculateAge === 'function') return calculateAge(dob);
+  if (!dob) return 0;
+  var b = new Date(dob), n = new Date();
+  if (isNaN(b.getTime())) return 0;
+  var a = n.getFullYear() - b.getFullYear(), m = n.getMonth() - b.getMonth();
+  if (m < 0 || (m === 0 && n.getDate() < b.getDate())) a--;
+  return a >= 0 ? a : 0;
+}
+function wcfIsLiveRec(r) {
+  return !!(r && r.head && r.status !== 'Rejected' && r.status !== 'Revoked' && !r.isUpdateRequest && !r.isEventGreetingConfig);
+}
+function wcfIsApprovedRec(r) {
+  return !!(r && r.head && r.status === 'Approved' && r.code && String(r.code).indexOf('PEND-') !== 0);
+}
+
+/* Every person stored in a record: head + members */
+function wcfPeopleOf(rec) {
+  var out = [];
+  if (!rec || !rec.head) return out;
+  var h = rec.head;
+  out.push({ rec: rec, code: rec.code, role: 'head', name: h.name, father: h.father, dob: h.dob, phone: h.phone,
+    memberId: h.memberId, clanKey: h.clanKey || h.clan, relationKey: 'Head' });
+  (rec.members || []).forEach(function (m) {
+    if (!m) return;
+    var rk = m.relationKey || '';
+    var father = m.father || ((rk === 'Son' || rk === 'Daughter') ? h.name : '');
+    out.push({ rec: rec, code: rec.code, role: 'member', name: m.name, father: father, dob: m.dob, phone: m.phone,
+      memberId: m.memberId, clanKey: '', relationKey: rk });
+  });
+  return out;
+}
+
+function wcfScorePair(app, p) {
+  var why = [], score = 0;
+  var nm = wcfNameMatch(app.name, p.name);
+  var nScore = nm.level;
+  var dobExact = !!(app.dob && p.dob && app.dob === p.dob);
+  var yA = String(app.dob || '').split('-')[0], yP = String(p.dob || '').split('-')[0];
+  var dobYear = !!(yA && yP && yA === yP);
+  var yearFar = !!(yA && yP && Math.abs(parseInt(yA, 10) - parseInt(yP, 10)) > 1);
+  var pa = wcfDig(app.phone), pp = wcfDig(p.phone);
+  var phoneSame = pa.length >= 8 && pp.length >= 8 && pa.slice(-8) === pp.slice(-8);
+  if (nScore < 2 && !(dobExact && phoneSame)) return null;
+  if (nScore) {
+    score += nScore;
+    why.push(nm.kind === 'reordered' ? 'same name in different word order' : nm.kind === 'same' ? 'same name' :
+      nm.kind === 'phonetic' ? 'similar-sounding name' : 'partly same name');
+  }
+  var fm = (app.father && p.father) ? wcfNameMatch(app.father, p.father) : { level: 0 };
+  if (fm.level === 3) { score += 2; why.push("same father's name"); }
+  else if (fm.level === 2) { score += 1; why.push("similar father's name"); }
+  if (dobExact) { score += 3; why.push('same date of birth'); }
+  else if (dobYear) { score += 1; why.push('same birth year'); }
+  else if (yearFar) { score -= 2; }
+  if (nScore === 3 && dobExact) { score += 1; }   /* identical name words AND exact birth date: very unlikely to be two people */
+  if (phoneSame) { score += 3; why.push('same phone number'); }
+  if (app.clanKey && p.clanKey && String(app.clanKey) === String(p.clanKey)) { score += 1; why.push('same clan'); }
+  return { score: score, why: why, nameLevel: nScore, dobExact: dobExact, phoneSame: phoneSame, fatherLevel: fm.level };
+}
+
+/* Returns [{level:'high'|'medium', score, why[], code, memberId, name, role, status}] best first.
+   Common names alone never reach 'medium': a name needs father / DOB / phone support. */
+function wcfFindIdentityMatches(app, records, excludeCode) {
+  var res = [];
+  (records || []).forEach(function (rec) {
+    if (!wcfIsLiveRec(rec)) return;
+    if (excludeCode && rec.code === excludeCode) return;
+    wcfPeopleOf(rec).forEach(function (p) {
+      var sp = wcfScorePair(app, p);
+      if (!sp) return;
+      var level = sp.score >= 7 ? 'high' : (sp.score >= 5 ? 'medium' : null);
+      if (!level) return;
+      res.push({ level: level, score: sp.score, why: sp.why, code: p.code, memberId: p.memberId, name: p.name,
+        role: p.role === 'head' ? 'head' : ('member' + (p.relationKey ? ' (' + p.relationKey + ')' : '')),
+        status: rec.status, type: rec.type });
+    });
+  });
+  res.sort(function (a, b) { return b.score - a.score; });
+  return res;
+}
+
+/* Reference check. state: 'valid' | 'invalid' | 'notfound' (caller may look in the cloud / treat as unverified offline) */
+function wcfCheckReference(refId, app, records, excludeCode) {
+  var U = String(refId == null ? '' : refId).trim().toUpperCase();
+  if (!U) return { state: 'invalid', reason: 'missing', msg: 'A reference Member ID is required.' };
+  var hit = null;
+  (records || []).forEach(function (rec) {
+    if (hit || !rec || !rec.head) return;
+    if (excludeCode && rec.code === excludeCode) return;
+    if (rec.type === 'family' && String(rec.code || '').toUpperCase() === U) { hit = { rec: rec, person: wcfPeopleOf(rec)[0], isHead: true, byCode: true }; return; }
+    wcfPeopleOf(rec).forEach(function (p) {
+      if (!hit && p.memberId && String(p.memberId).toUpperCase() === U) hit = { rec: rec, person: p, isHead: p.role === 'head' && rec.type === 'family' };
+    });
+  });
+  if (!hit) return { state: 'notfound', id: U, msg: 'This Member ID was not found among approved members.' };
+  if (!wcfIsApprovedRec(hit.rec)) return { state: 'invalid', reason: 'not-approved', msg: 'The reference Member ID belongs to a record that is not approved.' };
+  if (wcfAgeOf(hit.person.dob) < 18) return { state: 'invalid', reason: 'minor', msg: 'The reference must be an adult (18 or older).' };
+  var pa = wcfDig(app.phone), pp = wcfDig(hit.person.phone);
+  if (pa.length >= 8 && pp.length >= 8 && pa.slice(-8) === pp.slice(-8)) return { state: 'invalid', reason: 'self', msg: 'The reference cannot share your own phone number.' };
+  if (wcfNameMatch(app.name, hit.person.name).level >= 2) return { state: 'invalid', reason: 'self', msg: 'You cannot use yourself as your own reference.' };
+  var fam = wcfFindIdentityMatches(app, [hit.rec], excludeCode);
+  if (fam.length) return { state: 'invalid', reason: 'own-family', msg: 'You already appear inside the family of this reference. Use your own Member ID instead.' };
+  var used = null;
+  (records || []).forEach(function (rec) {
+    if (used || !rec || !rec.reference) return;
+    if (excludeCode && rec.code === excludeCode) return;
+    if (rec.status === 'Rejected' || rec.status === 'Revoked') return;
+    var rid = String(rec.reference.memberId || '').toUpperCase();
+    /* first come, first served: a later submission never blocks an earlier one */
+    if (app.submittedAt && rec.reference.submittedAt && rec.reference.submittedAt > app.submittedAt) return;
+    if (rid && (rid === U || rid === String(hit.person.memberId || '').toUpperCase() || rid === String(hit.rec.code || '').toUpperCase())) used = rec;
+  });
+  if (used) return { state: 'invalid', reason: 'used', msg: 'This reference Member ID has already been used for another application.', usedBy: used.code };
+  return { state: 'valid', isHead: !!hit.isHead, type: hit.isHead ? 'head' : 'adult', refCode: hit.rec.code,
+    refMemberId: hit.person.memberId || '', refName: hit.person.name,
+    msg: hit.isHead ? 'Reference verified (family head).' : 'Reference is an approved adult but NOT a family head - needs extra admin verification.' };
+}
+
+  window.wcfFindIdentityMatches = wcfFindIdentityMatches; window.wcfCheckReference = wcfCheckReference; window.wcfNameMatch = wcfNameMatch;
+
+  /* ---------- small helpers ---------- */
+  function lang() { return (typeof currentLang !== 'undefined' && currentLang) ? currentLang : 'en'; }
+  function T(en, ur, hi) { var l = lang(); return l === 'ur' ? ur : (l === 'hi' ? hi : en); }
+  function el(id) { return document.getElementById(id); }
+  function cloudOK() { return typeof isCloudReady !== 'undefined' && isCloudReady && typeof db !== 'undefined' && db; }
+  function withTimeout(p, ms) {
+    return new Promise(function (res, rej) {
+      var t = setTimeout(function () { rej(new Error('timeout')); }, ms);
+      p.then(function (v) { clearTimeout(t); res(v); }, function (e) { clearTimeout(t); rej(e); });
+    });
+  }
+  function saveLocal() { try { localStorage.setItem('WCF_CENSUS_RECORDS', JSON.stringify(storedFRCRecords)); } catch (e) {} }
+
+  /* ---------- 1. Safe download file names (FRC / IIC / ID card) ---------- */
+  function wcfSafeFilePart(s, max) {
+    s = String(s == null ? '' : s);
+    try { s = s.normalize('NFC'); } catch (e) {}
+    s = s.replace(/[\u0000-\u001f\u007f\\\/:*?"<>|#%&{}$!'`@+=~^;,\[\]()]/g, ' ')
+      .replace(/[\u200b-\u200f\u202a-\u202e\u2066-\u2069\ufeff]/g, '')
+      .replace(/\s+/g, '_').replace(/^[._]+|[._]+$/g, '');
+    if (max && s.length > max) s = s.slice(0, max).replace(/_+$/, '');
+    return s;
+  }
+  function wcfDocFileName(rec) {
+    if (!rec || !rec.head) return null;
+    var parts = [rec.type === 'family' ? 'FRC' : 'IIC'];
+    var n = wcfSafeFilePart(rec.head.name, 40), c = wcfSafeFilePart(rec.code || rec.head.memberId, 30);
+    if (n) parts.push(n);
+    if (c) parts.push(c);
+    return parts.join('_') + '.pdf';
+  }
+  window.wcfSafeFilePart = wcfSafeFilePart;
+  window.wcfDocFileName = wcfDocFileName;
+
+  /* ---------- 2. ID card PDF (front = page 1, back = page 2) built from the rendered cards ---------- */
+  function coverPhoto(img) {
+    try {
+      var r = img.getBoundingClientRect(), w = Math.round(r.width) || 76, h = Math.round(r.height) || 92;
+      var iw = img.naturalWidth, ih = img.naturalHeight;
+      if (!iw || !ih) return null;
+      var S = 4, c = document.createElement('canvas');
+      c.width = w * S; c.height = h * S;
+      var x = c.getContext('2d'), k = Math.max(c.width / iw, c.height / ih), dw = iw * k, dh = ih * k;
+      x.drawImage(img, (c.width - dw) / 2, (c.height - dh) / 2, dw, dh);
+      return c.toDataURL('image/jpeg', 0.92);
+    } catch (e) { return null; }
+  }
+  async function wcfDownloadIdCardPDF() {
+    var btn = el('btnDownloadIdCardPdf');
+    var idTxt = el('previewId') ? el('previewId').textContent.trim() : '';
+    var area = el('printableIdCardArea');
+    if (!area || !idTxt || idTxt === 'WCF-000000') {
+      alert(T('Please search and load a valid Member ID first.', 'براہ کرم پہلے درست ممبر آئی ڈی تلاش کریں۔', 'कृपया पहले वैध सदस्य आईडी खोजें।'));
+      return;
+    }
+    if (typeof html2canvas === 'undefined' || !window.jspdf || !window.jspdf.jsPDF) {
+      alert(T('PDF tools are not loaded. Check your internet connection and try again.', 'پی ڈی ایف ٹولز لوڈ نہیں ہوئے۔ انٹرنیٹ چیک کر کے دوبارہ کوشش کریں۔', 'PDF टूल लोड नहीं हुए। इंटरनेट जाँचकर फिर कोशिश करें।'));
+      return;
+    }
+    var cards = Array.prototype.slice.call(area.children).filter(function (c) { return c.tagName === 'DIV'; });
+    if (cards.length < 2) { alert('ID card layout not found.'); return; }
+    var oldLabel = btn ? btn.innerHTML : '';
+    if (btn) { btn.disabled = true; btn.innerHTML = T('Preparing PDF...', 'پی ڈی ایف تیار ہو رہی ہے...', 'PDF तैयार हो रही है...'); }
+    try {
+      var photoImg = el('previewPhotoImg');
+      var photoData = (photoImg && !photoImg.classList.contains('hidden') && photoImg.getAttribute('src')) ? coverPhoto(photoImg) : null;
+      var jsPDF = window.jspdf.jsPDF;
+      var pdf = new jsPDF('p', 'mm', 'a4');
+      var labels = ['ID Card - Front', 'ID Card - Back'];
+      for (var i = 0; i < 2; i++) {
+        var canvas = await html2canvas(cards[i], {
+          scale: 3, useCORS: true, allowTaint: false, backgroundColor: '#ffffff', logging: false,
+          onclone: function (doc) {
+            try {
+              var im = doc.getElementById('previewPhotoImg');
+              if (im && photoData) { im.src = photoData; im.style.objectFit = 'fill'; }
+              var all = doc.querySelectorAll('#printableIdCardArea *');
+              for (var k = 0; k < all.length; k++) {
+                var n = all[k], own = '';
+                for (var c = 0; c < n.childNodes.length; c++) if (n.childNodes[c].nodeType === 3) own += n.childNodes[c].nodeValue;
+                if (/[\u0600-\u06ff\u0900-\u097f]/.test(own)) { n.style.letterSpacing = 'normal'; n.style.wordSpacing = 'normal'; }
+              }
+            } catch (e) {}
+          }
+        });
+        if (!canvas || !canvas.width || !canvas.height) throw new Error('empty capture');
+        if (i > 0) pdf.addPage('a4', 'p');
+        var cardW = 85.6, cardH = cardW * (canvas.height / canvas.width), x = (210 - cardW) / 2, y = 30;
+        pdf.addImage(canvas.toDataURL('image/jpeg', 0.95), 'JPEG', x, y, cardW, cardH);
+        pdf.setDrawColor(190, 190, 190); pdf.setLineWidth(0.1); pdf.rect(x - 0.3, y - 0.3, cardW + 0.6, cardH + 0.6);
+        pdf.setFontSize(8); pdf.setTextColor(120, 120, 120);
+        pdf.text(labels[i] + '  (85.6 x ' + cardH.toFixed(1) + ' mm)', 105, y + cardH + 8, { align: 'center' });
+      }
+      var nm = el('previewName') ? el('previewName').textContent.trim() : '';
+      var fname = ['IDCard', wcfSafeFilePart(nm, 40), wcfSafeFilePart(idTxt, 30)].filter(Boolean).join('_') + '.pdf';
+      pdf.save(fname);
+    } catch (err) {
+      console.error('ID card PDF error:', err);
+      alert(T('Could not create the ID card PDF: ', 'آئی ڈی کارڈ پی ڈی ایف نہیں بن سکی: ', 'आईडी कार्ड PDF नहीं बन सकी: ') + (err && err.message ? err.message : err));
+    } finally {
+      if (btn) { btn.disabled = false; btn.innerHTML = oldLabel; }
+    }
+  }
+  window.wcfDownloadIdCardPDF = wcfDownloadIdCardPDF;
+
+  /* ---------- 3. Messages ---------- */
+  var REFMSG = {
+    missing: ['A reference Member ID is required for Individual registration.', 'انفرادی رجسٹریشن کے لیے حوالے کی ممبر آئی ڈی لازمی ہے۔', 'व्यक्तिगत पंजीकरण के लिए संदर्भ सदस्य आईडी अनिवार्य है।'],
+    notfound: ['This Member ID was not found among approved members. Please enter the correct WCF Member ID of an approved adult (family Head preferred).', 'یہ ممبر آئی ڈی منظور شدہ ممبرز میں نہیں ملی۔ براہ کرم کسی منظور شدہ بالغ (ترجیحاً سربراہِ خاندان) کی درست WCF ممبر آئی ڈی درج کریں۔', 'यह सदस्य आईडी स्वीकृत सदस्यों में नहीं मिली। कृपया किसी स्वीकृत वयस्क (मुखिया को प्राथमिकता) की सही WCF सदस्य आईडी दर्ज करें।'],
+    'not-approved': ['The reference Member ID belongs to a record that is not approved.', 'حوالے کی ممبر آئی ڈی ایسے ریکارڈ کی ہے جو ابھی منظور شدہ نہیں۔', 'संदर्भ सदस्य आईडी ऐसे रिकॉर्ड की है जो अभी स्वीकृत नहीं है।'],
+    minor: ['The reference must be an adult (18 or older).', 'حوالہ دینے والا بالغ (18 سال یا زائد) ہونا چاہیے۔', 'संदर्भ देने वाला वयस्क (18 वर्ष या अधिक) होना चाहिए।'],
+    self: ['You cannot use yourself, or your own phone number, as your reference.', 'آپ خود کو یا اپنا فون نمبر بطور حوالہ استعمال نہیں کر سکتے۔', 'आप स्वयं को या अपना फ़ोन नंबर संदर्भ के रूप में उपयोग नहीं कर सकते।'],
+    'own-family': ['You already appear inside the family of this reference. Please use your own Member ID instead.', 'آپ پہلے ہی اس حوالے کے خاندان میں موجود نظر آتے ہیں۔ براہ کرم اپنی ممبر آئی ڈی استعمال کریں۔', 'आप पहले से इस संदर्भ के परिवार में दर्ज दिखते हैं। कृपया अपनी सदस्य आईडी का उपयोग करें।'],
+    used: ['This reference Member ID has already been used for another application.', 'یہ حوالہ ممبر آئی ڈی پہلے ہی کسی دوسری درخواست کے لیے استعمال ہو چکی ہے۔', 'यह संदर्भ सदस्य आईडी पहले ही किसी अन्य आवेदन के लिए उपयोग हो चुकी है।']
+  };
+  function refMsg(reason) { var m = REFMSG[reason] || REFMSG.notfound; return T(m[0], m[1], m[2]); }
+
+  /* ---------- 4. Cloud lookup of an approved reference (server-checked, so offline is never mistaken for "not found") ---------- */
+  async function wcfCloudLookupRef(U) {
+    if (!cloudOK() || navigator.onLine === false) return { state: 'offline' };
+    var col = (typeof wcfActiveCollection === 'function') ? wcfActiveCollection() : null;
+    if (!col) return { state: 'offline' };
+    var offline = false;
+    var ops = [
+      function () { return db.collection(col).doc(U).get({ source: 'server' }).then(function (d) { return d.exists ? d.data() : null; }); },
+      function () { return db.collection(col).where('status', '==', 'Approved').where('head.memberId', '==', U).limit(1).get({ source: 'server' }).then(function (s) { var o = null; s.forEach(function (d) { if (!o) o = d.data(); }); return o; }); },
+      function () { return db.collection(col).where('status', '==', 'Approved').where('memberIds', 'array-contains', U).limit(1).get({ source: 'server' }).then(function (s) { var o = null; s.forEach(function (d) { if (!o) o = d.data(); }); return o; }); }
+    ];
+    for (var i = 0; i < ops.length; i++) {
+      try {
+        var r = await withTimeout(ops[i](), 7000);
+        if (r && wcfIsApprovedRec(r)) return { state: 'found', rec: r };
+      } catch (e) {
+        var c = e && e.code;
+        if (c === 'unavailable' || (e && e.message === 'timeout') || c === 'deadline-exceeded') offline = true;
+      }
+    }
+    return { state: offline ? 'offline' : 'notfound' };
+  }
+  window.wcfCloudLookupRef = wcfCloudLookupRef;
+
+  function applicantFromForm() {
+    var v = function (id) { var e = el(id); return e ? String(e.value || '').trim() : ''; };
+    return { name: v('headName'), father: v('headFather'), dob: v('headDOB'), phone: v('headPhone'), clanKey: v('headClan') };
+  }
+
+  /* ---------- 5. Checks that run BEFORE the existing submit chain ---------- */
+  async function wcfPreSubmitChecks() {
+    var mode = (typeof currentRegMode !== 'undefined') ? currentRegMode : 'family';
+    var editing = (typeof editingExistingFRCCode !== 'undefined') ? editingExistingFRCCode : null;
+    if (editing) {
+      var cur = storedFRCRecords[editing];
+      var hid = (typeof editingExistingHeadMemberId !== 'undefined') ? editingExistingHeadMemberId : null;
+      if (!cur || !cur.head || (hid && cur.head.memberId && cur.head.memberId !== hid)) {
+        alert(T('This family update session is out of date. Please search for the family again before saving.', 'خاندان کی اپڈیٹ کا سیشن پرانا ہو چکا ہے۔ محفوظ کرنے سے پہلے براہ کرم خاندان کو دوبارہ تلاش کریں۔', 'परिवार अपडेट का सत्र पुराना हो चुका है। सहेजने से पहले कृपया परिवार को दोबारा खोजें।'));
+        return false;
+      }
+      return true;
+    }
+    if (mode !== 'individual') return true;
+    var app = applicantFromForm();
+    if (!app.name) return true;
+    var records = Object.keys(storedFRCRecords).map(function (k) { return storedFRCRecords[k]; });
+    var refId = (el('refMemberId') ? el('refMemberId').value : '').trim().toUpperCase();
+    if (!refId) { alert(refMsg('missing')); if (el('refMemberId')) el('refMemberId').focus(); return false; }
+    var chk = wcfCheckReference(refId, app, records, null);
+    if (chk.state === 'notfound') {
+      var cl = await wcfCloudLookupRef(refId);
+      if (cl.state === 'found') chk = wcfCheckReference(refId, app, records.concat([cl.rec]), null);
+      else if (cl.state === 'offline') chk = { state: 'unverified' };
+      else chk = { state: 'invalid', reason: 'notfound' };
+    }
+    if (chk.state === 'invalid') { alert(refMsg(chk.reason)); if (el('refMemberId')) el('refMemberId').focus(); return false; }
+    if (chk.state === 'unverified') {
+      alert(T('You appear to be offline. Your reference could not be verified now; it will be checked again when you are online and when the application is reviewed.', 'آپ آف لائن معلوم ہوتے ہیں۔ حوالہ ابھی تصدیق نہیں ہو سکا؛ آن لائن ہونے پر اور درخواست کے جائزے کے وقت دوبارہ جانچا جائے گا۔', 'आप ऑफ़लाइन लगते हैं। संदर्भ अभी सत्यापित नहीं हो सका; ऑनलाइन होने पर और आवेदन की समीक्षा के समय फिर जाँचा जाएगा।'));
+    }
+    var matches = wcfFindIdentityMatches(app, records, null);
+    if (matches.some(function (m) { return m.level === 'high'; })) {
+      var go = confirm(T('POSSIBLE EXISTING MEMBER: your details closely match a person already in the directory.\n\nIf you are already registered, do NOT submit a new application - use your existing Member ID. A duplicate application may be rejected.\n\nContinue anyway?',
+        'ممکنہ موجودہ ممبر: آپ کی معلومات ڈائریکٹری میں پہلے سے موجود ایک شخص سے بہت مل رہی ہیں۔\n\nاگر آپ پہلے سے رجسٹرڈ ہیں تو نئی درخواست جمع نہ کرائیں، اپنی موجودہ ممبر آئی ڈی استعمال کریں۔ ڈپلیکیٹ درخواست مسترد ہو سکتی ہے۔\n\nپھر بھی جاری رکھیں؟',
+        'संभावित मौजूदा सदस्य: आपका विवरण डायरेक्टरी में पहले से मौजूद व्यक्ति से काफ़ी मेल खाता है।\n\nयदि आप पहले से पंजीकृत हैं तो नया आवेदन जमा न करें, अपनी मौजूदा सदस्य आईडी का उपयोग करें। डुप्लिकेट आवेदन अस्वीकार हो सकता है।\n\nफिर भी जारी रखें?'));
+      if (!go) return false;
+    }
+    window.__wcfRefCheck = {
+      memberId: refId,
+      refType: chk.state === 'valid' ? chk.type : 'unverified',
+      verified: chk.state === 'valid',
+      refRecord: chk.refCode || '',
+      submittedAt: new Date().toISOString()
+    };
+    return true;
+  }
+
+  /* ---------- 6. Re-check queued (offline) applications when the device is online again ---------- */
+  var revalidating = false;
+  async function wcfRevalidateQueued() {
+    if (revalidating || !cloudOK() || navigator.onLine === false) return;
+    revalidating = true;
+    try {
+      var recs = Object.keys(storedFRCRecords).map(function (k) { return storedFRCRecords[k]; });
+      var changed = false;
+      for (var i = 0; i < recs.length; i++) {
+        var rec = recs[i];
+        if (!rec || rec.type !== 'individual' || String(rec.code).indexOf('PEND-') !== 0 || rec.status !== 'Pending Verification') continue;
+        if (!rec.reference || rec.reference.verified === true || rec.reference.checkedAt) continue;
+        var rid = String(rec.reference.memberId || '').trim().toUpperCase();
+        if (!rid) continue;
+        var app = { name: rec.head.name, father: rec.head.father, dob: rec.head.dob, phone: rec.head.phone, clanKey: rec.head.clanKey, submittedAt: rec.reference.submittedAt };
+        var chk = wcfCheckReference(rid, app, recs, rec.code);
+        if (chk.state === 'notfound') {
+          var cl = await wcfCloudLookupRef(rid);
+          if (cl.state === 'found') chk = wcfCheckReference(rid, app, recs.concat([cl.rec]), rec.code);
+          else if (cl.state === 'offline') continue;
+          else chk = { state: 'invalid', reason: 'notfound' };
+        }
+        var newRef = Object.assign({}, rec.reference, {
+          verified: chk.state === 'valid',
+          refType: chk.state === 'valid' ? chk.type : 'invalid',
+          check: chk.state === 'valid' ? 'ok' : (chk.reason || 'invalid'),
+          checkedAt: new Date().toISOString()
+        });
+        rec.reference = newRef; changed = true;
+        try { await db.collection('wcf_pending_queue').doc(rec.code).set({ reference: newRef }, { merge: true }); } catch (e) {}
+      }
+      if (changed) saveLocal();
+    } catch (e) { console.warn('queued revalidation:', e); }
+    revalidating = false;
+  }
+  window.wcfRevalidateQueued = wcfRevalidateQueued;
+
+  /* ---------- 7. Labels that follow the portal language ---------- */
+  function relabelV12() {
+    var set = function (id, txt) { var e = el(id); if (e) e.textContent = txt; };
+    set('lblRefMemberId', T("Reference Member ID (family Head's WCF Member ID preferred):", 'حوالے کی ممبر آئی ڈی (ترجیحاً سربراہِ خاندان کی WCF ممبر آئی ڈی):', 'संदर्भ सदस्य आईडी (मुखिया की WCF सदस्य आईडी को प्राथमिकता):'));
+    set('lblRefMemberIdHint', T('Member ID of an approved adult (18+). A family Head is preferred; any other adult reference needs extra admin verification.', 'کسی منظور شدہ بالغ (18+) کی ممبر آئی ڈی۔ سربراہِ خاندان کو ترجیح ہے؛ کسی اور بالغ کے حوالے کی ایڈمن اضافی تصدیق کرے گا۔', 'किसी स्वीकृत वयस्क (18+) की सदस्य आईडी। मुखिया को प्राथमिकता है; किसी अन्य वयस्क के संदर्भ की एडमिन अतिरिक्त जाँच करेगा।'));
+    var ph = relOtherPH();
+    var inputs = document.querySelectorAll('[id^="memRelOther_"]');
+    for (var i = 0; i < inputs.length; i++) inputs[i].placeholder = ph;
+    var rm = el('refMemberId'); if (rm) rm.placeholder = 'WCF-123456';
+    var b = el('btnDownloadIdCardPdf');
+    if (b && !b.disabled) b.innerHTML = T('⬇️ Download ID Card PDF', '⬇️ آئی ڈی کارڈ پی ڈی ایف ڈاؤن لوڈ کریں', '⬇️ आईडी कार्ड PDF डाउनलोड करें');
+  }
+  function relOtherPH() {
+    return T('Enter relationship (e.g. Daughter-in-law, Son-in-law)', 'رشتہ لکھیں (مثلاً بہو، داماد)', 'रिश्ता लिखें (जैसे बहू, दामाद)');
+  }
+  window.wcfRelOtherPH = relOtherPH;
+
+  /* ---------- 8. Install after the older patch layers have wrapped their functions ---------- */
+  function wrapFn(name, make) {
+    var prev = window[name];
+    if (typeof prev !== 'function') return;
+    var fn = make(prev);
+    try { Object.keys(prev).forEach(function (k) { fn[k] = prev[k]; }); } catch (e) {}
+    window[name] = fn;
+  }
+  function install() {
+    if (window.__wcfV12Installed) return;
+    window.__wcfV12Installed = true;
+    wrapFn('handleFormSubmit', function (prev) {
+      return async function (e) {
+        try {
+          if (e && typeof e.preventDefault === 'function') e.preventDefault();
+          var okGo = await wcfPreSubmitChecks();
+          if (okGo === false) return;
+        } catch (err) { console.warn('v12 pre-submit check skipped:', err); }
+        try { return await prev.apply(this, arguments); }
+        finally { window.__wcfRefCheck = null; }
+      };
+    });
+    wrapFn('changeLanguage', function (prev) {
+      return function () { var r = prev.apply(this, arguments); try { relabelV12(); } catch (e) {} return r; };
+    });
+    relabelV12();
+    window.addEventListener('online', function () { setTimeout(wcfRevalidateQueued, 1500); });
+    setTimeout(wcfRevalidateQueued, 4000);
+  }
+  if (document.readyState === 'complete') setTimeout(install, 1500);
+  else {
+    window.addEventListener('load', function () { setTimeout(install, 1500); });
+    setTimeout(install, 6000); /* fallback when 'load' is delayed by slow images/network */
+  }
+
+})();
+</script>
+<!-- ==================== END WCF FIX PACK V12 (portal) ==================== -->
 </html>
