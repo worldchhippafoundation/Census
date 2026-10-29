@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr" class="notranslate" translate="no">
 <head>
-<meta http-equiv="Content-Security-Policy" content="default-src 'self' https://*.firebaseio.com https://*.googleapis.com https://*.gstatic.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://raw.githubusercontent.com https://*.githubusercontent.com; connect-src 'self' https://*.firebaseio.com https://*.googleapis.com https://firestore.googleapis.com;">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' https://*.firebaseio.com https://*.googleapis.com https://*.gstatic.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://raw.githubusercontent.com https://*.githubusercontent.com https://i.ytimg.com https://img.youtube.com; connect-src 'self' https://*.firebaseio.com https://*.googleapis.com https://firestore.googleapis.com;">
 <meta charset="UTF-8">
 <meta name="google" content="notranslate">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -215,9 +215,9 @@ Individual Adult (IIC)
 <!-- Population Dashboard Section -->
 <div id="cityStatsSection" class="hidden bg-white p-5 md:p-6 rounded-xl border border-slate-200 shadow space-y-4">
 <h3 id="cityStatsTitle" class="font-bold text-base text-slate-800">Community Population Dashboard (Global Search)</h3>
-<p id="cityStatsSub" class="text-xs text-slate-500">Enter your verified Certificate Code or registered Mobile Number to gain access and check population for any country or city.</p>
+<p id="cityStatsSub" class="text-xs text-slate-500">Anyone holding a valid Unique Code (any member's Member ID, FRC or IIC code) can enter it here to check population for any country or city.</p>
 <div id="popAuthBox" class="flex flex-col md:flex-row gap-3 max-w-xl">
-<input type="text" id="cityStatAuthInput" placeholder="Enter FRC/IIC Code or Mobile Number..." class="border border-slate-300 rounded-lg p-2.5 text-sm font-mono outline-none focus:ring-2 focus:ring-amber-600 flex-1">
+<input type="text" id="cityStatAuthInput" placeholder="Enter your Unique Code (Member ID / FRC / IIC)..." class="border border-slate-300 rounded-lg p-2.5 text-sm font-mono outline-none focus:ring-2 focus:ring-amber-600 flex-1">
 <button type="button" id="btnCityStatsVerify" onclick="verifyAndOpenPopulationDashboard()" class="bandhani-bg text-white font-bold px-5 py-2.5 rounded-lg text-sm shadow">
 Verify & Access
 </button>
@@ -950,8 +950,8 @@ searchPlaceholder: "فیملی سرٹیفکیٹ کوڈ یا سربراہِ خا�
 btnSearchAction: "تلاش و پرنٹ کریں",
 btnSearchAddMember: "+ نیا رکن شامل کریں",
 cityStatsTitle: "کمیونٹی آبادی ڈیش بورڈ (گلوبل سرچ)",
-cityStatsSub: "اپنا تصدیق شدہ FRC / IIC کوڈ یا موبائل نمبر درج کریں تاکہ رسائی حاصل ہو سکے۔",
-popAuthPlaceholder: "سرٹیفکیٹ کوڈ یا موبائل فون نمبر درج کریں...",
+cityStatsSub: "اپنا یونیک کوڈ (کسی بھی ممبر کی آئی ڈی، FRC یا IIC کوڈ) درج کریں تاکہ کسی بھی ملک یا شہر کی آبادی دیکھ سکیں۔",
+popAuthPlaceholder: "اپنا یونیک کوڈ درج کریں...",
 btnCityStatsVerify: "تصدیق و رسائی",
 popAccessNoticeText: "✅ رسائی منظور: آپ کسی بھی ملک یا شہر کی مردم شماری کا جائزہ لے سکتے ہیں۔",
 btnPopLock: "لاک کریں",
@@ -1091,8 +1091,8 @@ searchPlaceholder: "फ़ैमिली सर्टिफ़िकेट क�
 btnSearchAction: "खोजें और प्रिंट करें",
 btnSearchAddMember: "+ नया सदस्य जोड़ें",
 cityStatsTitle: "समुदाय आबादी डैशबोर्ड (वैश्विक खोज)",
-cityStatsSub: "अपना सत्यापित कोड या मोबाइल नंबर दर्ज करके आंकड़े देखें।",
-popAuthPlaceholder: "प्रमाण पत्र कोड या मोबाइल नंबर दर्ज करें...",
+cityStatsSub: "अपना यूनिक कोड (किसी भी सदस्य की आईडी, FRC या IIC कोड) दर्ज करके किसी भी देश या शहर की आबादी देखें।",
+popAuthPlaceholder: "अपना यूनिक कोड दर्ज करें...",
 btnCityStatsVerify: "सत्यापन एवं पहुंच",
 popAccessNoticeText: "✅ पहुंच स्वीकृत: आप किसी भी देश या शहर की जनगणना का जायजा ले सकते हैं।",
 btnPopLock: "लॉक करें",
@@ -1232,8 +1232,8 @@ searchPlaceholder: "Enter Family Certificate Code or Head's Mobile Number...",
 btnSearchAction: "Search & Print",
 btnSearchAddMember: "+ Add New Member",
 cityStatsTitle: "Community Population Dashboard (Global Search)",
-cityStatsSub: "Enter your verified Certificate Code or registered Mobile Number to gain access and check population for any country or city.",
-popAuthPlaceholder: "Enter Certificate Code or Mobile Number...",
+cityStatsSub: "Anyone holding a valid Unique Code (any member's Member ID, FRC or IIC code) can enter it here to check population for any country or city.",
+popAuthPlaceholder: "Enter your Unique Code (Member ID / FRC / IIC)...",
 btnCityStatsVerify: "Verify & Access",
 popAccessNoticeText: "✅ Access Granted: You can view census records for any country or city.",
 btnPopLock: "Lock",
@@ -3341,10 +3341,7 @@ closeAboutUsModal();
                 <input type="file" id="inputUserPhoto" accept="image/*" class="text-xs text-slate-500 file:mr-4 file:py-1.5 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 cursor-pointer">
             </div>
             <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-            <button type="button" id="btnDownloadIdCardPdf" onclick="wcfDownloadIdCardPDF()" class="w-full sm:w-auto bg-emerald-700 hover:bg-emerald-800 text-white font-black px-6 py-2.5 rounded-xl text-xs uppercase tracking-wider shadow-md transition flex items-center justify-center gap-2">⬇️ Download ID Card PDF</button>
-            <button type="button" id="btnPrintCardAction" onclick="wcfDownloadIdCardPDF()" class="w-full sm:w-auto bg-amber-500 hover:bg-amber-600 text-slate-950 font-black px-6 py-2.5 rounded-xl text-xs uppercase tracking-wider shadow-md transition flex items-center justify-center gap-2">
-                🖨️ Print ID Card
-            </button>
+            <button type="button" id="btnDownloadIdCardPdf" onclick="wcfDownloadIdCardPDF()" class="w-full sm:w-auto bg-emerald-700 hover:bg-emerald-800 text-white font-black px-6 py-2.5 rounded-xl text-xs uppercase tracking-wider shadow-md transition flex items-center justify-center gap-2">🖨️ Print / Download ID Card (PDF)</button>
             </div>
         </div>
     </div>
@@ -3636,7 +3633,7 @@ function wcfFindIdCardTarget(rawId) {
         const h = rec.head;
         if (h && (eq(h.memberId) || eq(h.code) || eq(h.id))) return { rec: rec, person: h, isHead: true };
         if (Array.isArray(rec.members)) {
-            const m = rec.members.find((mm, ix) => mm && (eq(mm.memberId) || eq(mm.code) || eq(mm.id) || eq(mm.uniqueId) || (!mm.memberId && eq(rec.code + '-' + (ix + 2)))));
+            const m = rec.members.find((mm, ix) => mm && mm.status !== 'Revoked' && (eq(mm.memberId) || eq(mm.code) || eq(mm.id) || eq(mm.uniqueId) || (!mm.memberId && eq(rec.code + '-' + (ix + 2)))));
             if (m) return { rec: rec, person: m, isHead: false };
         }
     }
@@ -3780,7 +3777,7 @@ M. WASEEM SADIQ TAK (Neemray Walay)
       lblIdEmergency: "Emergency Contact Number",
       lblIdPhoto: "Upload Your Photo <span class='text-amber-600 font-normal lowercase'>(Optional)</span>",
       btnPrintCardAction: "🖨️ Print ID Card",
-      btnDownloadIdCardPdf: "⬇️ Download ID Card PDF",
+      btnDownloadIdCardPdf: "🖨️ Print / Download ID Card (PDF)",
       cardOrgTitle: "World Chhippa Foundation",
       cardOrgSub: "Global Census & ID Authority",
       cardOfficialBadge: "Official ID",
@@ -6138,6 +6135,28 @@ function wcfCheckReference(refId, app, records, excludeCode) {
     } catch (e) {}
     return null;
   }
+  async function wcfWhiteSignature(card) {
+    var im = card ? card.querySelector('img[alt="Signature"]') : null;
+    if (!im) return null;
+    var urls = [im.currentSrc || im.src, 'Signature.png'];
+    for (var u = 0; u < urls.length; u++) {
+      try {
+        var img = await new Promise(function (res, rej) {
+          var t = new Image(); t.crossOrigin = 'anonymous';
+          t.onload = function () { res(t); }; t.onerror = rej; t.src = urls[u];
+        });
+        var w = img.naturalWidth, h = img.naturalHeight;
+        if (!w || !h) continue;
+        var c = document.createElement('canvas'); c.width = w; c.height = h;
+        var x = c.getContext('2d'); x.drawImage(img, 0, 0);
+        var data = x.getImageData(0, 0, w, h), p = data.data;
+        for (var k = 0; k < p.length; k += 4) { p[k] = 255; p[k + 1] = 255; p[k + 2] = 255; }
+        x.putImageData(data, 0, 0);
+        return c.toDataURL('image/png');
+      } catch (e) {}
+    }
+    return null;
+  }
   async function wcfDownloadIdCardPDF() {
     var btn = el('btnDownloadIdCardPdf');
     var idTxt = el('previewId') ? el('previewId').textContent.trim() : '';
@@ -6161,6 +6180,7 @@ function wcfCheckReference(refId, app, records, excludeCode) {
       var wmImg = area.querySelector('img[alt="Watermark"]');
       var wmData = wmImg ? bakeWatermark(wmImg) : null;
       var qr = liveQR();
+      var sigData = await wcfWhiteSignature(cards[1]);
       var jsPDF = window.jspdf.jsPDF;
       var pdf = new jsPDF('p', 'mm', 'a4');
       var labels = ['ID Card - Front', 'ID Card - Back'];
@@ -6190,14 +6210,26 @@ function wcfCheckReference(refId, app, records, excludeCode) {
                 qi.style.cssText = 'width:' + qr.w + 'px;height:' + qr.w + 'px;max-width:none;max-height:none;display:block;margin:0;';
                 qb.appendChild(qi);
               }
-              var fixIds = ['previewName', 'previewFather', 'previewBlood', 'previewEmergency', 'previewId', 'previewAddress', 'cardOfficialBadge'];
+              var sgs = doc.querySelectorAll('#printableIdCardArea img[alt="Signature"]');
+              for (var q = 0; q < sgs.length; q++) {
+                if (sigData) { sgs[q].src = sigData; }
+                ['filter', '-webkit-filter'].forEach(function (p) { sgs[q].style.setProperty(p, 'none', 'important'); });
+                sgs[q].style.setProperty('opacity', '1', 'important');
+              }
+              var bdg = doc.getElementById('cardOfficialBadge');
+              if (bdg) {
+                var SB = function (n, v) { bdg.style.setProperty(n, v, 'important'); };
+                SB('display', 'inline-block'); SB('height', '18px'); SB('line-height', '16px'); SB('padding', '0 10px');
+                SB('text-align', 'center'); SB('overflow', 'visible'); SB('white-space', 'nowrap');
+              }
+              var fixIds = ['previewName', 'previewFather', 'previewBlood', 'previewEmergency', 'previewId', 'previewAddress'];
 fixIds.forEach(function(id) {
   var el = doc.getElementById(id);
   if (el) {
     el.classList.remove('truncate');
     el.style.setProperty('overflow', 'visible', 'important');
-    el.style.setProperty('line-height', '1.35', 'important');
-    el.style.setProperty('padding-bottom', '3px', 'important');
+    el.style.setProperty('line-height', '1.2', 'important');
+    el.style.setProperty('padding-bottom', '1px', 'important');
     if (el.parentElement) el.parentElement.style.setProperty('overflow', 'visible', 'important');
     if (el.parentElement && el.parentElement.parentElement) el.parentElement.parentElement.style.setProperty('overflow', 'visible', 'important');
   }
@@ -6212,8 +6244,8 @@ fixIds.forEach(function(id) {
           }
         });
         if (!canvas || !canvas.width || !canvas.height) throw new Error('empty capture');
-        if (i > 0) pdf.addPage('a4', 'p');
-        var cardW = 85.6, cardH = cardW * (canvas.height / canvas.width), x = (210 - cardW) / 2, y = 30;
+        
+        var cardW = 85.6, cardH = cardW * (canvas.height / canvas.width), x = (210 - cardW) / 2, y = (i === 0 ? 30 : 30 + (window.__wcfCardH || 54) + 20); if (i === 0) window.__wcfCardH = cardH;
         pdf.addImage(canvas.toDataURL('image/jpeg', 0.95), 'JPEG', x, y, cardW, cardH);
         pdf.setDrawColor(190, 190, 190); pdf.setLineWidth(0.1); pdf.rect(x - 0.3, y - 0.3, cardW + 0.6, cardH + 0.6);
         pdf.setFontSize(8); pdf.setTextColor(120, 120, 120);
@@ -6366,7 +6398,7 @@ fixIds.forEach(function(id) {
     for (var i = 0; i < inputs.length; i++) inputs[i].placeholder = ph;
     var rm = el('refMemberId'); if (rm) rm.placeholder = 'WCF-123456';
     var b = el('btnDownloadIdCardPdf');
-    if (b && !b.disabled) b.innerHTML = T('⬇️ Download ID Card PDF', '⬇️ آئی ڈی کارڈ پی ڈی ایف ڈاؤن لوڈ کریں', '⬇️ आईडी कार्ड PDF डाउनलोड करें');
+    if (b && !b.disabled) b.innerHTML = T('🖨️ Print / Download ID Card (PDF)', '⬇️ آئی ڈی کارڈ پی ڈی ایف ڈاؤن لوڈ کریں', '⬇️ आईडी कार्ड PDF डाउनलोड करें');
   }
   function relOtherPH() {
     return T('Enter relationship (e.g. Daughter-in-law, Son-in-law)', 'رشتہ لکھیں (مثلاً بہو، داماد)', 'रिश्ता लिखें (जैसे बहू, दामाद)');
@@ -6411,4 +6443,195 @@ fixIds.forEach(function(id) {
 })();
 </script>
 <!-- ==================== END WCF FIX PACK V12 (portal) ==================== -->
+
+<!-- ==================== WCF index21: card layout fix + Unique-Code dashboard + Media tab ==================== -->
+<style id="wcf-v21-style">
+  /* Front card: keep text clear of the divider line */
+  #printableIdCardArea > div:first-child { padding: 12px 16px !important; }
+  #printableIdCardArea > div:first-child > div:nth-child(2) { padding-bottom: 5px !important; }
+  #printableIdCardArea > div:first-child > div:nth-child(3) { margin-top: 6px !important; margin-bottom: 8px !important; }
+  #printableIdCardArea > div:first-child > div:nth-child(3) .space-y-1 > * + * { margin-top: 2px !important; }
+  #printableIdCardArea > div:first-child > div:nth-child(4) { padding-top: 3px !important; }
+  /* Back card: address stays above the bottom line */
+  #printableIdCardArea > div:last-child > div:nth-child(2) { margin-bottom: 8px !important; }
+  /* OFFICIAL ID badge: text centred */
+  #cardOfficialBadge { display: inline-flex !important; align-items: center !important; justify-content: center !important;
+    height: 18px !important; padding: 0 10px !important; line-height: 1 !important; text-align: center !important; }
+  .wcf-media-card img { background: #f1f5f9; }
+</style>
+
+<script id="wcf-v21-dashboard">
+/* City Population Dashboard: ANY valid unique code (any member's ID, FRC or IIC code) unlocks it. No head-ID / phone needed. */
+(function () {
+  function norm(s) { return String(s == null ? '' : s).trim().toUpperCase(); }
+  function isOk(r) { return !!(r && r.status === 'Approved' && r.code && String(r.code).indexOf('PEND-') !== 0); }
+  function matches(r, U) {
+    var eq = function (v) { return v !== undefined && v !== null && norm(v) === U; };
+    if (eq(r.code)) return true;
+    var h = r.head || {};
+    if (eq(h.memberId) || eq(h.code) || eq(h.id)) return true;
+    return (Array.isArray(r.members) ? r.members : []).some(function (m) {
+      return m && m.status !== 'Revoked' && (eq(m.memberId) || eq(m.code) || eq(m.id) || eq(m.uniqueId));
+    });
+  }
+  window.verifyAndOpenPopulationDashboard = async function () {
+    var inp = document.getElementById('cityStatAuthInput');
+    var errEl = document.getElementById('cityStatsErrorMsg');
+    var v = inp ? inp.value.trim() : '';
+    var U = norm(v);
+    var fail = function (m) { errEl.textContent = m; errEl.classList.remove('hidden'); };
+    if (!U) { fail('Please enter your Unique Code.'); return; }
+    var recs = Object.keys(window.storedFRCRecords || {}).map(function (k) { return window.storedFRCRecords[k]; });
+    var ok = recs.some(function (r) { return isOk(r) && matches(r, U); });
+    if (!ok) {
+      try {
+        if (typeof isCloudReady !== 'undefined' && isCloudReady && typeof db !== 'undefined' && db) {
+          var rec = null;
+          if (window.wcfCloudFindByMemberId) rec = await window.wcfCloudFindByMemberId(v);
+          if (!rec && window.wcfCloudFindFamily) { var f = await window.wcfCloudFindFamily(v); if (f && !/^\+?[0-9 \-]{8,}$/.test(v)) rec = f; }
+          if (isOk(rec) && matches(rec, U)) ok = true;
+        }
+      } catch (e) {}
+    }
+    if (!ok) { fail('Unique Code (' + v + ') not found. Please enter a valid Member ID / FRC / IIC code.'); return; }
+    errEl.classList.add('hidden');
+    isPopDashboardUnlocked = true;
+    document.getElementById('popAuthBox').classList.add('hidden');
+    document.getElementById('popFilterArea').classList.remove('hidden');
+    if (typeof runPublicPopulationQuery === 'function') runPublicPopulationQuery();
+  };
+})();
+</script>
+
+<script id="wcf-v21-media">
+/* Media tab: YouTube links (title + thumbnail), community meeting photos and news. Data lives in Firebase collection "wcf_media"; only the admin can add/delete. */
+(function () {
+  var COL = 'wcf_media';
+  var cache = [], filter = 'all', loaded = false, saved = [];
+  function $(id) { return document.getElementById(id); }
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function lang() { return (typeof currentLang !== 'undefined' && currentLang) ? currentLang : 'en'; }
+  var TXT = {
+    en: { tab: '📺 Media', all: 'All', video: 'Videos', image: 'Photos', news: 'News', empty: 'Nothing published yet.', load: 'Loading…', err: 'Could not load media. Please try again later.', refresh: 'Refresh' },
+    ur: { tab: '📺 میڈیا', all: 'سب', video: 'ویڈیوز', image: 'تصاویر', news: 'خبریں', empty: 'ابھی کچھ شائع نہیں ہوا۔', load: 'لوڈ ہو رہا ہے…', err: 'میڈیا لوڈ نہیں ہو سکا۔', refresh: 'ریفریش' },
+    hi: { tab: '📺 मीडिया', all: 'सभी', video: 'वीडियो', image: 'फ़ोटो', news: 'समाचार', empty: 'अभी कुछ प्रकाशित नहीं हुआ।', load: 'लोड हो रहा है…', err: 'मीडिया लोड नहीं हो सका।', refresh: 'रीफ़्रेश' }
+  };
+  function t(k) { return (TXT[lang()] || TXT.en)[k]; }
+  var ACTIVE = 'bandhani-bg text-white px-5 py-2.5 rounded-lg font-bold text-xs md:text-sm shadow border border-amber-400/30';
+  var INACTIVE = 'bg-slate-200 text-slate-700 hover:bg-slate-300 px-5 py-2.5 rounded-lg font-bold text-xs md:text-sm';
+
+  function build() {
+    var bar = $('mainTabBar');
+    if (!bar || $('tabMedia')) return !!$('tabMedia');
+    var btn = document.createElement('button');
+    btn.type = 'button'; btn.id = 'tabMedia'; btn.className = INACTIVE; btn.textContent = t('tab');
+    bar.insertBefore(btn, bar.firstChild);
+    var sec = document.createElement('div');
+    sec.id = 'wcfMediaSection';
+    sec.className = 'hidden bg-white p-4 md:p-6 rounded-xl border border-slate-200 shadow space-y-4';
+    sec.innerHTML =
+      '<div class="flex flex-wrap items-center gap-2" id="wcfMediaFilters"></div>' +
+      '<p id="wcfMediaMsg" class="text-xs text-slate-500"></p>' +
+      '<div id="wcfMediaGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"></div>';
+    bar.insertAdjacentElement('afterend', sec);
+    var lb = document.createElement('div');
+    lb.id = 'wcfLightbox';
+    lb.style.cssText = 'display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.88);align-items:center;justify-content:center;padding:16px;cursor:zoom-out';
+    lb.innerHTML = '<img id="wcfLightboxImg" alt="" style="max-width:100%;max-height:100%;border-radius:8px">';
+    lb.addEventListener('click', function () { lb.style.display = 'none'; });
+    document.body.appendChild(lb);
+    btn.addEventListener('click', openMedia);
+    /* any other tab click: leave Media first, so the other tab's own code then shows its section */
+    bar.addEventListener('click', function (ev) {
+      var b = ev.target && ev.target.closest ? ev.target.closest('button') : null;
+      if (b && b.id !== 'tabMedia' && !sec.classList.contains('hidden')) closeMedia();
+    }, true);
+    sec.addEventListener('click', function (ev) {
+      var f = ev.target.closest('[data-f]'); if (f) { filter = f.getAttribute('data-f'); render(); return; }
+      if (ev.target.closest('[data-refresh]')) { load(true); return; }
+      var im = ev.target.closest('[data-zoom]'); if (im) { $('wcfLightboxImg').src = im.getAttribute('data-zoom'); $('wcfLightbox').style.display = 'flex'; }
+    });
+    return true;
+  }
+  function openMedia() {
+    var sec = $('wcfMediaSection'), bar = $('mainTabBar');
+    if (!sec) return;
+    if (sec.classList.contains('hidden')) {
+      saved = [];
+      Array.prototype.slice.call(bar.parentNode.children).forEach(function (n) {
+        if (n === bar || n === sec || n.tagName === 'SCRIPT' || n.tagName === 'STYLE') return;
+        saved.push({ n: n, hidden: n.classList.contains('hidden') });
+        n.classList.add('hidden');
+      });
+    }
+    sec.classList.remove('hidden');
+    Array.prototype.slice.call(bar.querySelectorAll('button')).forEach(function (b) { if (b.id !== 'tabMedia') b.className = INACTIVE; });
+    $('tabMedia').className = ACTIVE;
+    load(false);
+  }
+  function closeMedia() {
+    var sec = $('wcfMediaSection'); if (!sec) return;
+    sec.classList.add('hidden');
+    saved.forEach(function (o) { if (!o.hidden) o.n.classList.remove('hidden'); });
+    saved = [];
+    $('tabMedia').className = INACTIVE;
+  }
+  function dbOK() { return typeof isCloudReady !== 'undefined' && isCloudReady && typeof db !== 'undefined' && db; }
+  async function load(force) {
+    var msg = $('wcfMediaMsg');
+    if (loaded && !force) { render(); return; }
+    msg.textContent = t('load');
+    for (var i = 0; i < 20 && !dbOK(); i++) await new Promise(function (r) { setTimeout(r, 400); });
+    if (!dbOK()) { msg.textContent = t('err'); return; }
+    try {
+      var snap = await db.collection(COL).orderBy('ts', 'desc').limit(60).get();
+      cache = []; snap.forEach(function (d) { var x = d.data(); x.id = d.id; cache.push(x); });
+      loaded = true; render();
+    } catch (e) { console.warn('media load', e); msg.textContent = t('err'); }
+  }
+  function fdate(x) { try { return new Date(x.ts || x.createdAt).toLocaleDateString(); } catch (e) { return ''; } }
+  function render() {
+    var fb = $('wcfMediaFilters'), grid = $('wcfMediaGrid'), msg = $('wcfMediaMsg');
+    var fl = ['all', 'video', 'image', 'news'];
+    fb.innerHTML = fl.map(function (k) {
+      return '<button type="button" data-f="' + k + '" class="px-3 py-1.5 rounded-full text-xs font-bold ' + (filter === k ? 'bg-amber-600 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200') + '">' + esc(t(k)) + '</button>';
+    }).join('') + '<button type="button" data-refresh="1" class="ml-auto px-3 py-1.5 rounded-full text-xs font-bold bg-slate-800 text-white">↻ ' + esc(t('refresh')) + '</button>';
+    var list = cache.filter(function (x) { return filter === 'all' || x.kind === filter; });
+    msg.textContent = list.length ? '' : t('empty');
+    grid.innerHTML = list.map(function (x) {
+      var title = '<h4 class="font-bold text-sm text-slate-800 leading-snug">' + esc(x.title) + '</h4>';
+      var date = '<span class="text-[10px] text-slate-400">' + esc(fdate(x)) + '</span>';
+      if (x.kind === 'video') {
+        var th = 'https://i.ytimg.com/vi/' + encodeURIComponent(x.videoId) + '/hqdefault.jpg';
+        return '<div class="wcf-media-card border border-slate-200 rounded-xl overflow-hidden bg-white shadow-sm"><a href="' + esc(x.url) + '" target="_blank" rel="noopener noreferrer" class="block relative">' +
+          '<img src="' + th + '" alt="" loading="lazy" class="w-full aspect-video object-cover"><span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center"><span style="background:rgba(220,38,38,.92);color:#fff;border-radius:12px;width:52px;height:36px;display:flex;align-items:center;justify-content:center;font-size:18px">▶</span></span></a>' +
+          '<div class="p-3 space-y-1">' + title + date + '</div></div>';
+      }
+      if (x.kind === 'image') {
+        return '<div class="wcf-media-card border border-slate-200 rounded-xl overflow-hidden bg-white shadow-sm"><img src="' + esc(x.img) + '" data-zoom="' + esc(x.img) + '" alt="' + esc(x.title) + '" loading="lazy" class="w-full aspect-video object-cover cursor-zoom-in">' +
+          '<div class="p-3 space-y-1">' + title + date + '</div></div>';
+      }
+      return '<div class="wcf-media-card border border-amber-200 rounded-xl overflow-hidden bg-amber-50/50 shadow-sm sm:col-span-2 md:col-span-3">' +
+        (x.img ? '<img src="' + esc(x.img) + '" data-zoom="' + esc(x.img) + '" alt="" loading="lazy" class="w-full max-h-72 object-cover cursor-zoom-in">' : '') +
+        '<div class="p-4 space-y-1.5"><span class="text-[10px] font-bold text-amber-700 uppercase">' + esc(t('news')) + '</span>' + title + date +
+        '<p class="text-xs text-slate-700 leading-relaxed" style="white-space:pre-wrap">' + esc(x.text) + '</p></div></div>';
+    }).join('');
+  }
+  function relabel() { var b = $('tabMedia'); if (b) b.textContent = t('tab'); if (!$('wcfMediaSection').classList.contains('hidden')) render(); }
+  function start() {
+    if (!build()) { setTimeout(start, 500); return; }
+    if (typeof window.changeLanguage === 'function' && !window.changeLanguage._wcfMedia) {
+      var prev = window.changeLanguage;
+      var fn = function () { var r = prev.apply(this, arguments); try { relabel(); } catch (e) {} return r; };
+      try { Object.keys(prev).forEach(function (k) { fn[k] = prev[k]; }); } catch (e) {}
+      fn._wcfMedia = true; window.changeLanguage = fn;
+    }
+    relabel();
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { setTimeout(start, 300); });
+  else setTimeout(start, 300);
+})();
+</script>
+<!-- ==================== END WCF index21 additions ==================== -->
+
 </html>
