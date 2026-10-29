@@ -6190,8 +6190,18 @@ function wcfCheckReference(refId, app, records, excludeCode) {
                 qi.style.cssText = 'width:' + qr.w + 'px;height:' + qr.w + 'px;max-width:none;max-height:none;display:block;margin:0;';
                 qb.appendChild(qi);
               }
-              var ad = doc.getElementById('previewAddress');
-              if (ad) { ad.style.lineHeight = '1.25'; ad.style.paddingBottom = '2px'; }
+              var fixIds = ['previewName', 'previewFather', 'previewBlood', 'previewEmergency', 'previewId', 'previewAddress', 'cardOfficialBadge'];
+fixIds.forEach(function(id) {
+  var el = doc.getElementById(id);
+  if (el) {
+    el.classList.remove('truncate');
+    el.style.setProperty('overflow', 'visible', 'important');
+    el.style.setProperty('line-height', '1.35', 'important');
+    el.style.setProperty('padding-bottom', '3px', 'important');
+    if (el.parentElement) el.parentElement.style.setProperty('overflow', 'visible', 'important');
+    if (el.parentElement && el.parentElement.parentElement) el.parentElement.parentElement.style.setProperty('overflow', 'visible', 'important');
+  }
+});
               var all = doc.querySelectorAll('#printableIdCardArea *');
               for (var k = 0; k < all.length; k++) {
                 var n = all[k], own = '';
