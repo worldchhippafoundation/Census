@@ -6640,23 +6640,46 @@ fixIds.forEach(function(id) {
 
 </div>
 </footer>
-
 <script>
-// سادہ وزٹر کاؤنٹر کا اسکرپٹ
 (function() {
-    let visits = localStorage.getItem('WCF_VISITOR_COUNT');
-    if (!visits) {
-        visits = 1005; 
-    } else {
-        if (!sessionStorage.getItem('WCF_SESSION_counted')) {
-            visits = parseInt(visits) + 1;
-            localStorage.setItem('WCF_VISITOR_COUNT', visits);
-            sessionStorage.setItem('WCF_SESSION_counted', 'true');
-        }
-    }
     const counterEl = document.getElementById('wcfVisitorCounter');
-    if (counterEl) {
-        counterEl.textContent = Number(visits).toLocaleString();
+    const fallbackStart = 1005;
+
+    async function updateLiveVisitorCounter() {
+        if (typeof db !== 'undefined' && db) {
+            const ref = db.collection('wcf_config').doc('wcf_visitor_counter');
+            try {
+                const newCount = await db.runTransaction(async (t) => {
+                    const doc = await t.get(ref);
+                    let current = fallbackStart;
+                    if (doc.exists && typeof doc.data().count === 'number') {
+                        current = doc.data().count + 1;
+                    }
+                    t.set(ref, { count: current }, { merge: true });
+                    return current;
+                });
+                if (counterEl) counterEl.textContent = Number(newCount).toLocaleString();
+                localStorage.setItem('WCF_VISITOR_COUNT', newCount);
+                return;
+            } catch (err) {
+                console.warn("Firebase counter fallback:", err);
+            }
+        }
+
+        let visits = localStorage.getItem('WCF_VISITOR_COUNT');
+        if (!visits) {
+            visits = fallbackStart;
+        } else {
+            visits = parseInt(visits, 10) + 1;
+        }
+        localStorage.setItem('WCF_VISITOR_COUNT', visits);
+        if (counterEl) counterEl.textContent = Number(visits).toLocaleString();
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', updateLiveVisitorCounter);
+    } else {
+        updateLiveVisitorCounter();
     }
 })();
 </script>
