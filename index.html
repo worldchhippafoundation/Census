@@ -6633,5 +6633,31 @@ fixIds.forEach(function(id) {
 })();
 </script>
 <!-- ==================== END WCF index21 additions ==================== -->
+<div class="mt-3 pt-2 border-t border-slate-800/80 text-[11px] text-black flex items-center justify-center gap-2">
+<span>🌐 Total Website Visitors:</span>
+<span id="wcfVisitorCounter" class="font-mono font-bold text-black">Loading...</span>
+</div>
 
+</div>
+</footer>
+
+<script>
+// سادہ وزٹر کاؤنٹر کا اسکرپٹ
+(function() {
+    let visits = localStorage.getItem('WCF_VISITOR_COUNT');
+    if (!visits) {
+        visits = 1005; 
+    } else {
+        if (!sessionStorage.getItem('WCF_SESSION_counted')) {
+            visits = parseInt(visits) + 1;
+            localStorage.setItem('WCF_VISITOR_COUNT', visits);
+            sessionStorage.setItem('WCF_SESSION_counted', 'true');
+        }
+    }
+    const counterEl = document.getElementById('wcfVisitorCounter');
+    if (counterEl) {
+        counterEl.textContent = Number(visits).toLocaleString();
+    }
+})();
+</script>
 </html>
