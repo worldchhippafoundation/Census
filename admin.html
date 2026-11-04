@@ -4,6 +4,7 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://*.firebaseio.com https://*.googleapis.com https://*.gstatic.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://i.ytimg.com https://img.youtube.com; connect-src 'self' https://*.firebaseio.com https://*.googleapis.com https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com;">
 <meta charset="UTF-8">
 <meta name="google" content="notranslate">
+<meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>WCF Admin Census & Directory Manager (V.4.11.26)</title>
 <script src="https://cdn.tailwindcss.com"></script>
@@ -482,8 +483,8 @@ function loadAdminPendingQueue() {
         <div class="text-[10px] text-slate-500">Member ID: ${escapeHtml(rec.head.memberId)} | Clan: ${escapeHtml(rec.head.clan)} | Phone: ${escapeHtml(rec.head.phone)}</div>
       </div>
       <div class="flex gap-1.5">
-        <button onclick="updateStatusByAdmin('${escapeHtml(rec.code)}', 'Approved')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-2.5 py-1 rounded text-[10px] font-bold cursor-pointer">Approve</button>
-        <button onclick="updateStatusByAdmin('${escapeHtml(rec.code)}', 'Rejected')" class="bg-red-600 hover:bg-red-700 text-white px-2.5 py-1 rounded text-[10px] font-bold cursor-pointer">Reject</button>
+        <button data-wcf-act="Approved" data-wcf-code="${escapeHtml(rec.code)}" class="bg-emerald-600 hover:bg-emerald-700 text-white px-2.5 py-1 rounded text-[10px] font-bold cursor-pointer">Approve</button>
+        <button data-wcf-act="Rejected" data-wcf-code="${escapeHtml(rec.code)}" class="bg-red-600 hover:bg-red-700 text-white px-2.5 py-1 rounded text-[10px] font-bold cursor-pointer">Reject</button>
       </div>
     `;
     list.appendChild(item);
@@ -1058,8 +1059,8 @@ function exportOtherClansPDF() {
           '<div class="text-[10px] text-slate-500 font-mono">Phone: ' + escapeHtml(rec.head?.phone || "-") + ' | City: ' + escapeHtml(rec.head?.city || "-") + ' (' + escapeHtml(rec.head?.country || "-") + ')</div>' +
           '</div>' +
           '<div class="flex gap-2 shrink-0 self-end sm:self-center">' +
-          '<button onclick="updateStatusByAdmin(\'' + escapeHtml(rec.code) + '\', \'Approved\')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow cursor-pointer transition">✓ Approve & Issue Code</button>' +
-          '<button onclick="updateStatusByAdmin(\'' + escapeHtml(rec.code) + '\', \'Rejected\')" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow cursor-pointer transition">✕ Reject & Delete</button>' +
+          '<button data-wcf-act="Approved" data-wcf-code="' + escapeHtml(rec.code) + '" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow cursor-pointer transition">✓ Approve & Issue Code</button>' +
+          '<button data-wcf-act="Rejected" data-wcf-code="' + escapeHtml(rec.code) + '" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow cursor-pointer transition">✕ Reject & Delete</button>' +
           '</div>';
         list.appendChild(item);
       });
@@ -1085,7 +1086,7 @@ function exportOtherClansPDF() {
             const data = doc.data();
             if (data && data.code) {
               if (data.status === "Rejected") {
-                try { db.collection(colName).doc(doc.id).delete(); } catch(e){}
+                /* admin25: kept in Firebase, only hidden from the lists - never auto-deleted */
               } else {
                 freshRecords[data.code] = data;
               }
@@ -1108,6 +1109,15 @@ function exportOtherClansPDF() {
       if (!rec) return;
       const colsToClean = ["wcf_pending_queue", "trial_census_registrations", "census_registrations"];
       if (newStatus === "Rejected") {
+        if (isCloudReady && db) {
+          try {
+            var rejBy = "admin"; try { rejBy = (auth.currentUser && auth.currentUser.email) || "admin"; } catch(e0) {}
+            await db.collection("wcf_rejected_archive").doc(String(code)).set(Object.assign({}, JSON.parse(JSON.stringify(rec)), { archivedAt: new Date().toISOString(), archivedBy: rejBy }));
+          } catch (e) {
+            alert("REJECT CANCELLED - a backup copy could not be saved, so nothing was deleted.\n\n" + (e.code || "") + " " + (e.message || ""));
+            return;
+          }
+        }
         delete storedFRCRecords[code];
         try { localStorage.setItem("WCF_CENSUS_RECORDS", JSON.stringify(storedFRCRecords)); } catch(e){}
         if (isCloudReady && db) {
@@ -1116,11 +1126,12 @@ function exportOtherClansPDF() {
           }
         }
         updateCensusCounters();
-        alert("Record [" + code + "] has been REJECTED and permanently removed from the database.");
+        alert("Record [" + code + "] has been REJECTED and removed from the live lists. A backup copy is kept in wcf_rejected_archive.");
         return;
       }
       if (newStatus === "Approved") {
         const oldKey = code;
+        const approveBackup = JSON.parse(JSON.stringify(rec));
         let finalCode = code;
         if (String(code).startsWith("PEND-")) {
           finalCode = generateOfficialCodeOnApproval(rec.type);
@@ -1149,6 +1160,16 @@ function exportOtherClansPDF() {
         try { localStorage.setItem("WCF_CENSUS_RECORDS", JSON.stringify(storedFRCRecords)); } catch(e){}
         if (isCloudReady && db) {
           try {
+            await db.collection(getActiveCollectionName()).doc(finalCode).set(wcfDecorateRecord(rec));
+          } catch (e) {
+            delete storedFRCRecords[finalCode];
+            storedFRCRecords[oldKey] = approveBackup;
+            try { localStorage.setItem("WCF_CENSUS_RECORDS", JSON.stringify(storedFRCRecords)); } catch(e2){}
+            updateCensusCounters();
+            alert("APPROVE FAILED - nothing was changed or deleted. The application is still pending.\n\n" + (e.code || "") + " " + (e.message || ""));
+            return;
+          }
+          try {
             if (oldKey !== finalCode) {
               for (const c of colsToClean) {
                 try { await db.collection(c).doc(oldKey).delete(); } catch(e){}
@@ -1156,7 +1177,6 @@ function exportOtherClansPDF() {
             } else {
               try { await db.collection("wcf_pending_queue").doc(oldKey).delete(); } catch(e){}
             }
-            await db.collection(getActiveCollectionName()).doc(finalCode).set(wcfDecorateRecord(rec));
           } catch(e) {}
         }
         updateCensusCounters();
@@ -2534,11 +2554,9 @@ function wcfCheckReference(refId, app, records, excludeCode) {
     if (!list) return;
     Array.prototype.slice.call(list.children).forEach(function (item) {
       if (item.getAttribute('data-wcf-rv') === '1' || !item.querySelector) return;
-      var btn = item.querySelector('button[onclick*="updateStatusByAdmin"]');
+      var btn = item.querySelector('button[data-wcf-code]');
       if (!btn) return;
-      var m = /updateStatusByAdmin\('([^']+)'/.exec(btn.getAttribute('onclick') || '');
-      if (!m) return;
-      var rec = storedFRCRecords[m[1].replace(/&#39;/g, "'")];
+      var rec = storedFRCRecords[btn.getAttribute('data-wcf-code')];
       if (!rec) return;
       item.setAttribute('data-wcf-rv', '1');
       var rv;
@@ -3241,5 +3259,15 @@ function wcfCheckReference(refId, app, records, excludeCode) {
   window.__wcfPdfRecorder = { makeRecorder: makeRecorder, buildPage: buildPage };
 })();
 
+</script>
+
+<!-- ==================== WCF admin25: safe click handler for Approve / Reject buttons (no inline JS) ==================== -->
+<script id="wcf-v25-safe-click">
+document.addEventListener('click', function (ev) {
+  var b = ev.target && ev.target.closest ? ev.target.closest('[data-wcf-act]') : null;
+  if (!b) return;
+  var code = b.getAttribute('data-wcf-code'), act = b.getAttribute('data-wcf-act');
+  if (code && (act === 'Approved' || act === 'Rejected') && typeof window.updateStatusByAdmin === 'function') window.updateStatusByAdmin(code, act);
+});
 </script>
 </html>
