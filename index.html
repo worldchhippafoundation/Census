@@ -168,7 +168,7 @@ height: 0 !important;
 <div class="w-px h-6 bg-amber-600/50"></div>
 <div>
 <span class="text-[10px] text-amber-200 block">Mode:</span>
-<span id="liveSyncStatus" class="font-bold text-amber-400 text-xs">Local Trial</span>
+<span id="liveSyncStatus" class="font-bold text-emerald-400 text-xs">Live</span>
 </div>
 </div>
 <div class="flex items-center gap-2 bg-black/60 p-1.5 rounded-lg border border-amber-400/40 relative z-50">
@@ -4081,7 +4081,7 @@ M. WASEEM SADIQ TAK (Neemray Walay)
     const refContact = (document.getElementById('refElderContact')?.value || '').trim();
 
     // RULE 1 & RULE 2: Non-Chhippa Keyword Block & Custom Clan Validation
-    const bannedNonChhippaPattern = /(non[s-]*chhippa|ghair[s-]*chhippa|غیر[s]*چھیپا|गैर[s]*छीपा|none|nil|na|test|fake|unknown|xyz|abc|123)/i;
+    const bannedNonChhippaPattern = /(\bnon[\s-]*chhippa\b|\bghair[\s-]*chhippa\b|غیر\s*چھیپا|गैर\s*छीपा|\b(none|nil|test|fake|unknown|xyz|abc|123)\b|^\s*na\s*$)/i;
     if (bannedNonChhippaPattern.test(headName) || bannedNonChhippaPattern.test(headFather)) {
       alert(msg.nonChhippaBlocked);
       return false;
