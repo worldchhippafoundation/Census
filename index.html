@@ -136,34 +136,223 @@ height: 0 !important;
     display: block;
     margin-bottom: 0.35rem;
 }
+/* ===== HYDROGEN SMOOTH MEMORIAL POPUP (ZERO JITTER) & MOBILE POLISH ===== */
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+}
+.tabular-nums { font-variant-numeric: tabular-nums; }
+#memorialModal {
+    position: fixed !important;
+    inset: 0 !important;
+    top: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    z-index: 9998 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    overflow-y: auto;
+    background: rgba(15, 23, 42, 0.56);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.34s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.34s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity;
+}
+#memorialModal.mem-open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+#memorialModal.hidden {
+    display: none !important;
+}
+#memorialModal .memorial-card {
+    width: 100%;
+    max-width: 24.5rem;
+    margin: auto;
+    transform: translate3d(0, 14px, 0) scale(0.975);
+    opacity: 0;
+    transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.30s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform, opacity;
+}
+#memorialModal.mem-open .memorial-card {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 1;
+}
+#memorialModal .memorial-body {
+    min-height: 96px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+@media (prefers-reduced-motion: reduce) {
+    #memorialModal, #memorialModal .memorial-card {
+        transition: none !important;
+        transform: none !important;
+    }
+}
+@media (max-width: 640px) {
+    form button, form input, form select, #mainTabBar button {
+        min-height: 42px;
+    }
+    #printableIdCardArea > div {
+        max-width: 100%;
+    }
+}
+@media (max-width: 410px) {
+    #printableIdCardArea {
+        overflow-x: auto;
+        justify-content: flex-start;
+        padding-left: 0.25rem;
+        padding-right: 0.25rem;
+    }
+}
+/* Live Top News Ticker Bar */
+#wcfNewsTickerBar {
+    background: linear-gradient(90deg, #7f1d1d 0%, #991b1b 50%, #78350f 100%);
+    color: #fff;
+    border-bottom: 1px solid rgba(251, 191, 36, 0.45);
+    overflow: hidden;
+    position: relative;
+    z-index: 35;
+}
+#wcfNewsTickerBar .wcf-tk-inner {
+    display: flex;
+    align-items: center;
+    height: 36px;
+}
+#wcfNewsTickerBar .wcf-tk-label {
+    flex-shrink: 0;
+    background: #fbbf24;
+    color: #451a03;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 0 12px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    letter-spacing: 0.02em;
+    z-index: 2;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.25);
+}
+#wcfNewsTickerBar .wcf-tk-viewport {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+#wcfNewsTickerBar .wcf-tk-track {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+    will-change: transform;
+    animation: wcfTickerScroll var(--wcf-tk-duration, 28s) linear infinite;
+}
+#wcfNewsTickerBar:hover .wcf-tk-track,
+#wcfNewsTickerBar:active .wcf-tk-track {
+    animation-play-state: paused;
+}
+#wcfNewsTickerBar .wcf-tk-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 22px;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.4;
+}
+#wcfNewsTickerBar .wcf-tk-badge {
+    font-size: 10px;
+    font-weight: 800;
+    padding: 2px 7px;
+    border-radius: 6px;
+    text-transform: uppercase;
+}
+#wcfNewsTickerBar .wcf-tk-sep {
+    color: #fcd34d;
+    opacity: 0.7;
+}
+@keyframes wcfTickerScroll {
+    0% { transform: translate3d(0, 0, 0); }
+    100% { transform: translate3d(-50%, 0, 0); }
+}
+/* Admin-Controlled Welcome Modal (GPU-composited, matches #memorialModal smoothness) */
+#wcfWelcomeModal {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 9999 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    overflow-y: auto;
+    background: rgba(15, 23, 42, 0.58);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.34s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.34s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity;
+}
+#wcfWelcomeModal.mem-open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+#wcfWelcomeModal.hidden {
+    display: none !important;
+}
+#wcfWelcomeModal .memorial-card {
+    width: 100%;
+    max-width: 26rem;
+    margin: auto;
+    transform: translate3d(0, 14px, 0) scale(0.975);
+    opacity: 0;
+    transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.30s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform, opacity;
+}
+#wcfWelcomeModal.mem-open .memorial-card {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+    #wcfNewsTickerBar .wcf-tk-track { animation: none !important; }
+    #wcfWelcomeModal, #wcfWelcomeModal .memorial-card { transition: none !important; transform: none !important; }
+}
 </style>
-</head>
+<script src="/_aistudio-iframe.js?v=1f94f900"></script></head>
 <body class="bg-slate-50 text-slate-900 min-h-screen font-latin">
 <!-- Top Navigation Header -->
 <header class="bandhani-bg text-white shadow-md sticky top-0 z-40 border-b border-amber-500/40">
-<div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-3">
-<div class="flex items-center gap-3 cursor-pointer select-none" id="headerLogoArea" title="Official Seal">
-<img src="stamp.png" alt="WCF Official Seal" class="w-14 h-14 rounded-full object-contain shrink-0 shadow-sm border border-amber-500 bg-white hover:opacity-95 transition">
-<div>
-<h1 id="appTitle" class="text-base md:text-xl font-bold leading-relaxed mb-1 drop-shadow">Chhippa Family Registration Certificate</h1>
-<p id="appSub" class="text-[11px] md:text-xs text-amber-200 leading-normal mt-0.5">World Chhippa Foundation — Global Census Portal (V.Fnl)</p>
+<div class="max-w-6xl mx-auto px-3 md:px-4 py-2.5 md:py-3 flex flex-wrap justify-between items-center gap-2.5 md:gap-3">
+<div class="flex items-center gap-2.5 md:gap-3 cursor-pointer select-none min-w-0" id="headerLogoArea" title="Official Seal">
+<img src="stamp.png" alt="WCF Official Seal" class="w-11 h-11 md:w-14 md:h-14 rounded-full object-contain shrink-0 shadow-sm border border-amber-500 bg-white hover:opacity-95 transition">
+<div class="min-w-0">
+<h1 id="appTitle" class="text-sm sm:text-base md:text-xl font-bold leading-snug mb-0.5 drop-shadow">Chhippa Family Registration Certificate</h1>
+<p id="appSub" class="text-[10px] md:text-xs text-amber-200 leading-normal">World Chhippa Foundation — Global Census Portal (V.Fnl)</p>
 </div>
 </div>
-<!-- Official Launch Notice Banner -->
-<div id="launchNoticeBanner" class="hidden bg-amber-700 text-white p-3 rounded-lg shadow-md my-3 flex items-center justify-between text-xs md:text-sm w-full">
-<span>The Official Portal Will be Launched on 4th November 2026</span>
-<button type="button" onclick="dismissLaunchBanner()" class="bg-black/30 hover:bg-black/50 text-amber-200 px-2.5 py-1 rounded transition">Hide</button>
-</div>
-<div class="flex items-center gap-3 flex-wrap">
-<div class="flex items-center gap-3 bg-black/60 border border-amber-400/50 px-3 py-1 rounded-lg text-xs font-mono shadow-inner">
+<div class="flex items-center gap-2 md:gap-3 flex-wrap w-full lg:w-auto justify-between lg:justify-end">
+<div class="flex items-center gap-2.5 md:gap-3 bg-black/60 border border-amber-400/50 px-2.5 md:px-3 py-1 rounded-lg text-xs font-mono shadow-inner tabular-nums">
 <div>
 <span id="lblLiveFamilies" class="text-[10px] text-amber-200 block">Families:</span>
-<span id="liveTotalFamilies" class="font-bold text-amber-300 text-sm">0</span>
+<span id="liveTotalFamilies" class="font-bold text-amber-300 text-sm tabular-nums">0</span>
 </div>
 <div class="w-px h-6 bg-amber-600/50"></div>
 <div>
 <span id="lblLiveMembers" class="text-[10px] text-amber-200 block">Individuals:</span>
-<span id="liveTotalMembers" class="font-bold text-white text-sm">0</span>
+<span id="liveTotalMembers" class="font-bold text-white text-sm tabular-nums">0</span>
 </div>
 <div class="w-px h-6 bg-amber-600/50"></div>
 <div>
@@ -171,21 +360,35 @@ height: 0 !important;
 <span id="liveSyncStatus" class="font-bold text-emerald-400 text-xs">Live</span>
 </div>
 </div>
-<div class="flex items-center gap-2 bg-black/60 p-1.5 rounded-lg border border-amber-400/40 relative z-50">
-<label id="lblLang" class="text-xs text-amber-200 !mb-0 !leading-none font-semibold">Language:</label>
-<select id="langSelect" onchange="changeLanguage(this.value)" class="!bg-black/80 !text-amber-200 text-xs md:text-sm font-semibold rounded px-2.5 py-1 outline-none cursor-pointer border border-amber-400/50">
+<div class="flex items-center gap-1.5 md:gap-2 bg-black/60 p-1 md:p-1.5 rounded-lg border border-amber-400/40 relative z-50">
+<label id="lblLang" class="text-[11px] md:text-xs text-amber-200 !mb-0 !leading-none font-semibold">Language:</label>
+<select id="langSelect" onchange="changeLanguage(this.value)" class="!bg-black/80 !text-amber-200 text-xs md:text-sm font-semibold rounded px-2 md:px-2.5 py-1 outline-none cursor-pointer border border-amber-400/50">
 <option value="en" selected class="bg-slate-900 text-white">English</option>
 <option value="ur" class="bg-slate-900 text-white">اردو (Urdu)</option>
 <option value="hi" class="bg-slate-900 text-white">हिन्दी (Hindi)</option>
 </select>
-<button type="button" id="btnAboutUs" onclick="openAboutUsModal()" class="bg-black/60 hover:bg-black/80 text-amber-200 text-xs font-semibold px-3 py-1.5 rounded-lg border border-amber-400/40 transition shadow-inner cursor-pointer">
+<button type="button" id="btnAboutUs" onclick="openAboutUsModal()" class="bg-black/60 hover:bg-black/80 text-amber-200 text-xs font-semibold px-2.5 md:px-3 py-1.5 rounded-lg border border-amber-400/40 transition shadow-inner cursor-pointer whitespace-nowrap">
 About Us
 </button>
 </div>
 </div>
 </div>
 </header>
-<main class="max-w-5xl mx-auto p-4 md:p-6 space-y-6">
+<!-- Admin-Controlled Live Multi-News Top Ticker -->
+<div id="wcfNewsTickerBar" class="hidden" role="region" aria-label="Latest News Updates">
+<div class="max-w-6xl mx-auto wcf-tk-inner">
+<span id="wcfTkHeaderLabel" class="wcf-tk-label">LIVE UPDATES</span>
+<div class="wcf-tk-viewport" dir="ltr">
+<div id="wcfTkTrack" class="wcf-tk-track"></div>
+</div>
+</div>
+</div>
+<main class="max-w-5xl mx-auto p-3 sm:p-4 md:p-6 space-y-5 md:space-y-6">
+<!-- Official Launch Notice Banner -->
+<div id="launchNoticeBanner" class="hidden bg-amber-700 text-white px-3.5 py-2.5 rounded-xl shadow-md flex items-center justify-between gap-2 text-xs md:text-sm w-full">
+<span>The Official Portal Will be Launched on 4th November 2026</span>
+<button type="button" onclick="dismissLaunchBanner()" class="bg-black/30 hover:bg-black/50 text-amber-200 px-3 py-1 rounded-lg transition shrink-0 cursor-pointer">Hide</button>
+</div>
 <div id="mainTabBar" class="flex flex-wrap gap-3 border-b border-slate-200 pb-3">
 <button type="button" id="tabNewReg" onclick="switchMainTab('new')" class="bandhani-bg text-white px-5 py-2.5 rounded-lg font-bold text-xs md:text-sm shadow border border-amber-400/30">
 + New Census Registration
@@ -733,21 +936,22 @@ World Chhippa Foundation Global Census Registry
 </div>
 </main>
 <!-- COMPACT MEMORIAL TRIBUTE POPUP -->
-<div id="memorialModal" onclick="handleMemorialBackdropClick(event)" class="fixed inset-0 bottom-0 top-24 bg-black/30 z-40 overflow-y-auto p-4 flex items-center justify-center">
-<div class="relative w-full max-w-sm bg-white rounded-2xl shadow-2xl border-2 border-amber-500/60 p-4 text-center mx-auto" onclick="event.stopPropagation()">
+<div id="memorialModal" translate="no" onclick="handleMemorialBackdropClick(event)" class="notranslate hidden fixed inset-0 z-[9998] overflow-y-auto p-4 flex items-center justify-center" role="dialog" aria-modal="true" aria-labelledby="memPersonName">
+<div class="memorial-card relative w-full max-w-sm bg-white rounded-2xl shadow-2xl border-2 border-amber-500/60 p-5 text-center mx-auto" onclick="event.stopPropagation()">
 <!-- Close Button -->
-<button type="button" id="memCloseCross" onclick="closeMemorialModal()" class="absolute top-2.5 right-2.5 text-slate-400 hover:text-slate-800 text-lg font-bold w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center transition cursor-pointer">
+<button type="button" id="memCloseCross" aria-label="Close tribute" onclick="closeMemorialModal()" class="absolute top-3 right-3 text-slate-500 hover:text-slate-900 hover:bg-slate-200 text-xl leading-none font-bold w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center transition cursor-pointer">
 &times;
 </button>
 <!-- Golden Icon -->
-<div class="mx-auto mb-1.5 w-9 h-9 rounded-full bg-amber-50 border border-amber-300 flex items-center justify-center text-amber-700 shadow-sm">
-<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<div class="mx-auto mb-2 w-10 h-10 rounded-full bg-amber-50 border border-amber-300 flex items-center justify-center text-amber-700 shadow-sm">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
 </svg>
 </div>
-<h2 id="memCardSubtitle" class="text-[10px] font-bold tracking-wider text-amber-800 uppercase mb-3">In Eternal Remembrance</h2>
-<h1 class="text-base sm:text-lg font-black text-slate-900 leading-normal my-2" id="memPersonName">Muhammad Sadiq Tak</h1>
-<p class="text-[11px] font-semibold text-amber-700 mb-3" dir="ltr">(Neemray Walay) • 1931 – 2021</p>
+<h2 id="memCardSubtitle" class="text-[10px] font-bold tracking-wider text-amber-800 uppercase mb-2">In Eternal Remembrance</h2>
+<h1 class="text-base sm:text-lg font-black text-slate-900 leading-normal my-1.5" id="memPersonName">Muhammad Sadiq Tak</h1>
+<p id="memPersonDates" class="text-[11px] font-semibold text-amber-700 mb-3" dir="ltr">(Neemray Walay) • 1931 – 2021</p>
+<div class="memorial-body">
 <!-- English Text -->
 <div id="memTextEn" class="text-slate-700 text-xs leading-relaxed space-y-1.5">
 <p class="italic">"Honoring a lifetime of selfless dedication, love, and tireless service to the Chhippa Community."</p>
@@ -761,17 +965,36 @@ World Chhippa Foundation Global Census Registry
 <p class="text-[10px] font-bold text-amber-900">پیش کش: ٹاک فیملی (نیمڑے والے)</p>
 </div>
 <!-- Hindi Text -->
-<div id="memTextHi" class="hidden text-slate-700 text-xs leading-relaxed space-y-1.5 font-devanagari">
-<p>"छीपा बिरादरी के लिए निस्वार्थ सेवा, समर्पण और अटूट प्रेम को समर्पित।"</p>
-<p class="text-[10px] font-semibold text-slate-500">अल्लाह उन्हें जन्नत-उल-फ़िरदौस में आला मक़ाम अता फरमाए। आमीन।</p>
-<p class="text-[10px] font-bold text-amber-900">समर्पित: टाक परिवार (नीमड़े वाले)</p>
+<div id="memTextHi" translate="no" class="notranslate hidden text-slate-700 text-xs leading-relaxed space-y-1.5 font-devanagari">
+<p>"छीपा बिरादरी के लिए बे-लौस ख़िदमत, मोहब्बत और लाज़वाल क़ुर्बानियों की याद में।"</p>
+<p class="text-[10px] font-semibold text-slate-600">अल्लाह तआला उन्हें जन्नत-उल-फ़िरदौस में आला मक़ाम अता फ़रमाए। आमीन।</p>
+<p class="text-[10px] font-bold text-amber-900">पेश-कश: टाक फ़ैमिली (नीमड़े वाले)-कराची, पाकिस्तान</p>
+</div>
 </div>
 <!-- Enter Button -->
-<div class="mt-3 pt-2 border-t border-slate-100">
-<button type="button" id="btnMemEnter" onclick="closeMemorialModal()" class="w-full py-1.5 bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white text-xs font-bold rounded-xl shadow transition transform active:scale-95 cursor-pointer">
-Enter Portal 
+<div class="mt-3.5 pt-2.5 border-t border-slate-100">
+<button type="button" id="btnMemEnter" onclick="closeMemorialModal()" class="w-full py-2.5 bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white text-xs font-bold rounded-xl shadow transition transform active:scale-95 cursor-pointer">
+Enter Portal
 </button>
-<p class="text-[9px] text-slate-400 mt-1">Closes automatically in 10 seconds or click Enter</p>
+<p id="memCountdownNote" class="text-[10px] text-slate-500 mt-1.5">Closes automatically in <span id="memCountdownSec" class="font-bold text-amber-800 tabular-nums">10</span>s or click Enter</p>
+</div>
+</div>
+</div>
+<!-- ADMIN-CONTROLLED WELCOME POPUP -->
+<div id="wcfWelcomeModal" translate="no" onclick="if (event.target && event.target.id === 'wcfWelcomeModal' && window.wcfCloseWelcomeModal) window.wcfCloseWelcomeModal()" class="notranslate hidden" role="dialog" aria-modal="true" aria-labelledby="wcfWelPopupTitle">
+<div class="memorial-card relative bg-white rounded-2xl shadow-2xl border-2 border-emerald-600/70 overflow-hidden text-center mx-auto" onclick="event.stopPropagation()">
+<div class="bandhani-bg px-5 py-4 text-white relative">
+<button type="button" id="wcfWelCloseCross" aria-label="Close welcome" onclick="window.wcfCloseWelcomeModal && window.wcfCloseWelcomeModal()" class="absolute top-3 right-3 text-white/90 hover:text-white hover:bg-black/40 text-xl leading-none font-bold w-8 h-8 rounded-full bg-black/25 flex items-center justify-center transition cursor-pointer">&times;</button>
+<img src="stamp.png" alt="WCF Seal" class="w-12 h-12 rounded-full mx-auto mb-2 bg-white p-0.5 border-2 border-amber-400 shadow">
+<p id="wcfWelBadgeTop" class="text-[10px] font-bold uppercase tracking-widest text-amber-200">World Chhippa Foundation</p>
+</div>
+<div class="p-5 space-y-3">
+<h2 id="wcfWelPopupTitle" class="text-base sm:text-lg font-black text-slate-900 leading-snug">Welcome to Chhippa Census Directory</h2>
+<p id="wcfWelPopupMsg" class="text-xs sm:text-sm text-slate-700 leading-relaxed whitespace-pre-line"></p>
+<div class="pt-2 border-t border-slate-100">
+<button type="button" id="btnWcfWelEnter" onclick="window.wcfCloseWelcomeModal && window.wcfCloseWelcomeModal()" class="w-full py-2.5 bandhani-bg text-white text-xs font-bold rounded-xl shadow border border-amber-400/40 transition transform active:scale-95 cursor-pointer">Enter Portal</button>
+<p id="wcfWelCountdownNote" class="text-[10px] text-slate-500 mt-1.5">Closes automatically in <span id="wcfWelCountdownSec" class="font-bold text-amber-800 tabular-nums">10</span>s</p>
+</div>
 </div>
 </div>
 </div>
@@ -1365,6 +1588,8 @@ let isPopDashboardUnlocked = false;
 let activeViewingRecord = null;
 let memorialHasBeenClosed = false;
 let memorialTimer = null;
+let memorialCountdownInterval = null;
+let memorialCloseAnimTimer = null;
 let storedFRCRecords = {};
 try {
 const savedData = localStorage.getItem('WCF_CENSUS_RECORDS');
@@ -1753,14 +1978,10 @@ if (textUr) textUr.classList.add('hidden');
 if (textHi) textHi.classList.add('hidden');
 }
 }
-const memorial = document.getElementById('memorialModal');
-if (memorial) {
-memorial.classList.remove('hidden');
-updateMemorialPopupLanguage(lang);
-if (typeof memorialTimer !== 'undefined' && memorialTimer) clearTimeout(memorialTimer);
-memorialTimer = setTimeout(() => {
-closeMemorialModal();
-}, 10000);
+if (typeof window.wcfHandleStartupOrLanguagePopup === 'function') {
+window.wcfHandleStartupOrLanguagePopup(lang, !!window.__wcfInitialBooting);
+} else if (!window.__wcfInitialBooting && typeof openMemorialModalSmooth === 'function') {
+openMemorialModalSmooth(lang);
 }
 }
 function populateSelectOptions(selectId, optionsObj, defaultValue) {
@@ -1811,16 +2032,10 @@ cityEl.classList.add('hidden');
 tabNewBtn.className = activeCls;
 tabSearchBtn.className = inactiveCls;
 tabCityBtn.className = inactiveCls;
-formEl.reset();
-const memCont = document.getElementById('membersContainer');
-if (memCont) memCont.innerHTML = '';
-if (typeof memberCount !== 'undefined') memberCount = 0;
-if (typeof editingExistingFRCCode !== 'undefined') editingExistingFRCCode = null;
-if (typeof editingExistingHeadMemberId !== 'undefined') editingExistingHeadMemberId = null;
-const banner = document.getElementById('updatingFamilyBanner');
-if (banner) banner.classList.add('hidden');
 const submitBtn = document.getElementById('btnSubmitForm');
-if (submitBtn && typeof i18n !== 'undefined' && i18n[currentLang]) {
+if (submitBtn && typeof editingExistingFRCCode === 'string' && editingExistingFRCCode) {
+submitBtn.textContent = 'Update Family (' + editingExistingFRCCode + ')';
+} else if (submitBtn && typeof i18n !== 'undefined' && i18n[currentLang]) {
 submitBtn.textContent = i18n[currentLang].btnSubmitForm;
 }
 } else if (tab === 'search') {
@@ -2158,7 +2373,7 @@ toggleManualInput(document.getElementById(`memJob_${id}`), `memJobOtherWrap_${id
 handleRelationChange(id, false);
 });
 }
-function loadFRCForAddingMember() {
+async function loadFRCForAddingMember() {
 const inputVal = document.getElementById('searchFRCInput').value.trim();
 const cleanUpper = inputVal.toUpperCase();
 const cleanPhoneInput = inputVal.replace(/[^0-9]/g, '');
@@ -2196,6 +2411,16 @@ return mPhone.length >= 8 && mPhone.endsWith(cleanPhoneInput.slice(-8));
 }
 return false;
 });
+}
+if (!foundRecord && typeof isCloudReady !== 'undefined' && isCloudReady && typeof db !== 'undefined' && db) {
+try {
+if (typeof window.wcfCloudFindFamily === 'function') foundRecord = await window.wcfCloudFindFamily(inputVal);
+if (!foundRecord && typeof window.wcfCloudFindByMemberId === 'function') foundRecord = await window.wcfCloudFindByMemberId(inputVal);
+if (foundRecord && foundRecord.code) {
+storedFRCRecords[foundRecord.code] = foundRecord;
+try { localStorage.setItem('WCF_CENSUS_RECORDS', JSON.stringify(storedFRCRecords)); } catch(e) {}
+}
+} catch(e) {}
 }
 if (!foundRecord) {
 errEl.textContent = `Record (${inputVal}) not found.`;
@@ -2471,9 +2696,9 @@ storedFRCRecords[certCode] = record;
 try {
 localStorage.setItem('WCF_CENSUS_RECORDS', JSON.stringify(storedFRCRecords));
 } catch (err) {}
-if (isCloudReady && db && isSyncEnabled) {
+if (isCloudReady && db && isSyncEnabled && !editingExistingFRCCode) {
 try {
-db.collection(wcfActiveCollection()).doc(certCode).set(wcfDecorateRecord(record));
+await db.collection(wcfActiveCollection()).doc(certCode).set(wcfDecorateRecord(record));
 } catch(e) {
 console.warn("Firestore sync queue buffer:", e);
 }
@@ -3205,16 +3430,57 @@ closeAdminModal();
 alert("Database has been successfully cleared.");
 }
 }
-function initMemorialPopup() {
-if (memorialHasBeenClosed) return;
+function renderMemorialCountdownNote(lang, sec) {
+const note = document.getElementById('memCountdownNote');
+if (!note) return;
+const sHtml = '<span id="memCountdownSec" class="font-bold text-amber-800 tabular-nums">' + sec + '</span>';
+if (lang === 'ur') {
+note.setAttribute('dir', 'rtl');
+note.innerHTML = sHtml + ' سیکنڈ میں خود بخود بند ہو جائے گا یا پورٹل میں داخل ہوں دبائیں';
+} else if (lang === 'hi') {
+note.setAttribute('dir', 'ltr');
+note.innerHTML = sHtml + ' सेकंड में अपने आप बंद हो जाएगा या प्रवेश बटन दबाएँ';
+} else {
+note.setAttribute('dir', 'ltr');
+note.innerHTML = 'Closes automatically in ' + sHtml + 's or click Enter';
+}
+}
+function openMemorialModalSmooth(lang) {
 const modal = document.getElementById('memorialModal');
 if (!modal) return;
+const activeLang = lang || (typeof currentLang !== 'undefined' ? currentLang : 'en');
+if (memorialCloseAnimTimer) { clearTimeout(memorialCloseAnimTimer); memorialCloseAnimTimer = null; }
+if (memorialTimer) { clearTimeout(memorialTimer); memorialTimer = null; }
+if (memorialCountdownInterval) { clearInterval(memorialCountdownInterval); memorialCountdownInterval = null; }
+memorialHasBeenClosed = false;
+updateMemorialPopupLanguage(activeLang);
+let remaining = 10;
+renderMemorialCountdownNote(activeLang, remaining);
+if (modal.classList.contains('hidden') || !modal.classList.contains('mem-open')) {
 modal.classList.remove('hidden');
-updateMemorialPopupLanguage(currentLang || 'en');
-if (memorialTimer) clearTimeout(memorialTimer);
-memorialTimer = setTimeout(() => {
+void modal.offsetHeight;
+requestAnimationFrame(function() {
+requestAnimationFrame(function() {
+if (!memorialHasBeenClosed) modal.classList.add('mem-open');
+});
+});
+}
+memorialCountdownInterval = setInterval(function() {
+remaining -= 1;
+const secEl = document.getElementById('memCountdownSec');
+if (secEl) secEl.textContent = String(Math.max(remaining, 0));
+if (remaining <= 0) {
+clearInterval(memorialCountdownInterval);
+memorialCountdownInterval = null;
+}
+}, 1000);
+memorialTimer = setTimeout(function() {
 closeMemorialModal();
 }, 10000);
+}
+function initMemorialPopup() {
+if (memorialHasBeenClosed) return;
+openMemorialModalSmooth(currentLang || 'en');
 }
 function updateMemorialPopupLanguage(lang) {
 const tEn = document.getElementById('memTextEn');
@@ -3222,6 +3488,7 @@ const tUr = document.getElementById('memTextUr');
 const tHi = document.getElementById('memTextHi');
 const subTitle = document.getElementById('memCardSubtitle');
 const pName = document.getElementById('memPersonName');
+const pDates = document.getElementById('memPersonDates');
 const btnEnter = document.getElementById('btnMemEnter');
 if (!tEn || !tUr || !tHi) return;
 tEn.classList.add('hidden');
@@ -3231,17 +3498,20 @@ if (lang === 'ur') {
 tUr.classList.remove('hidden');
 if (subTitle) subTitle.textContent = "یادِ رفتگاں و خراجِ عقیدت";
 if (pName) pName.textContent = "محمد صادق ٹاک";
-if (btnEnter) btnEnter.textContent = "پورٹل میں داخل ہوں ";
+if (pDates) pDates.textContent = "(Neemray Walay) • 1931 – 2021";
+if (btnEnter) btnEnter.textContent = "پورٹل میں داخل ہوں";
 } else if (lang === 'hi') {
 tHi.classList.remove('hidden');
-if (subTitle) subTitle.textContent = "अमर स्मृति एवं सादर श्रद्धांजलि";
+if (subTitle) subTitle.textContent = "याद-ए-रफ़्तगाँ व ख़िराज-ए-अक़ीदत";
 if (pName) pName.textContent = "मोहम्मद सादिक़ टाक";
-if (btnEnter) btnEnter.textContent = "पोर्टल में प्रवेश करें ";
+if (pDates) pDates.textContent = "(नीमड़े वाले) • 1931 – 2021";
+if (btnEnter) btnEnter.textContent = "पोर्टल में दाख़िल हों";
 } else {
 tEn.classList.remove('hidden');
 if (subTitle) subTitle.textContent = "In Eternal Remembrance";
 if (pName) pName.textContent = "Muhammad Sadiq Tak";
-if (btnEnter) btnEnter.textContent = "Enter Portal ";
+if (pDates) pDates.textContent = "(Neemray Walay) • 1931 – 2021";
+if (btnEnter) btnEnter.textContent = "Enter Portal";
 }
 }
 function handleMemorialBackdropClick(e) {
@@ -3251,19 +3521,38 @@ closeMemorialModal();
 }
 function closeMemorialModal() {
 const modal = document.getElementById('memorialModal');
-if (modal) modal.classList.add('hidden');
-if (memorialTimer) clearTimeout(memorialTimer);
+if (memorialTimer) { clearTimeout(memorialTimer); memorialTimer = null; }
+if (memorialCountdownInterval) { clearInterval(memorialCountdownInterval); memorialCountdownInterval = null; }
+if (memorialCloseAnimTimer) { clearTimeout(memorialCloseAnimTimer); memorialCloseAnimTimer = null; }
 memorialHasBeenClosed = true;
+if (modal) {
+modal.classList.remove('mem-open');
+memorialCloseAnimTimer = setTimeout(function() {
+if (memorialHasBeenClosed) modal.classList.add('hidden');
+}, 340);
 }
+}
+document.addEventListener('keydown', function(ev) {
+if (ev.key === 'Escape') {
+const modal = document.getElementById('memorialModal');
+if (modal && modal.classList.contains('mem-open')) closeMemorialModal();
+}
+});
 function initApp() {
 const modal = document.getElementById('frcModal');
 if (modal) modal.classList.add('hidden');
 const adminModal = document.getElementById('adminModal');
 if (adminModal) adminModal.classList.add('hidden');
+window.__wcfInitialBooting = true;
 document.getElementById('langSelect').value = 'en';
 changeLanguage('en');
-updateCensusCounters();
+window.__wcfInitialBooting = false;
+if (typeof window.wcfRunBootWelcomeOrMemorial === 'function') {
+window.wcfRunBootWelcomeOrMemorial();
+} else if (typeof initMemorialPopup === 'function') {
 initMemorialPopup();
+}
+updateCensusCounters();
 handleHeadDOBValidation();
 }
 function checkAndShowLaunchBanner() {
@@ -3308,9 +3597,9 @@ closeAboutUsModal();
 
 
 
-</body>
 <!-- ID Card Section (Part 1 & 2) with i18n Translation Support -->
-<div class="max-w-4xl mx-auto my-8 p-6 bg-white rounded-2xl shadow-xl border border-slate-200 font-latin">
+<section class="max-w-5xl mx-auto px-3 sm:px-4 md:px-6 my-6 md:my-8">
+<div class="max-w-4xl mx-auto p-4 sm:p-6 bg-white rounded-2xl shadow-xl border border-slate-200 font-latin">
     <div class="flex flex-col sm:flex-row items-center justify-between gap-4 border-b pb-4 mb-6">
         <div>
             <h2 id="idPortalTitle" class="text-xl font-black text-emerald-800 uppercase tracking-wide">Digital Identity Card Portal</h2>
@@ -3420,177 +3709,12 @@ closeAboutUsModal();
     </div>
     <div class="w-24 border-t border-slate-500 mt-4 ml-auto"></div>
     <span id="cardSigSeal" class="text-[6.5px] text-slate-400 block mt-0.5">Signature & Seal</span>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<script>
-// --- FIXED & COMPLETED ID CARD JAVASCRIPT ---
-function fetchMemberDataForIdCard() {
-    const searchId = document.getElementById('searchMemberId').value.trim();
-    if(!searchId) {
-        alert(currentLang === 'ur' ? "براہ کرم درست ممبر آئی ڈی یا کوڈ درج کریں!" : (currentLang === 'hi' ? "कृपया सही सदस्य आईडी या कोड दर्ज करें!" : "Please enter a valid Member ID or code!"));
-        return;
-    }
-        function fetchMemberDataForIdCard() {
-    const searchId = document.getElementById('searchMemberId').value.trim();
-    if(!searchId) {
-        alert("براہ کرم درست ممبر آئی ڈی یا کوڈ درج کریں!");
-        return;
-    }
-    
-    let foundRec = null;
-    let foundMember = null;
-
-    if (storedFRCRecords[searchId.toUpperCase()]) {
-        foundRec = storedFRCRecords[searchId.toUpperCase()];
-        foundMember = foundRec.head;
-    } else {
-        for(let key in storedFRCRecords) {
-            let rec = storedFRCRecords[key];
-            
-            if(rec.code && rec.code.toUpperCase() === searchId.toUpperCase()) {
-                foundRec = rec;
-                foundMember = rec.head || rec;
-                break;
-            }
-            
-            if(rec.head && ((rec.head.memberId && rec.head.memberId.toUpperCase() === searchId.toUpperCase()) || (rec.head.code && rec.head.code.toUpperCase() === searchId.toUpperCase()))) {
-                foundRec = rec;
-                foundMember = rec.head;
-                break;
-            }
-            
-            if(rec.members && Array.isArray(rec.members)) {
-                let matchedMem = rec.members.find(m => 
-                    (m.code && m.code.toUpperCase() === searchId.toUpperCase()) || 
-                    (m.memberId && m.memberId.toUpperCase() === searchId.toUpperCase()) ||
-                    (m.id && m.id.toUpperCase() === searchId.toUpperCase())
-                );
-                if(matchedMem) {
-                    foundRec = rec;
-                    foundMember = matchedMem;
-                    break;
-                }
-            }
-        }
-    }
-
-    if (foundRec && foundMember) {
-        let targetData = foundMember || foundRec.head || foundRec;
-        
-        document.getElementById('previewId').innerText = targetData.memberId || targetData.code || targetData.id || '';
-        document.getElementById('previewName').innerText = targetData.name || targetData.memberName || 'Member Name';
-        document.getElementById('previewFather').innerText = targetData.father || targetData.fatherName || 'Father Name';
-        
-        let addressText = targetData.address || foundRec.address || '';
-        if(foundRec.city) addressText += `, ${foundRec.city}`;
-        document.getElementById('previewAddress').innerText = addressText || 'Address not specified';
-
-        const qrContainer = document.getElementById('idCardQRCode');
-        if(qrContainer) {
-            qrContainer.innerHTML = '';
-            const codeToUse = targetData.code || targetData.memberId || foundRec.code;
-            const secureUrl = `https://www.worldchhippafoundation.com/verify?doc=${codeToUse}&status=${foundRec.status || 'Pending'}&id=${targetData.memberId || codeToUse}`;
-            new QRCode(qrContainer, {
-                text: secureUrl,
-                width: 36,
-                height: 36,
-                colorDark: "#000000",
-                colorLight: "#ffffff"
-            });
-        }
-    } else {
-        alert("یہ ممبر آئی ڈی یا کوڈ سسٹم میں موجود نہیں ہے!");
-        document.getElementById('previewId').innerText = "";
-        document.getElementById('previewName').innerText = "Member Name";
-        document.getElementById('previewFather').innerText = "Father Name";
-        document.getElementById('previewAddress').innerText = "Address will appear here automatically...";
-        const qrContainer = document.getElementById('idCardQRCode');
-        if(qrContainer) qrContainer.innerHTML = '';
-    }
-}
-            // 3. Check inside members array for individual family members
-            if(rec.members && Array.isArray(rec.members)) {
-                let matchedMem = rec.members.find(m => 
-                    (m.code && m.code.toUpperCase() === searchId.toUpperCase()) || 
-                    (m.memberId && m.memberId.toUpperCase() === searchId.toUpperCase())
-                );
-                if(matchedMem) {
-                    foundRec = rec;
-                    foundMember = matchedMem;
-                    break;
-                }
-            }
-        }
-    } else {
-        // If found directly by FRC/Main key, default to head
-        foundMember = foundRec.head;
-    }
-
-    if (foundRec) {
-        // Use foundMember details if matched inside family, otherwise fall back to head/main
-        let targetData = foundMember || foundRec.head || foundRec;
-        
-        document.getElementById('previewId').innerText = targetData.memberId || targetData.code || targetData.id || '';
-        document.getElementById('previewName').innerText = targetData.name || targetData.memberName || 'Member Name';
-        document.getElementById('previewFather').innerText = targetData.father || targetData.fatherName || 'Father Name';
-        document.getElementById('previewAddress').innerText = targetData.address || foundRec.address || '';
-                const qrContainer = document.getElementById('idCardQRCode');
-        if(qrContainer) {
-            qrContainer.innerHTML = '';
-            const secureUrl = `https://www.worldchhippafoundation.com/verify?doc=${foundRec.code}&status=${foundRec.status || 'Pending'}&id=${foundRec.head.memberId}`;
-            new QRCode(qrContainer, {
-                text: secureUrl,
-                width: 36,
-                height: 36,
-                colorDark: "#000000",
-                colorLight: "#ffffff"
-            });
-        }
-    } else {
-        alert(currentLang === 'ur' ? "یہ ممبر آئی ڈی یا کوڈ سسٹم میں موجود نہیں ہے!" : (currentLang === 'hi' ? "यह सदस्य आईडी या कोड सिस्टम में मौजूद नहीं है!" : "This member ID or code does not exist in the system!"));
-        document.getElementById('previewId').innerText = "";
-        document.getElementById('previewName').innerText = "Member Name";
-        document.getElementById('previewFather').innerText = "Father Name";
-        document.getElementById('previewAddress').innerText = "Address will appear here automatically...";
-        const qrContainer = document.getElementById('idCardQRCode');
-        if(qrContainer) qrContainer.innerHTML = '';
-    }
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    const bloodSelect = document.getElementById('inputBloodGroup');
-    if(bloodSelect) {
-        bloodSelect.addEventListener('change', function() {
-            document.getElementById('previewBlood').innerText = this.value;
-        });
-    }
-    const emInput = document.getElementById('inputEmergencyContact');
-    if(emInput) {
-        emInput.addEventListener('input', function() {
-            document.getElementById('previewEmergency').innerText = this.value;
-        });
-    }
-    const photoInput = document.getElementById('inputUserPhoto');
-    if(photoInput) {
-        photoInput.addEventListener('change', function(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const img = document.getElementById('previewPhotoImg');
-                    img.src = e.target.result;
-                    img.classList.remove('hidden');
-                    document.getElementById('previewPhotoPlaceholder').classList.add('hidden');
-                }
-                reader.readAsDataURL(file);
-            }
-        });
-    }
-});
-</script>
 <script>
 /* ================= PART 3 ================= */
 function applyPortalLanguage() {
@@ -3735,7 +3859,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 </script>
-</body>
+</section>
 <footer class="bg-slate-900 text-white py-6 mt-12 border-t-2 border-amber-500 font-latin text-center">
 <div class="max-w-4xl mx-auto px-4 space-y-2">
 <p class="text-amber-400 font-bold text-xs md:text-sm">
@@ -3761,7 +3885,6 @@ M. WASEEM SADIQ TAK (Neemray Walay)
 </div>
 </div>
 </footer>
-</body>
 <style>
 @media print {
   body * { visibility: hidden !important; }
@@ -3880,7 +4003,6 @@ M. WASEEM SADIQ TAK (Neemray Walay)
   setTxt("cardSigSeal", t.cardSigSeal);
 }
 </script>
-</body>
 
 
 
@@ -4768,7 +4890,7 @@ M. WASEEM SADIQ TAK (Neemray Walay)
     }
   }
 
-  // FIX 7 HELPER: Lock Tribute Popup Hindi Text (Disable Auto-Translate, Keep UR & EN Untouched)
+  // FIX 7 HELPER: Lock Tribute Popup Hindi Text (Disable Auto-Translate, Zero Layout Jitter)
   function applyExactHindiTributeFix(lang) {
     const memModal = document.getElementById('memorialModal');
     if (memModal) {
@@ -4780,14 +4902,9 @@ M. WASEEM SADIQ TAK (Neemray Walay)
     if (tHi) {
       tHi.setAttribute('translate', 'no');
       tHi.classList.add('notranslate');
-      tHi.innerHTML = `
-        <p>"छीपा बिरादरी के लिए बे-लौस ख़िदमत, मोहब्बत और लाज़वाल क़ुर्बानियों की याद में।"</p>
-        <p class="text-[10px] font-semibold text-slate-600">अल्लाह तआला उन्हें जन्नत-उल-फ़िरदौस में आला मक़ाम अता फ़रमाए। आमीन।</p>
-        <p class="text-[10px] font-bold text-amber-900">पेश-कश: टाक फ़ैमिली (नीमड़े वाले)-कराची, पाकिस्तान</p>
-      `;
     }
 
-    const dateLine = memModal ? memModal.querySelector('p[dir="ltr"]') : null;
+    const dateLine = document.getElementById('memPersonDates');
     const subTitle = document.getElementById('memCardSubtitle');
     const pName = document.getElementById('memPersonName');
     const btnEnter = document.getElementById('btnMemEnter');
@@ -5151,7 +5268,7 @@ M. WASEEM SADIQ TAK (Neemray Walay)
           if (oldGeneratedCode && !String(oldGeneratedCode).startsWith("PEND-")) {
             delete storedFRCRecords[oldGeneratedCode];
             if (typeof isCloudReady !== "undefined" && isCloudReady && db) {
-              try { db.collection(wcfActiveCollection()).doc(oldGeneratedCode).delete(); } catch(err){}
+              try { await db.collection(wcfActiveCollection()).doc(oldGeneratedCode).delete(); } catch(err){}
             }
           }
           const tempId = "PEND-" + Math.floor(100000 + Math.random() * 900000);
@@ -5175,13 +5292,13 @@ M. WASEEM SADIQ TAK (Neemray Walay)
           updateCensusCounters();
           displayCertificateModal(activeViewingRecord);
         } else if (!isPendingSubmission && __wcfNewRecV5) {
-          if (typeof isCloudReady !== "undefined" && isCloudReady && db && isSyncEnabled) {
+          if (typeof isCloudReady !== "undefined" && isCloudReady && db && isSyncEnabled && !window.__wcfLastSubmitWasEdit) {
             try {
-              const isTrial = new Date().getTime() < new Date("2026-11-04T00:00:00+05:30").getTime();
-              if (isTrial) {
-                db.collection("trial_census_registrations").doc(activeViewingRecord.code).set(wcfDecorateRecord(activeViewingRecord));
-              }
+              await db.collection(wcfActiveCollection()).doc(activeViewingRecord.code).set(wcfDecorateRecord(activeViewingRecord));
             } catch(err){}
+          }
+          if (!window.__wcfLastSubmitWasEdit && typeof window.wcfApplyLiveRecordToStats === "function") {
+            window.wcfApplyLiveRecordToStats(activeViewingRecord);
           }
           updateCensusCounters();
         }
@@ -5355,20 +5472,38 @@ M. WASEEM SADIQ TAK (Neemray Walay)
   async function cleanSyncPortalRecordsWithCloud() {
     if (typeof isCloudReady === "undefined" || !isCloudReady || !db) return;
     try {
-      var cols = [wcfActiveCollection(), "wcf_pending_queue"];
       var cloudFresh = {};
-      for (var i = 0; i < cols.length; i++) {
-        var snap = await db.collection(cols[i]).get();
-        snap.forEach(function(doc) {
+      var activeCol = wcfActiveCollection();
+      try {
+        var appSnap = await db.collection(activeCol).where("status", "==", "Approved").get();
+        appSnap.forEach(function(doc) {
+          var d = doc.data();
+          if (d && d.code && !d.isEventGreetingConfig && d.status === "Approved") {
+            cloudFresh[d.code] = d;
+          }
+        });
+      } catch (eApp) {
+        try {
+          var fallbackSnap = await db.collection(activeCol).get();
+          fallbackSnap.forEach(function(doc) {
+            var d = doc.data();
+            if (d && d.code && !d.isEventGreetingConfig && d.status === "Approved") {
+              cloudFresh[d.code] = d;
+            }
+          });
+        } catch (e2) {}
+      }
+      try {
+        var pSnap = await db.collection("wcf_pending_queue").get();
+        pSnap.forEach(function(doc) {
           var d = doc.data();
           if (d && d.code && !d.isEventGreetingConfig && d.status !== "Rejected") {
             cloudFresh[d.code] = d;
           }
         });
-      }
-      // Replace lexical storedFRCRecords keys in-place so deleted local trial records disappear
-      if (typeof storedFRCRecords !== "undefined" && storedFRCRecords) {
-        Object.keys(storedFRCRecords).forEach(function(k) { delete storedFRCRecords[k]; });
+      } catch (ePend) {}
+      // Merge freshly fetched cloud records cleanly without dropping live submissions
+      if (typeof storedFRCRecords !== "undefined" && storedFRCRecords && Object.keys(cloudFresh).length > 0) {
         Object.keys(cloudFresh).forEach(function(k) { storedFRCRecords[k] = cloudFresh[k]; });
         try { localStorage.setItem("WCF_CENSUS_RECORDS", JSON.stringify(storedFRCRecords)); } catch(err) {}
       }
@@ -5428,9 +5563,7 @@ M. WASEEM SADIQ TAK (Neemray Walay)
   /* FIX 4: stop horizontal overflow from widening the layout viewport (popups drifted right on mobile) */
   html, body { max-width: 100%; overflow-x: hidden; }
   div.fixed.inset-0 { left: 0 !important; right: 0 !important; width: 100% !important; max-width: 100vw !important; box-sizing: border-box; }
-  #memorialModal { position: fixed; left: 0; right: 0; top: 6rem; bottom: 0; width: 100%; max-width: 100vw; padding: 1rem; display: flex; align-items: center; justify-content: center; box-sizing: border-box; }
-  #memorialModal.hidden { display: none !important; }
-  #memorialModal > div { width: 100%; max-width: 24rem; margin-left: auto !important; margin-right: auto !important; left: auto; right: auto; }
+  #memorialModal > div { width: 100%; max-width: 24.5rem; margin-left: auto !important; margin-right: auto !important; left: auto; right: auto; }
   #memorialModal > div, #memorialModal * { box-sizing: border-box; }
   #memorialModal p, #memorialModal h1, #memorialModal h2 { overflow-wrap: anywhere; }
   /* FIX 5: responsive nav-tab grid (incl. injected Pending tab) */
@@ -5543,22 +5676,85 @@ M. WASEEM SADIQ TAK (Neemray Walay)
     }
   };
 
-  /* ---------- Public counts published by admin (no personal data) ---------- */
+  /* ---------- Live Stats + Immediate Form Fill Delta Overlay ---------- */
+  var DELTA_KEY = 'WCF_LIVE_STATS_DELTAS_V1';
+  function readDeltas() {
+    try {
+      var arr = JSON.parse(localStorage.getItem(DELTA_KEY) || '[]');
+      return Array.isArray(arr) ? arr : [];
+    } catch (e) { return []; }
+  }
+  function writeDeltas(arr) {
+    try { localStorage.setItem(DELTA_KEY, JSON.stringify(arr || [])); } catch (e) {}
+  }
+  function isMaleRec(p) {
+    return !!(p && (p.genderKey === 'Male' || p.gender === 'مرد' || p.gender === 'Male' || p.gender === 'पुरुष'));
+  }
+  window.wcfApplyLiveRecordToStats = function (rec) {
+    if (!rec || rec.status !== 'Approved' || !rec.code || String(rec.code).indexOf('PEND-') === 0) return;
+    var col = wcfActiveCollection();
+    var h = rec.head || {}, hc = h.country || '', hci = h.city || '';
+    var people = [];
+    var hAge = parseInt(h.age, 10) || (typeof calculateAge === 'function' ? calculateAge(h.dob) : 0);
+    people.push({ c: hc, ci: hci, f: rec.type === 'family' ? 1 : 0, p: 1, m: (hAge >= 18 && isMaleRec(h)) ? 1 : 0, w: (hAge >= 18 && !isMaleRec(h)) ? 1 : 0, n: hAge < 18 ? 1 : 0 });
+    (Array.isArray(rec.members) ? rec.members : []).forEach(function (mm) {
+      if (!mm || mm.status === 'Revoked') return;
+      var mAge = parseInt(mm.age, 10) || (typeof calculateAge === 'function' ? calculateAge(mm.dob) : 0);
+      people.push({ c: mm.country || hc, ci: mm.city || hci, f: 0, p: 1, m: (mAge >= 18 && isMaleRec(mm)) ? 1 : 0, w: (mAge >= 18 && !isMaleRec(mm)) ? 1 : 0, n: mAge < 18 ? 1 : 0 });
+    });
+    var deltas = readDeltas().filter(function (x) { return x && x.code !== rec.code; });
+    deltas.push({ code: rec.code, col: col, ts: Date.now(), items: people });
+    writeDeltas(deltas);
+    paintHeaderCounts();
+    var pop = document.getElementById('popFilterArea');
+    if (pop && !pop.classList.contains('hidden') && typeof runPublicPopulationQuery === 'function') runPublicPopulationQuery();
+  };
   function statsForActive() {
-    var s = window.__wcfPublicStats;
-    if (!s) return null;
-    if (s.collection && s.collection !== wcfActiveCollection()) return { families: 0, individuals: 0, groups: [] };
-    return s;
+    var col = wcfActiveCollection();
+    var base = window.__wcfPublicStats;
+    if (base && base.collection && base.collection !== col) {
+      base = { families: 0, individuals: 0, groups: [], updatedAt: '' };
+    }
+    var deltas = readDeltas().filter(function (d) { return d && (!d.col || d.col === col); });
+    if (base && base.updatedAt) {
+      var pubMs = Date.parse(base.updatedAt) || 0;
+      if (pubMs > 0) {
+        var fresh = deltas.filter(function (d) { return (d.ts || 0) > pubMs + 1500; });
+        if (fresh.length !== deltas.length) writeDeltas(fresh);
+        deltas = fresh;
+      }
+    }
+    if (!base && !deltas.length) return null;
+    var out = {
+      families: (base && base.families) ? base.families : 0,
+      individuals: (base && base.individuals) ? base.individuals : 0,
+      groups: (base && Array.isArray(base.groups)) ? base.groups.map(function (g) { return Object.assign({}, g); }) : []
+    };
+    function addGroup(item) {
+      var c = String(item.c || '').trim(), ci = String(item.ci || '').trim();
+      var g = out.groups.find(function (x) { return String(x.c || '').trim() === c && String(x.ci || '').trim() === ci; });
+      if (!g) { g = { c: c, ci: ci, f: 0, p: 0, m: 0, w: 0, n: 0 }; out.groups.push(g); }
+      g.f += item.f || 0; g.p += item.p || 0; g.m += item.m || 0; g.w += item.w || 0; g.n += item.n || 0;
+      out.families += item.f || 0;
+      out.individuals += item.p || 0;
+    }
+    deltas.forEach(function (d) { (d.items || []).forEach(addGroup); });
+    return out;
   }
   function paintHeaderCounts() {
     var s = statsForActive();
-    if (!s) return;
+    var approvedLocal = Object.keys(storedFRCRecords || {}).map(function (k) { return storedFRCRecords[k]; }).filter(isApprovedRec);
+    var locFam = approvedLocal.filter(function (r) { return r.type === 'family'; }).length;
+    var locInd = 0;
+    approvedLocal.forEach(function (r) { locInd += 1 + (Array.isArray(r.members) ? r.members.length : 0); });
+    var famVal = s ? Math.max(s.families || 0, locFam) : locFam;
+    var indVal = s ? Math.max(s.individuals || 0, locInd) : locInd;
     var f = document.getElementById('liveTotalFamilies'), m = document.getElementById('liveTotalMembers');
-    if (f) f.textContent = s.families || 0;
-    if (m) m.textContent = s.individuals || 0;
+    if (f) f.textContent = famVal;
+    if (m) m.textContent = indVal;
   }
   async function loadStats() {
-    if (!cloudOK()) return;
+    if (!cloudOK()) { paintHeaderCounts(); return; }
     try {
       var d = await db.collection('wcf_config').doc('wcf_public_stats').get();
       if (d.exists) {
@@ -5613,6 +5809,12 @@ M. WASEEM SADIQ TAK (Neemray Walay)
     b.className = 'bg-amber-600 hover:bg-amber-500 text-white text-[11px] md:text-xs font-bold px-3 py-2 rounded-lg shadow';
     b.onclick = function () {
       closeFRCModal();
+      if (typeof cancelUpdatingFamily === 'function') cancelUpdatingFamily();
+      else {
+        var frm = document.getElementById('censusForm'); if (frm) frm.reset();
+        var mc = document.getElementById('membersContainer'); if (mc) mc.innerHTML = '';
+        if (typeof memberCount !== 'undefined') memberCount = 0;
+      }
       if (typeof switchMainTab === 'function') switchMainTab('new');
       var f = document.getElementById('censusForm');
       if (f) f.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -5836,6 +6038,7 @@ M. WASEEM SADIQ TAK (Neemray Walay)
       return async function () {
         var before = Object.keys(storedFRCRecords).length;
         var editCode = (typeof editingExistingFRCCode !== 'undefined') ? editingExistingFRCCode : null;
+        window.__wcfLastSubmitWasEdit = !!editCode;
         var prior = null, priorCount = 0;
         try {
           if (editCode && storedFRCRecords[editCode]) {
@@ -6680,4 +6883,266 @@ fixIds.forEach(function(id) {
     }
 })();
 </script>
+<!-- ==================== WCF HYDROGEN: LIVE MULTI-NEWS TICKER & ADMIN WELCOME SYNC ==================== -->
+<script id="wcf-hydrogen-ticker-welcome">
+(function() {
+  var CONFIG_COL = 'wcf_config';
+  var TICKER_DOC = 'wcf_live_ticker';
+  var WELCOME_DOC = 'wcf_portal_welcome';
+  var WELCOME_CACHE_KEY = 'WCF_PORTAL_WELCOME_CACHE';
+
+  var currentTickerData = { items: [], speed: 'normal' };
+  var currentWelcomeCfg = null;
+  var welcomeTimer = null;
+  var welcomeInterval = null;
+  var welcomeCloseAnimTimer = null;
+  var welcomeClosedByUser = false;
+  var bootHandled = false;
+
+  function escHtml(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function(c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  function safeUrl(u) {
+    var s = String(u || '').trim();
+    return /^https?:\/\//i.test(s) ? s : '';
+  }
+
+  function getLang() {
+    var sel = document.getElementById('langSelect');
+    if (sel && sel.value) return sel.value;
+    return (typeof currentLang !== 'undefined' && currentLang) ? currentLang : 'en';
+  }
+
+  /* ---------- 1. LIVE MULTI-NEWS TICKER ---------- */
+  function renderNewsTicker() {
+    var bar = document.getElementById('wcfNewsTickerBar');
+    var track = document.getElementById('wcfTkTrack');
+    var hdr = document.getElementById('wcfTkHeaderLabel');
+    if (!bar || !track) return;
+
+    var lang = getLang();
+    var active = (Array.isArray(currentTickerData.items) ? currentTickerData.items : []).filter(function(it) {
+      return it && it.active !== false && (it.en || it.ur || it.hi);
+    });
+
+    if (!active.length) {
+      bar.classList.add('hidden');
+      track.innerHTML = '';
+      return;
+    }
+
+    if (hdr) {
+      hdr.textContent = lang === 'ur' ? 'تازہ ترین خبریں' : (lang === 'hi' ? 'ताज़ा समाचार' : 'LIVE UPDATES');
+    }
+
+    var tagMap = {
+      urgent: { bg: '#dc2626', fg: '#ffffff', en: 'URGENT', ur: 'اہم اعلان', hi: 'जरूरी' },
+      event:  { bg: '#059669', fg: '#ffffff', en: 'EVENT',  ur: 'تقریب',   hi: 'कार्यक्रम' },
+      info:   { bg: '#0284c7', fg: '#ffffff', en: 'INFO',   ur: 'اطلاع',   hi: 'सूचना' },
+      news:   { bg: '#fbbf24', fg: '#451a03', en: 'NEWS',   ur: 'خبر',     hi: 'समाचार' }
+    };
+
+    var chunkHtml = active.map(function(item) {
+      var tag = tagMap[item.tag] || tagMap.news;
+      var badgeTxt = tag[lang] || tag.en;
+      var msg = lang === 'ur' ? (item.ur || item.en || item.hi)
+              : lang === 'hi' ? (item.hi || item.en || item.ur)
+              : (item.en || item.ur || item.hi);
+      var dirAttr = lang === 'ur' ? 'dir="rtl"' : 'dir="ltr"';
+      var href = safeUrl(item.url);
+      var textHtml = href
+        ? '<a href="' + escHtml(href) + '" target="_blank" rel="noopener noreferrer" class="underline decoration-amber-300 hover:text-amber-200">' + escHtml(msg) + '</a>'
+        : '<span>' + escHtml(msg) + '</span>';
+      return '<span class="wcf-tk-item" ' + dirAttr + '>' +
+        '<span class="wcf-tk-badge" style="background:' + tag.bg + ';color:' + tag.fg + '">' + escHtml(badgeTxt) + '</span>' +
+        textHtml +
+        '<span class="wcf-tk-sep">✦</span>' +
+      '</span>';
+    }).join('');
+
+    track.innerHTML = chunkHtml + chunkHtml;
+    var basePerItem = currentTickerData.speed === 'fast' ? 6 : (currentTickerData.speed === 'slow' ? 16 : 10);
+    var dur = Math.max(16, active.length * basePerItem);
+    track.style.setProperty('--wcf-tk-duration', dur + 's');
+    bar.classList.remove('hidden');
+  }
+
+  function startTickerSync() {
+    if (typeof db === 'undefined' || !db) return;
+    try {
+      db.collection(CONFIG_COL).doc(TICKER_DOC).onSnapshot(function(snap) {
+        if (snap.exists) {
+          var d = snap.data() || {};
+          currentTickerData = { items: Array.isArray(d.items) ? d.items : [], speed: d.speed || 'normal' };
+        } else {
+          currentTickerData = { items: [], speed: 'normal' };
+        }
+        renderNewsTicker();
+      }, function() {});
+    } catch (e) {}
+  }
+
+  /* ---------- 2. ADMIN-CONTROLLED WELCOME POPUP ---------- */
+  function clearWelcomeTimers() {
+    if (welcomeTimer) { clearTimeout(welcomeTimer); welcomeTimer = null; }
+    if (welcomeInterval) { clearInterval(welcomeInterval); welcomeInterval = null; }
+    if (welcomeCloseAnimTimer) { clearTimeout(welcomeCloseAnimTimer); welcomeCloseAnimTimer = null; }
+  }
+
+  function renderWelcomeTexts(cfg, lang, sec) {
+    var titleEl = document.getElementById('wcfWelPopupTitle');
+    var msgEl = document.getElementById('wcfWelPopupMsg');
+    var btnEl = document.getElementById('btnWcfWelEnter');
+    var badgeEl = document.getElementById('wcfWelBadgeTop');
+    var noteEl = document.getElementById('wcfWelCountdownNote');
+    var c = cfg || {};
+
+    var title = lang === 'ur'
+      ? (c.titleUr || c.titleEn || 'ورلڈ چھیپا فاؤنڈیشن مردم شماری ڈائریکٹری میں خوش آمدید')
+      : lang === 'hi'
+        ? (c.titleHi || c.titleEn || 'वर्ल्ड छीपा फ़ाउंडेशन जनगणना डायरेक्टरी में आपका स्वागत है')
+        : (c.titleEn || c.titleUr || 'Welcome to Chhippa Census Directory');
+    var msg = lang === 'ur'
+      ? (c.msgUr || c.msgEn || '')
+      : lang === 'hi'
+        ? (c.msgHi || c.msgEn || '')
+        : (c.msgEn || c.msgUr || '');
+
+    if (titleEl) {
+      titleEl.textContent = title;
+      titleEl.setAttribute('dir', lang === 'ur' ? 'rtl' : 'ltr');
+    }
+    if (msgEl) {
+      msgEl.textContent = msg;
+      msgEl.setAttribute('dir', lang === 'ur' ? 'rtl' : 'ltr');
+      msgEl.classList.toggle('hidden', !msg);
+    }
+    if (badgeEl) {
+      badgeEl.textContent = lang === 'ur' ? 'ورلڈ چھیپا فاؤنڈیشن' : (lang === 'hi' ? 'वर्ल्ड छीपा फ़ाउंडेशन' : 'World Chhippa Foundation');
+    }
+    if (btnEl) {
+      btnEl.textContent = lang === 'ur' ? 'پورٹل میں داخل ہوں' : (lang === 'hi' ? 'पोर्टल में दाख़िल हों' : 'Enter Portal');
+    }
+    if (noteEl) {
+      var sSpan = '<span id="wcfWelCountdownSec" class="font-bold text-amber-800 tabular-nums">' + Math.max(sec, 0) + '</span>';
+      if (lang === 'ur') {
+        noteEl.setAttribute('dir', 'rtl');
+        noteEl.innerHTML = 'یہ ونڈو ' + sSpan + ' سیکنڈ میں خود بند ہو جائے گی';
+      } else if (lang === 'hi') {
+        noteEl.setAttribute('dir', 'ltr');
+        noteEl.innerHTML = sSpan + ' सेकंड में अपने आप बंद हो जाएगा';
+      } else {
+        noteEl.setAttribute('dir', 'ltr');
+        noteEl.innerHTML = 'Closes automatically in ' + sSpan + 's or click Enter';
+      }
+    }
+  }
+
+  window.wcfOpenWelcomeModal = function(cfg, lang) {
+    var modal = document.getElementById('wcfWelcomeModal');
+    if (!modal) return;
+    clearWelcomeTimers();
+    welcomeClosedByUser = false;
+    var sec = (cfg && parseInt(cfg.seconds, 10)) || 10;
+    renderWelcomeTexts(cfg, lang || getLang(), sec);
+    if (modal.classList.contains('hidden') || !modal.classList.contains('mem-open')) {
+      modal.classList.remove('hidden');
+      void modal.offsetHeight;
+      requestAnimationFrame(function() {
+        requestAnimationFrame(function() {
+          if (!welcomeClosedByUser) modal.classList.add('mem-open');
+        });
+      });
+    }
+    var remaining = sec;
+    welcomeInterval = setInterval(function() {
+      remaining -= 1;
+      var secEl = document.getElementById('wcfWelCountdownSec');
+      if (secEl) secEl.textContent = String(Math.max(remaining, 0));
+      if (remaining <= 0) {
+        clearInterval(welcomeInterval);
+        welcomeInterval = null;
+      }
+    }, 1000);
+    welcomeTimer = setTimeout(function() {
+      window.wcfCloseWelcomeModal(true);
+    }, sec * 1000);
+  };
+
+  window.wcfCloseWelcomeModal = function(isAutoTimer) {
+    var modal = document.getElementById('wcfWelcomeModal');
+    clearWelcomeTimers();
+    welcomeClosedByUser = true;
+    if (modal) {
+      modal.classList.remove('mem-open');
+      welcomeCloseAnimTimer = setTimeout(function() {
+        if (welcomeClosedByUser) modal.classList.add('hidden');
+      }, 340);
+    }
+    if (currentWelcomeCfg && currentWelcomeCfg.mode === 'welcome_then_memorial' && isAutoTimer !== false) {
+      setTimeout(function() {
+        if (typeof openMemorialModalSmooth === 'function') openMemorialModalSmooth(getLang());
+      }, 360);
+    }
+  };
+
+  document.addEventListener('keydown', function(ev) {
+    if (ev.key === 'Escape') {
+      var modal = document.getElementById('wcfWelcomeModal');
+      if (modal && modal.classList.contains('mem-open')) window.wcfCloseWelcomeModal(false);
+    }
+  });
+
+  function applyPopupForLanguage(lang) {
+    var mode = (currentWelcomeCfg && currentWelcomeCfg.mode) || 'memorial';
+    if (mode === 'off') return;
+    if (mode === 'welcome' || mode === 'welcome_then_memorial') {
+      window.wcfOpenWelcomeModal(currentWelcomeCfg, lang);
+    } else if (typeof openMemorialModalSmooth === 'function') {
+      openMemorialModalSmooth(lang);
+    }
+  }
+
+  window.wcfHandleStartupOrLanguagePopup = function(lang, isInitialBoot) {
+    renderNewsTicker();
+    if (isInitialBoot) return;
+    applyPopupForLanguage(lang);
+  };
+
+  window.wcfRunBootWelcomeOrMemorial = async function() {
+    if (bootHandled) return;
+    bootHandled = true;
+    try {
+      var cached = localStorage.getItem(WELCOME_CACHE_KEY);
+      if (cached) currentWelcomeCfg = JSON.parse(cached);
+    } catch (e) {}
+
+    if (typeof db !== 'undefined' && db) {
+      try {
+        var snap = await Promise.race([
+          db.collection(CONFIG_COL).doc(WELCOME_DOC).get(),
+          new Promise(function(resolve) { setTimeout(function() { resolve(null); }, 1100); })
+        ]);
+        if (snap) {
+          currentWelcomeCfg = snap.exists ? (snap.data() || { mode: 'memorial' }) : { mode: 'memorial' };
+          try { localStorage.setItem(WELCOME_CACHE_KEY, JSON.stringify(currentWelcomeCfg)); } catch (e) {}
+        }
+      } catch (e) {}
+    }
+    applyPopupForLanguage(getLang());
+  };
+
+  function bootAll() {
+    startTickerSync();
+    if (!bootHandled) window.wcfRunBootWelcomeOrMemorial();
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bootAll);
+  else bootAll();
+})();
+</script>
+</body>
 </html>
