@@ -3460,9 +3460,10 @@ document.addEventListener('click', function (ev) {
         '    <div>',
         '      <label class="block text-[11px] font-bold text-slate-800 mb-1">Startup Popup Mode:</label>',
         '      <select id="wcfWelMode" class="w-full border border-emerald-400 rounded-lg p-2 text-xs font-bold bg-white outline-none">',
-        '        <option value="welcome">Custom Welcome Popup Only (خوش آمدید پاپ اپ)</option>',
-        '        <option value="welcome_then_memorial">Welcome First, Then Memorial Tribute</option>',
-        '        <option value="memorial">Default Memorial Tribute Only (Muhammad Sadiq Tak)</option>',
+        '        <option value="welcome_then_memorial" selected>Welcome Popup First, Then Memorial Tribute (دونوں چلیں گے)</option>',
+        '        <option value="welcome_banner">Top Welcome Card + Memorial Tribute Popup (ٹاپ ویلکم + ٹربیوٹ)</option>',
+        '        <option value="memorial">Default Memorial Tribute Only (صرف پرانا ٹربیوٹ پاپ اپ)</option>',
+        '        <option value="welcome">Welcome Popup Only (ٹربیوٹ بند کر کے صرف ویلکم)</option>',
         '        <option value="off">Off — No Startup Popup</option>',
         '      </select>',
         '    </div>',
@@ -3661,7 +3662,7 @@ document.addEventListener('click', function (ev) {
     document.getElementById('wcfWelMsgEn').value = 'Official Global Digital Census, Family Registration Certificate (FRC), and Identity Portal of the World Chhippa Foundation.';
     document.getElementById('wcfWelMsgHi').value = 'वर्ल्ड छीपा फ़ाउंडेशन का आधिकारिक ग्लोबल डिजिटल जनगणना और परिवार पंजीकरण पोर्टल।';
     var m = document.getElementById('wcfWelMode');
-    if (m && m.value === 'memorial') m.value = 'welcome';
+    if (m && m.value === 'memorial') m.value = 'welcome_then_memorial';
   };
 
   window.wcfTranslateWelcomeInputs = async function() {
@@ -3675,7 +3676,7 @@ document.addEventListener('click', function (ev) {
     if (btn) { btn.disabled = true; btn.textContent = 'Publishing...'; }
     try {
       await window.wcfTranslateWelcomeInputs();
-      var mode = (document.getElementById('wcfWelMode').value || 'welcome');
+      var mode = (document.getElementById('wcfWelMode').value || 'welcome_then_memorial');
       var seconds = parseInt(document.getElementById('wcfWelSeconds').value || '10', 10) || 10;
       var payload = {
         mode: mode,
@@ -3688,7 +3689,7 @@ document.addEventListener('click', function (ev) {
         msgHi: (document.getElementById('wcfWelMsgHi').value || '').trim(),
         updatedAt: new Date().toISOString()
       };
-      if ((mode === 'welcome' || mode === 'welcome_then_memorial') && !payload.titleEn && !payload.titleUr && !payload.titleHi) {
+      if ((mode === 'welcome' || mode === 'welcome_then_memorial' || mode === 'welcome_banner') && !payload.titleEn && !payload.titleUr && !payload.titleHi) {
         alert('Welcome mode ke liye kam az kam Title likhein (ya Prefill button dabaein).');
         return;
       }
@@ -3745,7 +3746,7 @@ document.addEventListener('click', function (ev) {
         if (document.getElementById('wcfWelMsgEn')) document.getElementById('wcfWelMsgEn').value = wd.msgEn || '';
         if (document.getElementById('wcfWelMsgHi')) document.getElementById('wcfWelMsgHi').value = wd.msgHi || '';
         if (badge) {
-          var mLabel = { welcome: 'LIVE: Custom Welcome', welcome_then_memorial: 'LIVE: Welcome + Memorial', memorial: 'Default Memorial', off: 'Popup OFF' }[wd.mode || 'memorial'] || 'LIVE';
+          var mLabel = { welcome: 'LIVE: Welcome Only', welcome_then_memorial: 'LIVE: Welcome + Tribute', welcome_banner: 'LIVE: Welcome Banner + Tribute', memorial: 'Default Tribute Only', off: 'Popup OFF' }[wd.mode || 'memorial'] || 'LIVE';
           badge.textContent = mLabel;
           badge.className = 'text-[11px] font-bold px-3 py-1 rounded-full ' + (wd.mode === 'off' ? 'bg-slate-600 text-white' : 'bg-emerald-600 text-white');
         }
