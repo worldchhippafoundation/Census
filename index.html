@@ -384,6 +384,17 @@ About Us
 </div>
 </div>
 <main class="max-w-5xl mx-auto p-3 sm:p-4 md:p-6 space-y-5 md:space-y-6">
+<!-- Admin-Controlled Welcome Greeting Card (keeps Memorial Tribute intact) -->
+<div id="wcfWelcomeBannerCard" class="hidden bandhani-bg text-white px-4 py-3.5 rounded-2xl shadow-lg border border-amber-400/60 flex items-start justify-between gap-3">
+<div class="flex items-start gap-3 min-w-0">
+<img src="stamp.png" alt="WCF Seal" class="w-10 h-10 rounded-full bg-white p-0.5 border border-amber-400 shrink-0 mt-0.5">
+<div class="min-w-0 space-y-0.5">
+<h2 id="wcfWelBannerTitle" class="text-sm sm:text-base font-black text-amber-200 leading-snug">Welcome to Chhippa Census Directory</h2>
+<p id="wcfWelBannerMsg" class="text-xs text-white/95 leading-relaxed whitespace-pre-line"></p>
+</div>
+</div>
+<button type="button" onclick="document.getElementById('wcfWelcomeBannerCard').classList.add('hidden')" aria-label="Hide welcome" class="bg-black/35 hover:bg-black/55 text-amber-200 text-xs font-bold px-2.5 py-1 rounded-lg shrink-0 cursor-pointer">&times;</button>
+</div>
 <!-- Official Launch Notice Banner -->
 <div id="launchNoticeBanner" class="hidden bg-amber-700 text-white px-3.5 py-2.5 rounded-xl shadow-md flex items-center justify-between gap-2 text-xs md:text-sm w-full">
 <span>The Official Portal Will be Launched on 4th November 2026</span>
@@ -1978,10 +1989,13 @@ if (textUr) textUr.classList.add('hidden');
 if (textHi) textHi.classList.add('hidden');
 }
 }
-if (typeof window.wcfHandleStartupOrLanguagePopup === 'function') {
-window.wcfHandleStartupOrLanguagePopup(lang, !!window.__wcfInitialBooting);
-} else if (!window.__wcfInitialBooting && typeof openMemorialModalSmooth === 'function') {
+if (typeof openMemorialModalSmooth === 'function') {
+if (!window.__wcfInitialBooting || !window.__wcfHasCustomWelcomeCached) {
 openMemorialModalSmooth(lang);
+}
+}
+if (typeof window.wcfSyncWelcomeOnLang === 'function') {
+window.wcfSyncWelcomeOnLang(lang, !!window.__wcfInitialBooting);
 }
 }
 function populateSelectOptions(selectId, optionsObj, defaultValue) {
@@ -3543,13 +3557,20 @@ const modal = document.getElementById('frcModal');
 if (modal) modal.classList.add('hidden');
 const adminModal = document.getElementById('adminModal');
 if (adminModal) adminModal.classList.add('hidden');
+try {
+var cachedWel = localStorage.getItem('WCF_PORTAL_WELCOME_CACHE');
+if (cachedWel) {
+var parsedWel = JSON.parse(cachedWel);
+window.__wcfHasCustomWelcomeCached = !!(parsedWel && (parsedWel.mode === 'welcome' || parsedWel.mode === 'welcome_then_memorial' || parsedWel.mode === 'off'));
+}
+} catch (e) {}
 window.__wcfInitialBooting = true;
 document.getElementById('langSelect').value = 'en';
 changeLanguage('en');
 window.__wcfInitialBooting = false;
 if (typeof window.wcfRunBootWelcomeOrMemorial === 'function') {
 window.wcfRunBootWelcomeOrMemorial();
-} else if (typeof initMemorialPopup === 'function') {
+} else if (!window.__wcfHasCustomWelcomeCached && typeof initMemorialPopup === 'function') {
 initMemorialPopup();
 }
 updateCensusCounters();
@@ -7096,20 +7117,61 @@ fixIds.forEach(function(id) {
     }
   });
 
-  function applyPopupForLanguage(lang) {
+  function renderWelcomeBanner(cfg, lang) {
+    var card = document.getElementById('wcfWelcomeBannerCard');
+    var tEl = document.getElementById('wcfWelBannerTitle');
+    var mEl = document.getElementById('wcfWelBannerMsg');
+    if (!card) return;
+    if (!cfg || cfg.mode !== 'welcome_banner') {
+      card.classList.add('hidden');
+      return;
+    }
+    var title = lang === 'ur'
+      ? (cfg.titleUr || cfg.titleEn || 'ورلڈ چھیپا فاؤنڈیشن مردم شماری ڈائریکٹری میں خوش آمدید')
+      : lang === 'hi'
+        ? (cfg.titleHi || cfg.titleEn || 'वर्ल्ड छीपा फ़ाउंडेशन जनगणना डायरेक्टरी में आपका स्वागत है')
+        : (cfg.titleEn || cfg.titleUr || 'Welcome to Chhippa Census Directory');
+    var msg = lang === 'ur'
+      ? (cfg.msgUr || cfg.msgEn || '')
+      : lang === 'hi'
+        ? (cfg.msgHi || cfg.msgEn || '')
+        : (cfg.msgEn || cfg.msgUr || '');
+    if (tEl) { tEl.textContent = title; tEl.setAttribute('dir', lang === 'ur' ? 'rtl' : 'ltr'); }
+    if (mEl) { mEl.textContent = msg; mEl.setAttribute('dir', lang === 'ur' ? 'rtl' : 'ltr'); mEl.classList.toggle('hidden', !msg); }
+    card.classList.remove('hidden');
+  }
+
+  function applyPopupForLanguage(lang, allowMemorialFallback) {
     var mode = (currentWelcomeCfg && currentWelcomeCfg.mode) || 'memorial';
-    if (mode === 'off') return;
+    renderWelcomeBanner(currentWelcomeCfg, lang);
+    if (mode === 'off') {
+      if (typeof closeMemorialModal === 'function') closeMemorialModal();
+      return;
+    }
     if (mode === 'welcome' || mode === 'welcome_then_memorial') {
+      if (typeof closeMemorialModal === 'function') {
+        var mem = document.getElementById('memorialModal');
+        if (mem && mem.classList.contains('mem-open')) closeMemorialModal();
+      }
       window.wcfOpenWelcomeModal(currentWelcomeCfg, lang);
-    } else if (typeof openMemorialModalSmooth === 'function') {
-      openMemorialModalSmooth(lang);
+      return;
+    }
+    if (allowMemorialFallback && typeof openMemorialModalSmooth === 'function') {
+      var memEl = document.getElementById('memorialModal');
+      if (!memEl || !memEl.classList.contains('mem-open')) {
+        openMemorialModalSmooth(lang);
+      }
     }
   }
 
-  window.wcfHandleStartupOrLanguagePopup = function(lang, isInitialBoot) {
+  window.wcfSyncWelcomeOnLang = function(lang, isInitialBoot) {
     renderNewsTicker();
+    renderWelcomeBanner(currentWelcomeCfg, lang);
     if (isInitialBoot) return;
-    applyPopupForLanguage(lang);
+    var mode = (currentWelcomeCfg && currentWelcomeCfg.mode) || 'memorial';
+    if (mode === 'welcome' || mode === 'welcome_then_memorial') {
+      window.wcfOpenWelcomeModal(currentWelcomeCfg, lang);
+    }
   };
 
   window.wcfRunBootWelcomeOrMemorial = async function() {
@@ -7120,19 +7182,29 @@ fixIds.forEach(function(id) {
       if (cached) currentWelcomeCfg = JSON.parse(cached);
     } catch (e) {}
 
+    var initialMode = (currentWelcomeCfg && currentWelcomeCfg.mode) || 'memorial';
+    if (initialMode === 'welcome' || initialMode === 'welcome_then_memorial') {
+      window.wcfOpenWelcomeModal(currentWelcomeCfg, getLang());
+    } else if (initialMode !== 'off') {
+      renderWelcomeBanner(currentWelcomeCfg, getLang());
+      var memEl = document.getElementById('memorialModal');
+      if (memEl && !memEl.classList.contains('mem-open') && typeof openMemorialModalSmooth === 'function') {
+        openMemorialModalSmooth(getLang());
+      }
+    }
+
     if (typeof db !== 'undefined' && db) {
       try {
-        var snap = await Promise.race([
-          db.collection(CONFIG_COL).doc(WELCOME_DOC).get(),
-          new Promise(function(resolve) { setTimeout(function() { resolve(null); }, 1100); })
-        ]);
-        if (snap) {
-          currentWelcomeCfg = snap.exists ? (snap.data() || { mode: 'memorial' }) : { mode: 'memorial' };
-          try { localStorage.setItem(WELCOME_CACHE_KEY, JSON.stringify(currentWelcomeCfg)); } catch (e) {}
+        var snap = await db.collection(CONFIG_COL).doc(WELCOME_DOC).get();
+        var fresh = snap.exists ? (snap.data() || { mode: 'memorial' }) : { mode: 'memorial' };
+        currentWelcomeCfg = fresh;
+        try { localStorage.setItem(WELCOME_CACHE_KEY, JSON.stringify(fresh)); } catch (e) {}
+        renderWelcomeBanner(fresh, getLang());
+        if (fresh.mode !== initialMode && fresh.mode !== 'memorial' && fresh.mode !== 'welcome_banner') {
+          applyPopupForLanguage(getLang(), true);
         }
       } catch (e) {}
     }
-    applyPopupForLanguage(getLang());
   };
 
   function bootAll() {
