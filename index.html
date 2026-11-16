@@ -286,49 +286,56 @@ html, body {
     0% { transform: translate3d(0, 0, 0); }
     100% { transform: translate3d(-50%, 0, 0); }
 }
-/* Admin-Controlled Welcome Modal (GPU-composited, matches #memorialModal smoothness) */
-#wcfWelcomeModal {
+/* Admin-Controlled Growing Welcome Text (NO popup window, pure typography: small -> big -> fade out) */
+#wcfWelcomeSplashText {
     position: fixed !important;
     inset: 0 !important;
-    z-index: 9999 !important;
+    z-index: 9997 !important;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 1rem;
-    overflow-y: auto;
-    background: rgba(15, 23, 42, 0.58);
-    -webkit-backdrop-filter: blur(4px);
-    backdrop-filter: blur(4px);
-    opacity: 0;
-    visibility: hidden;
+    padding: 1.5rem;
     pointer-events: none;
-    transition: opacity 0.34s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.34s cubic-bezier(0.16, 1, 0.3, 1);
-    will-change: opacity;
+    text-align: center;
 }
-#wcfWelcomeModal.mem-open {
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
-}
-#wcfWelcomeModal.hidden {
+#wcfWelcomeSplashText.hidden {
     display: none !important;
 }
-#wcfWelcomeModal .memorial-card {
-    width: 100%;
-    max-width: 26rem;
-    margin: auto;
-    transform: translate3d(0, 14px, 0) scale(0.975);
+#wcfWelcomeSplashText .wcf-splash-inner {
+    max-width: 44rem;
     opacity: 0;
-    transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.30s cubic-bezier(0.16, 1, 0.3, 1);
+    transform: translate3d(0, 12px, 0) scale(0.32);
+    transition: transform 0.78s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1);
     will-change: transform, opacity;
 }
-#wcfWelcomeModal.mem-open .memorial-card {
-    transform: translate3d(0, 0, 0) scale(1);
+#wcfWelcomeSplashText.splash-in .wcf-splash-inner {
     opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+}
+#wcfWelcomeSplashText.splash-out .wcf-splash-inner {
+    opacity: 0;
+    transform: translate3d(0, -10px, 0) scale(1.12);
+    transition: transform 0.55s ease-in, opacity 0.5s ease-in;
+}
+#wcfWelcomeSplashText .wcf-splash-title {
+    font-size: clamp(1.45rem, 4.4vw, 2.75rem);
+    font-weight: 900;
+    line-height: 1.3;
+    color: #7f1d1d;
+    text-shadow: 0 0 22px rgba(255, 255, 255, 0.98), 0 0 10px rgba(255, 255, 255, 0.98), 0 3px 14px rgba(127, 29, 29, 0.22);
+    letter-spacing: -0.01em;
+}
+#wcfWelcomeSplashText .wcf-splash-msg {
+    margin-top: 0.45rem;
+    font-size: clamp(0.88rem, 2.1vw, 1.15rem);
+    font-weight: 700;
+    line-height: 1.55;
+    color: #92400e;
+    text-shadow: 0 0 16px rgba(255, 255, 255, 0.98), 0 0 6px rgba(255, 255, 255, 0.98);
 }
 @media (prefers-reduced-motion: reduce) {
     #wcfNewsTickerBar .wcf-tk-track { animation: none !important; }
-    #wcfWelcomeModal, #wcfWelcomeModal .memorial-card { transition: none !important; transform: none !important; }
+    #wcfWelcomeSplashText .wcf-splash-inner { transition: none !important; transform: none !important; }
 }
 </style>
 <script src="/_aistudio-iframe.js?v=1f94f900"></script></head>
@@ -384,17 +391,6 @@ About Us
 </div>
 </div>
 <main class="max-w-5xl mx-auto p-3 sm:p-4 md:p-6 space-y-5 md:space-y-6">
-<!-- Admin-Controlled Welcome Greeting Card (keeps Memorial Tribute intact) -->
-<div id="wcfWelcomeBannerCard" class="hidden bandhani-bg text-white px-4 py-3.5 rounded-2xl shadow-lg border border-amber-400/60 flex items-start justify-between gap-3">
-<div class="flex items-start gap-3 min-w-0">
-<img src="stamp.png" alt="WCF Seal" class="w-10 h-10 rounded-full bg-white p-0.5 border border-amber-400 shrink-0 mt-0.5">
-<div class="min-w-0 space-y-0.5">
-<h2 id="wcfWelBannerTitle" class="text-sm sm:text-base font-black text-amber-200 leading-snug">Welcome to Chhippa Census Directory</h2>
-<p id="wcfWelBannerMsg" class="text-xs text-white/95 leading-relaxed whitespace-pre-line"></p>
-</div>
-</div>
-<button type="button" onclick="document.getElementById('wcfWelcomeBannerCard').classList.add('hidden')" aria-label="Hide welcome" class="bg-black/35 hover:bg-black/55 text-amber-200 text-xs font-bold px-2.5 py-1 rounded-lg shrink-0 cursor-pointer">&times;</button>
-</div>
 <!-- Official Launch Notice Banner -->
 <div id="launchNoticeBanner" class="hidden bg-amber-700 text-white px-3.5 py-2.5 rounded-xl shadow-md flex items-center justify-between gap-2 text-xs md:text-sm w-full">
 <span>The Official Portal Will be Launched on 4th November 2026</span>
@@ -991,22 +987,11 @@ Enter Portal
 </div>
 </div>
 </div>
-<!-- ADMIN-CONTROLLED WELCOME POPUP -->
-<div id="wcfWelcomeModal" translate="no" onclick="if (event.target && event.target.id === 'wcfWelcomeModal' && window.wcfCloseWelcomeModal) window.wcfCloseWelcomeModal()" class="notranslate hidden" role="dialog" aria-modal="true" aria-labelledby="wcfWelPopupTitle">
-<div class="memorial-card relative bg-white rounded-2xl shadow-2xl border-2 border-emerald-600/70 overflow-hidden text-center mx-auto" onclick="event.stopPropagation()">
-<div class="bandhani-bg px-5 py-4 text-white relative">
-<button type="button" id="wcfWelCloseCross" aria-label="Close welcome" onclick="window.wcfCloseWelcomeModal && window.wcfCloseWelcomeModal()" class="absolute top-3 right-3 text-white/90 hover:text-white hover:bg-black/40 text-xl leading-none font-bold w-8 h-8 rounded-full bg-black/25 flex items-center justify-center transition cursor-pointer">&times;</button>
-<img src="stamp.png" alt="WCF Seal" class="w-12 h-12 rounded-full mx-auto mb-2 bg-white p-0.5 border-2 border-amber-400 shadow">
-<p id="wcfWelBadgeTop" class="text-[10px] font-bold uppercase tracking-widest text-amber-200">World Chhippa Foundation</p>
-</div>
-<div class="p-5 space-y-3">
-<h2 id="wcfWelPopupTitle" class="text-base sm:text-lg font-black text-slate-900 leading-snug">Welcome to Chhippa Census Directory</h2>
-<p id="wcfWelPopupMsg" class="text-xs sm:text-sm text-slate-700 leading-relaxed whitespace-pre-line"></p>
-<div class="pt-2 border-t border-slate-100">
-<button type="button" id="btnWcfWelEnter" onclick="window.wcfCloseWelcomeModal && window.wcfCloseWelcomeModal()" class="w-full py-2.5 bandhani-bg text-white text-xs font-bold rounded-xl shadow border border-amber-400/40 transition transform active:scale-95 cursor-pointer">Enter Portal</button>
-<p id="wcfWelCountdownNote" class="text-[10px] text-slate-500 mt-1.5">Closes automatically in <span id="wcfWelCountdownSec" class="font-bold text-amber-800 tabular-nums">10</span>s</p>
-</div>
-</div>
+<!-- ADMIN-CONTROLLED GROWING WELCOME TEXT (pure animated text, NO popup box) -->
+<div id="wcfWelcomeSplashText" translate="no" class="notranslate hidden" aria-live="polite">
+<div class="wcf-splash-inner">
+<h2 id="wcfWelSplashTitle" class="wcf-splash-title">Welcome to Chhippa Census Directory</h2>
+<p id="wcfWelSplashMsg" class="wcf-splash-msg"></p>
 </div>
 </div>
 <!-- ABOUT US / DISCLAIMER MODAL -->
@@ -1990,12 +1975,10 @@ if (textHi) textHi.classList.add('hidden');
 }
 }
 if (typeof openMemorialModalSmooth === 'function') {
-if (!window.__wcfInitialBooting || !window.__wcfHasCustomWelcomeCached) {
 openMemorialModalSmooth(lang);
 }
-}
-if (typeof window.wcfSyncWelcomeOnLang === 'function') {
-window.wcfSyncWelcomeOnLang(lang, !!window.__wcfInitialBooting);
+if (typeof window.wcfSyncTickerOnLang === 'function') {
+window.wcfSyncTickerOnLang(lang);
 }
 }
 function populateSelectOptions(selectId, optionsObj, defaultValue) {
@@ -3557,22 +3540,8 @@ const modal = document.getElementById('frcModal');
 if (modal) modal.classList.add('hidden');
 const adminModal = document.getElementById('adminModal');
 if (adminModal) adminModal.classList.add('hidden');
-try {
-var cachedWel = localStorage.getItem('WCF_PORTAL_WELCOME_CACHE');
-if (cachedWel) {
-var parsedWel = JSON.parse(cachedWel);
-window.__wcfHasCustomWelcomeCached = !!(parsedWel && (parsedWel.mode === 'welcome' || parsedWel.mode === 'welcome_then_memorial' || parsedWel.mode === 'off'));
-}
-} catch (e) {}
-window.__wcfInitialBooting = true;
 document.getElementById('langSelect').value = 'en';
 changeLanguage('en');
-window.__wcfInitialBooting = false;
-if (typeof window.wcfRunBootWelcomeOrMemorial === 'function') {
-window.wcfRunBootWelcomeOrMemorial();
-} else if (!window.__wcfHasCustomWelcomeCached && typeof initMemorialPopup === 'function') {
-initMemorialPopup();
-}
 updateCensusCounters();
 handleHeadDOBValidation();
 }
@@ -7006,210 +6975,111 @@ fixIds.forEach(function(id) {
     } catch (e) {}
   }
 
-  /* ---------- 2. ADMIN-CONTROLLED WELCOME POPUP ---------- */
-  function clearWelcomeTimers() {
-    if (welcomeTimer) { clearTimeout(welcomeTimer); welcomeTimer = null; }
-    if (welcomeInterval) { clearInterval(welcomeInterval); welcomeInterval = null; }
-    if (welcomeCloseAnimTimer) { clearTimeout(welcomeCloseAnimTimer); welcomeCloseAnimTimer = null; }
+  /* ---------- 2. ADMIN-CONTROLLED GROWING WELCOME TEXT (NO POPUP BOX) ---------- */
+  var splashHoldTimer = null;
+  var splashHideTimer = null;
+  var splashPlayedOnce = false;
+
+  function clearSplashTimers() {
+    if (splashHoldTimer) { clearTimeout(splashHoldTimer); splashHoldTimer = null; }
+    if (splashHideTimer) { clearTimeout(splashHideTimer); splashHideTimer = null; }
   }
 
-  function renderWelcomeTexts(cfg, lang, sec) {
-    var titleEl = document.getElementById('wcfWelPopupTitle');
-    var msgEl = document.getElementById('wcfWelPopupMsg');
-    var btnEl = document.getElementById('btnWcfWelEnter');
-    var badgeEl = document.getElementById('wcfWelBadgeTop');
-    var noteEl = document.getElementById('wcfWelCountdownNote');
-    var c = cfg || {};
+  function playWelcomeSplashText(cfg, lang) {
+    var box = document.getElementById('wcfWelcomeSplashText');
+    var tEl = document.getElementById('wcfWelSplashTitle');
+    var mEl = document.getElementById('wcfWelSplashMsg');
+    if (!box || !cfg || cfg.mode === 'off' || cfg.mode === 'memorial') return;
 
-    var title = lang === 'ur'
-      ? (c.titleUr || c.titleEn || 'ورلڈ چھیپا فاؤنڈیشن مردم شماری ڈائریکٹری میں خوش آمدید')
-      : lang === 'hi'
-        ? (c.titleHi || c.titleEn || 'वर्ल्ड छीपा फ़ाउंडेशन जनगणना डायरेक्टरी में आपका स्वागत है')
-        : (c.titleEn || c.titleUr || 'Welcome to Chhippa Census Directory');
-    var msg = lang === 'ur'
-      ? (c.msgUr || c.msgEn || '')
-      : lang === 'hi'
-        ? (c.msgHi || c.msgEn || '')
-        : (c.msgEn || c.msgUr || '');
-
-    if (titleEl) {
-      titleEl.textContent = title;
-      titleEl.setAttribute('dir', lang === 'ur' ? 'rtl' : 'ltr');
-    }
-    if (msgEl) {
-      msgEl.textContent = msg;
-      msgEl.setAttribute('dir', lang === 'ur' ? 'rtl' : 'ltr');
-      msgEl.classList.toggle('hidden', !msg);
-    }
-    if (badgeEl) {
-      badgeEl.textContent = lang === 'ur' ? 'ورلڈ چھیپا فاؤنڈیشن' : (lang === 'hi' ? 'वर्ल्ड छीपा फ़ाउंडेशन' : 'World Chhippa Foundation');
-    }
-    if (btnEl) {
-      btnEl.textContent = lang === 'ur' ? 'پورٹل میں داخل ہوں' : (lang === 'hi' ? 'पोर्टल में दाख़िल हों' : 'Enter Portal');
-    }
-    if (noteEl) {
-      var sSpan = '<span id="wcfWelCountdownSec" class="font-bold text-amber-800 tabular-nums">' + Math.max(sec, 0) + '</span>';
-      if (lang === 'ur') {
-        noteEl.setAttribute('dir', 'rtl');
-        noteEl.innerHTML = 'یہ ونڈو ' + sSpan + ' سیکنڈ میں خود بند ہو جائے گی';
-      } else if (lang === 'hi') {
-        noteEl.setAttribute('dir', 'ltr');
-        noteEl.innerHTML = sSpan + ' सेकंड में अपने आप बंद हो जाएगा';
-      } else {
-        noteEl.setAttribute('dir', 'ltr');
-        noteEl.innerHTML = 'Closes automatically in ' + sSpan + 's or click Enter';
-      }
-    }
-  }
-
-  window.wcfOpenWelcomeModal = function(cfg, lang) {
-    var modal = document.getElementById('wcfWelcomeModal');
-    if (!modal) return;
-    clearWelcomeTimers();
-    welcomeClosedByUser = false;
-    var sec = (cfg && parseInt(cfg.seconds, 10)) || 10;
-    renderWelcomeTexts(cfg, lang || getLang(), sec);
-    if (modal.classList.contains('hidden') || !modal.classList.contains('mem-open')) {
-      modal.classList.remove('hidden');
-      void modal.offsetHeight;
-      requestAnimationFrame(function() {
-        requestAnimationFrame(function() {
-          if (!welcomeClosedByUser) modal.classList.add('mem-open');
-        });
-      });
-    }
-    var remaining = sec;
-    welcomeInterval = setInterval(function() {
-      remaining -= 1;
-      var secEl = document.getElementById('wcfWelCountdownSec');
-      if (secEl) secEl.textContent = String(Math.max(remaining, 0));
-      if (remaining <= 0) {
-        clearInterval(welcomeInterval);
-        welcomeInterval = null;
-      }
-    }, 1000);
-    welcomeTimer = setTimeout(function() {
-      window.wcfCloseWelcomeModal(true);
-    }, sec * 1000);
-  };
-
-  window.wcfCloseWelcomeModal = function(isAutoTimer) {
-    var modal = document.getElementById('wcfWelcomeModal');
-    clearWelcomeTimers();
-    welcomeClosedByUser = true;
-    if (modal) {
-      modal.classList.remove('mem-open');
-      welcomeCloseAnimTimer = setTimeout(function() {
-        if (welcomeClosedByUser) modal.classList.add('hidden');
-      }, 340);
-    }
-    if (currentWelcomeCfg && currentWelcomeCfg.mode === 'welcome_then_memorial' && isAutoTimer !== false) {
-      setTimeout(function() {
-        if (typeof openMemorialModalSmooth === 'function') openMemorialModalSmooth(getLang());
-      }, 360);
-    }
-  };
-
-  document.addEventListener('keydown', function(ev) {
-    if (ev.key === 'Escape') {
-      var modal = document.getElementById('wcfWelcomeModal');
-      if (modal && modal.classList.contains('mem-open')) window.wcfCloseWelcomeModal(false);
-    }
-  });
-
-  function renderWelcomeBanner(cfg, lang) {
-    var card = document.getElementById('wcfWelcomeBannerCard');
-    var tEl = document.getElementById('wcfWelBannerTitle');
-    var mEl = document.getElementById('wcfWelBannerMsg');
-    if (!card) return;
-    if (!cfg || cfg.mode !== 'welcome_banner') {
-      card.classList.add('hidden');
-      return;
-    }
-    var title = lang === 'ur'
+    var l = lang || getLang();
+    var title = l === 'ur'
       ? (cfg.titleUr || cfg.titleEn || 'ورلڈ چھیپا فاؤنڈیشن مردم شماری ڈائریکٹری میں خوش آمدید')
-      : lang === 'hi'
+      : l === 'hi'
         ? (cfg.titleHi || cfg.titleEn || 'वर्ल्ड छीपा फ़ाउंडेशन जनगणना डायरेक्टरी में आपका स्वागत है')
         : (cfg.titleEn || cfg.titleUr || 'Welcome to Chhippa Census Directory');
-    var msg = lang === 'ur'
+    var msg = l === 'ur'
       ? (cfg.msgUr || cfg.msgEn || '')
-      : lang === 'hi'
+      : l === 'hi'
         ? (cfg.msgHi || cfg.msgEn || '')
         : (cfg.msgEn || cfg.msgUr || '');
-    if (tEl) { tEl.textContent = title; tEl.setAttribute('dir', lang === 'ur' ? 'rtl' : 'ltr'); }
-    if (mEl) { mEl.textContent = msg; mEl.setAttribute('dir', lang === 'ur' ? 'rtl' : 'ltr'); mEl.classList.toggle('hidden', !msg); }
-    card.classList.remove('hidden');
+    if (!title && !msg) return;
+
+    clearSplashTimers();
+    if (tEl) { tEl.textContent = title; tEl.setAttribute('dir', l === 'ur' ? 'rtl' : 'ltr'); }
+    if (mEl) { mEl.textContent = msg; mEl.setAttribute('dir', l === 'ur' ? 'rtl' : 'ltr'); mEl.classList.toggle('hidden', !msg); }
+
+    box.classList.remove('splash-in', 'splash-out', 'hidden');
+    void box.offsetWidth;
+    requestAnimationFrame(function() {
+      requestAnimationFrame(function() {
+        box.classList.add('splash-in');
+      });
+    });
+
+    var sec = Math.max(3, Math.min(15, parseInt(cfg.seconds, 10) || 6));
+    splashHoldTimer = setTimeout(function() {
+      box.classList.remove('splash-in');
+      box.classList.add('splash-out');
+      splashHideTimer = setTimeout(function() {
+        box.classList.remove('splash-out');
+        box.classList.add('hidden');
+      }, 600);
+    }, sec * 1000);
   }
 
-  function applyPopupForLanguage(lang, allowMemorialFallback) {
-    var mode = (currentWelcomeCfg && currentWelcomeCfg.mode) || 'memorial';
-    renderWelcomeBanner(currentWelcomeCfg, lang);
-    if (mode === 'off') {
-      if (typeof closeMemorialModal === 'function') closeMemorialModal();
-      return;
-    }
-    if (mode === 'welcome' || mode === 'welcome_then_memorial') {
-      if (typeof closeMemorialModal === 'function') {
-        var mem = document.getElementById('memorialModal');
-        if (mem && mem.classList.contains('mem-open')) closeMemorialModal();
-      }
-      window.wcfOpenWelcomeModal(currentWelcomeCfg, lang);
-      return;
-    }
-    if (allowMemorialFallback && typeof openMemorialModalSmooth === 'function') {
-      var memEl = document.getElementById('memorialModal');
-      if (!memEl || !memEl.classList.contains('mem-open')) {
-        openMemorialModalSmooth(lang);
-      }
+  function hookMemorialCloseForWelcomeSplash() {
+    if (typeof window.closeMemorialModal === 'function' && !window.closeMemorialModal._wcfSplashHooked) {
+      var origCloseMem = window.closeMemorialModal;
+      window.closeMemorialModal = function() {
+        var r = origCloseMem.apply(this, arguments);
+        if (!splashPlayedOnce && currentWelcomeCfg && currentWelcomeCfg.mode !== 'off' && currentWelcomeCfg.mode !== 'memorial') {
+          splashPlayedOnce = true;
+          setTimeout(function() {
+            var mem = document.getElementById('memorialModal');
+            if (!mem || !mem.classList.contains('mem-open')) {
+              playWelcomeSplashText(currentWelcomeCfg, getLang());
+            }
+          }, 380);
+        }
+        return r;
+      };
+      window.closeMemorialModal._wcfSplashHooked = true;
     }
   }
 
-  window.wcfSyncWelcomeOnLang = function(lang, isInitialBoot) {
+  window.wcfSyncTickerOnLang = function(lang) {
     renderNewsTicker();
-    renderWelcomeBanner(currentWelcomeCfg, lang);
-    if (isInitialBoot) return;
-    var mode = (currentWelcomeCfg && currentWelcomeCfg.mode) || 'memorial';
-    if (mode === 'welcome' || mode === 'welcome_then_memorial') {
-      window.wcfOpenWelcomeModal(currentWelcomeCfg, lang);
+    var box = document.getElementById('wcfWelcomeSplashText');
+    if (box && !box.classList.contains('hidden') && currentWelcomeCfg) {
+      playWelcomeSplashText(currentWelcomeCfg, lang);
     }
   };
 
-  window.wcfRunBootWelcomeOrMemorial = async function() {
-    if (bootHandled) return;
-    bootHandled = true;
+  function startWelcomeTextSync() {
+    hookMemorialCloseForWelcomeSplash();
     try {
       var cached = localStorage.getItem(WELCOME_CACHE_KEY);
       if (cached) currentWelcomeCfg = JSON.parse(cached);
     } catch (e) {}
 
-    var initialMode = (currentWelcomeCfg && currentWelcomeCfg.mode) || 'memorial';
-    if (initialMode === 'welcome' || initialMode === 'welcome_then_memorial') {
-      window.wcfOpenWelcomeModal(currentWelcomeCfg, getLang());
-    } else if (initialMode !== 'off') {
-      renderWelcomeBanner(currentWelcomeCfg, getLang());
-      var memEl = document.getElementById('memorialModal');
-      if (memEl && !memEl.classList.contains('mem-open') && typeof openMemorialModalSmooth === 'function') {
-        openMemorialModalSmooth(getLang());
-      }
-    }
-
     if (typeof db !== 'undefined' && db) {
       try {
-        var snap = await db.collection(CONFIG_COL).doc(WELCOME_DOC).get();
-        var fresh = snap.exists ? (snap.data() || { mode: 'memorial' }) : { mode: 'memorial' };
-        currentWelcomeCfg = fresh;
-        try { localStorage.setItem(WELCOME_CACHE_KEY, JSON.stringify(fresh)); } catch (e) {}
-        renderWelcomeBanner(fresh, getLang());
-        if (fresh.mode !== initialMode && fresh.mode !== 'memorial' && fresh.mode !== 'welcome_banner') {
-          applyPopupForLanguage(getLang(), true);
-        }
+        db.collection(CONFIG_COL).doc(WELCOME_DOC).onSnapshot(function(snap) {
+          currentWelcomeCfg = snap.exists ? (snap.data() || { mode: 'off' }) : { mode: 'off' };
+          try { localStorage.setItem(WELCOME_CACHE_KEY, JSON.stringify(currentWelcomeCfg)); } catch (e) {}
+          var mem = document.getElementById('memorialModal');
+          if (!splashPlayedOnce && mem && !mem.classList.contains('mem-open') && currentWelcomeCfg.mode !== 'off' && currentWelcomeCfg.mode !== 'memorial') {
+            splashPlayedOnce = true;
+            playWelcomeSplashText(currentWelcomeCfg, getLang());
+          }
+        }, function() {});
       } catch (e) {}
     }
-  };
+  }
 
   function bootAll() {
     startTickerSync();
-    if (!bootHandled) window.wcfRunBootWelcomeOrMemorial();
+    startWelcomeTextSync();
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bootAll);
