@@ -3445,35 +3445,32 @@ document.addEventListener('click', function (ev) {
       welWrap.id = 'wcfAdminWelcomeWrap';
       welWrap.innerHTML = [
         '<button type="button" onclick="window.wcfToggleWelcomePanel()" class="wcf-hydro-toggle-btn bg-gradient-to-r from-emerald-800 to-teal-700 text-white border border-emerald-300 shadow">',
-        '  <span>👋 Main Website Welcome Popup Control ("Welcome to Chhippa Census Directory")</span>',
+        '  <span>✨ Main Website Welcome Text Animation ("Welcome to Chhippa Census Directory")</span>',
         '  <span id="wcfWelArrow">▼ Open</span>',
         '</button>',
         '<div id="wcfWelPanelBody" class="wcf-hydro-panel wcf-hydro-welcome-panel space-y-3">',
         '  <div class="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-emerald-300">',
         '    <div>',
-        '      <h4 class="text-xs font-black text-emerald-950 uppercase">Landing Welcome Popup Manager (hydrogenIndex.html)</h4>',
-        '      <p class="text-[11px] text-slate-600">Control what opens immediately when someone visits the main website: Custom Welcome, Memorial Tribute, Both, or Off.</p>',
+        '      <h4 class="text-xs font-black text-emerald-950 uppercase">Animated Welcome Text (Small &rarr; Big &rarr; Fade Out, No Popup Box)</h4>',
+        '      <p class="text-[11px] text-slate-600">Purana Memorial Tribute Popup hamesha normal chalega; uske band hote hi yeh text chhota se bada hoker screen par aayega aur chala jayega.</p>',
         '    </div>',
         '    <span id="wcfWelStatusBadge" class="text-[11px] font-bold px-3 py-1 rounded-full bg-slate-200 text-slate-700">Checking...</span>',
         '  </div>',
         '  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">',
         '    <div>',
-        '      <label class="block text-[11px] font-bold text-slate-800 mb-1">Startup Popup Mode:</label>',
+        '      <label class="block text-[11px] font-bold text-slate-800 mb-1">Welcome Text Status:</label>',
         '      <select id="wcfWelMode" class="w-full border border-emerald-400 rounded-lg p-2 text-xs font-bold bg-white outline-none">',
-        '        <option value="welcome_then_memorial" selected>Welcome Popup First, Then Memorial Tribute (دونوں چلیں گے)</option>',
-        '        <option value="welcome_banner">Top Welcome Card + Memorial Tribute Popup (ٹاپ ویلکم + ٹربیوٹ)</option>',
-        '        <option value="memorial">Default Memorial Tribute Only (صرف پرانا ٹربیوٹ پاپ اپ)</option>',
-        '        <option value="welcome">Welcome Popup Only (ٹربیوٹ بند کر کے صرف ویلکم)</option>',
-        '        <option value="off">Off — No Startup Popup</option>',
+        '        <option value="welcome_splash" selected>ON — Animated Welcome Text (چھوٹا سے بڑا ہو کر غائب)</option>',
+        '        <option value="off">OFF — Hidden (صرف پرانا ٹربیوٹ پاپ اپ)</option>',
         '      </select>',
         '    </div>',
         '    <div>',
-        '      <label class="block text-[11px] font-bold text-slate-800 mb-1">Auto-Close Timer (Seconds):</label>',
+        '      <label class="block text-[11px] font-bold text-slate-800 mb-1">Stay Visible Duration (Seconds):</label>',
         '      <select id="wcfWelSeconds" class="w-full border border-emerald-400 rounded-lg p-2 text-xs font-bold bg-white outline-none">',
-        '        <option value="5">5 Seconds</option>',
-        '        <option value="7">7 Seconds</option>',
-        '        <option value="10" selected>10 Seconds</option>',
-        '        <option value="15">15 Seconds</option>',
+        '        <option value="4">4 Seconds</option>',
+        '        <option value="6" selected>6 Seconds (Recommended)</option>',
+        '        <option value="8">8 Seconds</option>',
+        '        <option value="10">10 Seconds</option>',
         '      </select>',
         '    </div>',
         '  </div>',
@@ -3483,18 +3480,18 @@ document.addEventListener('click', function (ev) {
         '    <span id="wcfWelTransStatus" class="text-[11px] font-semibold text-slate-600">Write in any ONE language and click Save.</span>',
         '  </div>',
         '  <div class="p-3 rounded-xl bg-white border border-emerald-300 space-y-2.5">',
-        '    <p class="text-[11px] font-black text-emerald-950">Welcome Heading / Title:</p>',
+        '    <p class="text-[11px] font-black text-emerald-950">Welcome Heading Text:</p>',
         '    <input type="text" id="wcfWelTitleUr" dir="rtl" placeholder="اردو عنوان (مثال: چھیپا مردم شماری ڈائریکٹری میں خوش آمدید)" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-xs bg-white outline-none">',
         '    <input type="text" id="wcfWelTitleEn" dir="ltr" placeholder="English Title (e.g. Welcome to Chhippa Census Directory)" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-xs bg-white outline-none">',
         '    <input type="text" id="wcfWelTitleHi" dir="ltr" placeholder="हिंदी शीर्षक (उदा. छीपा जनगणना डायरेक्टरी में आपका स्वागत है)" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-xs bg-white outline-none">',
-        '    <p class="text-[11px] font-black text-emerald-950 pt-1">Welcome Message / Details:</p>',
+        '    <p class="text-[11px] font-black text-emerald-950 pt-1">Subtitle / Second Line (Optional):</p>',
         '    <textarea id="wcfWelMsgUr" rows="2" dir="rtl" placeholder="اردو پیغام..." class="w-full border border-slate-300 rounded-lg px-3 py-2 text-xs bg-white outline-none"></textarea>',
         '    <textarea id="wcfWelMsgEn" rows="2" dir="ltr" placeholder="English message..." class="w-full border border-slate-300 rounded-lg px-3 py-2 text-xs bg-white outline-none"></textarea>',
         '    <textarea id="wcfWelMsgHi" rows="2" dir="ltr" placeholder="हिंदी संदेश..." class="w-full border border-slate-300 rounded-lg px-3 py-2 text-xs bg-white outline-none"></textarea>',
         '  </div>',
         '  <div class="flex flex-wrap gap-2">',
-        '    <button type="button" id="btnWcfSaveWelcome" onclick="window.wcfSaveWelcomeConfig()" class="flex-1 min-w-[200px] bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs py-2.5 px-4 rounded-xl shadow cursor-pointer">💾 Save & Publish Welcome Popup Live</button>',
-        '    <button type="button" id="btnWcfDeleteWelcome" onclick="window.wcfDeleteWelcomeConfig()" class="bg-red-600 hover:bg-red-700 text-white font-bold text-xs py-2.5 px-4 rounded-xl shadow cursor-pointer">🗑️ Delete & Reset to Default Memorial</button>',
+        '    <button type="button" id="btnWcfSaveWelcome" onclick="window.wcfSaveWelcomeConfig()" class="flex-1 min-w-[200px] bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs py-2.5 px-4 rounded-xl shadow cursor-pointer">💾 Save & Publish Welcome Text Live</button>',
+        '    <button type="button" id="btnWcfDeleteWelcome" onclick="window.wcfDeleteWelcomeConfig()" class="bg-red-600 hover:bg-red-700 text-white font-bold text-xs py-2.5 px-4 rounded-xl shadow cursor-pointer">🗑️ Delete Welcome Text</button>',
         '  </div>',
         '</div>'
       ].join('');
@@ -3662,7 +3659,7 @@ document.addEventListener('click', function (ev) {
     document.getElementById('wcfWelMsgEn').value = 'Official Global Digital Census, Family Registration Certificate (FRC), and Identity Portal of the World Chhippa Foundation.';
     document.getElementById('wcfWelMsgHi').value = 'वर्ल्ड छीपा फ़ाउंडेशन का आधिकारिक ग्लोबल डिजिटल जनगणना और परिवार पंजीकरण पोर्टल।';
     var m = document.getElementById('wcfWelMode');
-    if (m && m.value === 'memorial') m.value = 'welcome_then_memorial';
+    if (m) m.value = 'welcome_splash';
   };
 
   window.wcfTranslateWelcomeInputs = async function() {
@@ -3676,8 +3673,8 @@ document.addEventListener('click', function (ev) {
     if (btn) { btn.disabled = true; btn.textContent = 'Publishing...'; }
     try {
       await window.wcfTranslateWelcomeInputs();
-      var mode = (document.getElementById('wcfWelMode').value || 'welcome_then_memorial');
-      var seconds = parseInt(document.getElementById('wcfWelSeconds').value || '10', 10) || 10;
+      var mode = (document.getElementById('wcfWelMode').value || 'welcome_splash');
+      var seconds = parseInt(document.getElementById('wcfWelSeconds').value || '6', 10) || 6;
       var payload = {
         mode: mode,
         seconds: seconds,
@@ -3689,31 +3686,31 @@ document.addEventListener('click', function (ev) {
         msgHi: (document.getElementById('wcfWelMsgHi').value || '').trim(),
         updatedAt: new Date().toISOString()
       };
-      if ((mode === 'welcome' || mode === 'welcome_then_memorial' || mode === 'welcome_banner') && !payload.titleEn && !payload.titleUr && !payload.titleHi) {
-        alert('Welcome mode ke liye kam az kam Title likhein (ya Prefill button dabaein).');
+      if (mode !== 'off' && !payload.titleEn && !payload.titleUr && !payload.titleHi) {
+        alert('Welcome text ke liye kam az kam Title likhein (ya Prefill button dabaein).');
         return;
       }
       await db.collection(CONFIG_COL).doc(WELCOME_DOC).set(payload);
       await loadHydrogenControlsFromCloud();
-      alert('✅ Welcome Popup settings live publish ho gayi hain!');
+      alert('✅ Animated Welcome Text live publish ho gaya hai!');
     } catch (e) {
       alert('Welcome save error: ' + e.message);
     } finally {
-      if (btn) { btn.disabled = false; btn.textContent = '💾 Save & Publish Welcome Popup Live'; }
+      if (btn) { btn.disabled = false; btn.textContent = '💾 Save & Publish Welcome Text Live'; }
     }
   };
 
   window.wcfDeleteWelcomeConfig = async function() {
     if (!db) return;
-    if (!confirm('Custom Welcome delete karke wapas default Memorial Tribute par reset karein?')) return;
+    if (!confirm('Animated Welcome Text delete karein?')) return;
     try {
       await db.collection(CONFIG_COL).doc(WELCOME_DOC).delete();
       ['wcfWelTitleUr','wcfWelTitleEn','wcfWelTitleHi','wcfWelMsgUr','wcfWelMsgEn','wcfWelMsgHi'].forEach(function(id) {
         var el = document.getElementById(id); if (el) el.value = '';
       });
-      var m = document.getElementById('wcfWelMode'); if (m) m.value = 'memorial';
+      var m = document.getElementById('wcfWelMode'); if (m) m.value = 'off';
       await loadHydrogenControlsFromCloud();
-      alert('🗑️ Custom Welcome hata diya gaya hai. Ab default Memorial Tribute chalega.');
+      alert('🗑️ Welcome Text delete kar diya gaya hai.');
     } catch (e) { alert(e.message); }
   };
 
@@ -3737,8 +3734,9 @@ document.addEventListener('click', function (ev) {
       var badge = document.getElementById('wcfWelStatusBadge');
       if (wlDoc.exists) {
         var wd = wlDoc.data() || {};
-        if (document.getElementById('wcfWelMode')) document.getElementById('wcfWelMode').value = wd.mode || 'memorial';
-        if (document.getElementById('wcfWelSeconds')) document.getElementById('wcfWelSeconds').value = String(wd.seconds || 10);
+        var isOff = wd.mode === 'off' || wd.mode === 'memorial';
+        if (document.getElementById('wcfWelMode')) document.getElementById('wcfWelMode').value = isOff ? 'off' : 'welcome_splash';
+        if (document.getElementById('wcfWelSeconds')) document.getElementById('wcfWelSeconds').value = String(wd.seconds || 6);
         if (document.getElementById('wcfWelTitleUr')) document.getElementById('wcfWelTitleUr').value = wd.titleUr || '';
         if (document.getElementById('wcfWelTitleEn')) document.getElementById('wcfWelTitleEn').value = wd.titleEn || '';
         if (document.getElementById('wcfWelTitleHi')) document.getElementById('wcfWelTitleHi').value = wd.titleHi || '';
@@ -3746,12 +3744,11 @@ document.addEventListener('click', function (ev) {
         if (document.getElementById('wcfWelMsgEn')) document.getElementById('wcfWelMsgEn').value = wd.msgEn || '';
         if (document.getElementById('wcfWelMsgHi')) document.getElementById('wcfWelMsgHi').value = wd.msgHi || '';
         if (badge) {
-          var mLabel = { welcome: 'LIVE: Welcome Only', welcome_then_memorial: 'LIVE: Welcome + Tribute', welcome_banner: 'LIVE: Welcome Banner + Tribute', memorial: 'Default Tribute Only', off: 'Popup OFF' }[wd.mode || 'memorial'] || 'LIVE';
-          badge.textContent = mLabel;
-          badge.className = 'text-[11px] font-bold px-3 py-1 rounded-full ' + (wd.mode === 'off' ? 'bg-slate-600 text-white' : 'bg-emerald-600 text-white');
+          badge.textContent = isOff ? 'OFF' : 'LIVE (Growing Text ON)';
+          badge.className = 'text-[11px] font-bold px-3 py-1 rounded-full ' + (isOff ? 'bg-slate-600 text-white' : 'bg-emerald-600 text-white');
         }
       } else if (badge) {
-        badge.textContent = 'Default Memorial Only';
+        badge.textContent = 'Not Active';
         badge.className = 'text-[11px] font-bold px-3 py-1 rounded-full bg-slate-200 text-slate-700';
       }
     } catch (e) {}
